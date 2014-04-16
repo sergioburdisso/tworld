@@ -7,6 +7,7 @@
  * but it isn't here to make debugging easier.
  */
 var CL3D = {};
+
 CL3D.DebugOutput = function (d, a) {
 	this.DebugRoot = null;
 	this.FPSRoot = null;
@@ -37,14 +38,14 @@ CL3D.DebugOutput.prototype.enableFPSCounter = function () {
 	this.FPSRootText = a;
 	this.FPSRoot.appendChild(a);
 	this.frames = 0;
-	this.lasttime = new Date().getTime()
+	this.lasttime = Date.now(); //new Date().getTime();
 };
 CL3D.DebugOutput.prototype.updatefps = function (c) {
 	if (this.FPSRootText == null) {
 		return
 	}
 	this.frames += 1;
-	var b = new Date().getTime();
+	var b = Date.now(); //new Date().getTime();
 	if (b - this.lasttime > 1000) {
 		var d = this.frames / (b - this.lasttime) * 1000;
 		var a = "FPS: " + d.toFixed(2);
@@ -239,9 +240,8 @@ CL3D.ColorF.prototype.G = 1;
 CL3D.ColorF.prototype.B = 1;
 CL3D.CLTimer = function () {};
 CL3D.CLTimer.getTime = function () {
-	console.log("getTime");
-	var a = new Date();
-	return a.getTime()
+	//var a = new Date();
+	return Date.now(); //a.getTime()
 };
 CL3D.Vect3d = function (a, c, b) {
 	if (a != null) {
@@ -1482,13 +1482,13 @@ CL3D.Action.MakeSceneNodeInvisible.prototype.execute = function (c, b) {
 	} if (a) {
 		switch (this.InvisibleMakeType) {
 		case 0:
-			a.Visible = false;
+			a.getVisible() = false;
 			break;
 		case 1:
-			a.Visible = true;
+			a.getVisible() = true;
 			break;
 		case 2:
-			a.Visible = !a.Visible;
+			a.getVisible() = !a.getVisible();
 			break
 		}
 	}
@@ -1884,7 +1884,7 @@ CL3D.Action.Shoot.prototype.execute = function (e, b) {
 			if (h != null) {
 				h.Pos = k.Start;
 				h.updateAbsolutePosition();
-				h.Visible = true;
+				h.getVisible() = true;
 				h.Id = -1;
 				h.Name = "";
 				var a = k.getVector();
@@ -2304,6 +2304,7 @@ CL3D.MeshBuffer.prototype.createClone = function () {
 			a.Indices.push(this.Indices[b])
 		}
 	}
+
 	return a
 };
 CL3D.Mesh = function () {
@@ -3994,6 +3995,7 @@ CL3D.SceneNode.prototype.init = function () {
 	this.Animators = new Array();
 	this.AbsoluteTransformation = new CL3D.Matrix4()
 };
+
 CL3D.SceneNode.prototype.Pos = null;
 CL3D.SceneNode.prototype.Rot = null;
 CL3D.SceneNode.prototype.Scale = null;
@@ -4002,6 +4004,15 @@ CL3D.SceneNode.prototype.Name = "";
 CL3D.SceneNode.prototype.Id = -1;
 CL3D.SceneNode.prototype.Selector = null;
 CL3D.SceneNode.prototype.Parent = null;
+CL3D.SceneNode.prototype.setVisible = function (value) {
+	this.Visible = value;
+
+	if (this.scene)
+		this.scene.updateNodesToRender();
+};
+CL3D.SceneNode.prototype.getVisible = function () {
+	return this.Visible;
+};
 CL3D.SceneNode.prototype.getParent = function () {
 	return this.Parent
 };
@@ -4033,7 +4044,7 @@ CL3D.SceneNode.prototype.getTransformedBoundingBox = function () {
 };
 CL3D.SceneNode.prototype.cloneMembers = function (a, e) {
 	a.Name = new String(this.Name);
-	a.Visible = this.Visible;
+	a.setVisible(this.getVisible());
 	a.Culling = this.Culling;
 	a.Pos = this.Pos.clone();
 	a.Rot = this.Rot.clone();
@@ -4086,19 +4097,24 @@ CL3D.SceneNode.prototype.addChild = function (a) {
 		}
 		a.Parent = this;
 		this.Children.push(a)
+
+		a.OnRegisterSceneNode(this.scene); // Every node adds itself to the render list
 	}
 };
 CL3D.SceneNode.prototype.removeChild = function (b) {
 	for (var a = 0; a < this.Children.length; ++a) {
 		if (this.Children[a] === b) {
+
 			b.Parent = null;
 			this.Children.splice(a, 1);
+
+			this.scene.updateNodesToRender();
 			return
 		}
 	}
 };
 CL3D.SceneNode.prototype.OnRegisterSceneNode = function (b) {
-	if (this.Visible) {
+	if (this.getVisible()) {
 		for (var a = 0; a < this.Children.length; ++a) {
 			var d = this.Children[a];
 			d.OnRegisterSceneNode(b)
@@ -4107,7 +4123,7 @@ CL3D.SceneNode.prototype.OnRegisterSceneNode = function (b) {
 };
 CL3D.SceneNode.prototype.OnAnimate = function (h, k) {
 	var e = false;
-	if (this.Visible) {
+	if (this.getVisible()) {
 		var f;
 		var b = this.Animators.length;
 		for (f = 0; f < b;) {
@@ -4368,7 +4384,7 @@ CL3D.MeshSceneNode.prototype.getType = function () {
 };
 CL3D.MeshSceneNode.prototype.OnRegisterSceneNode = function (d) {
 	var f = this.OwnedMesh;
-	if (this.Visible && f) {
+	if (this.getVisible() && f) {
 		var e = false;
 		var a = false;
 		for (var c = 0; c < f.MeshBuffers.length; ++c) {
@@ -4484,7 +4500,7 @@ CL3D.SkyBoxSceneNode.prototype.createVertex = function (g, f, e, d, c, b, i, h) 
 	return a
 };
 CL3D.SkyBoxSceneNode.prototype.OnRegisterSceneNode = function (a) {
-	if (this.Visible) {
+	if (this.getVisible()) {
 		a.registerNodeForRendering(this, 1);
 		CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, a)
 	}
@@ -4615,7 +4631,7 @@ CL3D.BillboardSceneNode.prototype.getType = function () {
 	return "billboard"
 };
 CL3D.BillboardSceneNode.prototype.OnRegisterSceneNode = function (a) {
-	if (this.Visible) {
+	if (this.getVisible()) {
 		a.registerNodeForRendering(this, this.MeshBuffer.Mat.isTransparent() ? CL3D.Scene.RENDER_MODE_TRANSPARENT : CL3D.Scene.RENDER_MODE_DEFAULT);
 		CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, a)
 	}
@@ -4863,7 +4879,7 @@ CL3D.SoundSceneNode.prototype.getType = function () {
 	return "sound"
 };
 CL3D.SoundSceneNode.prototype.OnRegisterSceneNode = function (a) {
-	if (this.Visible) {
+	if (this.getVisible()) {
 		a.registerNodeForRendering(this, CL3D.Scene.RENDER_MODE_DEFAULT);
 		CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, a)
 	}
@@ -5069,7 +5085,7 @@ CL3D.Overlay2DSceneNode.prototype.setText = function (a) {
 	this.DrawText = this.Text != null && this.Text != ""
 };
 CL3D.Overlay2DSceneNode.prototype.OnRegisterSceneNode = function (a) {
-	if (this.Visible) {
+	if (this.getVisible()) {
 		a.registerNodeForRendering(this, CL3D.Scene.RENDER_MODE_2DOVERLAY);
 		CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, a)
 	}
@@ -5368,7 +5384,7 @@ CL3D.AnimatedMeshSceneNode.prototype.getType = function () {
 	return "animatedmesh"
 };
 CL3D.AnimatedMeshSceneNode.prototype.OnRegisterSceneNode = function (a) {
-	if (this.Visible && this.Mesh) {
+	if (this.getVisible() && this.Mesh) {
 		a.registerNodeForRendering(this, CL3D.Scene.RENDER_MODE_DEFAULT);
 		CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, a)
 	}
@@ -5526,7 +5542,7 @@ CL3D.AnimatedMeshSceneNode.prototype.OnAnimate = function (c, e) {
 	}
 	return CL3D.SceneNode.prototype.OnAnimate.call(this, c, e)
 };
-CL3D.AnimatedMeshSceneNode.prototype.render = function (c) {
+CL3D.AnimatedMeshSceneNode.prototype.render = function (c) { //SS: this
 	c.setWorld(this.AbsoluteTransformation);
 	var d = this.Mesh;
 	if (d) {
@@ -5540,7 +5556,7 @@ CL3D.AnimatedMeshSceneNode.prototype.render = function (c) {
 				c.setWorld(this.AbsoluteTransformation.multiply(a.Transformation))
 			}
 			c.setMaterial(a.Mat);
-			c.drawMeshBuffer(a);
+			c.drawMeshBuffer(a); //SS: this
 			if (a.Transformation != null) {
 				c.setWorld(this.AbsoluteTransformation)
 			}
@@ -6408,7 +6424,7 @@ CL3D.AnimatorOnClick.prototype.animateNode = function (d, c) {
 			if (a - this.engine.LastCameraDragTime < 250) {
 				return false
 			}
-			if (d.Visible && this.isOverNode(d, this.PositionClickedX, this.PositionClickedY)) {
+			if (d.getVisible() && this.isOverNode(d, this.PositionClickedX, this.PositionClickedY)) {
 				if (this.FunctionToCall) {
 					this.FunctionToCall()
 				}
@@ -7362,7 +7378,7 @@ CL3D.AnimatorGameAI.prototype.isPositionVisibleFromPosition = function (b, a) {
 	return true
 };
 CL3D.AnimatorGameAI.prototype.getNearestSceneNodeFromAIAnimatorAndDistance = function (e, f, a) {
-	if (!e || !e.Visible) {
+	if (!e || !e.getVisible()) {
 		return
 	}
 	var d = false;
@@ -8807,14 +8823,25 @@ CL3D.Scene.prototype.doAnimate = function (b) {
 CL3D.Scene.prototype.getCurrentRenderMode = function () {
 	return this.CurrentRenderMode
 };
-CL3D.Scene.prototype.drawAll = function (f) {
+CL3D.Scene.prototype.updateNodesToRender = function(){
+	delete this.SceneNodesToRender;
+	delete this.SceneNodesToRenderTransparent;
+	delete this.LightsToRender;
+	delete this.Overlay2DToRender;
+
 	this.SceneNodesToRender = new Array();
 	this.SceneNodesToRenderTransparent = new Array();
 	this.LightsToRender = new Array();
 	this.Overlay2DToRender = new Array();
-	this.RootNode.OnRegisterSceneNode(this);
+	this.RootNode.OnRegisterSceneNode(this);//SS: fill all the above arrays (pushes all the elements to be rendered)
+}
+CL3D.Scene.prototype.drawAll = function (f) {
+	var a = 0; //Rendered Nodes Counter
+	var b= null; //ActiveCamera
+	var h = null; //Camera Bounding Box
+
 	this.CurrentRenderMode = CL3D.Scene.RENDER_MODE_CAMERA;
-	var b = null;
+	
 	if (this.ActiveCamera) {
 		b = this.ActiveCamera.getAbsolutePosition();
 		this.ActiveCamera.render(f)
@@ -8823,10 +8850,9 @@ CL3D.Scene.prototype.drawAll = function (f) {
 	if (this.SkyBoxSceneNode) {
 		this.SkyBoxSceneNode.render(f)
 	}
-	f.clearDynamicLights();
-	f.AmbientLight = this.AmbientLight.clone();
-	var d;
-	var a = 0;
+	//f.clearDynamicLights();
+	//f.AmbientLight = this.AmbientLight.clone(); //SS: clone returns a new object, leaving the object f.AmbientLight is pointing to anreachable
+	/*var d;	
 	if (b != null && this.LightsToRender.length > 0) {
 		this.LightsToRender.sort(function (l, i) {
 			var m = b.getDistanceFromSQ(l.getAbsolutePosition());
@@ -8844,8 +8870,8 @@ CL3D.Scene.prototype.drawAll = function (f) {
 	for (d = 0; d < this.LightsToRender.length; ++d) {
 		this.LightsToRender[d].render(f)
 	}
-	a += this.LightsToRender.length;
-	var h = null;
+	a += this.LightsToRender.length;*/
+
 	if (this.UseCulling) {
 		var e = null;
 		var c = f.getProjection();
@@ -8893,6 +8919,7 @@ CL3D.Scene.prototype.drawAll = function (f) {
 	this.NodeCountRenderedLastTime = a;
 	this.StoreViewMatrixForRedrawCheck()
 };
+
 CL3D.Scene.prototype.HasViewChangedSinceLastRedraw = function () {
 	if (!this.ActiveCamera) {
 		return true
@@ -9049,18 +9076,6 @@ CL3D.Scene.prototype.registerSceneNodeAnimatorForEvents = function (b) {
 		}
 	}
 	this.RegisteredSceneNodeAnimatorsForEventsList.push(b)
-};
-CL3D.Scene.prototype.unregisterSceneNodeAnimatorForEvents = function (b) {
-	if (b == null) {
-		return
-	}
-	for (var c = 0; c < this.RegisteredSceneNodeAnimatorsForEventsList.length; ++c) {
-		var d = this.RegisteredSceneNodeAnimatorsForEventsList[c];
-		if (d === b) {
-			this.RegisteredSceneNodeAnimatorsForEventsList.splice(c, 1);
-			return
-		}
-	}
 };
 CL3D.Scene.prototype.postMouseDownToAnimators = function (c) {
 	for (var a = 0; a < this.RegisteredSceneNodeAnimatorsForEventsList.length; ++a) {
@@ -9463,7 +9478,7 @@ CL3D.FlaceLoader = function () {
 		var g = null;
 		var q = 0;
 		if (y == 0) {
-			s.Visible = i;
+			s.setVisible(i);
 			s.Name = C;
 			s.Culling = n
 		}
@@ -9481,7 +9496,7 @@ CL3D.FlaceLoader = function () {
 					v.Pos = e;
 					v.Rot = j;
 					v.Scale = z;
-					v.Visible = i;
+					v.setVisible(i);
 					v.Name = C;
 					v.Culling = n;
 					v.Id = l;
@@ -9497,7 +9512,7 @@ CL3D.FlaceLoader = function () {
 					o.Pos = e;
 					o.Rot = j;
 					o.Scale = z;
-					o.Visible = i;
+					o.setVisible(i);
 					o.Name = C;
 					o.Culling = n;
 					o.Id = l;
@@ -9513,7 +9528,7 @@ CL3D.FlaceLoader = function () {
 					w.Pos = e;
 					w.Rot = j;
 					w.Scale = z;
-					w.Visible = i;
+					w.setVisible(i);
 					w.Name = C;
 					w.Culling = n;
 					w.Id = l;
@@ -9529,7 +9544,7 @@ CL3D.FlaceLoader = function () {
 					t.Pos = e;
 					t.Rot = j;
 					t.Scale = z;
-					t.Visible = i;
+					t.setVisible(i);
 					t.Name = C;
 					t.Culling = n;
 					t.Id = l;
@@ -9545,7 +9560,7 @@ CL3D.FlaceLoader = function () {
 					a.Pos = e;
 					a.Rot = j;
 					a.Scale = z;
-					a.Visible = i;
+					a.setVisible(i);
 					a.Name = C;
 					a.Culling = n;
 					a.Id = l;
@@ -9561,7 +9576,7 @@ CL3D.FlaceLoader = function () {
 					u.Pos = e;
 					u.Rot = j;
 					u.Scale = z;
-					u.Visible = i;
+					u.setVisible(i);
 					u.Name = C;
 					u.Culling = n;
 					u.scene = x;
@@ -9577,7 +9592,7 @@ CL3D.FlaceLoader = function () {
 					k.Pos = e;
 					k.Rot = j;
 					k.Scale = z;
-					k.Visible = i;
+					k.setVisible(i);
 					k.Name = C;
 					k.Culling = n;
 					k.Id = l;
@@ -9593,7 +9608,7 @@ CL3D.FlaceLoader = function () {
 					m.Pos = e;
 					m.Rot = j;
 					m.Scale = z;
-					m.Visible = i;
+					m.setVisible(i);
 					m.Name = C;
 					m.Culling = n;
 					m.Id = l;
@@ -9609,7 +9624,7 @@ CL3D.FlaceLoader = function () {
 					A.Pos = e;
 					A.Rot = j;
 					A.Scale = z;
-					A.Visible = i;
+					A.setVisible(i);
 					A.Name = C;
 					A.Culling = n;
 					A.Id = l;
@@ -9625,7 +9640,7 @@ CL3D.FlaceLoader = function () {
 					b.Pos = e;
 					b.Rot = j;
 					b.Scale = z;
-					b.Visible = i;
+					b.setVisible(i);
 					b.Name = C;
 					b.Culling = n;
 					b.Id = l;
@@ -9644,7 +9659,7 @@ CL3D.FlaceLoader = function () {
 					r.Pos = e;
 					r.Rot = j;
 					r.Scale = z;
-					r.Visible = i;
+					r.setVisible(i);
 					r.Name = C;
 					r.Culling = n;
 					r.Id = l;
@@ -10629,7 +10644,7 @@ CL3D.TriangleSelector.prototype.getCollisionPointWithLine = function (e, d, f, m
 	if (!e || !d) {
 		return null
 	}
-	if (this.Node != null && a && this.Node.Visible == false) {
+	if (this.Node != null && a && this.Node.getVisible() == false) {
 		return null
 	}
 	var h = new CL3D.Box3d();
