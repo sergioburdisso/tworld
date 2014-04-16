@@ -1,0 +1,292 @@
+<html>
+<head>
+	<title>Tileworld</title>
+	<!--<link href='http://fonts.googleapis.com/css?family=Exo:400,500,700,800,900' rel='stylesheet' type='text/css'>-->
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<script type="text/javascript" src="./lib/solid-loader.js"></script>
+	<style type="text/css">
+		body {
+			background-color:#000000;
+			color: white;
+			font-family:Arial, Helvetica, sans-serif;
+		}
+		
+		html {
+			overflow:hidden;
+		}
+
+		.element {
+			z-index: 2;
+		}
+
+		.title{}
+
+		.no-selection {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		.no-events {
+			pointer-events: none
+		}
+	
+		.fps {
+			position:absolute;
+			background-color: black;
+			top:0;
+			display:inline;
+			/*font-family:Arial, Helvetica, sans-serif;*/
+			font-size:15px;
+			color:white;
+		}
+
+		.menu {
+			background-color : #F1F1F1;
+			border-bottom: 1px solid #e8e8e8;
+			color: black;
+			font-size: 20px;
+			font-weight: 800;
+			font-family: arial,sans-serif;/*'Exo', sans-serif*/
+			width:auto;
+			height:0px;
+		}
+
+		.piepagina {
+			float:left;
+			padding: 0 10px 0 10px;
+			border-right: 1px solid rgba(255,255,255,1);
+		}
+	</style>
+</head>
+<body>
+	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;">  
+		<div id="score-up" class="no-selection element" style="position:absolute; z-index: 11; color: rgb(121, 255, 133); font-weight:bold; font-size:40px; text-shadow: 0 0 20px #44ff5e;">0</div>
+		<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>
+		<div id="fps" class="fps no-selection element" style="z-index: 9;">00 fps</div>
+		<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">
+		<img id="pauseBtn" src="imgs/pause.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">
+		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9">
+			<ul style="margin:7px; padding:0; list-style:none; pointer-events: auto">
+				<li id="sb-logo" style="float:left; overflow:hidden; ">
+					<a target="_blank" href="">
+						<img src="imgs/sb-logo.png" alt="A creation of Sergio Burdisso" border="0">
+					</a>
+				</li>
+				<li id="logos-line" style="float:left;margin-top: 4px; height: 24px; border-right: 1px solid rgba(255,255,255,0.5);">&nbsp;</li>
+				<li id="unsl-logo" style="float:left; padding-left:8px; overflow:hidden; ">
+					<a target="_blank" href="http://www.unsl.edu.ar">
+						<img src="imgs/unsl.png" alt="This is a UNSL thesis project" border="0">
+					</a>
+				</li>
+				<li style="float:left">&nbsp;</li>
+			</ul>
+			<ul id="pie-derecho" style="margin:7px; padding:0; float:right; font-size:10px; line-height: 18px; list-style:none; pointer-events: auto">
+				<li class="piepagina">
+					TECHNOLOGY
+				</li>
+				<li class="piepagina">
+					CREDITS
+				</li>
+				<li style="float:left;	padding: 0 5px 0 10px;">
+					SHARE
+				</li>
+				<li  style="float:left;	padding: 0 5px 0 5px;">
+					<a target="_blank" href="http://www.facebook.com/sharer.php?u=http://www.unsl.edu.ar?fb=1">
+						<img src="imgs/fb-icon.png" alt="" border="0">
+					</a>
+				</li>
+				<li  style="float:left;	padding: 0 5px 0 5px;">
+					<a target="_blank" href="http://twitter.com/share?text=%E2%80%9C3D%20tileworld%E2%80%9D%E2%80%A6%20An%20Interactive%20game%20for%20you%20to%20put%20your%20AI%20algorithms%20through%20their%20paces%20http%3A%2F%2Fwww.unsl.edu.ar%20%23AI%20%23webgl&url=">
+						<img src="imgs/twitter-icon.png" alt="" border="0">
+					</a>
+				</li>
+				<li  style="float:left;	padding: 0 5px 0 5px;">
+					<a target="_blank" href="https://plus.google.com/share?url=http%3A%2F%2Fwww.unsl.edu.ar">
+						<img src="imgs/gplus-icon.png" alt="" border="0">
+					</a>
+				</li>
+				<li style="float:left">&nbsp;</li>
+			</ul>
+			<span id="scoreParent" style="float:right; font-size:20px; margin-right: 15px; text-shadow: 0px 0px 10px white; opacity:0; display: none">
+				SCORE:&nbsp;<span id="score" style="font-size:30px; font-weight:bold; text-shadow: 0px 0px 10px cyan">0</span>
+			</span>
+		</div>
+		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: rgba(103,104,128,0.23) url('imgs/shadow_frame.png') no-repeat; background-size: 100% 100%;">
+			<div class="title" style="font-size:72px; font-weight: bold; padding-top:3%; text-shadow: 0 0 20px cyan">TILEWORLD</div>
+			<div class="title" style="font-size:48px;">SPACE VERSION</div>
+			<div class="title" style="font-size:18px; padding-top:13px;">
+				AN INTERACTIVE GAME FOR YOU TO PUT YOUR</br>AI ALGORITHMS THROUGH THEIR PACES
+			</div>
+			<div id="playFrame" style="width:100%; ">
+				<img id="playBtn" src="imgs/play.png" class ="element no-selection" style="position:relative; margin-left: -32px; padding-top: 90px">
+			</div>
+		</div>
+		<div id="frameColor" class="no-selection element" style="position: absolute; z-index: 11; display:none; width : 100%; height : 100%"></div>
+		<canvas id="tileworld" width="800" height="600" style="background-color : black; -webkit-filter: blur(5px); width : 100%; height : 100%"></canvas>
+	</div>
+	<script type="text/javascript">
+		var tileWorld;
+		var sound_keyboard;
+		//Ready function
+		window.onload=function(){
+			var _sound_music = new buzz.sound("./sounds/music.mp3");
+			sound_keyboard = new buzz.sound("./sounds/keyboard.mp3");
+			sound_keyboard.play().loop();
+
+			$("#tileworld").prop('width',$(window).width());
+			$("#tileworld").prop('height',$(window).height());
+
+			tileWorld = new Tileworld({
+							graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/Tileworld.ccbjs'),
+							dimension : [10, 10]
+						});
+
+			if (!_SHOW_FPS)
+				$("#fps").hide();
+
+			//Reset Button 
+			$("#resetBtn").mouseenter(function(e){
+				$("#resetBtn").prop("src", "imgs/restart_enter.png");
+			});
+			$("#resetBtn").mouseleave(function(e){
+				$("#resetBtn").prop("src", "imgs/restart.png");
+			});
+			$("#resetBtn").mousedown(function(e){
+				//TODO
+			});
+
+			//Pause Button
+			$("#pauseBtn").mouseenter(function(e){
+				$("#pauseBtn").prop("src", "imgs/pause_enter.png");
+			});
+			$("#pauseBtn").mouseleave(function(e){
+				$("#pauseBtn").prop("src", "imgs/pause.png");
+			});
+			$("#pauseBtn").mousedown(function(e){
+				togglePause();
+			});
+
+
+			//Play Button
+			$("#playBtn").mouseenter(function(e){
+				$("#playBtn").prop("src", "imgs/play_enter.png");
+			});
+			$("#playBtn").mouseleave(function(e){
+				$("#playBtn").prop("src", "imgs/play.png");
+			});
+			$("#playBtn").mousedown(function(e){
+				if (!_Ready){
+
+					sound_keyboard.stop();
+					_sound_music.loop().play();
+
+					_Ready = true;
+					$('#tileworld').css('-webkit-filter', '');
+					$('#playBtn').hide();
+					$('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
+
+					$("#resetBtn").show();
+					$("#pauseBtn").show();
+					$("#resetBtn").animate({opacity:1},500);
+					$("#pauseBtn").animate({opacity:1},500);
+					$(".title").animate({opacity:0},4000,function(){$(".title").hide()});
+
+					$("#logos-line").css({border:'none'});
+					$("#sb-logo").mouseleave();
+					$("#unsl-logo").mouseleave();
+					$("#pie-derecho").animate(
+						{opacity:0},
+						500,
+						function(){
+							$("#pie-derecho").hide();
+							$("#scoreParent").show();
+							$("#scoreParent").animate({opacity:1},1000);
+						}
+					);
+				}else
+					togglePause();
+			});
+
+			//Logos
+			$("#sb-logo").mouseenter(function(e){
+				$("#sb-logo").stop(true).animate({width:'119px', opacity: 1}, 100);
+			});
+			$("#sb-logo").mouseleave(function(e){
+				$("#sb-logo").stop(true).animate({width:'36px', opacity: _Ready? 0.2 : 1}, 500);
+			});
+
+			$("#unsl-logo").mouseenter(function(e){
+				$("#unsl-logo").stop(true).animate({width:'107px', opacity: 1}, 100);
+			});
+			$("#unsl-logo").mouseleave(function(e){
+				$("#unsl-logo").stop(true).animate({width:'30px', opacity: _Ready? 0.2 : 1}, 500);
+			});
+
+
+			$(window).resize(function() {
+				$("#fps").css({left: $("#tileworld").offset().left+($('#tileworld').width()-40)+"px"});
+				$("#pauseBtn").css({left: $("#tileworld").offset().left+"px"});
+				$("#resetBtn").css({left: ($("#tileworld").offset().left+((!_Pause)?64:0))+"px"});
+				$("#frameShadow").css({width: $('#frame').width()+"px", height: $('#frame').height()+"px"});
+			});
+
+			togglePause = function (){
+				if (_Pause = !_Pause){
+					$('#fps').hide();
+					$('#playBtn').show();
+					$('#playBtn').animate({opacity : 1, top : '+=150px'}, 400);
+					$("#frameShadow").animate({opacity : .3},700);
+					$("#frameShadow").css({'pointer-events':''});
+					$('#pauseBtn').animate({opacity : 0}, 400, function(){$('#pauseBtn').hide();});
+					$('#resetBtn').animate({left : '-=64'}, 400);
+					$('#menu').animate(
+						{height : '200px'},
+						{
+							duration: 400,
+							step: function(now, fx) {
+								$('#tileworld').css('-webkit-filter', 'blur('+now/50+'px)');
+							},
+							queue:false
+						}
+					);
+					$('#tileworld').css('background-color', 'blue');
+				}else{
+					$('#playBtn').animate({opacity : 0, top : '-=150px'}, 400, function(){$('#playBtn').hide();});
+					$("#frameShadow").animate({opacity : 1}, 100);
+					$("#frameShadow").css({'pointer-events':'none'});
+					$('#pauseBtn').show();
+					$('#pauseBtn').animate({opacity : 1}, 100);
+					$('#resetBtn').animate({left : '+=64'}, 100);
+					$('#menu').animate(
+						{height : 0},
+						{
+							duration: 100,
+							step: function(now, fx) {
+								$('#tileworld').css('-webkit-filter', 'blur('+now/50+'px)');
+							},
+							complete: function(){
+								$('#fps').show();
+								$('#tileworld').css('-webkit-filter', '');
+							},
+							queue:false
+						});
+					$('#tileworld').css('background-color', 'black');
+				}
+			}
+
+			$("#frameShadow").css({top: 0});
+			$("#frameColor").hide();
+			$("#score-up").hide();
+			$(window).resize();
+		};
+		/*$("#playBtn").load(function(){
+			$(window).resize();
+		});*/
+
+	</script>
+</body>
+</html>
