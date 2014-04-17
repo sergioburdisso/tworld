@@ -370,6 +370,8 @@ CL3D.Vect3d.prototype.multiplyThisWithVect = function (a) {
 	this.X *= a.X;
 	this.Y *= a.Y;
 	this.Z *= a.Z
+
+	return this;
 };
 CL3D.Vect3d.prototype.multiplyWithVect = function (a) {
 	return new CL3D.Vect3d(this.X * a.X, this.Y * a.Y, this.Z * a.Z)
@@ -378,13 +380,15 @@ CL3D.Vect3d.prototype.divideThisThroughVect = function (a) {
 	this.X /= a.X;
 	this.Y /= a.Y;
 	this.Z /= a.Z
+
+	return this;
 };
 CL3D.Vect3d.prototype.divideThroughVect = function (a) {
 	return new CL3D.Vect3d(this.X / a.X, this.Y / a.Y, this.Z / a.Z)
 };
-CL3D.Vect3d.prototype.crossProduct = function (a) {
+/*CL3D.Vect3d.prototype.crossProduct = function (a) {
 	return new CL3D.Vect3d(this.Y * a.Z - this.Z * a.Y, this.Z * a.X - this.X * a.Z, this.X * a.Y - this.Y * a.X)
-};
+};*/
 CL3D.Vect3d.prototype.crossProductTo = function (a) {
 	this.set(this.Y * a.Z - this.Z * a.Y, this.Z * a.X - this.X * a.Z, this.X * a.Y - this.Y * a.X);
 	return this;
@@ -6032,12 +6036,12 @@ CL3D.AnimatorCameraModelViewer.prototype.animateNode = function (e, c) {
 			this.SlidingMoveY = d * (this.SlidingSpeed / 1000)
 		}
 	}
-	var k = _tempV2.crossProduct(this.Camera.UpVector);
-	k.Y = 0;
-	k.normalize();
+	_tempV5.setTo(_tempV2).crossProductTo(this.Camera.UpVector);//var k = _tempV2.crossProduct(this.Camera.UpVector);
+	_tempV5.Y = 0;
+	_tempV5.normalize();
 	if (!CL3D.iszero(f)) {
-		k.multiplyThisWithScal(a * f);
-		_tempV0.addToThis(k)
+		_tempV5.multiplyThisWithScal(a * f);
+		_tempV0.addToThis(_tempV5)
 	}
 	if (!this.NoVerticalMovement && !CL3D.iszero(d)) {
 		_tempV5.setTo( this.Camera.UpVector );//var h = this.Camera.UpVector.clone();
@@ -6369,15 +6373,15 @@ CL3D.AnimatorFlyCircle.prototype.animateNode = function (e, d) {
 CL3D.AnimatorFlyCircle.prototype.init = function () {
 	this.Direction.normalize();
 	if (this.Direction.Y != 0) {
-		this.VecV = new CL3D.Vect3d(50, 0, 0);
-		this.VecV = this.VecV.crossProduct(this.Direction);
+		this.VecV.set(50, 0, 0);
+		this.VecV.crossProductTo(this.Direction);
 		this.VecV.normalize()
 	} else {
-		this.VecV = new CL3D.Vect3d(0, 50, 0);
-		this.VecV = this.VecV.crossProduct(this.Direction);
+		this.VecV.set(0, 50, 0);
+		this.VecV.crossProductTo(this.Direction);
 		this.VecV.normalize()
 	}
-	this.VecU = this.VecV.crossProduct(this.Direction);
+	this.VecU.setTo(this.VecV).crossProductTo(this.Direction);
 	this.VecU.normalize()
 };
 CL3D.AnimatorRotation = function (a) {
