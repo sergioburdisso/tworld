@@ -271,9 +271,9 @@ CL3D.Vect3d.prototype.copyTo = function (a) {
 	a.Y = this.Y;
 	a.Z = this.Z
 };
-CL3D.Vect3d.prototype.substract2 = function (a) {
+/*CL3D.Vect3d.prototype.substract = function (a) {
 	return new CL3D.Vect3d(this.X - a.X, this.Y - a.Y, this.Z - a.Z)
-};
+};*/
 CL3D.Vect3d.prototype.substractFromThis = function (a) {
 	this.X -= a.X;
 	this.Y -= a.Y;
@@ -281,9 +281,9 @@ CL3D.Vect3d.prototype.substractFromThis = function (a) {
 
 	return this;
 };
-CL3D.Vect3d.prototype.add = function (a) {
+/*CL3D.Vect3d.prototype.add = function (a) {
 	return new CL3D.Vect3d(this.X + a.X, this.Y + a.Y, this.Z + a.Z)
-};
+};*/
 CL3D.Vect3d.prototype.addToThis = function (a) {
 	this.X += a.X;
 	this.Y += a.Y;
@@ -356,13 +356,13 @@ CL3D.Vect3d.prototype.getDistanceFromSQ = function (b) {
 CL3D.Vect3d.prototype.getLengthSQ = function () {
 	return this.X * this.X + this.Y * this.Y + this.Z * this.Z
 };
-CL3D.Vect3d.prototype.multiplyWithScal = function (a) {
+/*CL3D.Vect3d.prototype.multiplyWithScal = function (a) {
 	return new CL3D.Vect3d(this.X * a, this.Y * a, this.Z * a)
-};
+};*/
 CL3D.Vect3d.prototype.multiplyThisWithScal = function (a) {
 	this.X *= a;
 	this.Y *= a;
-	this.Z *= a
+	this.Z *= a;
 
 	return this;
 };
@@ -419,6 +419,8 @@ var _tempV0 = new CL3D.Vect3d();
 var _tempV1 = new CL3D.Vect3d();
 var _tempV2 = new CL3D.Vect3d();
 var _tempV3 = new CL3D.Vect3d();
+var _tempV4 = new CL3D.Vect3d();
+var _tempV5 = new CL3D.Vect3d();
 
 //Class Line3d
 CL3D.Line3d = function () {
@@ -2913,21 +2915,21 @@ CL3D.SkinnedMesh.prototype.skinMesh = function () {
 CL3D.SkinnedMesh.prototype.skinJoint = function (e, b) {
 	if (e.Weights.length) {
 		var m = e.GlobalAnimatedMatrix.multiply(e.GlobalInversedMatrix);
-		var d = new CL3D.Vect3d();
-		var c = new CL3D.Vect3d();
+		//var d = new CL3D.Vect3d(); _tempV0
+		//var c = new CL3D.Vect3d(); _tempV1
 		var f = this.LocalBuffers;
 		var l;
 		var a;
 		for (var h = 0; h < e.Weights.length; ++h) {
 			var k = e.Weights[h];
-			m.transformVect2(d, k.StaticPos);
+			m.transformVect2(_tempV0, k.StaticPos);
 			l = f[k.buffer_id];
 			a = l.Vertices[k.vertex_id];
 			if (!this.Vertices_Moved[k.buffer_id][k.vertex_id]) {
 				this.Vertices_Moved[k.buffer_id][k.vertex_id] = true;
-				a.Pos = d.multiplyWithScal(k.strength)
+				a.Pos.setTo(_tempV0.multiplyThisWithScal(k.strength));
 			} else {
-				a.Pos.addToThis(d.multiplyWithScal(k.strength))
+				a.Pos.addToThis(_tempV0.multiplyThisWithScal(k.strength))
 			}
 		}
 	}
@@ -4325,7 +4327,7 @@ CL3D.CameraSceneNode.prototype.setTarget = function (a) {
 		this.Target = a.clone();
 		if (this.TargetAndRotationAreBound) {
 			this.updateAbsolutePosition();
-			this.Rot = a.substract(this.getAbsolutePosition()).getHorizontalAngle()
+			this.Rot.setTo(a).substractFromThis(this.getAbsolutePosition()).getHorizontalAngle()
 		}
 	}
 };
@@ -6038,14 +6040,14 @@ CL3D.AnimatorCameraModelViewer.prototype.animateNode = function (e, c) {
 		_tempV0.addToThis(k)
 	}
 	if (!this.NoVerticalMovement && !CL3D.iszero(d)) {
-		var h = this.Camera.UpVector.clone();
-		h.normalize();
-		var j = _tempV0.add(h.multiplyWithScal(a * d));
-		var g = j.clone();
-		g.Y = _tempV1.Y;
+		_tempV5.setTo( this.Camera.UpVector );//var h = this.Camera.UpVector.clone();
+		_tempV5.normalize();
+		_tempV3.setTo(_tempV0).addToThis( _tempV5.multiplyThisWithScal(a * d) );//var j = _tempV0.add(h.multiplyWithScal(a * d));
+		_tempV4.setTo( _tempV3 );//var g = _tempV3.clone();
+		_tempV4.Y = _tempV1.Y;
 		var o = this.Radius / 10;
-		if (g.getDistanceTo(_tempV1) > o) {
-			_tempV0= j
+		if (_tempV4.getDistanceTo(_tempV1) > o) {
+			_tempV0.setTo(_tempV3);
 		}
 	}
 	this.CursorControl.setMouseDownWhereMouseIsNow();
@@ -6357,9 +6359,9 @@ CL3D.AnimatorFlyCircle.prototype.animateNode = function (e, d) {
 	var c = (d - this.StartTime);
 	if (c != 0) {
 		var b = c * this.Speed;
-		var a = this.VecU.multiplyWithScal(Math.cos(b)).add(this.VecV.multiplyWithScal(Math.sin(b)));
-		a.multiplyThisWithScal(this.Radius);
-		e.Pos = this.Center.add(a);
+		_tempV0.setTo(this.VecU).multiplyThisWithScal(Math.cos(b)).addToThis(_tempV1.setTo(this.VecV).multiplyThisWithScal(Math.sin(b)));
+		_tempV0.multiplyThisWithScal(this.Radius);
+		e.Pos.setTo(this.Center).addToThis(_tempV0);
 		return true
 	}
 	return false
@@ -6396,7 +6398,7 @@ CL3D.AnimatorRotation.prototype.animateNode = function (g, f) {
 	var c = f - this.StartTime;
 	if (!this.RotateToTargetAndStop) {
 		if (c != 0) {
-			g.Rot.addToThis(this.Rotation.multiplyWithScal(c / 10));
+			g.Rot.addToThis(_tempV0.setTo(this.Rotation).multiplyThisWithScal(c / 10));
 			this.StartTime = f;
 			return true
 		}
