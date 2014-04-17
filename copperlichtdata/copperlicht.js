@@ -55,7 +55,6 @@ CL3D.DebugOutput.prototype.updatefps = function (c) {
 		this.FPSRootText.nodeValue = a;
 		this.lasttime = b;
 		this.frames = 0
-		console.log("fps");
 	}
 };
 CL3D.DebugOutput.prototype.print = function (a) {
@@ -220,6 +219,8 @@ CL3D.createColor = function (d, f, e, c) {
 	c = c & 255;
 	return (d << 24) | (f << 16) | (e << 8) | c
 };
+
+//Class ColorF
 CL3D.ColorF = function () {
 	this.A = 1;
 	this.R = 1;
@@ -243,6 +244,8 @@ CL3D.CLTimer.getTime = function () {
 	//var a = new Date();
 	return Date.now(); //a.getTime()
 };
+
+//Class Vect3d
 CL3D.Vect3d = function (a, c, b) {
 	if (a != null) {
 		this.X = a;
@@ -256,7 +259,9 @@ CL3D.Vect3d.prototype.Z = 0;
 CL3D.Vect3d.prototype.set = function (a, c, b) {
 	this.X = a;
 	this.Y = c;
-	this.Z = b
+	this.Z = b;
+
+	return this;
 };
 CL3D.Vect3d.prototype.clone = function () {
 	return new CL3D.Vect3d(this.X, this.Y, this.Z)
@@ -266,13 +271,15 @@ CL3D.Vect3d.prototype.copyTo = function (a) {
 	a.Y = this.Y;
 	a.Z = this.Z
 };
-CL3D.Vect3d.prototype.substract = function (a) {
+CL3D.Vect3d.prototype.substract2 = function (a) {
 	return new CL3D.Vect3d(this.X - a.X, this.Y - a.Y, this.Z - a.Z)
 };
 CL3D.Vect3d.prototype.substractFromThis = function (a) {
 	this.X -= a.X;
 	this.Y -= a.Y;
 	this.Z -= a.Z
+
+	return this;
 };
 CL3D.Vect3d.prototype.add = function (a) {
 	return new CL3D.Vect3d(this.X + a.X, this.Y + a.Y, this.Z + a.Z)
@@ -281,12 +288,8 @@ CL3D.Vect3d.prototype.addToThis = function (a) {
 	this.X += a.X;
 	this.Y += a.Y;
 	this.Z += a.Z
-};
-CL3D.Vect3d.prototype.addToThisReturnMe = function (a) {
-	this.X += a.X;
-	this.Y += a.Y;
-	this.Z += a.Z;
-	return this
+
+	return this;
 };
 CL3D.Vect3d.prototype.normalize = function () {
 	var a = this.X * this.X + this.Y * this.Y + this.Z * this.Z;
@@ -320,6 +323,8 @@ CL3D.Vect3d.prototype.setTo = function (a) {
 	this.X = a.X;
 	this.Y = a.Y;
 	this.Z = a.Z
+
+	return this;
 };
 CL3D.Vect3d.prototype.equals = function (a) {
 	return CL3D.equals(this.X, a.X) && CL3D.equals(this.Y, a.Y) && CL3D.equals(this.Z, a.Z)
@@ -358,12 +363,8 @@ CL3D.Vect3d.prototype.multiplyThisWithScal = function (a) {
 	this.X *= a;
 	this.Y *= a;
 	this.Z *= a
-};
-CL3D.Vect3d.prototype.multiplyThisWithScalReturnMe = function (a) {
-	this.X *= a;
-	this.Y *= a;
-	this.Z *= a;
-	return this
+
+	return this;
 };
 CL3D.Vect3d.prototype.multiplyThisWithVect = function (a) {
 	this.X *= a.X;
@@ -383,6 +384,10 @@ CL3D.Vect3d.prototype.divideThroughVect = function (a) {
 };
 CL3D.Vect3d.prototype.crossProduct = function (a) {
 	return new CL3D.Vect3d(this.Y * a.Z - this.Z * a.Y, this.Z * a.X - this.X * a.Z, this.X * a.Y - this.Y * a.X)
+};
+CL3D.Vect3d.prototype.crossProductTo = function (a) {
+	this.set(this.Y * a.Z - this.Z * a.Y, this.Z * a.X - this.X * a.Z, this.X * a.Y - this.Y * a.X);
+	return this;
 };
 CL3D.Vect3d.prototype.dotProduct = function (a) {
 	return this.X * a.X + this.Y * a.Y + this.Z * a.Z
@@ -409,18 +414,31 @@ CL3D.Vect3d.prototype.getHorizontalAngle = function () {
 CL3D.Vect3d.prototype.toString = function () {
 	return "(x: " + this.X + " y:" + this.Y + " z:" + this.Z + ")"
 };
+
+var _tempV0 = new CL3D.Vect3d();
+var _tempV1 = new CL3D.Vect3d();
+var _tempV2 = new CL3D.Vect3d();
+var _tempV3 = new CL3D.Vect3d();
+
+//Class Line3d
 CL3D.Line3d = function () {
 	this.Start = new CL3D.Vect3d();
 	this.End = new CL3D.Vect3d()
+
+	this.Vector = new CL3D.Vector3d();
 };
 CL3D.Line3d.prototype.Start = null;
 CL3D.Line3d.prototype.End = null;
 CL3D.Line3d.prototype.getVector = function () {
-	return this.End.substract(this.Start)
+	this.Vector.setTo(this.End);
+	this.Vector.substractFromThis(this.Start);
+	return this.Vector;
 };
 CL3D.Line3d.prototype.getLength = function () {
 	return this.getVector().getLength()
 };
+
+//Class Vect2d
 CL3D.Vect2d = function (a, b) {
 	if (a == null) {
 		this.X = 0;
@@ -432,9 +450,18 @@ CL3D.Vect2d = function (a, b) {
 };
 CL3D.Vect2d.prototype.X = 0;
 CL3D.Vect2d.prototype.Y = 0;
+
+//Class Box3d
 CL3D.Box3d = function () {
 	this.MinEdge = new CL3D.Vect3d();
-	this.MaxEdge = new CL3D.Vect3d()
+	this.MaxEdge = new CL3D.Vect3d();
+
+	this.Center = new CL3D.Vect3d();
+
+	this.Edges = new Array(8);
+
+	for (var i= 0; i < 8; ++i)
+		this.Edges[i] = new CL3D.Vect3d();
 };
 CL3D.Box3d.prototype.MinEdge = null;
 CL3D.Box3d.prototype.MaxEdge = null;
@@ -445,26 +472,28 @@ CL3D.Box3d.prototype.clone = function () {
 	return a
 };
 CL3D.Box3d.prototype.getCenter = function () {
-	var a = this.MinEdge.add(this.MaxEdge);
-	a.multiplyThisWithScal(0.5);
-	return a
+	this.Center.setTo(this.MinEdge);
+	this.Center.addToThis(this.MaxEdge);
+	this.Center.multiplyThisWithScal(0.5);
+	return this.Center;
 };
 CL3D.Box3d.prototype.getExtent = function () {
 	return this.MaxEdge.substract(this.MinEdge)
 };
 CL3D.Box3d.prototype.getEdges = function () {
 	var b = this.getCenter();
-	var c = b.substract(this.MaxEdge);
-	var a = new Array();
-	a.push(new CL3D.Vect3d(b.X + c.X, b.Y + c.Y, b.Z + c.Z));
-	a.push(new CL3D.Vect3d(b.X + c.X, b.Y - c.Y, b.Z + c.Z));
-	a.push(new CL3D.Vect3d(b.X + c.X, b.Y + c.Y, b.Z - c.Z));
-	a.push(new CL3D.Vect3d(b.X + c.X, b.Y - c.Y, b.Z - c.Z));
-	a.push(new CL3D.Vect3d(b.X - c.X, b.Y + c.Y, b.Z + c.Z));
-	a.push(new CL3D.Vect3d(b.X - c.X, b.Y - c.Y, b.Z + c.Z));
-	a.push(new CL3D.Vect3d(b.X - c.X, b.Y + c.Y, b.Z - c.Z));
-	a.push(new CL3D.Vect3d(b.X - c.X, b.Y - c.Y, b.Z - c.Z));
-	return a
+	_tempV0.setTo(b).substractFromThis(this.MaxEdge);
+
+	this.Edges[0].set(b.X + _tempV0.X, b.Y + _tempV0.Y, b.Z + _tempV0.Z);
+	this.Edges[1].set(b.X + _tempV0.X, b.Y - _tempV0.Y, b.Z + _tempV0.Z);
+	this.Edges[2].set(b.X + _tempV0.X, b.Y + _tempV0.Y, b.Z - _tempV0.Z);
+	this.Edges[3].set(b.X + _tempV0.X, b.Y - _tempV0.Y, b.Z - _tempV0.Z);
+	this.Edges[4].set(b.X - _tempV0.X, b.Y + _tempV0.Y, b.Z + _tempV0.Z);
+	this.Edges[5].set(b.X - _tempV0.X, b.Y - _tempV0.Y, b.Z + _tempV0.Z);
+	this.Edges[6].set(b.X - _tempV0.X, b.Y + _tempV0.Y, b.Z - _tempV0.Z);
+	this.Edges[7].set(b.X - _tempV0.X, b.Y - _tempV0.Y, b.Z - _tempV0.Z);
+
+	return this.Edges;
 };
 CL3D.Box3d.prototype.intersectsWithLine = function (d, e) {
 	var c = e.substract(d);
@@ -526,6 +555,8 @@ CL3D.Box3d.prototype.reset = function (a, c, b) {
 	this.MaxEdge.set(a, c, b);
 	this.MinEdge.set(a, c, b)
 };
+
+//Class Triangle3d
 CL3D.Plane3d = function () {
 	this.Normal = new CL3D.Vect3d(0, 1, 0);
 	this.recalculateD(new CL3D.Vect3d(0, 0, 0))
@@ -612,6 +643,8 @@ CL3D.Plane3d.prototype.isFrontFacing = function (b) {
 	var a = this.Normal.dotProduct(b);
 	return a <= 0
 };
+
+//Class Triangle3d
 CL3D.Triangle3d = function (e, d, f) {
 	if (e) {
 		this.pointA = e
@@ -694,10 +727,13 @@ CL3D.Triangle3d.prototype.copyTo = function (a) {
 	this.pointB.copyTo(a.pointB);
 	this.pointC.copyTo(a.pointC)
 };
+
+//Class Matrix4
 CL3D.Matrix4 = function (a) {
 	if (a == null) {
 		a = true
 	}
+
 	this.m00 = 0;
 	this.m01 = 0;
 	this.m02 = 0;
@@ -714,7 +750,9 @@ CL3D.Matrix4 = function (a) {
 	this.m13 = 0;
 	this.m14 = 0;
 	this.m15 = 0;
+
 	this.bIsIdentity = false;
+
 	if (a) {
 		this.m00 = 1;
 		this.m05 = 1;
@@ -722,6 +760,10 @@ CL3D.Matrix4 = function (a) {
 		this.m15 = 1;
 		this.bIsIdentity = true
 	}
+
+	this.Array = new Array(16);
+	this.Translation = new CL3D.Vect3d();
+	this.RotationDegrees = new CL3D.Vect3d();
 };
 CL3D.Matrix4.prototype.makeIdentity = function () {
 	this.m00 = 1;
@@ -759,7 +801,8 @@ CL3D.Matrix4.prototype.equals = function (a) {
 	return CL3D.equals(this.m00, a.m00) && CL3D.equals(this.m01, a.m01) && CL3D.equals(this.m02, a.m02) && CL3D.equals(this.m03, a.m03) && CL3D.equals(this.m04, a.m04) && CL3D.equals(this.m05, a.m05) && CL3D.equals(this.m06, a.m06) && CL3D.equals(this.m07, a.m07) && CL3D.equals(this.m08, a.m08) && CL3D.equals(this.m09, a.m09) && CL3D.equals(this.m10, a.m10) && CL3D.equals(this.m11, a.m11) && CL3D.equals(this.m12, a.m12) && CL3D.equals(this.m13, a.m13) && CL3D.equals(this.m14, a.m14) && CL3D.equals(this.m15, a.m15)
 };
 CL3D.Matrix4.prototype.getTranslation = function () {
-	return new CL3D.Vect3d(this.m12, this.m13, this.m14)
+	this.Translation.set(this.m12, this.m13, this.m14);
+	return this.Translation;
 };
 CL3D.Matrix4.prototype.getScale = function () {
 	return new CL3D.Vect3d(this.m00, this.m05, this.m10)
@@ -845,6 +888,32 @@ CL3D.Matrix4.prototype.multiply = function (a) {
 	b.m15 = this.m03 * a.m12 + this.m07 * a.m13 + this.m11 * a.m14 + this.m15 * a.m15;
 	return b
 };
+CL3D.Matrix4.prototype.multiplyByThis = function (a) {
+	if (this.bIsIdentity) {
+		a.copyTo(this);
+		return this;
+	}
+	if (a.bIsIdentity) 
+		return this;
+
+	this.m00 = this.m00 * a.m00 + this.m04 * a.m01 + this.m08 * a.m02 + this.m12 * a.m03;
+	this.m01 = this.m01 * a.m00 + this.m05 * a.m01 + this.m09 * a.m02 + this.m13 * a.m03;
+	this.m02 = this.m02 * a.m00 + this.m06 * a.m01 + this.m10 * a.m02 + this.m14 * a.m03;
+	this.m03 = this.m03 * a.m00 + this.m07 * a.m01 + this.m11 * a.m02 + this.m15 * a.m03;
+	this.m04 = this.m00 * a.m04 + this.m04 * a.m05 + this.m08 * a.m06 + this.m12 * a.m07;
+	this.m05 = this.m01 * a.m04 + this.m05 * a.m05 + this.m09 * a.m06 + this.m13 * a.m07;
+	this.m06 = this.m02 * a.m04 + this.m06 * a.m05 + this.m10 * a.m06 + this.m14 * a.m07;
+	this.m07 = this.m03 * a.m04 + this.m07 * a.m05 + this.m11 * a.m06 + this.m15 * a.m07;
+	this.m08 = this.m00 * a.m08 + this.m04 * a.m09 + this.m08 * a.m10 + this.m12 * a.m11;
+	this.m09 = this.m01 * a.m08 + this.m05 * a.m09 + this.m09 * a.m10 + this.m13 * a.m11;
+	this.m10 = this.m02 * a.m08 + this.m06 * a.m09 + this.m10 * a.m10 + this.m14 * a.m11;
+	this.m11 = this.m03 * a.m08 + this.m07 * a.m09 + this.m11 * a.m10 + this.m15 * a.m11;
+	this.m12 = this.m00 * a.m12 + this.m04 * a.m13 + this.m08 * a.m14 + this.m12 * a.m15;
+	this.m13 = this.m01 * a.m12 + this.m05 * a.m13 + this.m09 * a.m14 + this.m13 * a.m15;
+	this.m14 = this.m02 * a.m12 + this.m06 * a.m13 + this.m10 * a.m14 + this.m14 * a.m15;
+	this.m15 = this.m03 * a.m12 + this.m07 * a.m13 + this.m11 * a.m14 + this.m15 * a.m15;
+	return this;
+};
 CL3D.Matrix4.prototype.multiplyWith1x4Matrix = function (a) {
 	var b = a.clone();
 	b.W = a.W;
@@ -912,7 +981,24 @@ CL3D.Matrix4.prototype.getTransposed = function () {
 	return a
 };
 CL3D.Matrix4.prototype.asArray = function () {
-	return [this.m00, this.m01, this.m02, this.m03, this.m04, this.m05, this.m06, this.m07, this.m08, this.m09, this.m10, this.m11, this.m12, this.m13, this.m14, this.m15]
+	this.Array[0] = this.m00;
+	this.Array[1] = this.m01;
+	this.Array[2] = this.m02;
+	this.Array[3] = this.m03;
+	this.Array[4] = this.m04;
+	this.Array[5] = this.m05;
+	this.Array[6] = this.m06;
+	this.Array[7] = this.m07;
+	this.Array[8] = this.m08;
+	this.Array[9] = this.m09;
+	this.Array[10] = this.m10;
+	this.Array[11] = this.m11;
+	this.Array[12] = this.m12;
+	this.Array[13] = this.m13;
+	this.Array[14] = this.m14;
+	this.Array[15] = this.m15;
+
+	return this.Array;
 };
 CL3D.Matrix4.prototype.setByIndex = function (a, b) {
 	this.bIsIdentity = false;
@@ -1013,31 +1099,41 @@ CL3D.Matrix4.prototype.buildProjectionMatrixPerspectiveFovLH = function (e, d, f
 	this.bIsIdentity = false
 };
 CL3D.Matrix4.prototype.buildCameraLookAtMatrixLH = function (b, e, d) {
-	var a = e.substract(b);
-	a.normalize();
-	var f = d.crossProduct(a);
-	f.normalize();
-	var c = a.crossProduct(f);
-	this.m00 = f.X;
-	this.m01 = c.X;
-	this.m02 = a.X;
+	//a
+	_tempV0.setTo(e);
+	_tempV0.substractFromThis(b);
+	_tempV0.normalize();
+
+	//f
+	_tempV1.setTo(d);
+	_tempV1.crossProductTo(_tempV0);
+	_tempV1.normalize();
+
+	//c
+	_tempV2.setTo(_tempV0);
+	_tempV2.crossProductTo(_tempV1);
+
+	this.m00 = _tempV1.X;
+	this.m01 = _tempV2.X;
+	this.m02 = _tempV0.X;
 	this.m03 = 0;
-	this.m04 = f.Y;
-	this.m05 = c.Y;
-	this.m06 = a.Y;
+	this.m04 = _tempV1.Y;
+	this.m05 = _tempV2.Y;
+	this.m06 = _tempV0.Y;
 	this.m07 = 0;
-	this.m08 = f.Z;
-	this.m09 = c.Z;
-	this.m10 = a.Z;
+	this.m08 = _tempV1.Z;
+	this.m09 = _tempV2.Z;
+	this.m10 = _tempV0.Z;
 	this.m11 = 0;
-	this.m12 = -f.dotProduct(b);
-	this.m13 = -c.dotProduct(b);
-	this.m14 = -a.dotProduct(b);
+	this.m12 = -_tempV1.dotProduct(b);
+	this.m13 = -_tempV2.dotProduct(b);
+	this.m14 = -_tempV0.dotProduct(b);
 	this.m15 = 1;
 	this.bIsIdentity = false
 };
 CL3D.Matrix4.prototype.setRotationDegrees = function (a) {
-	this.setRotationRadians(a.multiplyWithScal(CL3D.DEGTORAD))
+	_tempV0.setTo(a).multiplyThisWithScal(CL3D.DEGTORAD);
+	this.setRotationRadians(_tempV0);
 };
 CL3D.Matrix4.prototype.setRotationRadians = function (i) {
 	var e = Math.cos(i.X);
@@ -1046,17 +1142,21 @@ CL3D.Matrix4.prototype.setRotationRadians = function (i) {
 	var c = Math.sin(i.Y);
 	var d = Math.cos(i.Z);
 	var g = Math.sin(i.Z);
+
 	this.m00 = (f * d);
 	this.m01 = (f * g);
 	this.m02 = (-c);
+
 	var h = a * c;
 	var b = e * c;
+
 	this.m04 = (h * d - e * g);
 	this.m05 = (h * g + e * d);
 	this.m06 = (a * f);
 	this.m08 = (b * d + a * g);
 	this.m09 = (b * g - a * d);
 	this.m10 = (e * f);
+
 	this.bIsIdentity = false
 };
 CL3D.Matrix4.prototype.getRotationDegrees = function () {
@@ -1089,7 +1189,7 @@ CL3D.Matrix4.prototype.getRotationDegrees = function () {
 	if (d < 0) {
 		d += 360
 	}
-	return new CL3D.Vect3d(g, f, d)
+	return this.RotationDegrees.set(g, f, d);
 };
 CL3D.Matrix4.prototype.setTranslation = function (a) {
 	this.m12 = a.X;
@@ -1125,7 +1225,10 @@ CL3D.Matrix4.prototype.transformBoxEx = function (d) {
 CL3D.Matrix4.prototype.toString = function () {
 	return this.m00 + " " + this.m01 + " " + this.m02 + " " + this.m03 + "\n" + this.m04 + " " + this.m05 + " " + this.m06 + " " + this.m07 + "\n" + this.m08 + " " + this.m09 + " " + this.m10 + " " + this.m11 + "\n" + this.m12 + " " + this.m13 + " " + this.m14 + " " + this.m15
 };
+
+//Class Quaternion
 CL3D.Quaternion = function (a, d, c, b) {
+	//console.log("Quaternion");
 	this.X = 0;
 	this.Y = 0;
 	this.Z = 0;
@@ -2631,7 +2734,8 @@ CL3D.SkinnedMesh.prototype.getFrameData = function (n, x, v, l, w, r, o, h) {
 					var f = c[s - 1];
 					k = n - g.frame;
 					j = f.frame - n;
-					v.setTo(f.position.substract(g.position).multiplyThisWithScalReturnMe(1 / (k + j)).multiplyThisWithScalReturnMe(k).addToThisReturnMe(g.position))
+					//v.setTo(f.position.substract(g.position).multiplyThisWithScal(1 / (k + j)).multiplyThisWithScal(k).addToThis(g.position))
+					v.setTo(f.position).substractFromThis(g.position).multiplyThisWithScal(1 / (k + j)).multiplyThisWithScal(k).addToThis(g.position);
 				}
 			}
 		}
@@ -2658,7 +2762,8 @@ CL3D.SkinnedMesh.prototype.getFrameData = function (n, x, v, l, w, r, o, h) {
 					var u = t[m - 1];
 					k = n - b.frame;
 					j = u.frame - n;
-					w.setTo(u.scale.substract(b.scale).multiplyThisWithScalReturnMe(1 / (k + j)).multiplyThisWithScalReturnMe(k).addToThisReturnMe(b.scale))
+					//w.setTo(u.scale.substract(b.scale).multiplyThisWithScal(1 / (k + j)).multiplyThisWithScal(k).addToThis(b.scale))
+					w.setTo(u.scale).substractFromThis(b.scale).multiplyThisWithScal(1 / (k + j)).multiplyThisWithScal(k).addToThis(b.scale);
 				}
 			}
 		}
@@ -5889,9 +5994,9 @@ CL3D.AnimatorCameraModelViewer.prototype.animateNode = function (e, c) {
 		a = 250
 	}
 	this.lastAnimTime = b;
-	var m = this.Camera.Pos.clone();
-	var i = this.Camera.Target.clone();
-	var l = i.substract(this.Camera.getAbsolutePosition());
+	_tempV0.setTo(this.Camera.Pos);//var m = this.Camera.Pos.clone();
+	_tempV1.setTo(this.Camera.Target);//var i = this.Camera.Target.clone();
+	_tempV2.setTo(_tempV1).substractFromThis(this.Camera.getAbsolutePosition());//var l = i.substract(this.Camera.getAbsolutePosition());
 	var f = 0;
 	var d = 0;
 	if (this.CursorControl.isMouseDown()) {
@@ -5925,29 +6030,29 @@ CL3D.AnimatorCameraModelViewer.prototype.animateNode = function (e, c) {
 			this.SlidingMoveY = d * (this.SlidingSpeed / 1000)
 		}
 	}
-	var k = l.crossProduct(this.Camera.UpVector);
+	var k = _tempV2.crossProduct(this.Camera.UpVector);
 	k.Y = 0;
 	k.normalize();
 	if (!CL3D.iszero(f)) {
 		k.multiplyThisWithScal(a * f);
-		m.addToThis(k)
+		_tempV0.addToThis(k)
 	}
 	if (!this.NoVerticalMovement && !CL3D.iszero(d)) {
 		var h = this.Camera.UpVector.clone();
 		h.normalize();
-		var j = m.add(h.multiplyWithScal(a * d));
+		var j = _tempV0.add(h.multiplyWithScal(a * d));
 		var g = j.clone();
-		g.Y = i.Y;
+		g.Y = _tempV1.Y;
 		var o = this.Radius / 10;
-		if (g.getDistanceTo(i) > o) {
-			m = j
+		if (g.getDistanceTo(_tempV1) > o) {
+			_tempV0= j
 		}
 	}
 	this.CursorControl.setMouseDownWhereMouseIsNow();
-	l = m.substract(i);
-	l.setLength(this.Radius);
-	m = i.add(l);
-	this.Camera.Pos = m;
+	_tempV2.setTo(_tempV0).substractFromThis(_tempV1);
+	_tempV2.setLength(this.Radius);
+	_tempV0.setTo(_tempV1).addToThis(_tempV2);
+	this.Camera.Pos.setTo(_tempV0);
 	return false
 };
 CL3D.AnimatorFollowPath = function (a) {
