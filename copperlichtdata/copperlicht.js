@@ -1330,7 +1330,6 @@ var _tempM2 = new CL3D.Matrix4();
 
 //Class Quaternion
 CL3D.Quaternion = function (a, d, c, b) {
-	//console.log("Quaternion");
 	this.X = 0;
 	this.Y = 0;
 	this.Z = 0;
@@ -2481,6 +2480,8 @@ CL3D.Material.EMT_REFLECTION_2_LAYER = 11;
 CL3D.Material.EMT_TRANSPARENT_ADD_COLOR = 12;
 CL3D.Material.EMT_TRANSPARENT_ALPHA_CHANNEL = 13;
 CL3D.Material.EMT_TRANSPARENT_REFLECTION_2_LAYER = 16;
+
+//Class MeshBuffer
 CL3D.MeshBuffer = function () {
 	this.Box = new CL3D.Box3d();
 	this.Mat = new CL3D.Material();
@@ -2558,6 +2559,8 @@ CL3D.MeshBuffer.prototype.createClone = function () {
 
 	return a
 };
+
+//Class Mesh
 CL3D.Mesh = function () {
 	this.Box = new CL3D.Box3d();
 	this.MeshBuffers = new Array()
@@ -2608,6 +2611,8 @@ CL3D.MeshCache.prototype.addMesh = function (a) {
 		this.Meshes.push(a)
 	}
 };
+
+
 CL3D.SkinnedMeshJoint = function () {
 	this.Name = "";
 	this.LocalMatrix = new CL3D.Matrix4();
@@ -2658,6 +2663,8 @@ CL3D.NamedAnimationRange.prototype.Name = "";
 CL3D.NamedAnimationRange.prototype.Begin = 0;
 CL3D.NamedAnimationRange.prototype.End = 0;
 CL3D.NamedAnimationRange.prototype.FPS = 0;
+
+//Class SkineedMesh
 CL3D.SkinnedMesh = function () {
 	this.Name = "";
 	this.AnimatedMeshesToLink = new Array();
