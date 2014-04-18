@@ -431,11 +431,14 @@ CL3D.Line3d = function () {
 	this.Start = new CL3D.Vect3d();
 	this.End = new CL3D.Vect3d()
 
-	this.Vector = new CL3D.Vector3d();
+	//this.Vector = new CL3D.Vector3d();
 };
 CL3D.Line3d.prototype.Start = null;
 CL3D.Line3d.prototype.End = null;
 CL3D.Line3d.prototype.getVector = function () {
+	if (!this.Vector)
+		this.Vector = new CL3D.Vector3d();
+
 	this.Vector.setTo(this.End);
 	this.Vector.substractFromThis(this.Start);
 	return this.Vector;
@@ -462,22 +465,25 @@ CL3D.Box3d = function () {
 	this.MinEdge = new CL3D.Vect3d();
 	this.MaxEdge = new CL3D.Vect3d();
 
-	this.Center = new CL3D.Vect3d();
+	//this.Center = new CL3D.Vect3d();
 
-	this.Edges = new Array(8);
+	/*this.Edges = new Array(8);
 
 	for (var i= 0; i < 8; ++i)
-		this.Edges[i] = new CL3D.Vect3d();
+		this.Edges[i] = new CL3D.Vect3d();*/
 };
 CL3D.Box3d.prototype.MinEdge = null;
 CL3D.Box3d.prototype.MaxEdge = null;
 CL3D.Box3d.prototype.clone = function () {
 	var a = new CL3D.Box3d();
-	a.MinEdge = this.MinEdge.clone();
-	a.MaxEdge = this.MaxEdge.clone();
+	a.MinEdge.setTo(this.MinEdge);
+	a.MaxEdge.setTo(this.MaxEdge);
 	return a
 };
 CL3D.Box3d.prototype.getCenter = function () {
+	if (!this.Center)
+		this.Center = new CL3D.Vect3d();
+
 	this.Center.setTo(this.MinEdge);
 	this.Center.addToThis(this.MaxEdge);
 	this.Center.multiplyThisWithScal(0.5);
@@ -489,6 +495,13 @@ CL3D.Box3d.prototype.getExtent = function () {
 CL3D.Box3d.prototype.getEdges = function () {
 	var b = this.getCenter();
 	_tempV0.setTo(b).substractFromThis(this.MaxEdge);
+
+	if (!this.Edges){
+		this.Edges = new Array(8);
+
+		for (var i= 0; i < 8; ++i)
+			this.Edges[i] = new CL3D.Vect3d();
+	}
 
 	this.Edges[0].set(b.X + _tempV0.X, b.Y + _tempV0.Y, b.Z + _tempV0.Z);
 	this.Edges[1].set(b.X + _tempV0.X, b.Y - _tempV0.Y, b.Z + _tempV0.Z);
@@ -767,9 +780,9 @@ CL3D.Matrix4 = function (a) {
 		this.bIsIdentity = true
 	}
 
-	this.Array = new Array(16);
-	this.Translation = new CL3D.Vect3d();
-	this.RotationDegrees = new CL3D.Vect3d();
+	//this.Array = new Array(16);
+	//this.Translation = new CL3D.Vect3d();
+	//this.RotationDegrees = new CL3D.Vect3d();
 };
 CL3D.Matrix4.prototype.makeIdentity = function () {
 	this.m00 = 1;
@@ -807,6 +820,9 @@ CL3D.Matrix4.prototype.equals = function (a) {
 	return CL3D.equals(this.m00, a.m00) && CL3D.equals(this.m01, a.m01) && CL3D.equals(this.m02, a.m02) && CL3D.equals(this.m03, a.m03) && CL3D.equals(this.m04, a.m04) && CL3D.equals(this.m05, a.m05) && CL3D.equals(this.m06, a.m06) && CL3D.equals(this.m07, a.m07) && CL3D.equals(this.m08, a.m08) && CL3D.equals(this.m09, a.m09) && CL3D.equals(this.m10, a.m10) && CL3D.equals(this.m11, a.m11) && CL3D.equals(this.m12, a.m12) && CL3D.equals(this.m13, a.m13) && CL3D.equals(this.m14, a.m14) && CL3D.equals(this.m15, a.m15)
 };
 CL3D.Matrix4.prototype.getTranslation = function () {
+	if (!this.Translation)
+		this.Translation = new CL3D.Vect3d();
+
 	this.Translation.set(this.m12, this.m13, this.m14);
 	return this.Translation;
 };
@@ -987,6 +1003,10 @@ CL3D.Matrix4.prototype.getTransposed = function () {
 	return a
 };
 CL3D.Matrix4.prototype.asArray = function () {
+
+	if(!this.Array)
+		this.Array = new Array(16);
+
 	this.Array[0] = this.m00;
 	this.Array[1] = this.m01;
 	this.Array[2] = this.m02;
@@ -1195,6 +1215,10 @@ CL3D.Matrix4.prototype.getRotationDegrees = function () {
 	if (d < 0) {
 		d += 360
 	}
+
+	if (!this.RotationDegrees)
+		this.RotationDegrees = new CL3D.Vect3d();
+
 	return this.RotationDegrees.set(g, f, d);
 };
 CL3D.Matrix4.prototype.setTranslation = function (a) {
