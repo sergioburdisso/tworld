@@ -8,6 +8,11 @@
  */
 var CL3D = {};
 
+Array.prototype.clear = function() {
+	this.splice(0, this.length);
+};
+
+
 CL3D.DebugOutput = function (d, a) {
 	this.DebugRoot = null;
 	this.FPSRoot = null;
@@ -518,7 +523,7 @@ CL3D.Box3d.prototype.intersectsWithLine = function (d, e) {
 	var c = e.substract(d);
 	var a = c.getLength();
 	c.normalize();
-	var b = d.add(e).multiplyWithScal(0.5);
+	var b = d.add(e).multiplyWithScal(0.5); //SS: may be optimized
 	return this.intersectsWithLineImpl(b, c, a * 0.5)
 };
 CL3D.Box3d.prototype.intersectsWithLineImpl = function (b, a, g) {
@@ -784,6 +789,48 @@ CL3D.Matrix4 = function (a) {
 	//this.Translation = new CL3D.Vect3d();
 	//this.RotationDegrees = new CL3D.Vect3d();
 };
+CL3D.Matrix4.prototype.setTo = function (a) {
+	this.m00 = a.m00;
+	this.m01 = a.m01;
+	this.m02 = a.m02;
+	this.m03 = a.m03;
+	this.m04 = a.m04;
+	this.m05 = a.m05;
+	this.m06 = a.m06;
+	this.m07 = a.m07;
+	this.m08 = a.m08;
+	this.m09 = a.m09;
+	this.m10 = a.m10;
+	this.m11 = a.m11;
+	this.m12 = a.m12;
+	this.m13 = a.m13;
+	this.m14 = a.m14;
+	this.m15 = a.m15;
+
+	this.bIsIdentity = false;
+
+	return this;
+};
+CL3D.Matrix4.prototype.resetToZero = function (a) {
+	this.m00 = 0;
+	this.m01 = 0;
+	this.m02 = 0;
+	this.m03 = 0;
+	this.m04 = 0;
+	this.m05 = 0;
+	this.m06 = 0;
+	this.m07 = 0;
+	this.m08 = 0;
+	this.m09 = 0;
+	this.m10 = 0;
+	this.m11 = 0;
+	this.m12 = 0;
+	this.m13 = 0;
+	this.m14 = 0;
+	this.m15 = 0;
+
+	return this;
+};
 CL3D.Matrix4.prototype.makeIdentity = function () {
 	this.m00 = 1;
 	this.m01 = 0;
@@ -827,7 +874,7 @@ CL3D.Matrix4.prototype.getTranslation = function () {
 	return this.Translation;
 };
 CL3D.Matrix4.prototype.getScale = function () {
-	return new CL3D.Vect3d(this.m00, this.m05, this.m10)
+	return new CL3D.Vect3d(this.m00, this.m05, this.m10) //SS: may be optimizad (as every function which returns a new object)
 };
 CL3D.Matrix4.prototype.rotateVect = function (a) {
 	var b = a.clone();
@@ -882,7 +929,7 @@ CL3D.Matrix4.prototype.transformPlane = function (a) {
 	b.normalize();
 	a.setPlane(d, b)
 };
-CL3D.Matrix4.prototype.multiply = function (a) {
+/*CL3D.Matrix4.prototype.multiply = function (a) {
 	var b = new CL3D.Matrix4(false);
 	if (this.bIsIdentity) {
 		a.copyTo(b);
@@ -909,8 +956,8 @@ CL3D.Matrix4.prototype.multiply = function (a) {
 	b.m14 = this.m02 * a.m12 + this.m06 * a.m13 + this.m10 * a.m14 + this.m14 * a.m15;
 	b.m15 = this.m03 * a.m12 + this.m07 * a.m13 + this.m11 * a.m14 + this.m15 * a.m15;
 	return b
-};
-CL3D.Matrix4.prototype.multiplyByThis = function (a) {
+};*/
+CL3D.Matrix4.prototype.multiplyThisWith = function (a) {
 	if (this.bIsIdentity) {
 		a.copyTo(this);
 		return this;
@@ -918,22 +965,42 @@ CL3D.Matrix4.prototype.multiplyByThis = function (a) {
 	if (a.bIsIdentity) 
 		return this;
 
-	this.m00 = this.m00 * a.m00 + this.m04 * a.m01 + this.m08 * a.m02 + this.m12 * a.m03;
-	this.m01 = this.m01 * a.m00 + this.m05 * a.m01 + this.m09 * a.m02 + this.m13 * a.m03;
-	this.m02 = this.m02 * a.m00 + this.m06 * a.m01 + this.m10 * a.m02 + this.m14 * a.m03;
-	this.m03 = this.m03 * a.m00 + this.m07 * a.m01 + this.m11 * a.m02 + this.m15 * a.m03;
-	this.m04 = this.m00 * a.m04 + this.m04 * a.m05 + this.m08 * a.m06 + this.m12 * a.m07;
-	this.m05 = this.m01 * a.m04 + this.m05 * a.m05 + this.m09 * a.m06 + this.m13 * a.m07;
-	this.m06 = this.m02 * a.m04 + this.m06 * a.m05 + this.m10 * a.m06 + this.m14 * a.m07;
-	this.m07 = this.m03 * a.m04 + this.m07 * a.m05 + this.m11 * a.m06 + this.m15 * a.m07;
-	this.m08 = this.m00 * a.m08 + this.m04 * a.m09 + this.m08 * a.m10 + this.m12 * a.m11;
-	this.m09 = this.m01 * a.m08 + this.m05 * a.m09 + this.m09 * a.m10 + this.m13 * a.m11;
-	this.m10 = this.m02 * a.m08 + this.m06 * a.m09 + this.m10 * a.m10 + this.m14 * a.m11;
-	this.m11 = this.m03 * a.m08 + this.m07 * a.m09 + this.m11 * a.m10 + this.m15 * a.m11;
-	this.m12 = this.m00 * a.m12 + this.m04 * a.m13 + this.m08 * a.m14 + this.m12 * a.m15;
-	this.m13 = this.m01 * a.m12 + this.m05 * a.m13 + this.m09 * a.m14 + this.m13 * a.m15;
-	this.m14 = this.m02 * a.m12 + this.m06 * a.m13 + this.m10 * a.m14 + this.m14 * a.m15;
-	this.m15 = this.m03 * a.m12 + this.m07 * a.m13 + this.m11 * a.m14 + this.m15 * a.m15;
+	if (!this.b)
+		this.b = new CL3D.Matrix4(false);
+
+	this.b.m00 = this.m00 * a.m00 + this.m04 * a.m01 + this.m08 * a.m02 + this.m12 * a.m03;
+	this.b.m01 = this.m01 * a.m00 + this.m05 * a.m01 + this.m09 * a.m02 + this.m13 * a.m03;
+	this.b.m02 = this.m02 * a.m00 + this.m06 * a.m01 + this.m10 * a.m02 + this.m14 * a.m03;
+	this.b.m03 = this.m03 * a.m00 + this.m07 * a.m01 + this.m11 * a.m02 + this.m15 * a.m03;
+	this.b.m04 = this.m00 * a.m04 + this.m04 * a.m05 + this.m08 * a.m06 + this.m12 * a.m07;
+	this.b.m05 = this.m01 * a.m04 + this.m05 * a.m05 + this.m09 * a.m06 + this.m13 * a.m07;
+	this.b.m06 = this.m02 * a.m04 + this.m06 * a.m05 + this.m10 * a.m06 + this.m14 * a.m07;
+	this.b.m07 = this.m03 * a.m04 + this.m07 * a.m05 + this.m11 * a.m06 + this.m15 * a.m07;
+	this.b.m08 = this.m00 * a.m08 + this.m04 * a.m09 + this.m08 * a.m10 + this.m12 * a.m11;
+	this.b.m09 = this.m01 * a.m08 + this.m05 * a.m09 + this.m09 * a.m10 + this.m13 * a.m11;
+	this.b.m10 = this.m02 * a.m08 + this.m06 * a.m09 + this.m10 * a.m10 + this.m14 * a.m11;
+	this.b.m11 = this.m03 * a.m08 + this.m07 * a.m09 + this.m11 * a.m10 + this.m15 * a.m11;
+	this.b.m12 = this.m00 * a.m12 + this.m04 * a.m13 + this.m08 * a.m14 + this.m12 * a.m15;
+	this.b.m13 = this.m01 * a.m12 + this.m05 * a.m13 + this.m09 * a.m14 + this.m13 * a.m15;
+	this.b.m14 = this.m02 * a.m12 + this.m06 * a.m13 + this.m10 * a.m14 + this.m14 * a.m15;
+	this.b.m15 = this.m03 * a.m12 + this.m07 * a.m13 + this.m11 * a.m14 + this.m15 * a.m15;
+
+	this.m00 = this.b.m00;
+	this.m01 = this.b.m01;
+	this.m02 = this.b.m02;
+	this.m03 = this.b.m03;
+	this.m04 = this.b.m04;
+	this.m05 = this.b.m05;
+	this.m06 = this.b.m06;
+	this.m07 = this.b.m07;
+	this.m08 = this.b.m08;
+	this.m09 = this.b.m09;
+	this.m10 = this.b.m10;
+	this.m11 = this.b.m11;
+	this.m12 = this.b.m12;
+	this.m13 = this.b.m13;
+	this.m14 = this.b.m14;
+	this.m15 = this.b.m15;
 	return this;
 };
 CL3D.Matrix4.prototype.multiplyWith1x4Matrix = function (a) {
@@ -974,9 +1041,10 @@ CL3D.Matrix4.prototype.getInverse = function (a) {
 	return true
 };
 CL3D.Matrix4.prototype.makeInverse = function () {
-	var a = new CL3D.Matrix4(false);
-	if (this.getInverse(a)) {
-		a.copyTo(this);
+	//var a = new CL3D.Matrix4(false);
+	_tempM2.resetToZero();
+	if (this.getInverse(_tempM2)) {
+		_tempM2.copyTo(this);
 		return true
 	}
 	return false
@@ -1246,8 +1314,8 @@ CL3D.Matrix4.prototype.transformBoxEx = function (d) {
 		this.transformVect(b[c])
 	}
 	var a = b[0];
-	d.MinEdge = a.clone();
-	d.MaxEdge = a.clone();
+	d.MinEdge.setTo(a);
+	d.MaxEdge.setTo(a);
 	for (c = 1; c < 8; ++c) {
 		d.addInternalPointByVector(b[c])
 	}
@@ -1256,6 +1324,10 @@ CL3D.Matrix4.prototype.toString = function () {
 	return this.m00 + " " + this.m01 + " " + this.m02 + " " + this.m03 + "\n" + this.m04 + " " + this.m05 + " " + this.m06 + " " + this.m07 + "\n" + this.m08 + " " + this.m09 + " " + this.m10 + " " + this.m11 + "\n" + this.m12 + " " + this.m13 + " " + this.m14 + " " + this.m15
 };
 
+var _tempM0 = new CL3D.Matrix4();
+var _tempM1 = new CL3D.Matrix4();
+var _tempM2 = new CL3D.Matrix4();
+
 //Class Quaternion
 CL3D.Quaternion = function (a, d, c, b) {
 	//console.log("Quaternion");
@@ -1263,6 +1335,7 @@ CL3D.Quaternion = function (a, d, c, b) {
 	this.Y = 0;
 	this.Z = 0;
 	this.W = 1;
+
 	if (a != null) {
 		this.X = a
 	}
@@ -1285,32 +1358,64 @@ CL3D.Quaternion.prototype.clone = function () {
 	this.copyTo(a);
 	return a
 };
+CL3D.Quaternion.prototype.set = function (x, y, z, w) {
+	this.X = 0;
+	this.Y = 0;
+	this.Z = 0;
+	this.W = 1;
+
+	if (x != null) {
+		this.X = x
+	}
+	if (y != null) {
+		this.Y = y
+	}
+	if (z != null) {
+		this.Z = z
+	}
+	if (w != null) {
+		this.W = w
+	}
+
+	return this;
+};
+CL3D.Quaternion.prototype.setTo = function (a) {
+	this.X = a.X;
+	this.Y = a.Y;
+	this.Z = a.Z;
+	this.W = a.W;
+
+	return this;
+};
 CL3D.Quaternion.prototype.copyTo = function (a) {
 	a.X = this.X;
 	a.Y = this.Y;
 	a.Z = this.Z;
 	a.W = this.W
 };
-CL3D.Quaternion.prototype.multiplyWith = function (a) {
+/*CL3D.Quaternion.prototype.multiplyWith = function (a) {
 	return new CL3D.Quaternion(this.X * a, this.Y * a, this.Z * a, this.W * a)
-};
+};*/
 CL3D.Quaternion.prototype.multiplyThisWith = function (a) {
 	this.X = this.X * a;
 	this.Y = this.Y * a;
 	this.Z = this.Z * a;
-	this.W = this.W * a
+	this.W = this.W * a;
+
+	return this;
 };
 CL3D.Quaternion.prototype.addToThis = function (a) {
 	this.X += a.X;
 	this.Y += a.Y;
 	this.Z += a.Z;
 	this.W += a.W;
+
 	return this
 };
 CL3D.Quaternion.prototype.slerp = function (g, f, b) {
 	var c = g.dotProduct(f);
 	if (c < 0) {
-		g = g.multiplyWith(-1);
+		g.multiplyThisWith(-1);
 		c *= -1
 	}
 	var d;
@@ -1326,23 +1431,28 @@ CL3D.Quaternion.prototype.slerp = function (g, f, b) {
 			e = b
 		}
 	} else {
-		f = new CL3D.Quaternion(-g.Y, g.X, -g.W, g.Z);
+		f.set(-g.Y, g.X, -g.W, g.Z);//f = new CL3D.Quaternion(-g.Y, g.X, -g.W, g.Z);
+		//_tempQ0.set(-g.Y, g.X, -g.W, g.Z);
 		d = Math.sin(CL3D.PI * (0.5 - b));
 		e = Math.sin(CL3D.PI * b)
 	}
-	var h = g.multiplyWith(d).addToThis(f.multiplyWith(e));
-	this.X = h.X;
-	this.Y = h.Y;
-	this.Z = h.Z;
-	this.W = h.W
+	_tempQ0.setTo(f);
+	_tempQ1.setTo(g).multiplyThisWith(d).addToThis(_tempQ0.multiplyThisWith(e));
+	this.X = _tempQ1.X;
+	this.Y = _tempQ1.Y;
+	this.Z = _tempQ1.Z;
+	this.W = _tempQ1.W
 };
 CL3D.Quaternion.prototype.dotProduct = function (a) {
 	return (this.X * a.X) + (this.Y * a.Y) + (this.Z * a.Z) + (this.W * a.W)
 };
 CL3D.Quaternion.prototype.getMatrix = function () {
-	var a = new CL3D.Matrix4(false);
-	this.getMatrix_transposed(a);
-	return a
+	if (!this.Matrix)
+		this.Matrix = new CL3D.Matrix4();
+
+	this.getMatrix_transposed(this.Matrix );
+
+	return this.Matrix;
 };
 CL3D.Quaternion.prototype.getMatrix_transposed = function (b) {
 	var e = this.X;
@@ -1407,6 +1517,12 @@ CL3D.Quaternion.prototype.normalize = function () {
 CL3D.Quaternion.prototype.toString = function () {
 	return "(x: " + this.X + " y:" + this.Y + " z:" + this.Z + " w:" + this.W + ")"
 };
+
+var _tempQ0 = new CL3D.Quaternion();
+var _tempQ1 = new CL3D.Quaternion();
+var _tempQ2 = new CL3D.Quaternion();
+
+//Class ViewFrustrum
 CL3D.ViewFrustrum = function () {
 	this.planes = new Array();
 	for (var a = 0; a < CL3D.ViewFrustrum.VF_PLANE_COUNT; ++a) {
@@ -1490,6 +1606,8 @@ CL3D.ViewFrustrum.prototype.getBoundingBox = function (c) {
 	a.addInternalPointByVector(this.getFarRightDown());
 	return a
 };
+
+//Class Vertex3D
 CL3D.Vertex3D = function (a) {
 	if (a) {
 		this.Pos = new CL3D.Vect3d();
@@ -1665,11 +1783,11 @@ CL3D.Action.ChangeSceneNodePosition.prototype.execute = function (a, f) {
 			break;
 		case 3:
 			var e = this.Vector.getLength();
-			var c = h.AbsoluteTransformation;
-			var i = new CL3D.Vect3d(1, 0, 0);
-			c.rotateVect(i);
-			i.setLength(e);
-			d = h.Pos.add(i);
+			_tempM0.setTo(h.AbsoluteTransformation);//var c = h.AbsoluteTransformation;
+			_tempV0.set(1, 0, 0);//var i = new CL3D.Vect3d(1, 0, 0);
+			_tempM0.rotateVect(_tempV0);
+			_tempV0.setLength(e);
+			d = h.Pos.add(_tempV0);
 			break
 		}
 		if (d != null) {
@@ -1943,7 +2061,7 @@ CL3D.Action.Shoot = function () {
 	this.AdditionalDirectionRotation = null;
 	this.ActionHandlerOnImpact = null
 };
-CL3D.Action.Shoot.prototype.execute = function (e, b) {
+/*CL3D.Action.Shoot.prototype.execute = function (e, b) {
 	if (!e || !b) {
 		return
 	}
@@ -2053,7 +2171,7 @@ CL3D.Action.Shoot.prototype.execute = function (e, b) {
 			}
 		}
 	}
-};
+};*/
 CL3D.Action.Shoot.prototype.shortenRayToClosestCollisionPointWithWorld = function (c, h, b, f) {
 	if (h.length != 0) {
 		var e = h[0].getAnimatorOfType("gameai");
@@ -2905,9 +3023,9 @@ CL3D.SkinnedMesh.prototype.buildAll_GlobalAnimatedMatrices = function (e, d) {
 		return
 	} else {
 		if (d == null || e.GlobalSkinningSpace) {
-			e.GlobalAnimatedMatrix = e.LocalAnimatedMatrix.clone()
+			e.GlobalAnimatedMatrix.setTo(e.LocalAnimatedMatrix);
 		} else {
-			e.GlobalAnimatedMatrix = d.GlobalAnimatedMatrix.multiply(e.LocalAnimatedMatrix)
+			e.GlobalAnimatedMatrix.setTo(d.GlobalAnimatedMatrix).multiplyThisWith(e.LocalAnimatedMatrix);
 		}
 	}
 	for (var b = 0; b < e.Children.length; ++b) {
@@ -2942,7 +3060,7 @@ CL3D.SkinnedMesh.prototype.skinMesh = function () {
 };
 CL3D.SkinnedMesh.prototype.skinJoint = function (e, b) {
 	if (e.Weights.length) {
-		var m = e.GlobalAnimatedMatrix.multiply(e.GlobalInversedMatrix);
+		_tempM0.setTo(e.GlobalAnimatedMatrix).multiplyThisWith(e.GlobalInversedMatrix);//var m = e.GlobalAnimatedMatrix.multiply(e.GlobalInversedMatrix);
 		//var d = new CL3D.Vect3d(); _tempV0
 		//var c = new CL3D.Vect3d(); _tempV1
 		var f = this.LocalBuffers;
@@ -2950,7 +3068,7 @@ CL3D.SkinnedMesh.prototype.skinJoint = function (e, b) {
 		var a;
 		for (var h = 0; h < e.Weights.length; ++h) {
 			var k = e.Weights[h];
-			m.transformVect2(_tempV0, k.StaticPos);
+			_tempM0.transformVect2(_tempV0, k.StaticPos);
 			l = f[k.buffer_id];
 			a = l.Vertices[k.vertex_id];
 			if (!this.Vertices_Moved[k.buffer_id][k.vertex_id]) {
@@ -3475,29 +3593,33 @@ CL3D.Renderer.prototype.drawWebGlStaticGeometry = function (a) {
 	g.bindBuffer(g.ARRAY_BUFFER, a.colorBuffer);
 	g.vertexAttribPointer(4, 3, g.FLOAT, false, 0, 0);
 	g.bindBuffer(g.ELEMENT_ARRAY_BUFFER, a.indexBuffer);
-	var d = new CL3D.Matrix4(false);
-	this.Projection.copyTo(d);
-	d = d.multiply(this.View);
-	d = d.multiply(this.World);
+
+	//var d = new CL3D.Matrix4(false);
+	_tempM0.resetToZero();
+	this.Projection.copyTo(_tempM0);
+	_tempM0.multiplyThisWith(this.View);
+	_tempM0.multiplyThisWith(this.World);
 	var c = this.currentGLProgram;
 	if (c.locWorldViewProj != null) {
-		g.uniformMatrix4fv(c.locWorldViewProj, false, this.getMatrixAsWebGLFloatArray(d))
+		g.uniformMatrix4fv(c.locWorldViewProj, false, this.getMatrixAsWebGLFloatArray(_tempM0)) // getMatrixAsWebGLFloatArray OPTIMIZAR NEW
 	}
 	if (c.locNormalMatrix != null) {
-		var e = new CL3D.Matrix4(true);
-		e = e.multiply(this.View);
-		e = e.multiply(this.World);
-		e.makeInverse();
-		g.uniformMatrix4fv(c.locNormalMatrix, true, this.getMatrixAsWebGLFloatArray(e))
+		//var e = new CL3D.Matrix4(true);
+		_tempM0.makeIdentity();
+		_tempM0.multiplyThisWith(this.View);
+		_tempM0.multiplyThisWith(this.World);
+		_tempM0.makeInverse();
+		g.uniformMatrix4fv(c.locNormalMatrix, true, this.getMatrixAsWebGLFloatArray(_tempM0))
 	}
 	if (c.locModelViewMatrix != null) {
-		var f = new CL3D.Matrix4(true);
-		f = f.multiply(this.View);
-		f = f.multiply(this.World);
-		g.uniformMatrix4fv(c.locModelViewMatrix, false, this.getMatrixAsWebGLFloatArray(f))
+		//var f = new CL3D.Matrix4(true);
+		_tempM0.makeIdentity();
+		_tempM0.multiplyThisWith(this.View);
+		_tempM0.multiplyThisWith(this.World);
+		g.uniformMatrix4fv(c.locModelViewMatrix, false, this.getMatrixAsWebGLFloatArray(_tempM0))
 	}
 	if (c.locLightPositions != null) {
-		this.setDynamicLightsIntoConstants(c)
+		this.setDynamicLightsIntoConstants(c) //  OPTIMIZAR NEW PERO VER SI SE LLAMA PRIMERO
 	}
 	g.drawElements(g.TRIANGLES, a.indexCount, g.UNSIGNED_SHORT, 0)
 };
@@ -3950,7 +4072,12 @@ CL3D.Renderer.prototype.setWorld = function (a) {
 };
 CL3D.Renderer.prototype.ensureCorrectMethodNamesSetForClosure = function (a) {};
 CL3D.Renderer.prototype.getMatrixAsWebGLFloatArray = function (a) {
-	return new WebGLFloatArray(a.asArray())
+	delete this.WebGLFloatArray;
+
+	if (!this.WebGLFloatArray)
+		this.WebGLFloatArray = new WebGLFloatArray(a.asArray());
+
+	return this.WebGLFloatArray
 };
 CL3D.Renderer.prototype.deleteTexture = function (a) {
 	if (a == null) {
@@ -4106,6 +4233,9 @@ CL3D.Renderer.prototype.fs_shader_onlyfirsttexture_gouraud = "		#ifdef GL_ES				
 CL3D.Renderer.prototype.fs_shader_lightmapcombine = "					#ifdef GL_ES												\n	precision highp float;										\n	#endif														\n	uniform sampler2D texture1;										uniform sampler2D texture2;																										varying vec2 v_texCoord1;										varying vec2 v_texCoord2;																										void main()														{																	vec2 texCoord1 = vec2(v_texCoord1.s, v_texCoord1.t);			vec2 texCoord2 = vec2(v_texCoord2.s, v_texCoord2.t);			vec4 col1 = texture2D(texture1, texCoord1);						vec4 col2 = texture2D(texture2, texCoord2);						gl_FragColor = col1 * col2;									}																";
 CL3D.Renderer.prototype.fs_shader_lightmapcombine_m4 = "			#ifdef GL_ES												\n	precision highp float;										\n	#endif														\n	uniform sampler2D texture1;										uniform sampler2D texture2;																										varying vec2 v_texCoord1;										varying vec2 v_texCoord2;																										void main()														{																	vec2 texCoord1 = vec2(v_texCoord1.s, v_texCoord1.t);			vec2 texCoord2 = vec2(v_texCoord2.s, v_texCoord2.t);			vec4 col1 = texture2D(texture1, texCoord1);						vec4 col2 = texture2D(texture2, texCoord2);						gl_FragColor = col1 * col2 * 3.0;							}																";
 CL3D.Renderer.prototype.fs_shader_lightmapcombine_gouraud = "		#ifdef GL_ES												\n	precision highp float;										\n	#endif														\n	uniform sampler2D texture1;										uniform sampler2D texture2;																										varying vec2 v_texCoord1;										varying vec2 v_texCoord2;										varying vec4 v_color;																											void main()														{																	vec2 texCoord1 = vec2(v_texCoord1.s, v_texCoord1.t);			vec2 texCoord2 = vec2(v_texCoord2.s, v_texCoord2.t);			vec4 col1 = texture2D(texture1, texCoord1);						vec4 col2 = texture2D(texture2, texCoord2);						vec4 final = col1 * col2 * v_color;								gl_FragColor = vec4(final.x, final.y, final.z, col1.w);		}																";
+
+
+//Class SceneNode
 CL3D.SceneNode = function () {
 	this.Type = -1;
 	this.Pos = new CL3D.Vect3d();
@@ -4199,7 +4329,7 @@ CL3D.SceneNode.prototype.cloneMembers = function (a, e) {
 	}
 	a.Animators = this.Animators.slice();
 	if (this.AbsoluteTransformation) {
-		a.AbsoluteTransformation = this.AbsoluteTransformation.clone()
+		a.AbsoluteTransformation.setTo(this.AbsoluteTransformation);
 	}
 	a.scene = this.scene
 };
@@ -4278,7 +4408,7 @@ CL3D.SceneNode.prototype.OnAnimate = function (h, k) {
 	}
 	return e
 };
-CL3D.SceneNode.prototype.getRelativeTransformation = function () {
+/*CL3D.SceneNode.prototype.getRelativeTransformation = function () {
 	var b = new CL3D.Matrix4();
 	b.setRotationDegrees(this.Rot);
 	b.setTranslation(this.Pos);
@@ -4288,12 +4418,29 @@ CL3D.SceneNode.prototype.getRelativeTransformation = function () {
 		b = b.multiply(a)
 	}
 	return b
+};*/
+CL3D.SceneNode.prototype.getRelativeTransformation = function () {
+	if (!this.RelativeTransformation)
+		this.RelativeTransformation = new CL3D.Matrix4();
+
+	this.RelativeTransformation.makeIdentity();
+	this.RelativeTransformation.setRotationDegrees(this.Rot);
+	this.RelativeTransformation.setTranslation(this.Pos);
+
+	if (this.Scale.X != 1 || this.Scale.Y != 1 || this.Scale.Z != 1) {
+		_tempM0.makeIdentity();
+		_tempM0.setScale(this.Scale);
+		this.RelativeTransformation.multiplyThisWith(_tempM0);
+	}
+	return this.RelativeTransformation;
 };
 CL3D.SceneNode.prototype.updateAbsolutePosition = function () {
 	if (this.Parent != null) {
-		this.AbsoluteTransformation = this.Parent.AbsoluteTransformation.multiply(this.getRelativeTransformation())
+		this.AbsoluteTransformation.setTo(this.Parent.AbsoluteTransformation).multiplyThisWith(this.getRelativeTransformation());
+		//this.AbsoluteTransformation = this.Parent.AbsoluteTransformation.multiply2(this.getRelativeTransformation());
 	} else {
-		this.AbsoluteTransformation = this.getRelativeTransformation()
+		this.AbsoluteTransformation.setTo( this.getRelativeTransformation() );
+		//this.AbsoluteTransformation = this.getRelativeTransformation();
 	}
 };
 CL3D.SceneNode.prototype.render = function (a) {};
@@ -4645,14 +4792,23 @@ CL3D.SkyBoxSceneNode.prototype.render = function (b) {
 	if (!a || !this.OwnedMesh) {
 		return
 	}
-	var d = new CL3D.Matrix4(false);
+	_tempM0.resetToZero();
+	this.AbsoluteTransformation.copyTo(_tempM0);
+	_tempM0.setTranslation(a.getAbsolutePosition());
+	var e = (a.getNearValue() + a.getFarValue()) * 0.5;
+	_tempM1.makeIdentity();
+	_tempV0.set(e, e, e);
+	_tempM1.setScale(_tempV0);
+	b.setWorld(_tempM0.multiplyThisWith(_tempM1));
+	b.drawMesh(this.OwnedMesh);
+	/*var d = new CL3D.Matrix4(false);
 	this.AbsoluteTransformation.copyTo(d);
 	d.setTranslation(a.getAbsolutePosition());
 	var e = (a.getNearValue() + a.getFarValue()) * 0.5;
 	var c = new CL3D.Matrix4();
 	c.setScale(new CL3D.Vect3d(e, e, e));
 	b.setWorld(d.multiply(c));
-	b.drawMesh(this.OwnedMesh)
+	b.drawMesh(this.OwnedMesh)*/
 };
 CL3D.SkyBoxSceneNode.prototype.createClone = function (a) {
 	var b = new CL3D.SkyBoxSceneNode();
@@ -4780,15 +4936,19 @@ CL3D.BillboardSceneNode.prototype.render = function (k) {
 	if (!e) {
 		var m = this.getAbsolutePosition();
 		var n = k.getStaticBillboardMeshBuffer();
-		var g = new CL3D.Matrix4(true);
-		g.setScale(new CL3D.Vect3d(this.SizeX * 0.5, this.SizeY * 0.5, 0));
-		var i = k.getView().clone();
-		i.setTranslation(new CL3D.Vect3d(0, 0, 0));
-		var o = new CL3D.Matrix4(true);
-		i.getInverse(o);
-		o.setTranslation(m);
-		g = o.multiply(g);
-		k.setWorld(g);
+		_tempM0.makeIdentity();//var g = new CL3D.Matrix4(true);
+		_tempV0.set(this.SizeX * 0.5, this.SizeY * 0.5, 0);
+		_tempM0.setScale( _tempV0 );
+
+		_tempM1.setTo(k.getView());//var i = k.getView().clone();
+		_tempV0.set(0, 0, 0);
+		_tempM1.setTranslation(_tempV0);
+
+		_tempM2.makeIdentity();//var o = new CL3D.Matrix4(true);
+		_tempM1.getInverse(_tempM2);
+		_tempM2.setTranslation(m);
+		_tempM0.setTo(_tempM2).multiplyThisWith(_tempM0);
+		k.setWorld(_tempM0);
 		k.setMaterial(this.MeshBuffer.Mat);
 		k.drawMeshBuffer(n)
 	} else {
@@ -5685,15 +5845,16 @@ CL3D.AnimatedMeshSceneNode.prototype.render = function (c) { //SS: this
 		for (var b = 0; b < d.LocalBuffers.length; ++b) {
 			var a = d.LocalBuffers[b];
 			if (b < this.Materials.length) {
-				a.Mat = this.Materials[b]
+				a.Mat = this.Materials[b];
 			}
 			if (a.Transformation != null) {
-				c.setWorld(this.AbsoluteTransformation.multiply(a.Transformation))
+
+				c.setWorld( _tempM0.setTo(this.AbsoluteTransformation).multiplyThisWith(a.Transformation) );
 			}
 			c.setMaterial(a.Mat);
 			c.drawMeshBuffer(a); //SS: this
 			if (a.Transformation != null) {
-				c.setWorld(this.AbsoluteTransformation)
+				c.setWorld(this.AbsoluteTransformation);
 			}
 		}
 	}
@@ -6834,7 +6995,7 @@ CL3D.AnimatorCollisionResponse.prototype.reset = function () {
 	this.LastAnimationTime = CL3D.CLTimer.getTime()
 };
 CL3D.AnimatorCollisionResponse.prototype.setWorld = function (a) {
-	this.World = a
+	this.World.setTo(a);
 };
 CL3D.AnimatorCollisionResponse.prototype.getWorld = function () {
 	return this.World
@@ -8813,7 +8974,7 @@ CL3D.CopperLicht.prototype.get2DPositionFrom3DPosition = function (b) {
 		return null
 	}
 	a.Projection.copyTo(j);
-	j = j.multiply(a.View);
+	j.multiplyThisWith(a.View);
 	var i = a.getWidth() / 2;
 	var e = a.getHeight() / 2;
 	var h = i;
@@ -9059,17 +9220,18 @@ CL3D.Scene.prototype.HasViewChangedSinceLastRedraw = function () {
 	if (!this.ActiveCamera) {
 		return true
 	}
-	var a = new CL3D.Matrix4(false);
-	this.ActiveCamera.Projection.copyTo(a);
-	a = a.multiply(this.ActiveCamera.ViewMatrix);
-	return !a.equals(this.LastViewProj)
+	//var a = new CL3D.Matrix4(false);
+	_tempM0.resetToZero();
+	this.ActiveCamera.Projection.copyTo(_tempM0);
+	_tempM0.multiplyThisWith(this.ActiveCamera.ViewMatrix);
+	return !_tempM0.equals(this.LastViewProj)
 };
 CL3D.Scene.prototype.StoreViewMatrixForRedrawCheck = function () {
 	if (!this.ActiveCamera) {
 		return
 	}
 	this.ActiveCamera.Projection.copyTo(this.LastViewProj);
-	this.LastViewProj = this.LastViewProj.multiply(this.ActiveCamera.ViewMatrix)
+	this.LastViewProj.multiplyThisWith(this.ActiveCamera.ViewMatrix);
 };
 CL3D.Scene.prototype.getLastUsedRenderer = function () {
 	return this.LastUsedRenderer
@@ -10868,7 +11030,7 @@ CL3D.MeshTriangleSelector = function (k, i) {
 	}
 };
 CL3D.MeshTriangleSelector.prototype = new CL3D.TriangleSelector();
-CL3D.MeshTriangleSelector.prototype.getAllTriangles = function (a, d) {
+/*CL3D.MeshTriangleSelector.prototype.getAllTriangles = function (a, d) {
 	if (!this.Node.AbsoluteTransformation) {
 		return
 	}
@@ -10894,7 +11056,7 @@ CL3D.MeshTriangleSelector.prototype.getAllTriangles = function (a, d) {
 			}
 		}
 	}
-};
+};*/
 CL3D.MeshTriangleSelector.prototype.getTrianglesInBox = function (c, a, b) {
 	this.getAllTriangles(a, b)
 };
@@ -11042,7 +11204,7 @@ CL3D.OctTreeTriangleSelector.prototype.getTrianglesInBox = function (e, b, d) {
 	var c = new CL3D.Matrix4();
 	var a = e.clone();
 	if (this.Node) {
-		c = this.Node.getAbsoluteTransformation().clone();
+		c.setTo(this.Node.getAbsoluteTransformation());
 		c.makeInverse();
 		c.transformBoxEx(a)
 	}
