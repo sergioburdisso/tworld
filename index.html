@@ -133,9 +133,11 @@
 		var sound_keyboard;
 		//Ready function
 		window.onload=function(){
-			var _sound_music = new buzz.sound("./sounds/music.mp3");
-			sound_keyboard = new buzz.sound("./sounds/keyboard.mp3");
-			sound_keyboard.play().loop();
+			if (_AUDIO_ENABLE){
+				var _sound_music = new buzz.sound("./sounds/music.mp3");
+				sound_keyboard = new buzz.sound("./sounds/keyboard.mp3");
+				sound_keyboard.play().loop();
+			}
 
 			$("#tileworld").prop('width',$(window).width());
 			$("#tileworld").prop('height',$(window).height());
@@ -181,8 +183,10 @@
 			$("#playBtn").mousedown(function(e){
 				if (!_Ready){
 
-					sound_keyboard.stop();
-					_sound_music.loop().play();
+					if (_AUDIO_ENABLE){
+						sound_keyboard.stop();
+						_sound_music.loop().play();
+					}
 
 					_Ready = true;
 					$('#tileworld').css('-webkit-filter', '');

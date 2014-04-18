@@ -12,7 +12,6 @@ Array.prototype.clear = function() {
 	this.splice(0, this.length);
 };
 
-
 CL3D.DebugOutput = function (d, a) {
 	this.DebugRoot = null;
 	this.FPSRoot = null;
