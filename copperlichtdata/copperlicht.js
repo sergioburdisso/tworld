@@ -236,7 +236,7 @@ CL3D.ColorF = function () {
 	this.G = 1;
 	this.B = 1;
 };
-CL3D.ColorF.prototype.clone = function () {
+CL3D.ColorF.prototype.clone = function () { //clone functions shouldn't be used, they usually cause garbage collection
 	var a = new CL3D.Light();
 	a.A = this.A;
 	a.R = this.R;
@@ -271,9 +271,9 @@ CL3D.Vect3d.prototype.set = function (a, c, b) {
 
 	return this;
 };
-CL3D.Vect3d.prototype.clone = function () { // SI LO BORRO NO ME TIRA ERROR PERO ANDA MAL!!!!!!!
+/*CL3D.Vect3d.prototype.clone = function () { // this method shouldn't be used
 	return new CL3D.Vect3d(this.X, this.Y, this.Z)
-};
+};*/
 CL3D.Vect3d.prototype.copyTo = function (a) {
 	a.X = this.X;
 	a.Y = this.Y;
@@ -466,6 +466,12 @@ CL3D.Box3d.prototype.setTo = function (b) {
 	this.MaxEdge.setTo(b.MaxEdge);
 	return this;
 };
+/*CL3D.Box3d.prototype.clone = function () {
+	var a = new CL3D.Box3d();
+	a.MinEdge.setTo(this.MinEdge);
+	a.MaxEdge.setTo(this.MaxEdge);
+	return a
+};*/
 CL3D.Box3d.prototype.getCenter = function () {
 	if (!this.Center)
 		this.Center = new CL3D.Vect3d();
@@ -677,6 +683,11 @@ CL3D.Matrix4.prototype.setTo = function (a) {
 
 	return this;
 };
+/*.Matrix4.prototype.clone = function () {// This function shudn't be used
+	var a = new CL3D.Matrix4(false);
+	this.copyTo(a);
+	return a
+};*/
 CL3D.Matrix4.prototype.resetToZero = function (a) {
 	this.m00 = 0;
 	this.m01 = 0;
@@ -2094,7 +2105,7 @@ CL3D.SkinnedMesh.prototype.finalize = function () {
 		d = this.AllJoints[g];
 		for (f = 0; f < d.AttachedMeshes.length; ++f) {
 			h = this.LocalBuffers[d.AttachedMeshes[f]];
-			h.Transformation = d.GlobalAnimatedMatrix.clone()
+			h.Transformation = new CL3D.Matrix4().setTo(d.GlobalAnimatedMatrix);
 		}
 	}
 	if (this.LocalBuffers.length == 0) {
@@ -2102,18 +2113,18 @@ CL3D.SkinnedMesh.prototype.finalize = function () {
 		this.BoundingBox.MaxEdge.set(0, 0, 0)
 	} else {
 		h = this.LocalBuffers[0];
-		this.BoundingBox.MinEdge = h.Box.MinEdge.clone();
-		this.BoundingBox.MaxEdge = h.Box.MaxEdge.clone();
+		this.BoundingBox.MinEdge.setTo(h.Box.MinEdge);
+		this.BoundingBox.MaxEdge.setTo(h.Box.MaxEdge);
 		for (g = 1; g < this.LocalBuffers.length; ++g) {
 			h = this.LocalBuffers[g];
 			if (h.Transformation == null) {
 				this.BoundingBox.addInternalPointByVector(h.Box.MinEdge);
 				this.BoundingBox.addInternalPointByVector(h.Box.MaxEdge)
 			} else {
-				var e = h.Box.clone();
-				h.Transformation.transformBoxEx(e);
-				this.BoundingBox.addInternalPointByVector(e.MinEdge);
-				this.BoundingBox.addInternalPointByVector(e.MaxEdge)
+				_tempB0.setTo(h.Box);
+				h.Transformation.transformBoxEx(_tempB0);
+				this.BoundingBox.addInternalPointByVector(_tempB0.MinEdge);
+				this.BoundingBox.addInternalPointByVector(_tempB0.MaxEdge)
 			}
 		}
 	}
@@ -2165,8 +2176,9 @@ CL3D.SkinnedMesh.prototype.checkForAnimation = function () {
 				var b = k.vertex_id;
 				g = this.LocalBuffers[d];
 				var a = g.Vertices[b];
-				k.StaticPos = a.Pos.clone();
-				k.StaticNormal = a.Normal.clone()
+
+				k.StaticPos = new CL3D.Vect3d(a.Pos.X, a.Pos.Y, a.Pos.Z);
+				k.StaticNormal.setTo(a.Normal)
 			}
 		}
 	}
@@ -2182,15 +2194,14 @@ CL3D.SkinnedMesh.prototype.CalculateGlobalMatrices = function (d, c) {
 		return
 	}
 	if (c == null) {
-
-		d.GlobalMatrix = d.LocalMatrix.clone()
+		d.GlobalMatrix.setTo(d.LocalMatrix)
 	} else {
-		d.GlobalMatrix = c.GlobalMatrix.multiply(d.LocalMatrix)
+		d.GlobalMatrix.setTo(c.GlobalMatrix).multiplyThisWith(d.LocalMatrix)
 	}
-	d.LocalAnimatedMatrix = d.LocalMatrix.clone();
-	d.GlobalAnimatedMatrix = d.GlobalMatrix.clone();
+	d.LocalAnimatedMatrix.setTo(d.LocalMatrix);
+	d.GlobalAnimatedMatrix.setTo(d.GlobalMatrix);
 	if (d.GlobalInversedMatrix.isIdentity()) {
-		d.GlobalInversedMatrix = d.GlobalMatrix.clone();
+		d.GlobalInversedMatrix.setTo(d.GlobalMatrix);
 		d.GlobalInversedMatrix.makeInverse()
 	}
 	for (var a = 0; a < d.Children.length; ++a) {
@@ -4174,14 +4185,6 @@ CL3D.SkyBoxSceneNode.prototype.render = function (b) {
 	_tempM1.setScale(_tempV0);
 	b.setWorld(_tempM0.multiplyThisWith(_tempM1));
 	b.drawMesh(this.OwnedMesh);
-	/*var d = new CL3D.Matrix4(false);
-	this.AbsoluteTransformation.copyTo(d);
-	d.setTranslation(a.getAbsolutePosition());
-	var e = (a.getNearValue() + a.getFarValue()) * 0.5;
-	var c = new CL3D.Matrix4();
-	c.setScale(new CL3D.Vect3d(e, e, e));
-	b.setWorld(d.multiply(c));
-	b.drawMesh(this.OwnedMesh)*/
 };
 CL3D.SkyBoxSceneNode.prototype.createClone = function (a) {
 	var b = new CL3D.SkyBoxSceneNode();
