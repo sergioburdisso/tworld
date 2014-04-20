@@ -4312,21 +4312,24 @@ CL3D.BillboardSceneNode.prototype.render = function (k) {
 	if (!e) {
 		var m = this.getAbsolutePosition();
 		var n = k.getStaticBillboardMeshBuffer();
+
 		_tempM0.makeIdentity();
 		_tempV0.set(this.SizeX * 0.5, this.SizeY * 0.5, 0);
 		_tempM0.setScale( _tempV0 );
 
 		_tempM1.setTo(k.getView());
 		_tempV0.set(0, 0, 0);
-		_tempM1.setTranslation(_tempV0);
+		_tempM1.setTranslation( _tempV0 );
 
 		_tempM2.makeIdentity();
-		_tempM1.getInverse(_tempM2);
-		_tempM2.setTranslation(m);
-		_tempM0.setTo(_tempM2).multiplyThisWith(_tempM0);
-		k.setWorld(_tempM0);
-		k.setMaterial(this.MeshBuffer.Mat);
-		k.drawMeshBuffer(n)
+		_tempM1.getInverse( _tempM2 );
+		_tempM2.setTranslation( m );
+		_tempM1.setTo( _tempM0 );
+		_tempM0.setTo( _tempM2 ).multiplyThisWith( _tempM1 );
+		k.setWorld( _tempM0 );
+
+		k.setMaterial( this.MeshBuffer.Mat );
+		k.drawMeshBuffer( n )
 	} else {
 		var m = this.getAbsolutePosition();
 		var c = a.getAbsolutePosition();
