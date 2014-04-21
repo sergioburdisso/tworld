@@ -8,15 +8,6 @@
  */
 var CL3D = {};
 
-Array.prototype.clear = function() {
-	this.length = 0;
-};
-Array.prototype.remove = function(index) {
-	for (var i= index; i < this.length; ++i)
-		this[i] = this[i+1];
-	this.length--;
-};
-
 CL3D.DebugOutput = function (d, a) {
 	this.DebugRoot = null;
 	this.FPSRoot = null;
@@ -453,6 +444,8 @@ CL3D.Vect2d = function (a, b) {
 };
 CL3D.Vect2d.prototype.X = 0;
 CL3D.Vect2d.prototype.Y = 0;
+
+var _temp2V0 = new CL3D.Vect2d();
 
 //Class Box3d
 CL3D.Box3d = function () {
@@ -8346,13 +8339,14 @@ CL3D.CopperLicht.prototype.get3DPositionFrom2DPosition = function (m, k) {
 	return j
 };
 CL3D.CopperLicht.prototype.get2DPositionFrom3DPosition = function (b) {
-	var j = new CL3D.Matrix4(false);
 	var a = this.TheRenderer;
+	_tempM0.resetToZero();
+
 	if (!a.Projection) {
 		return null
 	}
-	a.Projection.copyTo(j);
-	j.multiplyThisWith(a.View);
+	a.Projection.copyTo(_tempM0);
+	_tempM0.multiplyThisWith(a.View);
 	var i = a.getWidth() / 2;
 	var e = a.getHeight() / 2;
 	var h = i;
@@ -8360,17 +8354,17 @@ CL3D.CopperLicht.prototype.get2DPositionFrom3DPosition = function (b) {
 	if (e == 0 || i == 0) {
 		return null
 	}
-	var d = new CL3D.Vect3d(b.X, b.Y, b.Z);
-	d.W = 1;
-	j.multiplyWith1x4Matrix(d);
-	var c = d.W == 0 ? 1 : (1 / d.W);
-	if (d.Z < 0) {
+	_tempV0.set(b.X, b.Y, b.Z);
+	_tempV0.W = 1;
+	_tempM0.multiplyWith1x4Matrix(_tempV0);
+	var c = _tempV0.W == 0 ? 1 : (1 / _tempV0.W);
+	if (_tempV0.Z < 0) {
 		return null
 	}
-	var f = new CL3D.Vect2d();
-	f.X = i * (d.X * c) + h;
-	f.Y = g - (e * (d.Y * c));
-	return f
+
+	_temp2V0.X = i * (_tempV0.X * c) + h;
+	_temp2V0.Y = g - (e * (_tempV0.Y * c));
+	return _temp2V0;
 };
 CL3D.CopperLicht.prototype.setActiveCameraNextFrame = function (a) {
 	if (a == null) {
@@ -8524,7 +8518,9 @@ CL3D.Scene.prototype.drawAll = function (f) {
 	if (this.SkyBoxSceneNode) {
 		this.SkyBoxSceneNode.render(f)
 	}
+
 	//I'm not using dynamic lights so the chuck below is not necessary
+
 	//f.clearDynamicLights();
 	//f.AmbientLight = this.AmbientLight.clone(); //SS: clone returns a new object, leaving the object f.AmbientLight is pointing to anreachable
 	/*var d;	
