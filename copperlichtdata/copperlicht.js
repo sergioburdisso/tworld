@@ -744,7 +744,7 @@ CL3D.Matrix4.prototype.getTranslation = function () {
 	return this.Translation;
 };
 CL3D.Matrix4.prototype.getScale = function () {
-	return new CL3D.Vect3d(this.m00, this.m05, this.m10) //SS: may be optimizad (as every function which returns a new object)
+	return new CL3D.Vect3d(this.m00, this.m05, this.m10) //SS: may be optimizad (as well as every function which returns a new object)
 };
 CL3D.Matrix4.prototype.rotateVect = function (a) {
 	var b = a.clone();
@@ -2214,9 +2214,9 @@ CL3D.SkinnedMesh.prototype.animateMesh = function (g, b) {
 	}
 	for (var d = 0; d < this.AllJoints.length; ++d) {
 		var e = this.AllJoints[d];
-		_tempV5.setTo(e.Animatedposition);//var a = e.Animatedposition.clone();
-		_tempV4.setTo(e.Animatedscale);//var f = e.Animatedscale.clone();
-		_tempQ2.setTo(e.Animatedrotation);//var c = e.Animatedrotation.clone();
+		_tempV5.setTo(e.Animatedposition);
+		_tempV4.setTo(e.Animatedscale);
+		_tempQ2.setTo(e.Animatedrotation);
 		this.getFrameData(g, e, _tempV5, e.positionHint, _tempV4, e.scaleHint, _tempQ2, e.rotationHint);
 		e.Animatedposition.setTo(_tempV5);
 		e.Animatedscale.setTo(_tempV4);
@@ -2260,7 +2260,6 @@ CL3D.SkinnedMesh.prototype.getFrameData = function (n, x, v, l, w, r, o, h) {
 					var f = c[s - 1];
 					k = n - g.frame;
 					j = f.frame - n;
-					//v.setTo(f.position.substract(g.position).multiplyThisWithScal(1 / (k + j)).multiplyThisWithScal(k).addToThis(g.position))
 					v.setTo(f.position).substractFromThis(g.position).multiplyThisWithScal(1 / (k + j)).multiplyThisWithScal(k).addToThis(g.position);
 				}
 			}
@@ -2288,7 +2287,6 @@ CL3D.SkinnedMesh.prototype.getFrameData = function (n, x, v, l, w, r, o, h) {
 					var u = t[m - 1];
 					k = n - b.frame;
 					j = u.frame - n;
-					//w.setTo(u.scale.substract(b.scale).multiplyThisWithScal(1 / (k + j)).multiplyThisWithScal(k).addToThis(b.scale))
 					w.setTo(u.scale).substractFromThis(b.scale).multiplyThisWithScal(1 / (k + j)).multiplyThisWithScal(k).addToThis(b.scale);
 				}
 			}
@@ -2423,7 +2421,7 @@ CL3D.SkinnedMesh.prototype.skinMesh = function () {
 			if (!this.LocalBuffers[f.AttachedMeshes[d]].Transformation)
 				this.LocalBuffers[f.AttachedMeshes[d]].Transformation = new CL3D.Matrix4();
 
-			this.LocalBuffers[f.AttachedMeshes[d]].Transformation.setTo(f.GlobalAnimatedMatrix); // VER ESTE CLONE
+			this.LocalBuffers[f.AttachedMeshes[d]].Transformation.setTo(f.GlobalAnimatedMatrix);
 		}
 	}
 	for (e = 0; e < this.LocalBuffers.length; ++e) {
@@ -2439,12 +2437,10 @@ CL3D.SkinnedMesh.prototype.skinMesh = function () {
 };
 CL3D.SkinnedMesh.prototype.skinJoint = function (e, b) {
 	if (e.Weights.length) {
-		_tempM0.setTo(e.GlobalAnimatedMatrix).multiplyThisWith(e.GlobalInversedMatrix);//var m = e.GlobalAnimatedMatrix.multiply(e.GlobalInversedMatrix);
-		//var d = new CL3D.Vect3d(); _tempV0
-		//var c = new CL3D.Vect3d(); _tempV1
 		var f = this.LocalBuffers;
 		var l;
 		var a;
+		_tempM0.setTo(e.GlobalAnimatedMatrix).multiplyThisWith(e.GlobalInversedMatrix);
 		for (var h = 0; h < e.Weights.length; ++h) {
 			var k = e.Weights[h];
 			_tempM0.transformVect2(_tempV0, k.StaticPos);
@@ -2974,17 +2970,15 @@ CL3D.Renderer.prototype.drawWebGlStaticGeometry = function (a) {
 	g.vertexAttribPointer(4, 3, g.FLOAT, false, 0, 0);
 	g.bindBuffer(g.ELEMENT_ARRAY_BUFFER, a.indexBuffer);
 
-	//var d = new CL3D.Matrix4(false);
 	_tempM0.resetToZero();
 	this.Projection.copyTo(_tempM0);
 	_tempM0.multiplyThisWith(this.View);
 	_tempM0.multiplyThisWith(this.World);
 	var c = this.currentGLProgram;
 	if (c.locWorldViewProj != null) {
-		g.uniformMatrix4fv(c.locWorldViewProj, false, this.getMatrixAsWebGLFloatArray(_tempM0)) // getMatrixAsWebGLFloatArray OPTIMIZAR NEW
+		g.uniformMatrix4fv(c.locWorldViewProj, false, this.getMatrixAsWebGLFloatArray(_tempM0))
 	}
 	if (c.locNormalMatrix != null) {
-		//var e = new CL3D.Matrix4(true);
 		_tempM0.makeIdentity();
 		_tempM0.multiplyThisWith(this.View);
 		_tempM0.multiplyThisWith(this.World);
@@ -2992,14 +2986,13 @@ CL3D.Renderer.prototype.drawWebGlStaticGeometry = function (a) {
 		g.uniformMatrix4fv(c.locNormalMatrix, true, this.getMatrixAsWebGLFloatArray(_tempM0))
 	}
 	if (c.locModelViewMatrix != null) {
-		//var f = new CL3D.Matrix4(true);
 		_tempM0.makeIdentity();
 		_tempM0.multiplyThisWith(this.View);
 		_tempM0.multiplyThisWith(this.World);
 		g.uniformMatrix4fv(c.locModelViewMatrix, false, this.getMatrixAsWebGLFloatArray(_tempM0))
 	}
 	if (c.locLightPositions != null) {
-		this.setDynamicLightsIntoConstants(c) //  OPTIMIZAR NEW PERO VER SI SE LLAMA PRIMERO
+		this.setDynamicLightsIntoConstants(c)
 	}
 	g.drawElements(g.TRIANGLES, a.indexCount, g.UNSIGNED_SHORT, 0)
 };
@@ -8522,7 +8515,7 @@ CL3D.Scene.prototype.drawAll = function (f) {
 	//I'm not using dynamic lights so the chuck below is not necessary
 
 	//f.clearDynamicLights();
-	//f.AmbientLight = this.AmbientLight.clone(); //SS: clone returns a new object, leaving the object f.AmbientLight is pointing to anreachable
+	//f.AmbientLight = this.AmbientLight.clone(); //SS: clone returns a new object, leaving the object f.AmbientLight is pointing to unreachable
 	/*var d;	
 	if (b != null && this.LightsToRender.length > 0) {
 		this.LightsToRender.sort(function (l, i) {
