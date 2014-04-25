@@ -8333,13 +8333,13 @@ CL3D.CopperLicht.prototype.get3DPositionFrom2DPosition = function (m, k) {
 };
 CL3D.CopperLicht.prototype.get2DPositionFrom3DPosition = function (b) {
 	var a = this.TheRenderer;
-	_tempM0.resetToZero();
+	_tempM2.resetToZero();
 
 	if (!a.Projection) {
 		return null
 	}
-	a.Projection.copyTo(_tempM0);
-	_tempM0.multiplyThisWith(a.View);
+	a.Projection.copyTo(_tempM2);
+	_tempM2.multiplyThisWith(a.View);
 	var i = a.getWidth() / 2;
 	var e = a.getHeight() / 2;
 	var h = i;
@@ -8347,16 +8347,16 @@ CL3D.CopperLicht.prototype.get2DPositionFrom3DPosition = function (b) {
 	if (e == 0 || i == 0) {
 		return null
 	}
-	_tempV0.set(b.X, b.Y, b.Z);
-	_tempV0.W = 1;
-	_tempM0.multiplyWith1x4Matrix(_tempV0);
-	var c = _tempV0.W == 0 ? 1 : (1 / _tempV0.W);
-	if (_tempV0.Z < 0) {
+	_tempV5.set(b.X, b.Y, b.Z);
+	_tempV5.W = 1;
+	_tempM2.multiplyWith1x4Matrix(_tempV5);
+	var c = _tempV5.W == 0 ? 1 : (1 / _tempV5.W);
+	if (_tempV5.Z < 0) {
 		return null
 	}
 
-	_temp2V0.X = i * (_tempV0.X * c) + h;
-	_temp2V0.Y = g - (e * (_tempV0.Y * c));
+	_temp2V0.X = i * (_tempV5.X * c) + h;
+	_temp2V0.Y = g - (e * (_tempV5.Y * c));
 	return _temp2V0;
 };
 CL3D.CopperLicht.prototype.setActiveCameraNextFrame = function (a) {

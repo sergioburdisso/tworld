@@ -66,9 +66,9 @@
 	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;">  
 		<div id="score-up" class="no-selection element" style="position:absolute; z-index: 11; color: rgb(121, 255, 133); font-weight:bold; font-size:40px; text-shadow: 0 0 20px #44ff5e;">0</div>
 		<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>
-		<div id="fps" class="fps no-selection element" style="z-index: 9;">00 fps</div>
+		<div id="fps" class="fps no-selection element" style="z-index: 9; background-color: transparent">00 fps</div>
 		<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">
-		<img id="pauseBtn" src="imgs/pause.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">
+		<!--<img id="pauseBtn" src="imgs/pause.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9">
 			<ul style="margin:7px; padding:0; list-style:none; pointer-events: auto">
 				<li id="sb-logo" style="float:left; overflow:hidden; ">
@@ -142,7 +142,7 @@
 			$("#tileworld").prop('width',$(window).width());
 			$("#tileworld").prop('height',$(window).height());
 
-			tileWorld = new Tileworld({
+			_Tileworld = new Tileworld({
 							graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/Tileworld.ccbjs'),
 							dimension : [10, 10]
 						});
@@ -162,7 +162,7 @@
 			});
 
 			//Pause Button
-			$("#pauseBtn").mouseenter(function(e){
+			/*$("#pauseBtn").mouseenter(function(e){
 				$("#pauseBtn").prop("src", "imgs/pause_enter.png");
 			});
 			$("#pauseBtn").mouseleave(function(e){
@@ -170,33 +170,34 @@
 			});
 			$("#pauseBtn").mousedown(function(e){
 				togglePause();
-			});
+			});*/
 
 
 			//Play Button
 			$("#playBtn").mouseenter(function(e){
-				$("#playBtn").prop("src", "imgs/play_enter.png");
+				if (_Ready)
+					$("#playBtn").prop("src", "imgs/play_enter.png");
 			});
 			$("#playBtn").mouseleave(function(e){
 				$("#playBtn").prop("src", "imgs/play.png");
 			});
 			$("#playBtn").mousedown(function(e){
-				if (!_Ready){
+				if (_Ready){
 
 					if (_AUDIO_ENABLE){
 						sound_keyboard.stop();
 						_sound_music.loop().play();
 					}
 
-					_Ready = true;
+					_Running = true;
 					$('#tileworld').css('-webkit-filter', '');
 					$('#playBtn').hide();
 					$('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
 
 					$("#resetBtn").show();
-					$("#pauseBtn").show();
+					//$("#pauseBtn").show();
 					$("#resetBtn").animate({opacity:1},500);
-					$("#pauseBtn").animate({opacity:1},500);
+					//$("#pauseBtn").animate({opacity:1},500);
 					$(".title").animate({opacity:0},4000,function(){$(".title").hide()});
 
 					$("#logos-line").css({border:'none'});
@@ -211,8 +212,10 @@
 							$("#scoreParent").animate({opacity:1},1000);
 						}
 					);
-				}else
-					togglePause();
+
+					_Tileworld.start();
+				}/*else
+					togglePause();*/
 			});
 
 			//Logos
@@ -220,25 +223,24 @@
 				$("#sb-logo").stop(true).animate({width:'119px', opacity: 1}, 100);
 			});
 			$("#sb-logo").mouseleave(function(e){
-				$("#sb-logo").stop(true).animate({width:'36px', opacity: _Ready? 0.2 : 1}, 500);
+				$("#sb-logo").stop(true).animate({width:'36px', opacity: _Running? 0.2 : 1}, 500);
 			});
 
 			$("#unsl-logo").mouseenter(function(e){
 				$("#unsl-logo").stop(true).animate({width:'107px', opacity: 1}, 100);
 			});
 			$("#unsl-logo").mouseleave(function(e){
-				$("#unsl-logo").stop(true).animate({width:'30px', opacity: _Ready? 0.2 : 1}, 500);
+				$("#unsl-logo").stop(true).animate({width:'30px', opacity: _Running? 0.2 : 1}, 500);
 			});
-
 
 			$(window).resize(function() {
 				$("#fps").css({left: $("#tileworld").offset().left+($('#tileworld').width()-40)+"px"});
-				$("#pauseBtn").css({left: $("#tileworld").offset().left+"px"});
-				$("#resetBtn").css({left: ($("#tileworld").offset().left+((!_Pause)?64:0))+"px"});
+				//$("#pauseBtn").css({left: $("#tileworld").offset().left+"px"});
+				$("#resetBtn").css({left: $("#tileworld").offset().left/*+((!_Pause)?64:0))*/+"px"});
 				$("#frameShadow").css({width: $('#frame').width()+"px", height: $('#frame').height()+"px"});
 			});
 
-			togglePause = function (){
+			/*togglePause = function (){
 				if (_Pause = !_Pause){
 					$('#fps').hide();
 					$('#playBtn').show();
@@ -280,7 +282,7 @@
 						});
 					$('#tileworld').css('background-color', 'black');
 				}
-			}
+			}*/
 
 			$("#frameShadow").css({top: 0});
 			$("#frameColor").hide();
