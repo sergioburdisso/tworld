@@ -111,9 +111,18 @@
 				</li>
 				<li style="float:left">&nbsp;</li>
 			</ul>
-			<span id="scoreParent" style="float:right; font-size:20px; margin-right: 15px; text-shadow: 0px 0px 10px white; opacity:0; display: none">
+			<span id="battery-parent" style="float:right; margin: -5px 15px 0 -35px; text-shadow: 0px 0px 10px cyan; opacity:0; display: none">
+				<span id="battery-percent" style="float: right; margin-top: -20px;">100.0%</span>
+				<span style="float: right; margin-top: 13px; width: 5px; height: 16px; background-color: rgba(255, 255, 255, 0.35); border-radius: 0 5px 5px 0;"></span>
+				<span style="overflow: hidden; float: right; margin-top: 3px; margin-right: 1px; width: 75px; height: 35px; background-color: rgba(255, 255, 255, 0.35); border-radius: 6px; box-shadow: 0 0 10px rgba(87, 255, 168, 0.57);">
+					<div id="battery-charge" style="background-color: rgb(76, 218, 100); height:100%; width: 100%"></div>
+				</span>
+			</span>
+			<span id="score-parent" style="float:right; font-size:20px; margin-right: 15px; text-shadow: 0px 0px 10px white; opacity:0; display: none">
 				SCORE:&nbsp;<span id="score" style="font-size:30px; font-weight:bold; text-shadow: 0px 0px 10px cyan">0</span>
 			</span>
+
+			
 		</div>
 		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: rgba(103,104,128,0.23) url('imgs/shadow_frame.png') no-repeat; background-size: 100% 100%;">
 			<div class="title" style="font-size:72px; font-weight: bold; padding-top:3%; text-shadow: 0 0 20px cyan">TILEWORLD</div>
@@ -149,6 +158,9 @@
 
 			if (!_SHOW_FPS)
 				$("#fps").hide();
+
+			if (!Tileworld.Battery)
+				$("battery-parent").remove();
 
 			//Reset Button 
 			$("#resetBtn").mouseenter(function(e){
@@ -208,8 +220,12 @@
 						500,
 						function(){
 							$("#pie-derecho").hide();
-							$("#scoreParent").show();
-							$("#scoreParent").animate({opacity:1},1000);
+							$("#score-parent").show();
+							$("#score-parent").animate({opacity:1},1000);
+							if (Tileworld.Battery){
+								$("#battery-parent").show();
+								$("#battery-parent").animate({opacity:1},1000);
+							}
 						}
 					);
 
