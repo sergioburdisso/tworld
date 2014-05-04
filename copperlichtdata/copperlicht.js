@@ -4321,36 +4321,45 @@ CL3D.BillboardSceneNode.prototype.render = function (k) {
 		var c = a.getAbsolutePosition();
 		var h = a.getTarget();
 		var f = a.getUpVector();
-		var l = h.substract(c);
-		l.normalize();
-		var b = f.crossProduct(l);
-		if (b.getLengthSQ() == 0) {
-			b.set(f.Y, f.X, f.Z)
+
+		_tempV0.setTo(h).substractFromThis(c);
+
+		_tempV0.normalize();
+
+
+		_tempV1.setTo(f).crossProductTo(_tempV0);
+
+		if (_tempV1.getLengthSQ() == 0) {
+			_tempV1.set(f.Y, f.X, f.Z)
 		}
-		b.normalize();
-		b.multiplyThisWithScal(0.5 * this.SizeX);
-		var d = b.crossProduct(l);
-		d.normalize();
-		d.multiplyThisWithScal(0.5 * this.SizeY);
+		_tempV1.normalize();
+		_tempV1.multiplyThisWithScal(0.5 * this.SizeX);
+
+		_tempV2.setTo(_tempV1).crossProductTo(_tempV0);
+		_tempV2.normalize();
+		_tempV2.multiplyThisWithScal(0.5 * this.SizeY);
+
 		if (this.IsVertical) {
-			d.set(0, -0.5 * this.SizeY, 0)
+			_tempV2.set(0, -0.5 * this.SizeY, 0)
 		}
-		l.multiplyThisWithScal(1);
+		_tempV0.multiplyThisWithScal(1);
 		this.vtx1.Pos.setTo(m);
-		this.vtx1.Pos.addToThis(b);
-		this.vtx1.Pos.addToThis(d);
+		this.vtx1.Pos.addToThis(_tempV1);
+		this.vtx1.Pos.addToThis(_tempV2);
 		this.vtx2.Pos.setTo(m);
-		this.vtx2.Pos.addToThis(b);
-		this.vtx2.Pos.substractFromThis(d);
+		this.vtx2.Pos.addToThis(_tempV1);
+		this.vtx2.Pos.substractFromThis(_tempV2);
 		this.vtx3.Pos.setTo(m);
-		this.vtx3.Pos.substractFromThis(b);
-		this.vtx3.Pos.substractFromThis(d);
+		this.vtx3.Pos.substractFromThis(_tempV1);
+		this.vtx3.Pos.substractFromThis(_tempV2);
 		this.vtx4.Pos.setTo(m);
-		this.vtx4.Pos.substractFromThis(b);
-		this.vtx4.Pos.addToThis(d);
+		this.vtx4.Pos.substractFromThis(_tempV1);
+		this.vtx4.Pos.addToThis(_tempV2);
 		this.MeshBuffer.update();
-		var j = new CL3D.Matrix4(true);
-		k.setWorld(j);
+
+		//var j = new CL3D.Matrix4(true);
+		_tempM0.makeIdentity();
+		k.setWorld(_tempM0);
 		k.setMaterial(this.MeshBuffer.Mat);
 		k.drawMeshBuffer(this.MeshBuffer)
 	}

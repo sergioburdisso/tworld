@@ -60,12 +60,47 @@
 			padding: 0 10px 0 10px;
 			border-right: 1px solid rgba(255,255,255,1);
 		}
+
+		.console{
+			background-color: rgba(0,0,0,0.4);
+			display: inline-block;
+			width: 75%;
+			word-wrap: break-word;
+			font-family: monospace;
+			padding-left: 5px;
+			padding-right: 5px;
+		}
+		.error{
+			color:red;
+			text-shadow: 0 0 10px red;
+		}
+		.log{
+			color:white;
+			text-shadow: 0 0 10px cyan;
+		}
+		.header{
+			color: rgb(60, 255, 91);
+			font-size: small;
+			background-color: rgba(0,0,0,0.5);
+			text-shadow: 0 0 10px cyan;
+		}
+		pre{
+			display: block;
+			font-family: monospace;
+			white-space: pre;
+			margin: 0 0 10px 0;
+		}
 	</style>
 </head>
 <body>
-	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;">  
-		<div id="score-up" class="no-selection element" style="position:absolute; z-index: 11; color: rgb(121, 255, 133); font-weight:bold; font-size:40px; text-shadow: 0 0 20px #44ff5e;">0</div>
+	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;">
+		<div id="score-up" class="no-selection element" style="pointer-events: none; position:absolute; z-index: 11; color: rgb(121, 255, 133); font-weight:bold; font-size:40px; text-shadow: 0 0 20px #44ff5e;">0</div>
 		<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>
+		<div class="no-selection element no-events" style="z-index: 9; overflow: hidden; position: absolute; background-color: transparent; top:70px; height: 100%; width: 100%; text-align: left;">
+			<div class="element" style="position: absolute; bottom: 120px; width: 100%;">
+				<div id="console"></div>
+			</div>
+		</div>
 		<div id="fps" class="fps no-selection element" style="z-index: 9; background-color: transparent">00 fps</div>
 		<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">
 		<!--<img id="pauseBtn" src="imgs/pause.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
@@ -121,20 +156,18 @@
 			<span id="score-parent" style="float:right; font-size:20px; margin-right: 15px; text-shadow: 0px 0px 10px white; opacity:0; display: none">
 				SCORE:&nbsp;<span id="score" style="font-size:30px; font-weight:bold; text-shadow: 0px 0px 10px cyan">0</span>
 			</span>
-
-			
 		</div>
 		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: rgba(103,104,128,0.23) url('imgs/shadow_frame.png') no-repeat; background-size: 100% 100%;">
-			<div class="title" style="font-size:72px; font-weight: bold; padding-top:3%; text-shadow: 0 0 20px cyan">TILEWORLD</div>
-			<div class="title" style="font-size:48px;">SPACE VERSION</div>
-			<div class="title" style="font-size:18px; padding-top:13px;">
+			<div class="title no-events" style="font-size:72px; font-weight: bold; padding-top:3%; text-shadow: 0 0 20px cyan">TILEWORLD</div>
+			<div class="title no-events" style="font-size:48px;">SPACE VERSION</div>
+			<div class="title no-events" style="font-size:18px; padding-top:13px;">
 				AN INTERACTIVE GAME FOR YOU TO PUT YOUR</br>AI ALGORITHMS THROUGH THEIR PACES
 			</div>
 			<div id="playFrame" style="width:100%; ">
 				<img id="playBtn" src="imgs/play.png" class ="element no-selection" style="position:relative; margin-left: -32px; padding-top: 90px">
 			</div>
 		</div>
-		<div id="frameColor" class="no-selection element" style="position: absolute; z-index: 11; display:none; width : 100%; height : 100%"></div>
+		<div id="frameColor" class="no-selection element" style="pointer-events: none; position: absolute; z-index: 11; display:none; width : 100%; height : 100%"></div>
 		<canvas id="tileworld" width="800" height="600" style="background-color : black; -webkit-filter: blur(5px); width : 100%; height : 100%"></canvas>
 	</div>
 	<script type="text/javascript">
