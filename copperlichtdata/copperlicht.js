@@ -8509,6 +8509,7 @@ CL3D.Scene.prototype.drawAll = function (f) {
 	var a = 0; // Rendered Nodes Counter
 	var b= null; // ActiveCamera
 	var h = null; // Camera Bounding Box
+	var length;
 
 	this.CurrentRenderMode = CL3D.Scene.RENDER_MODE_CAMERA;
 	
@@ -8521,7 +8522,7 @@ CL3D.Scene.prototype.drawAll = function (f) {
 		this.SkyBoxSceneNode.render(f)
 	}
 
-	//I'm not using dynamic lights so the chuck below is not necessary
+	//I'm not using dynamic lights so the chuck below is not necessary (the less code, the better)
 
 	//f.clearDynamicLights();
 	//f.AmbientLight = this.AmbientLight.clone(); //SS: clone returns a new object, leaving the object f.AmbientLight is pointing to unreachable
@@ -8556,7 +8557,8 @@ CL3D.Scene.prototype.drawAll = function (f) {
 		}
 	}
 	this.CurrentRenderMode = CL3D.Scene.RENDER_MODE_DEFAULT;
-	for (d = 0; d < this.SceneNodesToRender.length; ++d) {
+	length = this.SceneNodesToRender.length;
+	for (d = 0; d < length; ++d) {
 		var j = this.SceneNodesToRender[d];
 		if (h == null || h.intersectsWithBox(j.getTransformedBoundingBox())) {
 			j.render(f);
@@ -8564,7 +8566,8 @@ CL3D.Scene.prototype.drawAll = function (f) {
 		}
 	}
 	this.CurrentRenderMode = CL3D.Scene.RENDER_MODE_TRANSPARENT;
-	if (b != null && this.SceneNodesToRenderTransparent.length > 0) {
+	length = this.SceneNodesToRenderTransparent.length;
+	if (b != null && length > 0) {
 		this.SceneNodesToRenderTransparent.sort(function (l, i) {
 			var m = b.getDistanceFromSQ(l.getAbsolutePosition());
 			var k = b.getDistanceFromSQ(i.getAbsolutePosition());
@@ -8577,7 +8580,7 @@ CL3D.Scene.prototype.drawAll = function (f) {
 			return 0
 		})
 	}
-	for (d = 0; d < this.SceneNodesToRenderTransparent.length; ++d) {
+	for (d = 0; d < length; ++d) {
 		var j = this.SceneNodesToRenderTransparent[d];
 		if (h == null || h.intersectsWithBox(j.getTransformedBoundingBox())) {
 			j.render(f);
@@ -8585,7 +8588,8 @@ CL3D.Scene.prototype.drawAll = function (f) {
 		}
 	}
 	this.CurrentRenderMode = CL3D.Scene.RENDER_MODE_2DOVERLAY;
-	for (d = 0; d < this.Overlay2DToRender.length; ++d) {
+	length = this.Overlay2DToRender.length;
+	for (d = 0; d < length; ++d) {
 		this.Overlay2DToRender[d].render(f)
 	}
 	a += this.Overlay2DToRender.length;
