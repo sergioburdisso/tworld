@@ -5,6 +5,11 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 	<script type="text/javascript" src="./lib/solid-loader.js"></script>
 	<style type="text/css">
+		@font-face {
+			font-family: invasion2000;
+			src: url('invasion2000.ttf');
+		}
+
 		body {
 			background-color:#000000;
 			color: white;
@@ -39,7 +44,7 @@
 			background-color: black;
 			top:0;
 			display:inline;
-			/*font-family:Arial, Helvetica, sans-serif;*/
+			font-family: invasion2000, Arial, Helvetica, sans-serif;
 			font-size:15px;
 			color:white;
 		}
@@ -94,7 +99,7 @@
 </head>
 <body>
 	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;">
-		<div id="score-up" class="no-selection element" style="pointer-events: none; position:absolute; z-index: 11; color: rgb(121, 255, 133); font-weight:bold; font-size:40px; text-shadow: 0 0 20px #44ff5e;">0</div>
+		<div id="score-up" class="no-selection element" style="pointer-events: none; position:absolute; z-index: 11; color: rgb(255, 105, 0); font-weight:bold; font-size:40px; text-shadow: 0 0 10px rgb(255, 0, 201); font-family: invasion2000">0</div>
 		<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>
 		<div class="no-selection element no-events" style="z-index: 9; overflow: hidden; position: absolute; background-color: transparent; top:70px; height: 100%; width: 100%; text-align: left;">
 			<div class="element" style="position: absolute; bottom: 120px; width: 100%;">
@@ -102,9 +107,9 @@
 			</div>
 		</div>
 		<div id="fps" class="fps no-selection element" style="z-index: 9; background-color: transparent">00 fps</div>
-		<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">
+		<!--<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		<!--<img id="pauseBtn" src="imgs/pause.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
-		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9">
+		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9;">
 			<ul style="margin:7px; padding:0; list-style:none; pointer-events: auto">
 				<li id="sb-logo" style="float:left; overflow:hidden; ">
 					<a target="_blank" href="">
@@ -146,15 +151,15 @@
 				</li>
 				<li style="float:left">&nbsp;</li>
 			</ul>
-			<span id="battery-parent" style="float:right; margin: -5px 15px 0 -35px; text-shadow: 0px 0px 10px cyan; opacity:0; display: none">
+			<span id="battery-parent" style="float:right; margin: -5px 15px 0 -35px; text-shadow: 0px 0px 10px cyan; opacity:0; display: none; font-family: invasion2000">
 				<span id="battery-percent" style="float: right; margin-top: -20px;">100.0%</span>
 				<span style="float: right; margin-top: 13px; width: 5px; height: 16px; background-color: rgba(255, 255, 255, 0.35); border-radius: 0 5px 5px 0;"></span>
 				<span id="battery-charge-frame" style="overflow: hidden; float: right; margin-top: 3px; margin-right: 1px; width: 75px; height: 35px; background-color: rgba(255, 255, 255, 0.35); border-radius: 6px; box-shadow: 0 0 10px rgba(87, 255, 168, 0.57);">
 					<div id="battery-charge" style="background-color: rgb(76, 218, 100); height:100%; width: 100%"></div>
 				</span>
 			</span>
-			<span id="score-parent" style="float:right; font-size:20px; margin-right: 15px; text-shadow: 0px 0px 10px white; opacity:0; display: none">
-				SCORE:&nbsp;<span id="score" style="font-size:30px; font-weight:bold; text-shadow: 0px 0px 10px cyan">0</span>
+			<span id="score-parent" style="float:right; font-size:20px; margin-right: 15px; /*text-shadow: 0px 0px 10px black;*/ opacity:0; display: none; font-family: invasion2000; text-shadow: 0px 0px 10px rgb(255, 0, 201); color: rgb(255, 105, 0)">
+				SCORE:&nbsp;<span id="score" style="font-size:30px; font-weight:bold;">0</span>
 			</span>
 		</div>
 		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: rgba(103,104,128,0.23) url('imgs/shadow_frame.png') no-repeat; background-size: 100% 100%;">
@@ -196,7 +201,7 @@
 				$("battery-parent").remove();
 
 			//Reset Button 
-			$("#resetBtn").mouseenter(function(e){
+			/*$("#resetBtn").mouseenter(function(e){
 				$("#resetBtn").prop("src", "imgs/restart_enter.png");
 			});
 			$("#resetBtn").mouseleave(function(e){
@@ -204,7 +209,7 @@
 			});
 			$("#resetBtn").mousedown(function(e){
 				//TODO
-			});
+			});*/
 
 			//Pause Button
 			/*$("#pauseBtn").mouseenter(function(e){
@@ -239,9 +244,9 @@
 					$('#playBtn').hide();
 					$('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
 
-					$("#resetBtn").show();
+					//$("#resetBtn").show();
 					//$("#pauseBtn").show();
-					$("#resetBtn").animate({opacity:1},500);
+					//$("#resetBtn").animate({opacity:1},500);
 					//$("#pauseBtn").animate({opacity:1},500);
 					$(".title").animate({opacity:0},4000,function(){$(".title").hide()});
 
@@ -285,7 +290,7 @@
 			$(window).resize(function() {
 				$("#fps").css({left: $("#tileworld").offset().left+($('#tileworld').width()-40)+"px"});
 				//$("#pauseBtn").css({left: $("#tileworld").offset().left+"px"});
-				$("#resetBtn").css({left: $("#tileworld").offset().left/*+((!_Pause)?64:0))*/+"px"});
+				//$("#resetBtn").css({left: $("#tileworld").offset().left/*+((!_Pause)?64:0))*/+"px"});
 				$("#frameShadow").css({width: $('#frame').width()+"px", height: $('#frame').height()+"px"});
 			});
 
