@@ -10,15 +10,18 @@ var CL3D = {};
 
 CL3D.DebugOutput = function (d, a) {
 	this.DebugRoot = null;
-	this.FPSRoot = null;
-	var e = document.getElementById(d);
-	if (e == null) {
+	//this.FPSRoot = null;
+	//var e = document.getElementById(d);
+	/*if (e == null) {
 		CL3D.gCCDebugInfoEnabled = false;
 		return
-	}
-	this.DebugRoot = e.parentNode;
+	}*/
+
+	$("#console").append('<div class="console header" id="loading-header">'+ new Date().toLocaleTimeString()+'&nbsp;&gt;</div>');
+	this.DebugRoot = document.getElementById( "console" );
 	if (this.DebugRoot) {
-		this.LoadingRoot = document.createElement("div");
+		this.LoadingRoot = document.createElement( "div" );
+		this.LoadingRoot.className = "console log";
 		this.DebugRoot.appendChild(this.LoadingRoot);
 		var b = document.createTextNode("Loading...");
 		this.LoadingRootText = b;
@@ -27,7 +30,8 @@ CL3D.DebugOutput = function (d, a) {
 	if (a) {
 		this.enableFPSCounter()
 	}
-};
+	//console.log("Loading...");
+};/*
 CL3D.DebugOutput.prototype.enableFPSCounter = function () {
 	if (this.FPSRoot != null) {
 		return
@@ -56,27 +60,40 @@ CL3D.DebugOutput.prototype.updatefps = function (c) {
 		this.lasttime = b;
 		this.frames = 0
 	}
-};
+};*/
+
 CL3D.DebugOutput.prototype.print = function (a) {
 	if (CL3D.gCCDebugInfoEnabled == false) {
 		return
 	}
-	this.printInternal(a, false)
+	//this.printInternal(a, false)
+	console.error(a);
 };
 CL3D.DebugOutput.prototype.setLoadingText = function (a) {
-	if (!this.LoadingRoot) {
-		return
+	if (!this.LoadingRoot)
+		return;
+
+	if (a == null){
+		this.LoadingRootText.nodeValue = "loading is complete! :) ";
+		$(this.LoadingRoot).animate(
+			{opacity : 0},
+			6000,
+			function(){
+				this.parentElement.removeChild(this)
+			}
+		);
+		$("#loading-header").animate({opacity: 0}, 6000, function(){this.parentElement.removeChild(this)});
+		delete this.LoadingRoot;
+		$("#playBtn").show();
 	}
-	if (a == null) {
-		this.LoadingRoot.style.display = "none"
-	} else {
-		this.LoadingRoot.style.display = "block";
-		this.LoadingRootText.nodeValue = a
-	}
+	else 
+		this.LoadingRootText.nodeValue = a;
 };
 CL3D.DebugOutput.prototype.printError = function (b, a) {
-	this.printInternal(b, true, a)
+	//this.printInternal(b, true, a)
+	console.error(b);
 };
+/*
 CL3D.DebugOutput.prototype.printInternal = function (e, d, b) {
 	if (CL3D.gCCDebugInfoEnabled == false && d != true) {
 		return
@@ -91,7 +108,7 @@ CL3D.DebugOutput.prototype.printInternal = function (e, d, b) {
 		var c = document.createTextNode(e);
 		this.DebugRoot.appendChild(c)
 	}
-};
+};*/
 CL3D.gCCDebugInfoEnabled = true;
 CL3D.gCCDebugOutput = null;
 CL3D.CCFileLoader = function (a) {
@@ -7868,7 +7885,7 @@ CL3D.CopperLicht = function (d, e, c, a) {
 	var b = this;
 	setInterval(function () {
 		b.loadingUpdateIntervalHandler()
-	}, 500)
+	}, 100)
 };
 CL3D.CopperLicht.prototype.initRenderer = function () {
 	return this.createRenderer()
@@ -7946,14 +7963,14 @@ CL3D.CopperLicht.prototype.createRenderer = function () {
 };
 CL3D.CopperLicht.prototype.draw3DIntervalHandler = function () {
 	this.draw3dScene();
-	if (CL3D.gCCDebugOutput != null) {
+	/*if (CL3D.gCCDebugOutput != null) {
 		var b = this.Document.getCurrentScene();
 		var a = null;
 		if (b != null && b.UseCulling) {
 			a = " nodes rendered: " + b.NodeCountRenderedLastTime
 		}
 		CL3D.gCCDebugOutput.updatefps(a)
-	}
+	}*/
 };
 CL3D.CopperLicht.prototype.loadingUpdateIntervalHandler = function () {
 	if (!CL3D.gCCDebugOutput) {
@@ -7965,6 +7982,7 @@ CL3D.CopperLicht.prototype.loadingUpdateIntervalHandler = function () {
 		b = this.TheTextureManager.getCountOfTexturesToLoad();
 		c = this.TheTextureManager.getTextureCount()
 	}
+
 	if (this.LoadingAFile || b) {
 		var a = "Loading";
 		if (b > 0) {
