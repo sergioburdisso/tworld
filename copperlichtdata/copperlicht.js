@@ -2497,6 +2497,9 @@ CL3D.TextureManager.prototype.getTexture = function (b, a) {
 		c.Image.onload = function () {
 			d.onTextureLoaded(c)
 		};
+		c.Image.onerror = function () {
+			console.error("Error: couldn't download texture '"+c.Name+"'\n(if your Internet connection is slow, try reloading the page)");
+		};
 		c.Image.src = c.Name;
 		return c
 	}
