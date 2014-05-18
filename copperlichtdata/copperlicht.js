@@ -121,7 +121,6 @@ CL3D.CCFileLoader = function (a) {
 			CL3D.gCCDebugOutput.printError("Could not open file " + d.FileToLoad + " (status:" + evt + ")")
 		}
 		this.xmlhttp.onload = function(){
-			alert("file to load= " + d.FileToLoad);
 			if (d.FileToLoad.indexOf(".ccbjs")){
 				var response = "", arrayBuffer = new Uint8Array(d.xmlhttp.response);
 
