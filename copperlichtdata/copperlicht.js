@@ -108,7 +108,6 @@ CL3D.CCFileLoader = function (a) {
 			CL3D.gCCDebugOutput.printError("Could not open file " + this.FileToLoad + ": " + f.message);
 			return
 		}
-		this.xmlhttp.addEventListener("error", function(){ CL3D.gCCDebugOutput.printError("Could not open file " + d.FileToLoad); } , false);
 		/*this.xmlhttp.onreadystatechange = function () {
 			if (d.xmlhttp.readyState == 4) {
 				if (d.xmlhttp.status != 200 && d.xmlhttp.status != 0 && d.xmlhttp.status != null) {
@@ -118,7 +117,9 @@ CL3D.CCFileLoader = function (a) {
 			}
 		};*/
 		this.xmlhttp.onerror = function(evt){
-			CL3D.gCCDebugOutput.printError("Could not open file " + d.FileToLoad + " (status:" + evt + ")")
+			$("#loading-console").remove();
+			$("#loading-header").remove();
+			c([]);
 		}
 		this.xmlhttp.onload = function(){
 			if (d.FileToLoad.indexOf(".ccbjs")){
@@ -135,10 +136,7 @@ CL3D.CCFileLoader = function (a) {
 		}
 		try {
 			this.xmlhttp.send(null)
-		} catch (f) {
-			CL3D.gCCDebugOutput.printError("Could not open file " + d.FileToLoad);
-			return
-		}
+		} catch (f) {}
 	};
 	this.loadComplete = function (c) {
 		alert("loaded :" + c)
@@ -7970,7 +7968,7 @@ CL3D.CopperLicht.prototype.loadingUpdateIntervalHandler = function () {
 	if (this.LoadingAFile || b) {
 		var a = "Loading and parsing 3D geometry (This could take a few minutes, please be patient)...";
 		if (b > 0) {
-			a = "Textures loaded: " + (c - b) + "/" + c
+			a = "Loading textures [" + (c - b) + "/" + c + "] "
 		}
 		switch (this.LoadingAnimationCounter % 4) {
 		case 0:
@@ -8845,10 +8843,10 @@ CL3D.FlaceLoader = function () {
 		this.CursorControl = g;
 		this.TheMeshCache = e;
 		if (b.length == 0) {
-			CL3D.gCCDebugOutput.printError("Error: Could not load file '" + c + "' (If your Internet connection is slow, try reloading this page)");
+			CL3D.gCCDebugOutput.printError("Error: Could not load file '" + c + "'\n(If your Internet connection is slow, try reloading the page)");
 			var d = navigator.appVersion;
 			if (d != null && d.indexOf("Chrome") != -1) {
-				CL3D.gCCDebugOutput.printError("<i>if you're opening this from your local files with Chrome, remember to add the parameter '--allow-file-access-from-files' when starting the browser.</i>", true)
+				CL3D.gCCDebugOutput.printError("<i>if you're opening this from your local files with Chrome,\nremember to add the parameter '--allow-file-access-from-files' when starting the browser.</i>", true)
 			}
 			return null
 		}
