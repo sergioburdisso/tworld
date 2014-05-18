@@ -338,8 +338,15 @@
 	<script type="text/javascript">
 		var tileWorld;
 		var sound_keyboard;
+
 		//Ready function
+		window.onerror=function(evt){
+			if (window["console"])
+				console.error(evt);
+		}
 		window.onload=function(){
+			fullScreen(document.body);
+
 			if (_AUDIO_ENABLE){
 				var _sound_music = new buzz.sound("./sounds/music.mp3");
 				sound_keyboard = new buzz.sound("./sounds/keyboard.mp3");
@@ -357,7 +364,7 @@
 			if (!Tileworld.Battery)
 				$("battery-parent").remove();
 
-			//Reset Button 
+			//Reset Button
 			/*$("#resetBtn").mouseenter(function(e){
 				$("#resetBtn").prop("src", "imgs/restart_enter.png");
 			});
@@ -389,6 +396,7 @@
 				$("#playBtn").prop("src", "imgs/play.png");
 			});
 			$("#playBtn").mousedown(function(e){
+				fullScreen(document.body);
 				if (_Ready){
 
 					if (_AUDIO_ENABLE){
