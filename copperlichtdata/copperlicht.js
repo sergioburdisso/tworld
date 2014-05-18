@@ -123,12 +123,13 @@ CL3D.CCFileLoader = function (a) {
 		}
 		this.xmlhttp.onload = function(){
 			if (d.FileToLoad.indexOf(".ccbjs")){
-				var response = "", arrayBuffer = new Uint8Array(d.xmlhttp.response);
+				var arrayBuffer = new Uint8Array(d.xmlhttp.response)
+				var response = new Array(arrayBuffer.length);
 
 				if (arrayBuffer){
 					for (var length = arrayBuffer.length, i= 0; i < length; ++i)
-						response += String.fromCharCode(arrayBuffer[i]);
-					c(response);
+						response[i] = String.fromCharCode(arrayBuffer[i]);
+					c(response.join(""));
 				}else
 					c([]);
 			}else
