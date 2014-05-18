@@ -10,6 +10,140 @@
 			src: url('invasion2000.ttf');
 		}
 
+		.bubblingG {
+		text-align: center;
+		width:83px;
+		height:52px;
+		}
+
+		.bubblingG span {
+		display: inline-block;
+		vertical-align: middle;
+		width: 10px;
+		height: 10px;
+		margin: 26px auto;
+		background: rgba(0,0,0,0);
+		-moz-border-radius: 52px;
+		-moz-animation: bubblingG 0.6s infinite alternate;
+		-webkit-border-radius: 52px;
+		-webkit-animation: bubblingG 0.6s infinite alternate;
+		-ms-border-radius: 52px;
+		-ms-animation: bubblingG 0.6s infinite alternate;
+		-o-border-radius: 52px;
+		-o-animation: bubblingG 0.6s infinite alternate;
+		border-radius: 52px;
+		animation: bubblingG 0.6s infinite alternate;
+		}
+
+		#bubblingG_1 {
+		-moz-animation-delay: 0.36s;
+		-webkit-animation-delay: 0.36s;
+		-ms-animation-delay: 0.36s;
+		-o-animation-delay: 0.36s;
+		animation-delay: 0.36s;
+		}
+
+		#bubblingG_2 {
+		-moz-animation-delay: 0.18s;
+		-webkit-animation-delay: 0.18s;
+		-ms-animation-delay: 0.18s;
+		-o-animation-delay: 0.18s;
+		animation-delay: 0.18s;
+		}
+
+		#bubblingG_3 {
+		-moz-animation-delay: 0s;
+		-webkit-animation-delay: 0s;
+		-ms-animation-delay: 0s;
+		-o-animation-delay: 0s;
+		animation-delay: 0s;
+		}
+
+		@-moz-keyframes bubblingG {
+		0% {
+		width: 10px;
+		height: 10px;
+		background-color:rgba(0,0,0,0);
+		-moz-transform: translateY(0);
+		}
+
+		100% {
+		width: 25px;
+		height: 25px;
+		background-color:rgba(0,0,0,0.8);
+		-moz-transform: translateY(-22px);
+		}
+
+		}
+
+		@-webkit-keyframes bubblingG {
+		0% {
+		width: 10px;
+		height: 10px;
+		background-color:rgba(0,0,0,0);
+		-webkit-transform: translateY(0);
+		}
+
+		100% {
+		width: 25px;
+		height: 25px;
+		background-color:rgba(0,0,0,0.8);
+		-webkit-transform: translateY(-22px);
+		}
+
+		}
+
+		@-ms-keyframes bubblingG {
+		0% {
+		width: 10px;
+		height: 10px;
+		background-color:rgba(0,0,0,0);
+		-ms-transform: translateY(0);
+		}
+
+		100% {
+		width: 25px;
+		height: 25px;
+		background-color:rgba(0,0,0,0.8);
+		-ms-transform: translateY(-22px);
+		}
+
+		}
+
+		@-o-keyframes bubblingG {
+		0% {
+		width: 10px;
+		height: 10px;
+		background-color:rgba(0,0,0,0);
+		-o-transform: translateY(0);
+		}
+
+		100% {
+		width: 25px;
+		height: 25px;
+		background-color:rgba(0,0,0,0.8);
+		-o-transform: translateY(-22px);
+		}
+
+		}
+
+		@keyframes bubblingG {
+		0% {
+		width: 10px;
+		height: 10px;
+		background-color:rgba(0,0,0,0);
+		transform: translateY(0);
+		}
+
+		100% {
+		width: 25px;
+		height: 25px;
+		background-color:rgba(0,0,0,0.8);
+		transform: translateY(-22px);
+		}
+
+		}
+
 		body {
 			/*background-color:#FFFFFF;*/
 			color: white;
@@ -115,10 +249,19 @@
 	</style>
 </head>
 <body>
-	<div class="no-selection element no-events" style="z-index: 9; overflow: hidden; position: absolute; background-color: transparent; top:70px; height: 100%; width: 100%; text-align: left;">
+	<div class="element no-events" style="z-index: 9; overflow: hidden; position: absolute; background-color: transparent; top:70px; height: 100%; width: 100%; text-align: left;">
 		<div class="element" style="position: absolute; bottom: 120px; width: 100%;">
 			<div id="console"></div>
 		</div>
+	</div>
+	<div id="loading" class="bubblingG no-selection" style="z-index:100; position:absolute; top:50%; left:50%; width: 200px; margin-left: -100px; color: white">
+		<span id="bubblingG_1">l</span>
+		<span id="bubblingG_2">o</span>
+		<span id="bubblingG_2">a</span>
+		<span id="bubblingG_1">d</span>
+		<span id="bubblingG_2">i</span>
+		<span id="bubblingG_2">n</span>
+		<span id="bubblingG_1">g</span>
 	</div>
 	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;  opacity:0">
 		<div id="score-up" class="no-selection element" style="pointer-events: none; display: none; position:absolute; z-index: 11; color: rgb(255, 105, 0); font-weight:bold; font-size:40px; text-shadow: 0 0 10px rgb(255, 0, 201); font-family: invasion2000">0</div>
@@ -180,13 +323,13 @@
 			</span>
 		</div>
 		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: rgba(103,104,128,0.23) url('imgs/shadow_frame.png') no-repeat; background-size: 100% 100%;">
-			<div class="title no-events" style="font-size:72px; font-weight: bold; padding-top:3%; text-shadow: 0 0 20px cyan">TILEWORLD</div>
+			<div class="title no-events" style="font-size:72px; font-weight: bold; padding-top:3%; text-shadow: 0 0 20px rgb(0, 255, 69);">TILEWORLD</div>
 			<div class="title no-events" style="font-size:48px;">SPACE VERSION</div>
 			<div class="title no-events" style="font-size:18px; padding-top:13px;">
 				AN INTERACTIVE GAME FOR YOU TO PUT YOUR</br>AI ALGORITHMS THROUGH THEIR PACES
 			</div>
-			<div id="playFrame" style="width:100%; ">
-				<img id="playBtn" src="imgs/play.png" class ="element no-selection" style="position:relative; margin-left: -32px; padding-top: 10px; display: none">
+			<div id="playFrame" style="display: none; opacity: 0; position:absolute; top:50%; left:50%; width: 200px; margin-left: -100px;">
+				<img id="playBtn" src="imgs/play.png" class ="element no-selection">
 			</div>
 		</div>
 		<div id="frameColor" class="no-selection element" style="pointer-events: none; position: absolute; z-index: 11; display:none; width : 100%; height : 100%"></div>
@@ -207,7 +350,7 @@
 			$("#tileworld").prop('height',$(window).height());
 
 			_Tileworld = new Tileworld({
-							graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/Tileworld.ccbjs'),
+							graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/tileworld.ccbjs'),
 							dimension : [10, 10]
 						});
 

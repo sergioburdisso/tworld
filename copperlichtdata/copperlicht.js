@@ -10,17 +10,12 @@ var CL3D = {};
 
 CL3D.DebugOutput = function (d, a) {
 	this.DebugRoot = null;
-	//this.FPSRoot = null;
-	//var e = document.getElementById(d);
-	/*if (e == null) {
-		CL3D.gCCDebugInfoEnabled = false;
-		return
-	}*/
 
 	$("#console").append('<div class="console header" id="loading-header">'+ new Date().toLocaleTimeString()+'&nbsp;&gt;</div>');
 	this.DebugRoot = document.getElementById( "console" );
 	if (this.DebugRoot) {
 		this.LoadingRoot = document.createElement( "div" );
+		this.LoadingRoot.id = "loading-console"
 		this.LoadingRoot.className = "console log";
 		this.DebugRoot.appendChild(this.LoadingRoot);
 		var b = document.createTextNode("Loading...");
@@ -30,90 +25,61 @@ CL3D.DebugOutput = function (d, a) {
 	if (a) {
 		this.enableFPSCounter()
 	}
-	//console.log("Loading...");
-};/*
-CL3D.DebugOutput.prototype.enableFPSCounter = function () {
-	if (this.FPSRoot != null) {
-		return
-	}
-	this.FPSRoot = document.createElement("div");
-	this.DebugRoot.appendChild(this.FPSRoot);
-	var a = document.createTextNode("FPS: 0");
-	this.FPSRootText = a;
-	this.FPSRoot.appendChild(a);
-	this.frames = 0;
-	this.lasttime = Date.now();
 };
-CL3D.DebugOutput.prototype.updatefps = function (c) {
-	if (this.FPSRootText == null) {
-		return
-	}
-	this.frames += 1;
-	var b = Date.now();
-	if (b - this.lasttime > 1000) {
-		var d = this.frames / (b - this.lasttime) * 1000;
-		var a = "FPS: " + d.toFixed(2);
-		if (c != null) {
-			a += c
-		}
-		this.FPSRootText.nodeValue = a;
-		this.lasttime = b;
-		this.frames = 0
-	}
-};*/
-
 CL3D.DebugOutput.prototype.print = function (a) {
 	if (CL3D.gCCDebugInfoEnabled == false) {
 		return
 	}
-	//this.printInternal(a, false)
 	console.error(a);
+	$("#loading").remove();
 };
 CL3D.DebugOutput.prototype.setLoadingText = function (a) {
 	if (!this.LoadingRoot)
 		return;
 
 	if (a == null){
-		this.LoadingRootText.nodeValue = "loading is complete! :) ";
+		this.LoadingRootText.nodeValue = "loading is complete! =D ";
 		$(this.LoadingRoot).animate(
 			{opacity : 0},
-			6000,
+			7000,
 			function(){
 				this.parentElement.removeChild(this)
 			}
 		);
 		$("#loading-header").animate({opacity: 0}, 6000, function(){this.parentElement.removeChild(this)});
 		delete this.LoadingRoot;
-		$("#playBtn").show();
+		clearInterval(CL3D.LoadingTimer);
+		CL3D.LoadingTimer = null;
+
+		//if everything is loaded but we aren't ready
+		if (!_Ready){
+			$("#loading").children().remove();
+			$("#loading").append(
+				'<span id="bubblingG_1">w</span>'+
+				'<span id="bubblingG_2">a</span>'+
+				'<span id="bubblingG_2">i</span>'+
+				'<span id="bubblingG_1">t</span>'
+			);
+		}else{
+			$("#playFrame").show();
+			$("#playFrame").animate({opacity : 1}, 1000);
+			$("#loading").remove();
+		}
 	}
 	else 
 		this.LoadingRootText.nodeValue = a;
 };
 CL3D.DebugOutput.prototype.printError = function (b, a) {
-	//this.printInternal(b, true, a)
+	$("#loading").remove();
 	console.error(b);
 };
-/*
-CL3D.DebugOutput.prototype.printInternal = function (e, d, b) {
-	if (CL3D.gCCDebugInfoEnabled == false && d != true) {
-		return
-	}
-	if (b) {
-		this.DebugRoot.appendChild(document.createElement("br"));
-		var a = document.createElement("div");
-		this.DebugRoot.appendChild(a);
-		a.innerHTML = e
-	} else {
-		this.DebugRoot.appendChild(document.createElement("br"));
-		var c = document.createTextNode(e);
-		this.DebugRoot.appendChild(c)
-	}
-};*/
+
 CL3D.gCCDebugInfoEnabled = true;
 CL3D.gCCDebugOutput = null;
 CL3D.CCFileLoader = function (a) {
 	this.FileToLoad = a;
 	this.xmlhttp = false;
+
 	if (!this.xmlhttp && typeof XMLHttpRequest != "undefined") {
 		try {
 			this.xmlhttp = new XMLHttpRequest()
@@ -135,19 +101,39 @@ CL3D.CCFileLoader = function (a) {
 		}
 		var d = this;
 		try {
-			this.xmlhttp.open("GET", this.FileToLoad, true)
+			this.xmlhttp.open("GET", this.FileToLoad, true);
+			if (this.FileToLoad.indexOf(".ccbjs"))
+				this.xmlhttp.responseType = "arraybuffer";
 		} catch (f) {
 			CL3D.gCCDebugOutput.printError("Could not open file " + this.FileToLoad + ": " + f.message);
 			return
 		}
-		this.xmlhttp.onreadystatechange = function () {
+		this.xmlhttp.addEventListener("error", function(){ CL3D.gCCDebugOutput.printError("Could not open file " + d.FileToLoad); } , false);
+		/*this.xmlhttp.onreadystatechange = function () {
 			if (d.xmlhttp.readyState == 4) {
 				if (d.xmlhttp.status != 200 && d.xmlhttp.status != 0 && d.xmlhttp.status != null) {
 					CL3D.gCCDebugOutput.printError("Could not open file " + d.FileToLoad + " (status:" + d.xmlhttp.status + ")")
 				}
 				c(d.xmlhttp.responseText)
 			}
-		};
+		};*/
+		this.xmlhttp.onerror = function(evt){
+			CL3D.gCCDebugOutput.printError("Could not open file " + d.FileToLoad + " (status:" + evt + ")")
+		}
+		this.xmlhttp.onload = function(){
+			alert("file to load= " + d.FileToLoad);
+			if (d.FileToLoad.indexOf(".ccbjs")){
+				var response = "", arrayBuffer = new Uint8Array(d.xmlhttp.response);
+
+				if (arrayBuffer){
+					for (var length = arrayBuffer.length, i= 0; i < length; ++i)
+						response += String.fromCharCode(arrayBuffer[i]);
+					c(response);
+				}else
+					c([]);
+			}else
+				c(d.xmlhttp.responseText);
+		}
 		try {
 			this.xmlhttp.send(null)
 		} catch (f) {
@@ -3274,8 +3260,7 @@ CL3D.Renderer.prototype.init = function (a) {
 		}
 	} catch (c) {}
 	if (this.gl == null) {
-		CL3D.gCCDebugOutput.printError("Error: This browser does not support WebGL (or it is disabled).");
-		CL3D.gCCDebugOutput.printError("See www.ambiera.com/copperlicht/browsersupport.html for details.");
+		CL3D.gCCDebugOutput.printError("Error: Sorry, this browser does not support WebGL (or it is disabled).");
 		return false
 	} else {
 		this.removeCompatibilityProblems();
@@ -7883,7 +7868,7 @@ CL3D.CopperLicht = function (d, e, c, a) {
 		this.FPS = c
 	}
 	var b = this;
-	setInterval(function () {
+	CL3D.LoadingTimer = setInterval(function () {
 		b.loadingUpdateIntervalHandler()
 	}, 100)
 };
@@ -7984,22 +7969,22 @@ CL3D.CopperLicht.prototype.loadingUpdateIntervalHandler = function () {
 	}
 
 	if (this.LoadingAFile || b) {
-		var a = "Loading";
+		var a = "Loading and parsing 3D geometry (This could take a few minutes, please be patient)...";
 		if (b > 0) {
 			a = "Textures loaded: " + (c - b) + "/" + c
 		}
 		switch (this.LoadingAnimationCounter % 4) {
 		case 0:
-			a += ("   ");
+			a += "--";
 			break;
 		case 1:
-			a += (".  ");
+			a += "\\";
 			break;
 		case 2:
-			a += (".. ");
+			a += "|";
 			break;
 		case 3:
-			a += ("...");
+			a += "/";
 			break
 		}
 		CL3D.gCCDebugOutput.setLoadingText(a)
@@ -8861,16 +8846,16 @@ CL3D.FlaceLoader = function () {
 		this.CursorControl = g;
 		this.TheMeshCache = e;
 		if (b.length == 0) {
-			CL3D.gCCDebugOutput.printError("Error: Could not load file '" + c + "'");
+			CL3D.gCCDebugOutput.printError("Error: Could not load file '" + c + "' (If your Internet connection is slow, try reloading this page)");
 			var d = navigator.appVersion;
 			if (d != null && d.indexOf("Chrome") != -1) {
-				CL3D.gCCDebugOutput.printError("<i>For using local files with Chrome, add the parameter '--allow-file-access-from-files' when starting the browser.</i>", true)
+				CL3D.gCCDebugOutput.printError("<i>if you're opening this from your local files with Chrome, remember to add the parameter '--allow-file-access-from-files' when starting the browser.</i>", true)
 			}
 			return null
 		}
-		if (c.indexOf(".ccbjs")) {
+		/*if (c.indexOf(".ccbjs")) {
 			b = CL3D.base64decode(b)
-		}
+		}*/
 		var a = new CL3D.CCDocument();
 		this.Document = a;
 		this.setRootPath();
