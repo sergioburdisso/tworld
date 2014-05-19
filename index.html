@@ -260,6 +260,7 @@
 		<span id="bubblingG_2"></span>
 		<span id="bubblingG_1"></span>
 	</div>
+	<img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
 	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;  opacity:0">
 		<div id="score-up" class="no-selection element" style="pointer-events: none; display: none; position:absolute; z-index: 11; color: rgb(255, 105, 0); font-weight:bold; font-size:40px; text-shadow: 0 0 10px rgb(255, 0, 201); font-family: invasion2000">0</div>
 		<!--<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>-->
@@ -325,7 +326,7 @@
 			<div class="title no-events" style="font-size:18px; padding-top:13px;">
 				AN INTERACTIVE GAME FOR YOU TO PUT YOUR</br>AI ALGORITHMS THROUGH THEIR PACES
 			</div>
-			<div id="playFrame" style="display: none; opacity: 0; position:absolute; top:50%; left:50%; width: 200px; margin-left: -100px;">
+			<div id="playFrame" style="display: none; opacity: 0; position:absolute; top:50%; left:50%; margin-left: -64px; margin-top: -64px;">
 				<img id="playBtn" src="imgs/play.png" class ="element no-selection">
 			</div>
 		</div>
@@ -450,6 +451,9 @@
 			$("#unsl-logo").mouseleave(function(e){
 				$("#unsl-logo").stop(true).animate({width:'30px', opacity: _Running? 0.2 : 1}, 500);
 			});
+
+			$("#sb-logo").mouseleave();
+			$("#unsl-logo").mouseleave();
 
 			$(window).resize(function() {
 				$("#fps").css({left: $("#tileworld").offset().left+($('#tileworld').width()-40)+"px"});

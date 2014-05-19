@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<!-- TILEWORLD MESSAGE (tw_msg) HIGH-LEVEL STRUCTURE -->
+	<!--tw_msg-->
+	<xs:element name="tw_msg">
+		<xs:complexType>
+			<xs:sequence>
+				<!--tw_msg.header (percept, start, end, ready_for_next_action, error)-->
+				<xs:element ref="header"/>
+
+				<!--tw_msg.data/desc-->
+				<xs:choice>
+					<!--tw_msg.data-->
+					<xs:element name="data">
+						<xs:complexType>
+							<xs:all>
+								<!--tw_msg.data.grid-->
+								<xs:element ref="grid"/>
+
+								<!--tw_msg.data.time-->
+								<xs:element ref="time"/>
+
+								<!--tw_msg.data.score-->
+								<xs:element ref="score"/>
+
+								<!--tw_msg.data.battery (optional)-->
+								<xs:element ref="battery" minOccurs="0"/>
+
+								<!--tw_msg.data.battery_charger (optional)-->
+								<xs:element ref="battery_charger" minOccurs="0"/>
+
+								<!--tw_msg.data.agent-->
+								<xs:element ref="agent"/>
+
+								<!--tw_msg.data.holes-->
+								<xs:element ref="holes"/>
+
+								<!--tw_msg.data.tiles-->
+								<xs:element ref="tiles"/>
+
+								<!--tw_msg.data.tiles-->
+								<xs:element ref="obstacles"/>
+
+								<!--tw_msg.data.builtin_knowledge-->
+								<xs:element ref="builtin_knowledge"/>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+
+					<!--tw_msg.desc-->
+					<xs:element name="desc" type="xs:string"/>
+
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<!-- TILEWORLD MESSAGE (tw_msg) HIGH-LEVEL STRUCTURE END -->
+
+	<!-- DEFINITION OF INDIVIDUAL ELEMENTS -->
+	<!--tw_msg.header-->
+	<xs:element name="header">
+		<xs:simpleType>
+			 <xs:restriction base="xs:string">
+				<xs:enumeration value="percept"/>
+				<xs:enumeration value="start"/>
+				<xs:enumeration value="end"/>
+				<xs:enumeration value="ready_for_next_action"/>
+				<xs:enumeration value="error"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+
+	<!--tw_msg.data.grid-->
+	<xs:element name="grid">
+		<xs:complexType>
+			<xs:sequence>
+				<!--tw_msg.data.grid.row[i]-->
+				<xs:element name="row" minOccurs="3" maxOccurs="unbounded"/><!--3..* row(s)-->
+			</xs:sequence>
+			<xs:attribute name="rows" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="columns" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.grid.row[i]-->
+	<xs:element name="row">
+		<xs:complexType>
+			<xs:sequence>
+				<!--tw_msg.data.grid.row[i].column[j]-->
+				<xs:element ref="column" minOccurs="3" maxOccurs="unbounded"/><!--3..* column(s)-->
+			</xs:sequence>
+			<xs:attribute name="index" type="xs:nonNegativeInteger"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.grid.row[i].column[j]-->
+	<xs:element name="column">
+		<xs:complexType>
+			<xs:attribute name="index" type="xs:nonNegativeInteger"/>
+			<xs:attribute name="value" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.time-->
+	<xs:element name="time">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.score-->
+	<xs:element name="score">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.battery (optional)-->
+	<xs:element name="battery">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.battery_charger (optional)-->
+	<xs:element name="battery_charger">
+		<xs:complexType>
+			<xs:attribute name="row" type="xs:integer" use="required"/>
+			<xs:attribute name="column" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.agent-->
+	<xs:element name="agent">
+		<xs:complexType>
+			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.holes-->
+	<xs:element name="holes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="hole" minOccurs="0" maxOccurs="unbounded"/><!--0..* hole(s)-->
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.holes.hole[*]-->
+	<xs:element name="hole">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="cell" minOccurs="1" maxOccurs="unbounded"/><!--1..* cell(s)-->
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="size" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="lifetime_left" type="xs:nonNegativeInteger"/><!--optional-->
+			<xs:attribute name="time_elapsed" type="xs:nonNegativeInteger"/><!--optional-->
+		</xs:complexType>
+	</xs:element>
+
+	<!--*.cell-->
+	<xs:element name="cell">
+		<xs:complexType>
+			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.tiles-->
+	<xs:element name="tiles">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="tile" minOccurs="0" maxOccurs="unbounded"/><!--0..* tile(s)-->
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.tiles.tile[*]-->
+	<xs:element name="tile">
+		<xs:complexType>
+			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
+			<!--
+			<xs:attribute name="lifetime_left" type="xs:nonNegativeInteger"/>
+			<xs:attribute name="time_elapsed" type="xs:nonNegativeInteger"/>
+			-->
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.obstacles-->
+	<xs:element name="obstacles">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="obstacle" minOccurs="0" maxOccurs="unbounded"/><!--0..* obstacle(s)-->
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.obstacles.obstacle[*]-->
+	<xs:element name="obstacle">
+		<xs:complexType>
+			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="lifetime_left" type="xs:nonNegativeInteger"/><!--optional-->
+			<xs:attribute name="time_elapsed" type="xs:nonNegativeInteger"/><!--optional-->
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge-->
+	<xs:element name="builtin_knowledge">
+		<xs:complexType>
+			<xs:all>
+				<!--tw_msg.data.builtin_knowledge.costs-->
+				<xs:element ref="costs"/>
+				<!--tw_msg.data.builtin_knowledge.probability-->
+				<xs:element ref="probability"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.costs-->
+	<xs:element name="costs">
+		<xs:complexType>
+			<xs:all>
+				<!--tw_msg.data.builtin_knowledge.costs.moves-->
+				<xs:element ref="move"/>
+				<!--tw_msg.data.builtin_knowledge.invalid_action-->
+				<xs:element ref="invalid_action"/>
+				<!--tw_msg.data.builtin_knowledge.hole_filling-->
+				<xs:element ref="hole_filling"/>
+				<!--tw_msg.data.builtin_knowledge.battery-->
+				<xs:element name="battery">
+					<xs:complexType>
+						<xs:all>
+							<!--tw_msg.data.builtin_knowledge.battery.walk-->
+							<xs:element ref="walk"/>
+							<!--tw_msg.data.builtin_knowledge.battery.slide_tiles-->
+							<xs:element ref="slide_tiles"/>
+							<!--tw_msg.data.builtin_knowledge.battery.invalid_move-->
+							<xs:element ref="invalid_move"/>
+						</xs:all>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.costs.moves-->
+	<xs:element name="move">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:decimal" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.invalid_action-->
+	<xs:element name="invalid_action">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:decimal" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.hole_filling-->
+	<xs:element name="hole_filling">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:decimal" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.battery.walk-->
+	<xs:element name="walk">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.battery.slide_tiles-->
+	<xs:element name="slide_tiles">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.battery.invalid_move-->
+	<xs:element name="invalid_move">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.probability-->
+	<!--EMPTY SO FAR-->
+	<xs:element name="probability">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:restriction base="xs:anyType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>
