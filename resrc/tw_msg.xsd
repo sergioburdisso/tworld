@@ -21,7 +21,8 @@
 								<xs:element ref="grid"/>
 
 								<!--tw_msg.data.time-->
-								<xs:element ref="time"/>
+								<!--(optional, depending on whether the environment is dynamic or static)-->
+								<xs:element ref="time" minOccurs="0"/>
 
 								<!--tw_msg.data.score-->
 								<xs:element ref="score"/>
@@ -234,8 +235,8 @@
 				<xs:element ref="invalid_action"/>
 				<!--tw_msg.data.builtin_knowledge.hole_filling-->
 				<xs:element ref="hole_filling"/>
-				<!--tw_msg.data.builtin_knowledge.battery-->
-				<xs:element name="battery">
+				<!--tw_msg.data.builtin_knowledge.battery (optional)-->
+				<xs:element name="battery" minOccurs="0">
 					<xs:complexType>
 						<xs:all>
 							<!--tw_msg.data.builtin_knowledge.battery.walk-->
