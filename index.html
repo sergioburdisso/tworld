@@ -354,14 +354,16 @@
 			$("#tileworld").prop('width',$(window).width());
 			$("#tileworld").prop('height',$(window).height());
 
-			_Tileworld = new Tileworld({
-							graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/tileworld.ccbjs'),
-							dimension : [10, 10]
-						});
+			//Tileworld class guard
+			if (Tileworld){
+				_Tileworld = new Tileworld({
+								graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/tileworld.ccbjs'),
+								dimension : [5, 5]
+							});
 
-			if (!Tileworld.Battery)
-				$("battery-parent").remove();
-
+				if (!Tileworld.Battery)
+					$("battery-parent").remove();
+			}
 			//Reset Button
 			/*$("#resetBtn").mouseenter(function(e){
 				$("#resetBtn").prop("src", "imgs/restart_enter.png");
