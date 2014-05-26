@@ -336,7 +336,7 @@
 				SCORE:&nbsp;<span id="score" style="font-size:30px; font-weight:bold;">0</span>
 			</span>
 		</div>
-		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: rgba(103,104,128,0.23) url('imgs/shadow_frame.png') no-repeat; height:100%; width:100%; background-size: cover;">
+		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: url('imgs/shadow_frame.png') no-repeat; height:100%; width:100%; background-size: 100% 100%;">
 			<div class="title no-events" style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;">TILEWORLD</div>
 			<div class="title no-events" style="font-size:48px; background-color: rgba(0, 0, 0, 0.3);">SPACE VERSION</div>
 			<div class="title no-events" style="font-size:18px; padding-top:13px; background-color: rgba(0, 0, 0, 0.4);">
@@ -426,11 +426,11 @@
 				}
 			}*/
 
-			if (_AUDIO_ENABLE){
+			/*if (_AUDIO_ENABLE){
 				var _sound_music = new buzz.sound("./sounds/music.mp3");
 				sound_keyboard = new buzz.sound("./sounds/keyboard.mp3");
 				sound_keyboard.play().loop();
-			}
+			}*/
 
 			$("#tileworld").prop('width',$(window).width());
 			$("#tileworld").prop('height',$(window).height());
@@ -458,10 +458,10 @@
 
 				if (_Ready){
 
-					if (_AUDIO_ENABLE){
+					/*if (_AUDIO_ENABLE){
 						sound_keyboard.stop();
 						_sound_music.loop().play();
-					}
+					}*/
 
 					$('#tileworld').css('-webkit-filter', '');
 					$('#playBtn').hide();

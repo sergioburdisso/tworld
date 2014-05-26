@@ -2854,12 +2854,10 @@ CL3D.Renderer.prototype.setMaterial = function (b) {
 	d.uniform1i(d.getUniformLocation(a, "texture2"), 1)
 };
 CL3D.Renderer.prototype.drawMeshBuffer = function (a) {
-	if (a == null) {
+	if (a == null || this.gl == null) {
 		return
 	}
-	if (this.gl == null) {
-		return
-	}
+
 	if (a.RendererNativeArray == null) {
 		this.createRendererNativeArray(a)
 	} else {
@@ -2867,6 +2865,7 @@ CL3D.Renderer.prototype.drawMeshBuffer = function (a) {
 			this.updatePositionsInRendererNativeArray(a)
 		}
 	}
+
 	this.drawWebGlStaticGeometry(a.RendererNativeArray)
 };
 CL3D.Renderer.prototype.updatePositionsInRendererNativeArray = function (c) {
@@ -2874,11 +2873,13 @@ CL3D.Renderer.prototype.updatePositionsInRendererNativeArray = function (c) {
 		var f = this.gl;
 		var a = c.Vertices.length;
 		var e = c.RendererNativeArray.positionsArray;
-		for (var d = 0; d < a; ++d) {
-			var b = c.Vertices[d];
-			e[d * 3 + 0] = b.Pos.X;
-			e[d * 3 + 1] = b.Pos.Y;
-			e[d * 3 + 2] = b.Pos.Z
+		var d = a;
+		var b;
+		while (d--) {
+			b = c.Vertices[d].Pos;
+			e[d * 3 + 0] = b.X;
+			e[d * 3 + 1] = b.Y;
+			e[d * 3 + 2] = b.Z
 		}
 		f.bindBuffer(f.ARRAY_BUFFER, c.RendererNativeArray.positionBuffer);
 		f.bufferSubData(f.ARRAY_BUFFER, 0, e)
@@ -2890,33 +2891,36 @@ CL3D.Renderer.prototype.createRendererNativeArray = function (a) {
 		var f = new Object();
 		var h = a.Vertices.length;
 		var k = new Float32Array(h * 3);
-		var b = new Float32Array(h * 3);
-		var l = new Float32Array(h * 2);
-		var c = new Float32Array(h * 2);
-		var p = new Float32Array(h * 3);
+
+		if (!a.b){
+			a.b = new Float32Array(h * 3);
+			a.l = new Float32Array(h * 2);
+			a.c = new Float32Array(h * 2);
+			a.p = new Float32Array(h * 3);
+			a.n = new WebGLUnsignedShortArray(a.Indices.length);
+		}
 
 		for (var e = 0; e < h; ++e) {
 			var o = a.Vertices[e];
 			k[e * 3 + 0] = o.Pos.X;
 			k[e * 3 + 1] = o.Pos.Y;
 			k[e * 3 + 2] = o.Pos.Z;
-			b[e * 3 + 0] = o.Normal.X;
-			b[e * 3 + 1] = o.Normal.Y;
-			b[e * 3 + 2] = o.Normal.Z;
-			l[e * 2 + 0] = o.TCoords.X;
-			l[e * 2 + 1] = o.TCoords.Y;
-			c[e * 2 + 0] = o.TCoords2.X;
-			c[e * 2 + 1] = o.TCoords2.Y;
-			p[e * 3 + 0] = CL3D.getRed(o.Color) / 255;
-			p[e * 3 + 1] = CL3D.getGreen(o.Color) / 255;
-			p[e * 3 + 2] = CL3D.getBlue(o.Color) / 255
+			a.b[e * 3 + 0] = o.Normal.X;
+			a.b[e * 3 + 1] = o.Normal.Y;
+			a.b[e * 3 + 2] = o.Normal.Z;
+			a.l[e * 2 + 0] = o.TCoords.X;
+			a.l[e * 2 + 1] = o.TCoords.Y;
+			a.c[e * 2 + 0] = o.TCoords2.X;
+			a.c[e * 2 + 1] = o.TCoords2.Y;
+			a.p[e * 3 + 0] = CL3D.getRed(o.Color) / 255;
+			a.p[e * 3 + 1] = CL3D.getGreen(o.Color) / 255;
+			a.p[e * 3 + 2] = CL3D.getBlue(o.Color) / 255
 		}
 		var m = a.Indices.length;
-		var n = new WebGLUnsignedShortArray(m);
 		for (var d = 0; d < m; d += 3) {
-			n[d + 0] = a.Indices[d + 0];
-			n[d + 1] = a.Indices[d + 2];
-			n[d + 2] = a.Indices[d + 1]
+			a.n[d + 0] = a.Indices[d + 0];
+			a.n[d + 1] = a.Indices[d + 2];
+			a.n[d + 2] = a.Indices[d + 1]
 		}
 		f.positionBuffer = g.createBuffer();
 		g.bindBuffer(g.ARRAY_BUFFER, f.positionBuffer);
@@ -2924,21 +2928,21 @@ CL3D.Renderer.prototype.createRendererNativeArray = function (a) {
 		f.positionsArray = k;
 		f.texcoordsBuffer = g.createBuffer();
 		g.bindBuffer(g.ARRAY_BUFFER, f.texcoordsBuffer);
-		g.bufferData(g.ARRAY_BUFFER, l, g.STATIC_DRAW);
+		g.bufferData(g.ARRAY_BUFFER, a.l, g.STATIC_DRAW);
 		f.texcoordsBuffer2 = g.createBuffer();
 		g.bindBuffer(g.ARRAY_BUFFER, f.texcoordsBuffer2);
-		g.bufferData(g.ARRAY_BUFFER, c, g.STATIC_DRAW);
+		g.bufferData(g.ARRAY_BUFFER, a.c, g.STATIC_DRAW);
 		f.normalBuffer = g.createBuffer();
 		g.bindBuffer(g.ARRAY_BUFFER, f.normalBuffer);
-		g.bufferData(g.ARRAY_BUFFER, b, g.STATIC_DRAW);
+		g.bufferData(g.ARRAY_BUFFER, a.b, g.STATIC_DRAW);
 		g.bindBuffer(g.ARRAY_BUFFER, null);
 		f.colorBuffer = g.createBuffer();
 		g.bindBuffer(g.ARRAY_BUFFER, f.colorBuffer);
-		g.bufferData(g.ARRAY_BUFFER, p, g.STATIC_DRAW);
+		g.bufferData(g.ARRAY_BUFFER, a.p, g.STATIC_DRAW);
 		g.bindBuffer(g.ARRAY_BUFFER, null);
 		f.indexBuffer = g.createBuffer();
 		g.bindBuffer(g.ELEMENT_ARRAY_BUFFER, f.indexBuffer);
-		g.bufferData(g.ELEMENT_ARRAY_BUFFER, n, g.STATIC_DRAW);
+		g.bufferData(g.ELEMENT_ARRAY_BUFFER, a.n, g.STATIC_DRAW);
 		f.indexCount = m;
 		g.bindBuffer(g.ELEMENT_ARRAY_BUFFER, null);
 		f.gl = g;
@@ -5224,13 +5228,16 @@ CL3D.AnimatedMeshSceneNode.prototype.OnAnimate = function (c, e) {
 	return CL3D.SceneNode.prototype.OnAnimate.call(this, c, e)
 };
 CL3D.AnimatedMeshSceneNode.prototype.render = function (c) {
+	var b, matLength;
 	c.setWorld(this.AbsoluteTransformation);
 	var d = this.Mesh;
 	if (d) {
 		this.calculateMeshForCurrentFrame();
-		for (var b = 0; b < d.LocalBuffers.length; ++b) {
+		matLength = this.Materials.length;
+		b = d.LocalBuffers.length;
+		while ( b-- ) {
 			var a = d.LocalBuffers[b];
-			if (b < this.Materials.length) {
+			if (b < matLength) {
 				a.Mat = this.Materials[b];
 			}
 			if (a.Transformation != null) {
@@ -8571,7 +8578,6 @@ CL3D.Scene.prototype.drawAll = function (f) {
 	}
 	this.CurrentRenderMode = CL3D.Scene.RENDER_MODE_DEFAULT;
 	length = this.SceneNodesToRender.length;
-	//console.log(length);
 	for (d = 0; d < length; ++d) {
 		var j = this.SceneNodesToRender[d];
 		if (h == null || h.intersectsWithBox(j.getTransformedBoundingBox())) {
@@ -8603,7 +8609,6 @@ CL3D.Scene.prototype.drawAll = function (f) {
 	}
 	this.CurrentRenderMode = CL3D.Scene.RENDER_MODE_2DOVERLAY;
 	length = this.Overlay2DToRender.length;
-	console.log(length);
 	for (d = 0; d < length; ++d) {
 		this.Overlay2DToRender[d].render(f)
 	}
