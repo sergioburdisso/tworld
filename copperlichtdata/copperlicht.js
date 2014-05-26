@@ -52,18 +52,11 @@ CL3D.DebugOutput.prototype.setLoadingText = function (a) {
 		CL3D.LoadingTimer = null;
 
 		//if everything is loaded but we aren't ready
-		if (!_Ready){
-			$("#loading").children().remove();
-			$("#loading").append(
-				'<span id="bubblingG_1">w</span>'+
-				'<span id="bubblingG_2">a</span>'+
-				'<span id="bubblingG_2">i</span>'+
-				'<span id="bubblingG_1">t</span>'
-			);
-		}else{
+		if (_Ready){
 			$("#playFrame").show();
 			$("#playFrame").animate({opacity : 1}, 1000);
-			$("#loading").remove();
+			$("#loading").animate({opacity : 0}, 1000, function(){this.remove()});
+			//$("#loading-shadow").animate({opacity : 0}, 1000, function(){this.remove()});
 		}
 	}
 	else 
@@ -5921,13 +5914,13 @@ CL3D.AnimatorFlyCircle = function (b, a, d, c) {
 	this.Speed = 0.01;
 	this.Radius = 100;
 	if (b) {
-		this.Center = b.clone()
+		this.Center.setTo(b)
 	}
 	if (a) {
 		this.Radius = a
 	}
 	if (d) {
-		this.Direction = d.clone()
+		this.Direction.setTo(d)
 	}
 	if (c) {
 		this.Speed = c

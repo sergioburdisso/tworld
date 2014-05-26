@@ -6,161 +6,183 @@
 	<script type="text/javascript" src="./lib/solid-loader.js"></script>
 	<style type="text/css">
 		@font-face {
-			font-family: invasion2000;
-			src: url('./resrc/invasion2000.ttf');
+			font-family: airstrike;
+			src: url('./resrc/airstrike.ttf');
 		}
 
-		.bubblingG {
-			text-align: center;
-			width:83px;
-			height:52px;
+
+		@-moz-keyframes spinningH {
+		  from {
+		    -moz-transform: rotateX(0deg) rotateY(0deg);
+		  }
+		  to{
+		    -moz-transform: rotateX(360deg) rotateY(360deg);
+		  }
 		}
 
-		.bubblingG span {
-			display: inline-block;
-			vertical-align: middle;
-			width: 10px;
-			height: 10px;
-			margin: 26px auto;
-			background: rgba(0,0,0,0);
-			-moz-border-radius: 52px;
-			-moz-animation: bubblingG 0.6s infinite alternate;
-			-webkit-border-radius: 52px;
-			-webkit-animation: bubblingG 0.6s infinite alternate;
-			-ms-border-radius: 52px;
-			-ms-animation: bubblingG 0.6s infinite alternate;
-			-o-border-radius: 52px;
-			-o-animation: bubblingG 0.6s infinite alternate;
-			border-radius: 52px;
-			animation: bubblingG 0.6s infinite alternate;
+		@-webkit-keyframes spinningH {
+		  from {
+		    -webkit-transform: rotateX(0deg) rotateY(0deg);
+		  }
+		  to{
+		    -webkit-transform: rotateX(360deg) rotateY(360deg);
+		  }
 		}
 
-		#bubblingG_1 {
-			-moz-animation-delay: 0.36s;
-			-webkit-animation-delay: 0.36s;
-			-ms-animation-delay: 0.36s;
-			-o-animation-delay: 0.36s;
-			animation-delay: 0.36s;
+		@-o-keyframes spinningH {
+		  from {
+		    -o-transform: rotateX(0deg) rotateY(0deg);
+		  }
+		  to{
+		    -o-transform: rotateX(360deg) rotateY(360deg);
+		  }
 		}
 
-		#bubblingG_2 {
-			-moz-animation-delay: 0.18s;
-			-webkit-animation-delay: 0.18s;
-			-ms-animation-delay: 0.18s;
-			-o-animation-delay: 0.18s;
-			animation-delay: 0.18s;
+		@-ms-keyframes spinningH {
+		  from {
+		    -ms-transform: rotateX(0deg) rotateY(0deg);
+		  }
+		  to{
+		    -ms-transform: rotateX(360deg) rotateY(360deg);
+		  }
 		}
 
-		#bubblingG_3 {
-			-moz-animation-delay: 0s;
-			-webkit-animation-delay: 0s;
-			-ms-animation-delay: 0s;
-			-o-animation-delay: 0s;
-			animation-delay: 0s;
+		@keyframes spinningH {
+		  from {
+		    transform: rotateX(0deg) rotateY(0deg);
+		  }
+		  to{
+		    transform: rotateX(360deg) rotateY(360deg);
+		  }
 		}
 
-		@-moz-keyframes bubblingG {
-			0% {
-				width: 10px;
-				height: 10px;
-				background-color:rgba(0,0,0,0);
-				-moz-transform: translateY(0);
-			}
+		 #loading {
+		  -webkit-perspective : 4000px;
+		  -moz-perspective    : 4000px;
+		  -o-perspective      : 4000px;
+		  -ms-perspective     : 4000px;
+		  perspective         : 4000px;
 
-			100% {
-				width: 25px;
-				height: 25px;
-				background-color:rgba(0,0,0,0.8);
-				-moz-transform: translateY(-22px);
-			}
+		  -webkit-perspective-origin  : 50% 50%;
+		  -moz-perspective-origin     : 50% 50%;
+		  -moz-transform-origin       : 50% 50%;
+		  -o-perspective-origin       : 50% 50%;
+		  -ms-perspective-origin      : 50% 50%;
+		  perspective-origin          : 50% 50%;
+		 }
 
+		.animate {
+		  -webkit-animation : spinningH 2s infinite linear;
+		  -moz-animation    : spinningH 2s infinite linear;
+		  -o-animation      : spinningH 2s infinite linear;
+		  -ms-animation     : spinningH 2s infinite linear;
+		  animation         : spinningH 2s infinite linear;
 		}
 
-		@-webkit-keyframes bubblingG {
-			0% {
-				width: 10px;
-				height: 10px;
-				background-color:rgba(0,0,0,0);
-				-webkit-transform: translateY(0);
-			}
-
-			100% {
-				width: 25px;
-				height: 25px;
-				background-color:rgba(0,0,0,0.8);
-				-webkit-transform: translateY(-22px);
-			}
-
+		.backgroundCube{
+			background-image: url('imgs/cube_face.png'); 
+			background-size: 78px;
 		}
 
-		@-ms-keyframes bubblingG {
-			0% {
-				width: 10px;
-				height: 10px;
-				background-color:rgba(0,0,0,0);
-				-ms-transform: translateY(0);
-			}
+		#cube {
+		  position: relative;
+		  margin: -117px auto;
+		  height: 100px;
+		  width: 100px;
 
-			100% {
-				width: 25px;
-				height: 25px;
-				background-color:rgba(0,0,0,0.8);
-				-ms-transform: translateY(-22px);
-			}
+		  -webkit-transition  : -webkit-transform 2s linear;
+		  -moz-transition     : -moz-transform 2s linear;
+		  -o-transition       : -o-transform 2s linear;
+		  -ms-transition      : -ms-transform 2s linear;
+		  transition          : transform 2s linear;
+
+		  -webkit-transform-style : preserve-3d;
+		  -moz-transform-style    : preserve-3d;
+		  -o-transform-style      : preserve-3d;
+		  -ms-transform-style     : preserve-3d;
+		  transform-style         : preserve-3d;
 		}
 
-		@-o-keyframes bubblingG {
-			0% {
-				width: 10px;
-				height: 10px;
-				background-color:rgba(0,0,0,0);
-				-o-transform: translateY(0);
-			}
-
-			100% {
-				width: 25px;
-				height: 25px;
-				background-color:rgba(0,0,0,0.8);
-				-o-transform: translateY(-22px);
-			}
+		#cube>div {
+		  position: absolute;
+		  height: 100px;
+		  width: 100px;
+		  padding: 0px;
+		  /*opacity: 0.9;*/
+		  background-position:center center;
 		}
 
-		@keyframes bubblingG {
-			0% {
-				width: 10px;
-				height: 10px;
-				background-color:rgba(0,0,0,0);
-				transform: translateY(0);
-			}
+		#cube div:nth-child(1) {
+		  -webkit-transform : translateZ(55px);
+		  -moz-transform    : translateZ(55px);
+		  -o-transform      : translateZ(55px);
+		  -ms-transform     : translateZ(55px);
+		  transform         : translateZ(55px);
+		}
 
-			100% {
-				width: 25px;
-				height: 25px;
-				background-color:rgba(0,0,0,0.8);
-				transform: translateY(-22px);
-			}
+		#cube div:nth-child(2) {
+		  -webkit-transform : rotateY(90deg) translateZ(55px);
+		  -moz-transform    : rotateY(90deg) translateZ(55px);
+		  -o-transform      : rotateY(90deg) translateZ(55px);
+		  -ms-transform     : rotateY(90deg) translateZ(55px);
+		  transform         : rotateY(90deg) translateZ(55px);
+		}
+
+		#cube div:nth-child(3) {
+		  -webkit-transform : rotateY(180deg) translateZ(55px);
+		  -moz-transform    : rotateY(180deg) translateZ(55px);
+		  -o-transform      : rotateY(180deg) translateZ(55px);
+		  -ms-transform     : rotateY(180deg) translateZ(55px);
+		  transform         : rotateY(180deg) translateZ(55px);
+		}
+
+		#cube div:nth-child(4) {
+		  -webkit-transform : rotateY(-90deg) translateZ(55px);
+		  -moz-transform    : rotateY(-90deg) translateZ(55px);
+		  -o-transform      : rotateY(-90deg) translateZ(55px);
+		  -ms-transform     : rotateY(-90deg) translateZ(55px);
+		  transform         : rotateY(-90deg) translateZ(55px);
+		}
+
+		#cube div:nth-child(5) {
+		  -webkit-transform : rotateX(-90deg) translateZ(55px) rotate(180deg);
+		  -moz-transform    : rotateX(-90deg) translateZ(55px) rotate(180deg);
+		  -o-transform      : rotateX(-90deg) translateZ(55px) rotate(180deg);
+		  -ms-transform     : rotateX(-90deg) translateZ(55px) rotate(180deg);
+		  transform         : rotateX(-90deg) translateZ(55px) rotate(180deg);
+		}
+
+		#cube div:nth-child(6)  {
+		  -webkit-transform : rotateX(90deg) translateZ(55px);
+		  -moz-transform    : rotateX(90deg) translateZ(55px);
+		  -o-transform      : rotateX(90deg) translateZ(55px);
+		  -ms-transform     : rotateX(90deg) translateZ(55px);
+		  transform         : rotateX(90deg) translateZ(55px);
+		}
+
+		.gradiant{
+			background: #f2f6f8;
+			background: -moz-linear-gradient(top,  #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%);
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f6f8), color-stop(50%,#d8e1e7), color-stop(51%,#b5c6d0), color-stop(100%,#e0eff9));
+			background: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+			background: -o-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+			background: -ms-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+			background: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 );
+			background: #f2f6f8;
+			background: -moz-linear-gradient(top,  #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%);
+			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f6f8), color-stop(50%,#d8e1e7), color-stop(51%,#b5c6d0), color-stop(100%,#e0eff9));
+			background: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+			background: -o-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+			background: -ms-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+			background: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 );
 		}
 
 		body {
-			/*background-color:#FFFFFF;*/
+			background-color:#000000;
 			color: white;
 			font-family:Arial, Helvetica, sans-serif;
-			background: #f2f6f8;
-			background: -moz-linear-gradient(top,  #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f6f8), color-stop(50%,#d8e1e7), color-stop(51%,#b5c6d0), color-stop(100%,#e0eff9));
-			background: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: -o-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: -ms-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 );
-			background: #f2f6f8;
-			background: -moz-linear-gradient(top,  #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f6f8), color-stop(50%,#d8e1e7), color-stop(51%,#b5c6d0), color-stop(100%,#e0eff9));
-			background: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: -o-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: -ms-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 );
 			/*overflow: hidden;*/
 		}
 		
@@ -192,7 +214,7 @@
 			background-color: black;
 			top:0;
 			display:inline;
-			font-family: invasion2000, Arial, Helvetica, sans-serif;
+			font-family: Arial, Helvetica, sans-serif;
 			font-size:15px;
 			color:white;
 		}
@@ -245,36 +267,38 @@
 		}
 	</style>
 </head>
-<body>
+<body class="gradiant">
 	<div class="element no-events" style="z-index: 9; overflow: hidden; position: absolute; background-color: transparent; top:70px; height: 100%; width: 100%; text-align: left;">
 		<div class="element" style="position: absolute; bottom: 120px; width: 100%;">
 			<div id="console"></div>
 		</div>
 	</div>
-	<div id="loading" class="bubblingG no-selection" style="z-index:100; position:absolute; top:50%; left:50%; width: 300px; margin-left: -150px; color: white">
-		<span id="bubblingG_1"></span>
-		<span id="bubblingG_2"></span>
-		<span id="bubblingG_2"></span>
-		<span id="bubblingG_1"></span>
-		<span id="bubblingG_2"></span>
-		<span id="bubblingG_2"></span>
-		<span id="bubblingG_1"></span>
+	<div id="loading" style="z-index:100; position:absolute; top:50%; left:50%; width: 300px; margin-left: -150px; color: white">
+		<div id="cube" class="animate">
+			<div class="backgroundCube"></div>
+			<div class="backgroundCube"></div>
+			<div class="backgroundCube"></div>
+			<div class="backgroundCube"></div>
+			<div class="backgroundCube"></div>
+			<div class="backgroundCube"></div>
+			<div ic="cube-core" style="background-color: white; width:10px; height:10px; top:50%; left:50%; margin-top:-5px; margin-left:-5px"></div>
+		</div>
 	</div>
 	<img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
 	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;  opacity:0">
-		<div id="score-up" class="no-selection element" style="pointer-events: none; display: none; position:absolute; z-index: 11; color: rgb(255, 105, 0); font-weight:bold; font-size:40px; text-shadow: 0 0 10px rgb(255, 0, 201); font-family: invasion2000">0</div>
+		<div id="score-up" class="no-selection element" style="pointer-events: none; display: none; position:absolute; z-index: 11; color: rgb(255, 105, 0); font-weight:bold; font-size:40px; text-shadow: 0 0 10px rgb(255, 0, 201); font-family: airstrike">0</div>
 		<!--<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>-->
 		<div id="fps" class="fps no-selection element" style="z-index: 9; background-color: transparent;">00 fps</div>
 		<!--<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		<!--<img id="pauseBtn" src="imgs/pause.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
-		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9;">
+		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
 			<ul style="margin:7px; padding:0; list-style:none; pointer-events: auto">
 				<li id="sb-logo" style="float:left; overflow:hidden; ">
 					<a target="_blank" href="">
-						<img src="imgs/sb-logo.png" alt="A creation of Sergio Burdisso" border="0">
+						<img src="data:image/png;base64,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" alt="A creation of Sergio Burdisso" border="0">
 					</a>
 				</li>
-				<li id="logos-line" style="float:left;margin-top: 4px; height: 24px; border-right: 1px solid rgba(255,255,255,0.5);">&nbsp;</li>
+				<li id="logos-line" style="float:left;margin-top: 4px; height: 24px; border-right: 1px solid rgba(255,255,255,0.2);">&nbsp;</li>
 				<li id="unsl-logo" style="float:left; padding-left:8px; overflow:hidden; ">
 					<a target="_blank" href="http://www.unsl.edu.ar">
 						<img src="imgs/unsl.png" alt="This is a UNSL thesis project" border="0">
@@ -309,24 +333,24 @@
 				</li>
 				<li style="float:left">&nbsp;</li>
 			</ul>
-			<span id="battery-parent" style="float:right; margin: -5px 15px 0 -35px; text-shadow: 0px 0px 10px cyan; opacity:0; display: none; font-family: invasion2000">
-				<span id="battery-percent" style="float: right; margin-top: -20px;">100.0%</span>
+			<span id="battery-parent" style="float:right; margin: -3px 15px 0 -35px; text-shadow: 0px 0px 10px cyan; opacity:0; display: none;">
 				<span style="float: right; margin-top: 13px; width: 5px; height: 16px; background-color: rgba(255, 255, 255, 0.35); border-radius: 0 5px 5px 0;"></span>
 				<span id="battery-charge-frame" style="overflow: hidden; float: right; margin-top: 3px; margin-right: 1px; width: 75px; height: 35px; background-color: rgba(255, 255, 255, 0.35); border-radius: 6px; box-shadow: 0 0 10px rgba(87, 255, 168, 0.57);">
 					<div id="battery-charge" style="background-color: rgb(76, 218, 100); height:100%; width: 100%"></div>
 				</span>
+				<span id="battery-percent" style="float: right; margin-top: 14px; font-size: 10px; -webkit-transform: rotate(90deg); -ms-transform: rotate(90deg); transform: rotate(90deg);">100.0%</span>
 			</span>
-			<span id="score-parent" style="float:right; font-size:20px; margin-right: 15px; /*text-shadow: 0px 0px 10px black;*/ opacity:0; display: none; font-family: invasion2000; text-shadow: 0px 0px 10px rgb(255, 0, 201); color: rgb(255, 105, 0)">
+			<span id="score-parent" style="float:right; font-size:20px; margin-right: 40px; margin-top: 10px; opacity:0; display: none; font-family: airstrike; text-shadow: 0px 0px 10px rgb(255, 0, 201); color: rgb(255, 105, 0)">
 				SCORE:&nbsp;<span id="score" style="font-size:30px; font-weight:bold;">0</span>
 			</span>
 		</div>
 		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: rgba(103,104,128,0.23) url('imgs/shadow_frame.png') no-repeat; background-size: 100% 100%;">
-			<div class="title no-events" style="font-size:72px; font-weight: bold; padding-top:3%; text-shadow: 0 0 20px rgb(0, 255, 69);">TILEWORLD</div>
-			<div class="title no-events" style="font-size:48px;">SPACE VERSION</div>
-			<div class="title no-events" style="font-size:18px; padding-top:13px;">
+			<div class="title no-events" style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;">TILEWORLD</div>
+			<div class="title no-events" style="font-size:48px; background-color: rgba(0, 0, 0, 0.3);">SPACE VERSION</div>
+			<div class="title no-events" style="font-size:18px; padding-top:13px; background-color: rgba(0, 0, 0, 0.4);">
 				AN INTERACTIVE GAME FOR YOU TO PUT YOUR</br>AI ALGORITHMS THROUGH THEIR PACES
 			</div>
-			<div id="playFrame" style="display: none; opacity: 0; position:absolute; top:50%; left:50%; margin-left: -64px; margin-top: -64px;">
+			<div id="playFrame" style="display: none; opacity: 0;">
 				<img id="playBtn" src="imgs/play.png" class ="element no-selection">
 			</div>
 		</div>
@@ -343,27 +367,7 @@
 				console.error(evt);
 		}
 		window.onload=function(){
-			fullScreen(document.body);
 
-			if (_AUDIO_ENABLE){
-				var _sound_music = new buzz.sound("./sounds/music.mp3");
-				sound_keyboard = new buzz.sound("./sounds/keyboard.mp3");
-				sound_keyboard.play().loop();
-			}
-
-			$("#tileworld").prop('width',$(window).width());
-			$("#tileworld").prop('height',$(window).height());
-
-			//Tileworld class guard
-			if (Tileworld){
-				_Tileworld = new Tileworld({
-								graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/tileworld.ccbjs'),
-								dimension : [5, 5]
-							});
-
-				if (!Tileworld.Battery)
-					$("battery-parent").remove();
-			}
 			//Reset Button
 			/*$("#resetBtn").mouseenter(function(e){
 				$("#resetBtn").prop("src", "imgs/restart_enter.png");
@@ -385,84 +389,6 @@
 			$("#pauseBtn").mousedown(function(e){
 				togglePause();
 			});*/
-
-
-			//Play Button
-			$("#playBtn").mouseenter(function(e){
-				if (_Ready)
-					$("#playBtn").prop("src", "imgs/play_enter.png");
-			});
-			$("#playBtn").mouseleave(function(e){
-				$("#playBtn").prop("src", "imgs/play.png");
-			});
-			$("#playBtn").mousedown(function(e){
-
-				fullScreen(document.body);
-
-				if (_Ready){
-
-					if (_AUDIO_ENABLE){
-						sound_keyboard.stop();
-						_sound_music.loop().play();
-					}
-
-					_Running = true;
-					$('#tileworld').css('-webkit-filter', '');
-					$('#playBtn').hide();
-					$('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
-
-					//$("#resetBtn").show();
-					//$("#pauseBtn").show();
-					//$("#resetBtn").animate({opacity:1},500);
-					//$("#pauseBtn").animate({opacity:1},500);
-					$(".title").animate({opacity:0},4000,function(){$(".title").hide()});
-
-					$("#logos-line").css({border:'none'});
-					$("#sb-logo").mouseleave();
-					$("#unsl-logo").mouseleave();
-					$("#pie-derecho").animate(
-						{opacity:0},
-						500,
-						function(){
-							$("#pie-derecho").hide();
-							$("#score-parent").show();
-							$("#score-parent").animate({opacity:1},1000);
-							if (Tileworld.Battery){
-								$("#battery-parent").show();
-								$("#battery-parent").animate({opacity:1},1000);
-							}
-						}
-					);
-
-					_Tileworld.start();
-				}/*else
-					togglePause();*/
-			});
-
-			//Logos
-			$("#sb-logo").mouseenter(function(e){
-				$("#sb-logo").stop(true).animate({width:'119px', opacity: 1}, 100);
-			});
-			$("#sb-logo").mouseleave(function(e){
-				$("#sb-logo").stop(true).animate({width:'36px', opacity: _Running? 0.2 : 1}, 500);
-			});
-
-			$("#unsl-logo").mouseenter(function(e){
-				$("#unsl-logo").stop(true).animate({width:'107px', opacity: 1}, 100);
-			});
-			$("#unsl-logo").mouseleave(function(e){
-				$("#unsl-logo").stop(true).animate({width:'30px', opacity: _Running? 0.2 : 1}, 500);
-			});
-
-			$("#sb-logo").mouseleave();
-			$("#unsl-logo").mouseleave();
-
-			$(window).resize(function() {
-				$("#fps").css({left: $("#tileworld").offset().left+($('#tileworld').width()-40)+"px"});
-				//$("#pauseBtn").css({left: $("#tileworld").offset().left+"px"});
-				//$("#resetBtn").css({left: $("#tileworld").offset().left/*+((!_Pause)?64:0))*/+"px"});
-				$("#frameShadow").css({width: $('#frame').width()+"px", height: $('#frame').height()+"px"});
-			});
 
 			/*togglePause = function (){
 				if (_Pause = !_Pause){
@@ -508,6 +434,97 @@
 				}
 			}*/
 
+			if (_AUDIO_ENABLE){
+				var _sound_music = new buzz.sound("./sounds/music.mp3");
+				sound_keyboard = new buzz.sound("./sounds/keyboard.mp3");
+				sound_keyboard.play().loop();
+			}
+
+			$("#tileworld").prop('width',$(window).width());
+			$("#tileworld").prop('height',$(window).height());
+
+			//Tileworld class guard
+			if (Tileworld){
+				_Tileworld = new Tileworld({
+								graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/tileworld.ccbjs'),
+								dimension : [_ROWS, _COLUMNS]
+							});
+
+				if (!Tileworld.Battery)
+					$("battery-parent").remove();
+			}
+
+			//Play Button
+			$("#playBtn").mouseenter(function(e){
+				if (_Ready)
+					$("#playBtn").prop("src", "imgs/play_enter.png");
+			});
+			$("#playBtn").mouseleave(function(e){
+				$("#playBtn").prop("src", "imgs/play.png");
+			});
+			$("#playBtn").mousedown(function(e){
+
+				if (_Ready){
+
+					if (_AUDIO_ENABLE){
+						sound_keyboard.stop();
+						_sound_music.loop().play();
+					}
+
+					$('#tileworld').css('-webkit-filter', '');
+					$('#playBtn').hide();
+					$('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
+
+					//$("#resetBtn").show();
+					//$("#pauseBtn").show();
+					//$("#resetBtn").animate({opacity:1},500);
+					//$("#pauseBtn").animate({opacity:1},500);
+					$(".title").animate({opacity:0},4000,function(){$(".title").hide()});
+
+					$("#logos-line").css({border:'none'});
+					$("#sb-logo").mouseleave();
+					$("#unsl-logo").mouseleave();
+					$("#pie-derecho").animate(
+						{opacity:0},
+						500,
+						function(){
+							$("#pie-derecho").hide();
+							$("#score-parent").show();
+							$("#score-parent").animate({opacity:1},1000);
+							if (Tileworld.Battery){
+								$("#battery-parent").show();
+								$("#battery-parent").animate({opacity:1},1000);
+							}
+						}
+					);
+
+					_Tileworld.start();
+				}/*else
+					togglePause();*/
+			});
+
+			//Logos
+			$("#sb-logo").mouseenter(function(e){
+				$("#sb-logo").stop(true).animate({width:'119px', opacity: 1}, 100);
+			});
+			$("#sb-logo").mouseleave(function(e){
+				$("#sb-logo").stop(true).animate({width:'36px', opacity: 0.2}, 500);
+			});
+
+			$("#unsl-logo").mouseenter(function(e){
+				$("#unsl-logo").stop(true).animate({width:'107px', opacity: 1}, 100);
+			});
+			$("#unsl-logo").mouseleave(function(e){
+				$("#unsl-logo").stop(true).animate({width:'30px', opacity: 0.2}, 500);
+			});
+
+			$(window).resize(function() {
+				$("#fps").css({left: $("#tileworld").offset().left+($('#tileworld').width()-40)+"px"});
+				//$("#pauseBtn").css({left: $("#tileworld").offset().left+"px"});
+				//$("#resetBtn").css({left: $("#tileworld").offset().left/*+((!_Pause)?64:0))+"px"});
+				$("#frameShadow").css({width: $('#frame').width()+"px", height: $('#frame').height()+"px"});
+			});
+
 			$("#frameShadow").css({top: 0});
 			$("#frameColor").hide();
 			$("#score-up").hide();
@@ -517,7 +534,15 @@
 				$("#fps").hide();
 
 			$("#frame").show();
-			$("#frame").animate({opacity : 1}, 4000);
+			$("#frame").animate({opacity : 1}, 4000, function(){$(document.body).removeClass("gradiant");});
+
+			$(".backgroundCube").animate({opacity : 0}, 4000, function(){this.remove()});
+			$("#loading-shadow").animate({opacity: 0}, 4000, function(){this.remove()});
+			$("#cube").animate({opacity: 0.6}, 4000);
+
+
+			$("#sb-logo").mouseleave();
+			$("#unsl-logo").mouseleave();
 		};
 		/*$("#playBtn").load(function(){
 			$(window).resize();

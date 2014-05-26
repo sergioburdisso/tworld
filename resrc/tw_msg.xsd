@@ -27,14 +27,14 @@
 								<!--tw_msg.data.score-->
 								<xs:element ref="score"/>
 
+								<!--tw_msg.data.rob-->
+								<xs:element ref="rob"/>
+
 								<!--tw_msg.data.battery (optional)-->
 								<xs:element ref="battery" minOccurs="0"/>
 
 								<!--tw_msg.data.battery_charger (optional)-->
 								<xs:element ref="battery_charger" minOccurs="0"/>
-
-								<!--tw_msg.data.agent-->
-								<xs:element ref="agent"/>
 
 								<!--tw_msg.data.holes-->
 								<xs:element ref="holes"/>
@@ -134,8 +134,8 @@
 		</xs:complexType>
 	</xs:element>
 
-	<!--tw_msg.data.agent-->
-	<xs:element name="agent">
+	<!--tw_msg.data.rob-->
+	<xs:element name="rob">
 		<xs:complexType>
 			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
 			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
