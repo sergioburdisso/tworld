@@ -55,8 +55,6 @@ CL3D.DebugOutput.prototype.setLoadingText = function (a) {
 		if (_Ready){
 			$("#playFrame").show();
 			$("#playFrame").animate({opacity : 1}, 1000);
-			$("#loading").animate({opacity : 0}, 1000, function(){this.remove()});
-			//$("#loading-shadow").animate({opacity : 0}, 1000, function(){this.remove()});
 		}
 	}
 	else 
@@ -8573,6 +8571,7 @@ CL3D.Scene.prototype.drawAll = function (f) {
 	}
 	this.CurrentRenderMode = CL3D.Scene.RENDER_MODE_DEFAULT;
 	length = this.SceneNodesToRender.length;
+	//console.log(length);
 	for (d = 0; d < length; ++d) {
 		var j = this.SceneNodesToRender[d];
 		if (h == null || h.intersectsWithBox(j.getTransformedBoundingBox())) {
@@ -8604,6 +8603,7 @@ CL3D.Scene.prototype.drawAll = function (f) {
 	}
 	this.CurrentRenderMode = CL3D.Scene.RENDER_MODE_2DOVERLAY;
 	length = this.Overlay2DToRender.length;
+	console.log(length);
 	for (d = 0; d < length; ++d) {
 		this.Overlay2DToRender[d].render(f)
 	}

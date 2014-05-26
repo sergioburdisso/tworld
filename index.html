@@ -11,48 +11,48 @@
 		}
 
 
-		@-moz-keyframes spinningH {
+		@-moz-keyframes spinning {
 		  from {
-		    -moz-transform: rotateX(0deg) rotateY(0deg);
+		    -moz-transform: rotateX(0deg) rotateY(0deg) rotateZ(360deg);
 		  }
 		  to{
-		    -moz-transform: rotateX(360deg) rotateY(360deg);
+		    -moz-transform: rotateX(360deg) rotateY(360deg) rotateZ(0deg);
 		  }
 		}
 
-		@-webkit-keyframes spinningH {
+		@-webkit-keyframes spinning {
 		  from {
-		    -webkit-transform: rotateX(0deg) rotateY(0deg);
+		    -webkit-transform: rotateX(360deg) rotateY(0deg) rotateZ(360deg);
 		  }
 		  to{
-		    -webkit-transform: rotateX(360deg) rotateY(360deg);
+		    -webkit-transform: rotateX(0deg) rotateY(360deg) rotateZ(0deg);
 		  }
 		}
 
-		@-o-keyframes spinningH {
+		@-o-keyframes spinning {
 		  from {
-		    -o-transform: rotateX(0deg) rotateY(0deg);
+		    -o-transform: rotateX(0deg) rotateY(0deg) rotateZ(360deg);
 		  }
 		  to{
-		    -o-transform: rotateX(360deg) rotateY(360deg);
+		    -o-transform: rotateX(360deg) rotateY(360deg) rotateZ(0deg);
 		  }
 		}
 
-		@-ms-keyframes spinningH {
+		@-ms-keyframes spinning {
 		  from {
-		    -ms-transform: rotateX(0deg) rotateY(0deg);
+		    -ms-transform: rotateX(0deg) rotateY(0deg) rotateZ(360deg);
 		  }
 		  to{
-		    -ms-transform: rotateX(360deg) rotateY(360deg);
+		    -ms-transform: rotateX(360deg) rotateY(360deg) rotateZ(0deg);
 		  }
 		}
 
-		@keyframes spinningH {
+		@keyframes spinning {
 		  from {
-		    transform: rotateX(0deg) rotateY(0deg);
+		    transform: rotateX(0deg) rotateY(0deg) rotateZ(360deg);
 		  }
 		  to{
-		    transform: rotateX(360deg) rotateY(360deg);
+		    transform: rotateX(360deg) rotateY(360deg) rotateZ(0deg);
 		  }
 		}
 
@@ -71,17 +71,20 @@
 		  perspective-origin          : 50% 50%;
 		 }
 
-		.animate {
-		  -webkit-animation : spinningH 2s infinite linear;
-		  -moz-animation    : spinningH 2s infinite linear;
-		  -o-animation      : spinningH 2s infinite linear;
-		  -ms-animation     : spinningH 2s infinite linear;
-		  animation         : spinningH 2s infinite linear;
+		.animate-rot {
+		  -webkit-animation : spinning 2s infinite linear;
+		  -moz-animation    : spinning 2s infinite linear;
+		  -o-animation      : spinning 2s infinite linear;
+		  -ms-animation     : spinning 2s infinite linear;
+		  animation         : spinning 2s infinite linear;
 		}
 
 		.backgroundCube{
 			background-image: url('imgs/cube_face.png'); 
-			background-size: 78px;
+			/*background-size: 78px;
+			background-size: 130px;
+			background-size: cover;*/
+			background-size: 28px;
 		}
 
 		#cube {
@@ -113,70 +116,55 @@
 		}
 
 		#cube div:nth-child(1) {
-		  -webkit-transform : translateZ(55px);
-		  -moz-transform    : translateZ(55px);
-		  -o-transform      : translateZ(55px);
-		  -ms-transform     : translateZ(55px);
-		  transform         : translateZ(55px);
+		  -webkit-transform : translateZ(50px);
+		  -moz-transform    : translateZ(50px);
+		  -o-transform      : translateZ(50px);
+		  -ms-transform     : translateZ(50px);
+		  transform         : translateZ(50px);
 		}
 
 		#cube div:nth-child(2) {
-		  -webkit-transform : rotateY(90deg) translateZ(55px);
-		  -moz-transform    : rotateY(90deg) translateZ(55px);
-		  -o-transform      : rotateY(90deg) translateZ(55px);
-		  -ms-transform     : rotateY(90deg) translateZ(55px);
-		  transform         : rotateY(90deg) translateZ(55px);
+		  -webkit-transform : rotateY(90deg) translateZ(50px);
+		  -moz-transform    : rotateY(90deg) translateZ(50px);
+		  -o-transform      : rotateY(90deg) translateZ(50px);
+		  -ms-transform     : rotateY(90deg) translateZ(50px);
+		  transform         : rotateY(90deg) translateZ(50px);
 		}
 
 		#cube div:nth-child(3) {
-		  -webkit-transform : rotateY(180deg) translateZ(55px);
-		  -moz-transform    : rotateY(180deg) translateZ(55px);
-		  -o-transform      : rotateY(180deg) translateZ(55px);
-		  -ms-transform     : rotateY(180deg) translateZ(55px);
-		  transform         : rotateY(180deg) translateZ(55px);
+		  -webkit-transform : rotateY(180deg) translateZ(50px);
+		  -moz-transform    : rotateY(180deg) translateZ(50px);
+		  -o-transform      : rotateY(180deg) translateZ(50px);
+		  -ms-transform     : rotateY(180deg) translateZ(50px);
+		  transform         : rotateY(180deg) translateZ(50px);
 		}
 
 		#cube div:nth-child(4) {
-		  -webkit-transform : rotateY(-90deg) translateZ(55px);
-		  -moz-transform    : rotateY(-90deg) translateZ(55px);
-		  -o-transform      : rotateY(-90deg) translateZ(55px);
-		  -ms-transform     : rotateY(-90deg) translateZ(55px);
-		  transform         : rotateY(-90deg) translateZ(55px);
+		  -webkit-transform : rotateY(-90deg) translateZ(50px);
+		  -moz-transform    : rotateY(-90deg) translateZ(50px);
+		  -o-transform      : rotateY(-90deg) translateZ(50px);
+		  -ms-transform     : rotateY(-90deg) translateZ(50px);
+		  transform         : rotateY(-90deg) translateZ(50px);
 		}
 
 		#cube div:nth-child(5) {
-		  -webkit-transform : rotateX(-90deg) translateZ(55px) rotate(180deg);
-		  -moz-transform    : rotateX(-90deg) translateZ(55px) rotate(180deg);
-		  -o-transform      : rotateX(-90deg) translateZ(55px) rotate(180deg);
-		  -ms-transform     : rotateX(-90deg) translateZ(55px) rotate(180deg);
-		  transform         : rotateX(-90deg) translateZ(55px) rotate(180deg);
+		  -webkit-transform : rotateX(-90deg) translateZ(50px) rotate(180deg);
+		  -moz-transform    : rotateX(-90deg) translateZ(50px) rotate(180deg);
+		  -o-transform      : rotateX(-90deg) translateZ(50px) rotate(180deg);
+		  -ms-transform     : rotateX(-90deg) translateZ(50px) rotate(180deg);
+		  transform         : rotateX(-90deg) translateZ(50px) rotate(180deg);
 		}
 
 		#cube div:nth-child(6)  {
-		  -webkit-transform : rotateX(90deg) translateZ(55px);
-		  -moz-transform    : rotateX(90deg) translateZ(55px);
-		  -o-transform      : rotateX(90deg) translateZ(55px);
-		  -ms-transform     : rotateX(90deg) translateZ(55px);
-		  transform         : rotateX(90deg) translateZ(55px);
+		  -webkit-transform : rotateX(90deg) translateZ(50px);
+		  -moz-transform    : rotateX(90deg) translateZ(50px);
+		  -o-transform      : rotateX(90deg) translateZ(50px);
+		  -ms-transform     : rotateX(90deg) translateZ(50px);
+		  transform         : rotateX(90deg) translateZ(50px);
 		}
 
-		.gradiant{
-			background: #f2f6f8;
-			background: -moz-linear-gradient(top,  #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f6f8), color-stop(50%,#d8e1e7), color-stop(51%,#b5c6d0), color-stop(100%,#e0eff9));
-			background: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: -o-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: -ms-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 );
-			background: #f2f6f8;
-			background: -moz-linear-gradient(top,  #f2f6f8 0%, #d8e1e7 50%, #b5c6d0 51%, #e0eff9 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f2f6f8), color-stop(50%,#d8e1e7), color-stop(51%,#b5c6d0), color-stop(100%,#e0eff9));
-			background: -webkit-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: -o-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: -ms-linear-gradient(top,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			background: linear-gradient(to bottom,  #f2f6f8 0%,#d8e1e7 50%,#b5c6d0 51%,#e0eff9 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 );
+		.body-background{
+			background-color: #1F1F23;
 		}
 
 		body {
@@ -267,31 +255,35 @@
 		}
 	</style>
 </head>
-<body class="gradiant">
+<body class="body-background">
 	<div class="element no-events" style="z-index: 9; overflow: hidden; position: absolute; background-color: transparent; top:70px; height: 100%; width: 100%; text-align: left;">
 		<div class="element" style="position: absolute; bottom: 120px; width: 100%;">
 			<div id="console"></div>
 		</div>
 	</div>
 	<div id="loading" style="z-index:100; position:absolute; top:50%; left:50%; width: 300px; margin-left: -150px; color: white">
-		<div id="cube" class="animate">
+		<div id="cube" class="animate-rot">
 			<div class="backgroundCube"></div>
 			<div class="backgroundCube"></div>
 			<div class="backgroundCube"></div>
 			<div class="backgroundCube"></div>
 			<div class="backgroundCube"></div>
 			<div class="backgroundCube"></div>
-			<div ic="cube-core" style="background-color: white; width:10px; height:10px; top:50%; left:50%; margin-top:-5px; margin-left:-5px"></div>
+			<div style="background-color: rgba(141, 255, 243, 0.8); width:10px; height:10px; top:50%; left:50%; margin-top:-5px; margin-left:-5px; border-radius: 5px 5px;"></div>
 		</div>
 	</div>
 	<img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
 	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;  opacity:0">
+		<img src="./imgs/circuit-frame_mirror.png" style="z-index:10; margin-top: 3px; position: absolute"/>
 		<div id="score-up" class="no-selection element" style="pointer-events: none; display: none; position:absolute; z-index: 11; color: rgb(255, 105, 0); font-weight:bold; font-size:40px; text-shadow: 0 0 10px rgb(255, 0, 201); font-family: airstrike">0</div>
 		<!--<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>-->
 		<div id="fps" class="fps no-selection element" style="z-index: 9; background-color: transparent;">00 fps</div>
 		<!--<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		<!--<img id="pauseBtn" src="imgs/pause.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
+			<div style="height: 100%; width: 100%; position: absolute;">
+				<img src="./imgs/circuit-frame.png" style="height: 100%; float: right; margin-top: -8px;"/>
+			</div>	
 			<ul style="margin:7px; padding:0; list-style:none; pointer-events: auto">
 				<li id="sb-logo" style="float:left; overflow:hidden; ">
 					<a target="_blank" href="">
@@ -306,7 +298,7 @@
 				</li>
 				<li style="float:left">&nbsp;</li>
 			</ul>
-			<ul id="pie-derecho" style="margin:7px; padding:0; float:right; font-size:10px; line-height: 18px; list-style:none; pointer-events: auto">
+			<ul id="pie-derecho" style="margin:10px; padding:0; float:right; font-size:10px; line-height: 18px; list-style:none; pointer-events: auto">
 				<li class="piepagina">
 					TECHNOLOGY
 				</li>
@@ -334,7 +326,7 @@
 				<li style="float:left">&nbsp;</li>
 			</ul>
 			<span id="battery-parent" style="float:right; margin: -3px 15px 0 -35px; text-shadow: 0px 0px 10px cyan; opacity:0; display: none;">
-				<span style="float: right; margin-top: 13px; width: 5px; height: 16px; background-color: rgba(255, 255, 255, 0.35); border-radius: 0 5px 5px 0;"></span>
+				<span style="float: right; margin-top: 13px; margin-right: -4px; width: 5px; height: 16px; background-color: rgba(255, 255, 255, 0.35); border-radius: 0 5px 5px 0;"></span>
 				<span id="battery-charge-frame" style="overflow: hidden; float: right; margin-top: 3px; margin-right: 1px; width: 75px; height: 35px; background-color: rgba(255, 255, 255, 0.35); border-radius: 6px; box-shadow: 0 0 10px rgba(87, 255, 168, 0.57);">
 					<div id="battery-charge" style="background-color: rgb(76, 218, 100); height:100%; width: 100%"></div>
 				</span>
@@ -344,7 +336,7 @@
 				SCORE:&nbsp;<span id="score" style="font-size:30px; font-weight:bold;">0</span>
 			</span>
 		</div>
-		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: rgba(103,104,128,0.23) url('imgs/shadow_frame.png') no-repeat; background-size: 100% 100%;">
+		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: rgba(103,104,128,0.23) url('imgs/shadow_frame.png') no-repeat; height:100%; width:100%; background-size: cover;">
 			<div class="title no-events" style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;">TILEWORLD</div>
 			<div class="title no-events" style="font-size:48px; background-color: rgba(0, 0, 0, 0.3);">SPACE VERSION</div>
 			<div class="title no-events" style="font-size:18px; padding-top:13px; background-color: rgba(0, 0, 0, 0.4);">
@@ -520,9 +512,6 @@
 
 			$(window).resize(function() {
 				$("#fps").css({left: $("#tileworld").offset().left+($('#tileworld').width()-40)+"px"});
-				//$("#pauseBtn").css({left: $("#tileworld").offset().left+"px"});
-				//$("#resetBtn").css({left: $("#tileworld").offset().left/*+((!_Pause)?64:0))+"px"});
-				$("#frameShadow").css({width: $('#frame').width()+"px", height: $('#frame').height()+"px"});
 			});
 
 			$("#frameShadow").css({top: 0});
@@ -534,12 +523,10 @@
 				$("#fps").hide();
 
 			$("#frame").show();
-			$("#frame").animate({opacity : 1}, 4000, function(){$(document.body).removeClass("gradiant");});
+			$("#frame").animate({opacity : 1}, 4000, function(){$(document.body).removeClass("body-background");});
 
-			$(".backgroundCube").animate({opacity : 0}, 4000, function(){this.remove()});
-			$("#loading-shadow").animate({opacity: 0}, 4000, function(){this.remove()});
-			$("#cube").animate({opacity: 0.6}, 4000);
-
+			$("#loading-shadow").animate({opacity: 0}, 4000, function(){$("#loading-shadow").remove()});
+			$("#loading").animate({opacity : 0}, 4000, function(){$("#loading").remove()});
 
 			$("#sb-logo").mouseleave();
 			$("#unsl-logo").mouseleave();
