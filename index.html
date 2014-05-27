@@ -247,6 +247,9 @@
 			background-color: rgba(0,0,0,0.5);
 			text-shadow: 0 0 10px cyan;
 		}
+		.blur{
+			-webkit-filter: blur(5px);
+		}
 		pre{
 			display: block;
 			font-family: monospace;
@@ -339,7 +342,7 @@
 			</div>
 		</div>
 		<div id="frameColor" class="no-selection element" style="pointer-events: none; position: absolute; z-index: 11; display:none; width : 100%; height : 100%"></div>
-		<canvas id="tileworld" width="800" height="600" style="background-color: black; -webkit-filter: blur(5px); width : 100%; height : 100%;"></canvas>
+		<canvas id="tileworld" width="800" height="600" class="blur" style="background-color: black; width : 100%; height : 100%;"></canvas>
 	</div>
 	<script type="text/javascript">
 		var tileWorld;
@@ -452,7 +455,7 @@
 						_sound_music.loop().play();
 					}*/
 
-					$('#tileworld').css('-webkit-filter', '');
+					$('#tileworld').removeClass("blur");
 					$('#playBtn').hide();
 					$('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
 
