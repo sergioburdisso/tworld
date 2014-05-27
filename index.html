@@ -256,8 +256,10 @@
 	</style>
 </head>
 <body class="body-background">
-	<div class="element no-events" style="z-index: 9; overflow: hidden; position: absolute; background-color: transparent; top:70px; height: 100%; width: 100%; text-align: left;">
-		<div class="element" style="position: absolute; bottom: 120px; width: 100%;">
+	<span id="robs-hud" class="no-events" style="bottom: 0; position: absolute; width: 100%; z-index: 11; opacity:0; display: none;">
+	</span>
+	<div class="no-events" style="z-index: 9; overflow: hidden; position: absolute;  top:70px; background-color: transparent; height: 100%; width: 100%; text-align: left;">
+		<div style="position: absolute; bottom: 120px; width: 100%;">
 			<div id="console"></div>
 		</div>
 	</div>
@@ -275,9 +277,9 @@
 	<img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
 	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;  opacity:0">
 		<img src="./imgs/circuit-frame_mirror.png" style="z-index:10; margin-top: 3px; position: absolute"/>
-		<div id="score-up" class="no-selection element" style="pointer-events: none; display: none; position:absolute; z-index: 11; color: rgb(255, 105, 0); font-weight:bold; font-size:40px; text-shadow: 0 0 10px rgb(255, 0, 201); font-family: airstrike">0</div>
 		<!--<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>-->
-		<div id="fps" class="fps no-selection element" style="z-index: 9; background-color: transparent;">00 fps</div>
+		<div id="fps" class="fps no-selection" style="z-index: 9; background-color: transparent">00 fps</div>
+		<div id="time" class="no-selection" style="z-index: 9; font-family: airstrike; width: 100%; font-size: 40px; position: absolute; color: darkorange; text-shadow: 0 0 10px white;"></div>
 		<!--<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		<!--<img id="pauseBtn" src="imgs/pause.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
@@ -325,16 +327,6 @@
 				</li>
 				<li style="float:left">&nbsp;</li>
 			</ul>
-			<span id="battery-parent" style="float:right; margin: -3px 15px 0 -35px; text-shadow: 0px 0px 10px cyan; opacity:0; display: none;">
-				<span style="float: right; margin-top: 13px; margin-right: -4px; width: 5px; height: 16px; background-color: rgba(255, 255, 255, 0.35); border-radius: 0 5px 5px 0;"></span>
-				<span id="battery-charge-frame" style="overflow: hidden; float: right; margin-top: 3px; margin-right: 1px; width: 75px; height: 35px; background-color: rgba(255, 255, 255, 0.35); border-radius: 6px; box-shadow: 0 0 10px rgba(87, 255, 168, 0.57);">
-					<div id="battery-charge" style="background-color: rgb(76, 218, 100); height:100%; width: 100%"></div>
-				</span>
-				<span id="battery-percent" style="float: right; margin-top: 14px; font-size: 10px; -webkit-transform: rotate(90deg); -ms-transform: rotate(90deg); transform: rotate(90deg);">100.0%</span>
-			</span>
-			<span id="score-parent" style="float:right; font-size:20px; margin-right: 40px; margin-top: 10px; opacity:0; display: none; font-family: airstrike; text-shadow: 0px 0px 10px rgb(255, 0, 201); color: rgb(255, 105, 0)">
-				SCORE:&nbsp;<span id="score" style="font-size:30px; font-weight:bold;">0</span>
-			</span>
 		</div>
 		<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: url('imgs/shadow_frame.png') no-repeat; height:100%; width:100%; background-size: 100% 100%;">
 			<div class="title no-events" style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;">TILEWORLD</div>
@@ -441,9 +433,6 @@
 								graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/tileworld.ccbjs'),
 								dimension : [_ROWS, _COLUMNS]
 							});
-
-				if (!Tileworld.Battery)
-					$("battery-parent").remove();
 			}
 
 			//Play Button
@@ -481,12 +470,8 @@
 						500,
 						function(){
 							$("#pie-derecho").hide();
-							$("#score-parent").show();
-							$("#score-parent").animate({opacity:1},1000);
-							if (Tileworld.Battery){
-								$("#battery-parent").show();
-								$("#battery-parent").animate({opacity:1},1000);
-							}
+							$("#robs-hud").show();
+							$("#robs-hud").animate({opacity:1},1000);
 						}
 					);
 
