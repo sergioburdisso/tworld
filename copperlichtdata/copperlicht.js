@@ -4390,7 +4390,7 @@ CL3D.BillboardSceneNode.prototype.createClone = function (a) {
 	var b = new CL3D.BillboardSceneNode();
 	this.cloneMembers(b, a);
 	if (this.Box) {
-		b.Box = this.Box.clone()
+		b.Box.setTo(this.Box)
 	}
 	b.SizeX = this.SizeX;
 	b.SizeY = this.SizeY;
