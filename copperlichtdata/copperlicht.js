@@ -31,7 +31,6 @@ CL3D.DebugOutput.prototype.print = function (a) {
 		return
 	}
 	console.error(a);
-	$("#loading").remove();
 };
 CL3D.DebugOutput.prototype.setLoadingText = function (a) {
 	if (!this.LoadingRoot)
@@ -61,7 +60,6 @@ CL3D.DebugOutput.prototype.setLoadingText = function (a) {
 		this.LoadingRootText.nodeValue = a;
 };
 CL3D.DebugOutput.prototype.printError = function (b, a) {
-	$("#loading").remove();
 	console.error(b);
 };
 
@@ -4098,7 +4096,7 @@ CL3D.MeshSceneNode.prototype.createClone = function (a) {
 	b.ReadonlyMaterials = this.ReadonlyMaterials;
 	b.DoesCollision = this.DoesCollision;
 	if (this.Box) {
-		b.Box = this.Box.clone()
+		b.Box.setTo(this.Box)
 	}
 	return b
 };
