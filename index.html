@@ -87,6 +87,20 @@
 			background-size: 28px;
 		}
 
+		.robsHudBackground{
+			background-image: url(file:///C:/Users/Liliana/Desktop/Tileworld/Nuevo/copperlichtdata/tp-background.png);
+			background-size: 350px;
+			background-position: 122% 0%;
+			background-repeat: no-repeat;
+		}
+
+		.robsHudBackgroundWarning{
+			background-image: url(file:///C:/Users/Liliana/Desktop/Tileworld/Nuevo/imgs/reg-grad.png);
+			background-size: 176px;
+			background-position-x: right;
+			background-repeat: repeat-y;
+		}
+
 		#cube {
 		  position: relative;
 		  margin: -117px auto;
@@ -247,6 +261,11 @@
 			background-color: rgba(0,0,0,0.5);
 			text-shadow: 0 0 10px cyan;
 		}
+		.rotate90{
+			-webkit-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
 		.blur{
 			-webkit-filter: blur(5px);
 		}
@@ -259,9 +278,9 @@
 	</style>
 </head>
 <body class="body-background">
-	<span id="robs-hud" class="no-events" style="bottom: 0; position: absolute; width: 100%; z-index: 11; opacity:0; display: none;">
+	<span id="robs-hud" class="no-events robsHudBackground" style="bottom: 0; position: absolute; width: 100%; z-index: 11; opacity:0; display: none;">
 	</span>
-	<div class="no-events" style="z-index: 9; overflow: hidden; position: absolute;  top:70px; background-color: transparent; height: 100%; width: 100%; text-align: left;">
+	<div class="no-events" style="z-index: 100; overflow: hidden; position: absolute;  top:70px; background-color: transparent; height: 100%; width: 100%; text-align: left;">
 		<div style="position: absolute; bottom: 120px; width: 100%;">
 			<div id="console"></div>
 		</div>
@@ -279,10 +298,10 @@
 	</div>
 	<img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
 	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;  opacity:0">
-		<img src="./imgs/circuit-frame_mirror.png" class="no-events" style="z-index:10; margin-top: 3px; position: absolute"/>
+		<img src="./imgs/circuit-frame_mirror.png" class="no-events no-selection" style="z-index:10; margin-top: 3px; position: absolute"/>
 		<!--<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>-->
 		<div id="fps" class="fps no-selection" style="z-index: 9; background-color: transparent">00 fps</div>
-		<div id="time" class="no-events no-selection" style="z-index: 9; font-family: airstrike; width: 100%; font-size: 40px; position: absolute; color: darkorange; text-shadow: 0 0 10px white;"></div>
+		<div id="time" class="no-events no-selection" style="z-index: 9; font-family: airstrike; width: 100%; font-size: 40px; position: absolute; color: darkorange; text-shadow: 0 0 10px white; background: url(./copperlichtdata/tp-background.png) 50% 50% no-repeat;"></div>
 		<!--<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		<!--<img id="pauseBtn" src="imgs/pause.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
@@ -437,6 +456,16 @@
 								dimension : [_ROWS, _COLUMNS]
 							});
 			}
+
+						//-> keydown Event Handler
+			$(document).keydown(function(e){
+				if (isValidKey(e.keyCode)){
+					switch(e.keyCode){
+						case 13://space bar
+							$("#playBtn").mousedown();
+					}
+				}
+			});
 
 			//Play Button
 			$("#playBtn").mouseenter(function(e){
