@@ -303,7 +303,7 @@
 		<div id="fps" class="fps no-selection" style="z-index: 9; background-color: transparent">00 fps</div>
 		<div id="time" class="no-events no-selection" style="z-index: 9; font-family: airstrike; width: 100%; font-size: 40px; position: absolute; color: darkorange; text-shadow: 0 0 10px white; background: url(./copperlichtdata/tp-background.png) 50% 50% no-repeat;"></div>
 		<!--<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
-		<!--<img id="pauseBtn" src="imgs/pause.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
+		<img id="pauseBtn" src="imgs/pause.png" class ="no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">
 		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
 			<div style="height: 100%; width: 100%; position: absolute;">
 				<img src="./imgs/circuit-frame.png" style="height: 100%; float: right; margin-top: -8px;"/>
@@ -385,67 +385,6 @@
 				//TODO
 			});*/
 
-			//Pause Button
-			/*$("#pauseBtn").mouseenter(function(e){
-				$("#pauseBtn").prop("src", "imgs/pause_enter.png");
-			});
-			$("#pauseBtn").mouseleave(function(e){
-				$("#pauseBtn").prop("src", "imgs/pause.png");
-			});
-			$("#pauseBtn").mousedown(function(e){
-				togglePause();
-			});*/
-
-			/*togglePause = function (){
-				if (_Pause = !_Pause){
-					$('#fps').hide();
-					$('#playBtn').show();
-					$('#playBtn').animate({opacity : 1, top : '+=150px'}, 400);
-					$("#frameShadow").animate({opacity : .3},700);
-					$("#frameShadow").css({'pointer-events':''});
-					$('#pauseBtn').animate({opacity : 0}, 400, function(){$('#pauseBtn').hide();});
-					$('#resetBtn').animate({left : '-=64'}, 400);
-					$('#menu').animate(
-						{height : '200px'},
-						{
-							duration: 400,
-							step: function(now, fx) {
-								$('#tileworld').css('-webkit-filter', 'blur('+now/50+'px)');
-							},
-							queue:false
-						}
-					);
-					$('#tileworld').css('background-color', 'blue');
-				}else{
-					$('#playBtn').animate({opacity : 0, top : '-=150px'}, 400, function(){$('#playBtn').hide();});
-					$("#frameShadow").animate({opacity : 1}, 100);
-					$("#frameShadow").css({'pointer-events':'none'});
-					$('#pauseBtn').show();
-					$('#pauseBtn').animate({opacity : 1}, 100);
-					$('#resetBtn').animate({left : '+=64'}, 100);
-					$('#menu').animate(
-						{height : 0},
-						{
-							duration: 100,
-							step: function(now, fx) {
-								$('#tileworld').css('-webkit-filter', 'blur('+now/50+'px)');
-							},
-							complete: function(){
-								$('#fps').show();
-								$('#tileworld').css('-webkit-filter', '');
-							},
-							queue:false
-						});
-					$('#tileworld').css('background-color', 'black');
-				}
-			}*/
-
-			/*if (_AUDIO_ENABLE){
-				var _sound_music = new buzz.sound("./sounds/music.mp3");
-				sound_keyboard = new buzz.sound("./sounds/keyboard.mp3");
-				sound_keyboard.play().loop();
-			}*/
-
 			$("#tileworld").prop('width',$(window).width());
 			$("#tileworld").prop('height',$(window).height());
 
@@ -457,7 +396,7 @@
 							});
 			}
 
-						//-> keydown Event Handler
+			//-> keydown Event Handler
 			$(document).keydown(function(e){
 				if (isValidKey(e.keyCode)){
 					switch(e.keyCode){
@@ -479,19 +418,14 @@
 
 				if (_Ready){
 
-					/*if (_AUDIO_ENABLE){
-						sound_keyboard.stop();
-						_sound_music.loop().play();
-					}*/
-
 					$('#tileworld').removeClass("blur");
 					$('#playBtn').hide();
 					$('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
 
 					//$("#resetBtn").show();
-					//$("#pauseBtn").show();
+					$("#pauseBtn").show();
 					//$("#resetBtn").animate({opacity:1},500);
-					//$("#pauseBtn").animate({opacity:1},500);
+					$("#pauseBtn").animate({opacity:1},500);
 					$(".title").animate({opacity:0},4000,function(){$(".title").hide()});
 
 					$("#logos-line").css({border:'none'});
@@ -548,9 +482,6 @@
 			$("#sb-logo").mouseleave();
 			$("#unsl-logo").mouseleave();
 		};
-		/*$("#playBtn").load(function(){
-			$(window).resize();
-		});*/
 
 	</script>
 </body>
