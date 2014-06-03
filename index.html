@@ -90,7 +90,7 @@
 		.robsHudBackground{
 			background-image: url(copperlichtdata/tp-background.png);
 			background-size: 350px;
-			background-position-y: -95px;
+			/*background-position-y: -95px;*/
 			background-position-x: right;
 			background-repeat: repeat-y;
 		}
@@ -298,7 +298,8 @@
 		.logo{
 			float:right;
 			width:100px;
-			opacity: 0.6;
+			opacity: 0.5;
+			padding-top: 5px;
 		}
 		.header-sub{
 			font-size: 12px;
@@ -322,7 +323,8 @@
 			<div class="backgroundCube"></div>
 			<div class="backgroundCube"></div>
 			<div class="backgroundCube"></div>
-			<div style="background-color: rgba(141, 255, 243, 0.8); width:10px; height:10px; top:50%; left:50%; margin-top:-5px; margin-left:-5px; border-radius: 5px 5px;"></div>
+			<!--<div style="background-color: rgba(0, 255, 69, 0.3); width:10px; height:10px; top:50%; left:50%; margin-top:-5px; margin-left:-5px; border-radius: 5px 5px;"></div>-->
+			<div style="background-color: rgba(0, 255, 69, 0.5); width:10px; height:10px; top:50%; left:50%; margin-top:-5px; margin-left:-5px;"></div>
 		</div>
 	</div>
 	<img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
@@ -334,7 +336,7 @@
 			<!--<div style="color: rgb(64, 221, 64); font-size: 36px; text-shadow: rgb(255, 0, 232) 0px 0px 6px;">
 				COOL!
 			</div>-->
-			<table style="position:absolute; width: 600px; top:50%; left:50%; margin-top:-100px; margin-left:-300px; text-align: center; border-collapse: collapse; background-color: rgba(0, 0, 0, 0.45);">
+			<table style="position:absolute; width: 600px; top:50%; left:50%; margin-top:-130px; margin-left:-300px; text-align: center; border-collapse: collapse; background-color: rgba(0, 0, 0, 0.45);">
 				<tr> 
 					<th></th>
 					<th>PLAYER(S)</th>
@@ -344,7 +346,7 @@
 					<th>BATTERY<br><span class="header-sub">use/restore</span></th>
 				</tr>
 				<tr>
-					<td class="columnRight"><img src="./imgs/gold.png" /></td>
+					<td id="1-pos" class="columnRight"></td>
 					<td id="1-player"></td>
 					<td id="1-score">-</td>
 					<td id="1-holes">-</td>
@@ -352,7 +354,7 @@
 					<td id="1-battery">-</td>
 				</tr>
 				<tr id="2-row">
-					<td class="columnRight"><img src="./imgs/silver.png" /></td>
+					<td id="2-pos" class="columnRight"></td>
 					<td id="2-player"></td>
 					<td id="2-score">-</td>
 					<td id="2-holes">-</td>
@@ -360,7 +362,7 @@
 					<td id="2-battery">-</td>
 				</tr>
 				<tr id="3-row">
-					<td class="columnRight"><img src="./imgs/bronze.png" /></td>
+					<td id="3-pos" class="columnRight"></td>
 					<td id="3-player"></td>
 					<td id="3-score">-</td>
 					<td id="3-holes">-</td>
@@ -368,7 +370,7 @@
 					<td id="3-battery">-</td>
 				</tr>
 			</table>
-			<div style="position:absolute; bottom:0; width:100%; background-color: rgba(0, 0, 0, 0.45); padding: 10px 0; font-size: 15px;">
+			<div style="position:absolute; bottom:0; width:100%; background-color: rgba(0, 0, 0, 0.45); padding: 5px 0; font-size: 15px;">
 				<span class="logo">
 					<span><img src="./imgs/-footsteps.png" /></span>
 					<span id="min-moves"></span>
@@ -386,8 +388,16 @@
 					<span id="max-cells"></span>
 				</span>
 				<span class="logo">
-					<span><img src="./imgs/battery.png" /></span>
-					<span id="max-battery"></span>
+					<span><img src="./imgs/battery-use.png" /></span>
+					<span id="max-battery-use"></span>
+				</span>
+				<span class="logo">
+					<span><img src="./imgs/battery-recharge.png" /></span>
+					<span id="max-battery-recharge"></span>
+				</span>
+				<span class="logo">
+					<span><img src="./imgs/battery-restore.png" /></span>
+					<span id="max-battery-restore"></span>
 				</span>
 				<span class="logo">
 					<span><img src="./imgs/score.png" /></span>
@@ -399,8 +409,11 @@
 		<!--<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>-->
 		<div id="fps" class="fps no-selection" style="z-index: 9; background-color: transparent">00 fps</div>
 		<div id="time" class="no-events no-selection" style="z-index: 9; font-family: airstrike; width: 100%; font-size: 40px; position: absolute; color: darkorange; text-shadow: 0 0 10px white; background: url(./copperlichtdata/tp-background.png) 50% 50% no-repeat;"></div>
-		<!--<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
-		<img id="pauseBtn" src="imgs/pause.png" class ="no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">
+		<div id="header" class="no-selection" style="z-index: 9; width: 100%; position: absolute; opacity: 0; display: none;">
+			<img id="pauseBtn" src="imgs/pause.png" class ="no-selection" style="float:left;">
+			<img id="cameraBtn" src="imgs/camera.png" class ="element no-selection" style="float:left;">
+			<!--<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
+		</div>
 		<div id="pie" class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
 			<div style="height: 100%; width: 100%; position: absolute;">
 				<img src="./imgs/circuit-frame.png" style="height: 100%; float: right; margin-top: -8px;"/>
@@ -498,6 +511,7 @@
 				if (isValidKey(e.keyCode)){
 					switch(e.keyCode){
 						case 13://space bar
+						if ($("#playBtn"))
 							$("#playBtn").mousedown();
 					}
 				}
@@ -519,10 +533,9 @@
 					$('#playBtn').hide();
 					$('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
 
-					//$("#resetBtn").show();
-					$("#pauseBtn").show();
-					//$("#resetBtn").animate({opacity:1},500);
-					$("#pauseBtn").animate({opacity:1},500);
+
+					$("#header").show();
+					$("#header").animate({opacity:1},500);
 					$(".title").animate({opacity:0},4000,function(){$(".title").hide()});
 
 					$("#logos-line").css({border:'none'});
@@ -539,8 +552,8 @@
 					);
 
 					_Tileworld.start();
-				}/*else
-					togglePause();*/
+					$("#playBtn").remove();
+				}
 			});
 
 			//Logos
