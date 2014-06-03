@@ -80,7 +80,7 @@
 		}
 
 		.backgroundCube{
-			background-image: url('imgs/cube_face.png'); 
+			background-image: url(imgs/cube_face.png); 
 			/*background-size: 78px;
 			background-size: 130px;
 			background-size: cover;*/
@@ -88,14 +88,15 @@
 		}
 
 		.robsHudBackground{
-			background-image: url(file:///C:/Users/Liliana/Desktop/Tileworld/Nuevo/copperlichtdata/tp-background.png);
+			background-image: url(copperlichtdata/tp-background.png);
 			background-size: 350px;
-			background-position: 122% 0%;
-			background-repeat: no-repeat;
+			background-position-y: -95px;
+			background-position-x: right;
+			background-repeat: repeat-y;
 		}
 
 		.robsHudBackgroundWarning{
-			background-image: url(file:///C:/Users/Liliana/Desktop/Tileworld/Nuevo/imgs/reg-grad.png);
+			background-image: url(imgs/reg-grad.png);
 			background-size: 176px;
 			background-position-x: right;
 			background-repeat: repeat-y;
@@ -269,11 +270,39 @@
 		.blur{
 			-webkit-filter: blur(5px);
 		}
+
+		.columnCenter{
+			text-align: center;
+		}
+		.columnRight{
+			text-align: right;
+			font-size: 37px;
+			color: rgb(0, 156, 255);
+			text-shadow: 0 0 7px rgba(255, 255, 255, 0.33);
+		}
+
+		th {
+			background-color: rgba(0, 0, 0, 0.68);
+			font-size: 18px;
+			color: rgb(255, 134, 0);
+			padding: 10px 0;
+		}
+
 		pre{
 			display: block;
 			font-family: monospace;
 			white-space: pre;
 			margin: 0 0 10px 0;
+		}
+
+		.logo{
+			float:right;
+			width:100px;
+			opacity: 0.6;
+		}
+		.header-sub{
+			font-size: 12px;
+			color: rgb(71, 47, 10);
 		}
 	</style>
 </head>
@@ -298,13 +327,81 @@
 	</div>
 	<img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
 	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;  opacity:0">
-		<img src="./imgs/circuit-frame_mirror.png" class="no-events no-selection" style="z-index:10; margin-top: 3px; position: absolute"/>
+		<div id="game-over" class="no-events" style="display:none; opacity:0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); position: absolute; z-index: 40; font-size: 20px; font-family: airstrike;">
+			<div style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;">
+				TIME'S UP!
+			</div>
+			<!--<div style="color: rgb(64, 221, 64); font-size: 36px; text-shadow: rgb(255, 0, 232) 0px 0px 6px;">
+				COOL!
+			</div>-->
+			<table style="position:absolute; width: 600px; top:50%; left:50%; margin-top:-100px; margin-left:-300px; text-align: center; border-collapse: collapse; background-color: rgba(0, 0, 0, 0.45);">
+				<tr> 
+					<th></th>
+					<th>PLAYER(S)</th>
+					<th>SCORE<br><span class="header-sub">final/total</span></th>
+					<th>HOLES/<br>CELLS</span></th>
+					<th>MOVES<br><span class="header-sub">OK/not OK</span></th>
+					<th>BATTERY<br><span class="header-sub">use/restore</span></th>
+				</tr>
+				<tr>
+					<td class="columnRight"><img src="./imgs/gold.png" /></td>
+					<td id="1-player"></td>
+					<td id="1-score">-</td>
+					<td id="1-holes">-</td>
+					<td id="1-moves">-</td>
+					<td id="1-battery">-</td>
+				</tr>
+				<tr id="2-row">
+					<td class="columnRight"><img src="./imgs/silver.png" /></td>
+					<td id="2-player"></td>
+					<td id="2-score">-</td>
+					<td id="2-holes">-</td>
+					<td id="2-moves">-</td>
+					<td id="2-battery">-</td>
+				</tr>
+				<tr id="3-row">
+					<td class="columnRight"><img src="./imgs/bronze.png" /></td>
+					<td id="3-player"></td>
+					<td id="3-score">-</td>
+					<td id="3-holes">-</td>
+					<td id="3-moves">-</td>
+					<td id="3-battery">-</td>
+				</tr>
+			</table>
+			<div style="position:absolute; bottom:0; width:100%; background-color: rgba(0, 0, 0, 0.45); padding: 10px 0; font-size: 15px;">
+				<span class="logo">
+					<span><img src="./imgs/-footsteps.png" /></span>
+					<span id="min-moves"></span>
+				</span>
+				<span class="logo">
+					<span><img src="./imgs/+footsteps.png" /></span>
+					<span id="max-moves"></span>
+				</span>
+				<span class="logo">
+					<span><img src="./imgs/xfootsteps.png" /></span>
+					<span id="invalid-moves"></span>
+				</span>
+				<span class="logo">
+					<span><img src="./imgs/cells.png" /></span>
+					<span id="max-cells"></span>
+				</span>
+				<span class="logo">
+					<span><img src="./imgs/battery.png" /></span>
+					<span id="max-battery"></span>
+				</span>
+				<span class="logo">
+					<span><img src="./imgs/score.png" /></span>
+					<span id="max-score"></span>
+				</span>
+			</div>
+		</div>
+		<img src="./imgs/circuit-frame_mirror.png" class="no-events no-selection" style="z-index:100; margin-top: 3px; position: absolute"/>
 		<!--<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>-->
 		<div id="fps" class="fps no-selection" style="z-index: 9; background-color: transparent">00 fps</div>
 		<div id="time" class="no-events no-selection" style="z-index: 9; font-family: airstrike; width: 100%; font-size: 40px; position: absolute; color: darkorange; text-shadow: 0 0 10px white; background: url(./copperlichtdata/tp-background.png) 50% 50% no-repeat;"></div>
 		<!--<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		<img id="pauseBtn" src="imgs/pause.png" class ="no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">
-		<div class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
+		<div id="pie" class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
 			<div style="height: 100%; width: 100%; position: absolute;">
 				<img src="./imgs/circuit-frame.png" style="height: 100%; float: right; margin-top: -8px;"/>
 			</div>	
@@ -416,7 +513,7 @@
 			});
 			$("#playBtn").mousedown(function(e){
 
-				if (_Ready){
+				if (_Ready && !_Running){
 
 					$('#tileworld').removeClass("blur");
 					$('#playBtn').hide();
@@ -465,7 +562,7 @@
 				$("#fps").css({left: $("#tileworld").offset().left+($('#tileworld').width()-40)+"px"});
 			});
 
-			$("#frameShadow").css({top: 0});
+			//$("#frameShadow").css("top", "0");
 			$("#frameColor").hide();
 			$("#score-up").hide();
 			$(window).resize();
