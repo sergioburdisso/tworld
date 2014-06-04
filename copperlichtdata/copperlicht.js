@@ -5962,7 +5962,7 @@ CL3D.AnimatorFlyCircle.prototype.init = function () {
 CL3D.AnimatorRotation = function (a) {
 	this.Rotation = new CL3D.Vect3d();
 	if (a) {
-		this.Rotation = a.clone()
+		this.Rotation.setTo(a)
 	}
 	this.StartTime = CL3D.CLTimer.getTime();
 	this.RotateToTargetAndStop = false;

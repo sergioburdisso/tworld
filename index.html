@@ -411,8 +411,8 @@
 		<div id="time" class="no-events no-selection" style="z-index: 9; font-family: airstrike; width: 100%; font-size: 40px; position: absolute; color: darkorange; text-shadow: 0 0 10px white; background: url(./copperlichtdata/tp-background.png) 50% 50% no-repeat;"></div>
 		<div id="header" class="no-selection" style="z-index: 9; width: 100%; position: absolute; opacity: 0; display: none;">
 			<img id="pauseBtn" src="imgs/pause.png" class ="no-selection" style="float:left;">
+			<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="float:left;">
 			<img id="cameraBtn" src="imgs/camera.png" class ="element no-selection" style="float:left;">
-			<!--<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="position:absolute; opacity: 0; display: none; z-index: 9;">-->
 		</div>
 		<div id="pie" class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
 			<div style="height: 100%; width: 100%; position: absolute;">
@@ -485,15 +485,15 @@
 		window.onload=function(){
 
 			//Reset Button
-			/*$("#resetBtn").mouseenter(function(e){
+			$("#resetBtn").mouseenter(function(e){
 				$("#resetBtn").prop("src", "imgs/restart_enter.png");
 			});
 			$("#resetBtn").mouseleave(function(e){
 				$("#resetBtn").prop("src", "imgs/restart.png");
 			});
-			$("#resetBtn").mousedown(function(e){
-				//TODO
-			});*/
+			$("#resetBtn").mouseup(function(e){
+				location.reload();
+			});
 
 			$("#tileworld").prop('width',$(window).width());
 			$("#tileworld").prop('height',$(window).height());
@@ -512,7 +512,7 @@
 					switch(e.keyCode){
 						case 13://space bar
 						if ($("#playBtn"))
-							$("#playBtn").mousedown();
+							$("#playBtn").mouseup();
 					}
 				}
 			});
@@ -525,7 +525,7 @@
 			$("#playBtn").mouseleave(function(e){
 				$("#playBtn").prop("src", "imgs/play.png");
 			});
-			$("#playBtn").mousedown(function(e){
+			$("#playBtn").mouseup(function(e){
 
 				if (_Ready && !_Running){
 
