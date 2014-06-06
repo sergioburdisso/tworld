@@ -42,10 +42,11 @@ CL3D.DebugOutput.prototype.setLoadingText = function (a) {
 			{opacity : 0},
 			7000,
 			function(){
-				this.parentElement.removeChild(this)
+				if (this.parentElement)
+					this.parentElement.removeChild(this)
 			}
 		);
-		$("#loading-header").animate({opacity: 0}, 6000, function(){this.parentElement.removeChild(this)});
+		$("#loading-header").animate({opacity: 0}, 6000, function(){if (this.parentElement) this.parentElement.removeChild(this)});
 		delete this.LoadingRoot;
 		clearInterval(CL3D.LoadingTimer);
 		CL3D.LoadingTimer = null;
@@ -3657,10 +3658,12 @@ CL3D.SceneNode.prototype.Id = -1;
 CL3D.SceneNode.prototype.Selector = null;
 CL3D.SceneNode.prototype.Parent = null;
 CL3D.SceneNode.prototype.setVisible = function (value) {
-	this.Visible = value;
+	if (this.Visible != value){
+		this.Visible = value;
 
-	if (this.scene)
-		this.scene.updateNodesToRender();
+		if (this.scene)
+			this.scene.updateNodesToRender();
+	}
 };
 CL3D.SceneNode.prototype.getVisible = function () {
 	return this.Visible;

@@ -90,15 +90,14 @@
 		.robsHudBackground{
 			background-image: url(copperlichtdata/tp-background.png);
 			background-size: 350px;
-			/*background-position-y: -95px;*/
-			background-position-x: right;
+			background-position: right 0;
 			background-repeat: repeat-y;
 		}
 
 		.robsHudBackgroundWarning{
 			background-image: url(imgs/reg-grad.png);
 			background-size: 176px;
-			background-position-x: right;
+			background-position: right 0;
 			background-repeat: repeat-y;
 		}
 
@@ -186,11 +185,8 @@
 			background-color:#000000;
 			color: white;
 			font-family:Arial, Helvetica, sans-serif;
-			/*overflow: hidden;*/
-		}
-		
-		html {
-			overflow:hidden;
+			overflow: hidden;
+			margin: 0;
 		}
 
 		.element {
@@ -294,12 +290,17 @@
 			white-space: pre;
 			margin: 0 0 10px 0;
 		}
-
+		.center{
+			position: absolute;
+			top:50%;
+			left:50%;
+		}
 		.logo{
 			float:right;
 			width:100px;
 			opacity: 0.5;
 			padding-top: 5px;
+			display: none;
 		}
 		.header-sub{
 			font-size: 12px;
@@ -308,13 +309,7 @@
 	</style>
 </head>
 <body class="body-background">
-	<span id="robs-hud" class="no-events robsHudBackground" style="bottom: 0; position: absolute; width: 100%; z-index: 11; opacity:0; display: none;">
-	</span>
-	<div class="no-events" style="z-index: 100; overflow: hidden; position: absolute;  top:70px; background-color: transparent; height: 100%; width: 100%; text-align: left;">
-		<div style="position: absolute; bottom: 120px; width: 100%;">
-			<div id="console"></div>
-		</div>
-	</div>
+	<span id="robs-hud" class="no-events robsHudBackground" style="bottom: 0; position: absolute; width: 100%; z-index: 11; opacity:0; display: none;"></span>
 	<div id="loading" style="z-index:50; position:absolute; top:50%; left:50%; width: 300px; margin-left: -150px; color: white">
 		<div id="cube" class="animate-rot">
 			<div class="backgroundCube"></div>
@@ -328,15 +323,23 @@
 		</div>
 	</div>
 	<img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
-	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; margin: -8;  opacity:0">
-		<div id="game-over" class="no-events" style="display:none; opacity:0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); position: absolute; z-index: 40; font-size: 20px; font-family: airstrike;">
-			<div style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;">
+	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; opacity:0">
+		<div class="no-events" style="position:absolute; width:100%; height:100%; overflow:hidden">
+			<div style="z-index: 100; overflow: hidden; position: absolute;  top:70px; background-color: transparent; height: 100%; width: 100%; text-align: left;">
+				<div style="position: absolute; bottom: 120px; width: 100%;">
+					<div id="console"></div>
+				</div>
+			</div>
+		</div>
+		<div id="black-screen" class="no-selection" style="display:none; opacity:0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); position: absolute; z-index: 40; font-size: 20px; font-family: airstrike;">
+			<div id="title" style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;">
 				TIME'S UP!
 			</div>
 			<!--<div style="color: rgb(64, 221, 64); font-size: 36px; text-shadow: rgb(255, 0, 232) 0px 0px 6px;">
 				COOL!
 			</div>-->
-			<table style="position:absolute; width: 600px; top:50%; left:50%; margin-top:-130px; margin-left:-300px; text-align: center; border-collapse: collapse; background-color: rgba(0, 0, 0, 0.45);">
+			<img id="playPauseBtn" src="imgs/play.png" class ="no-selection center" style="margin-left:-64px; margin-top:-64px">
+			<table id="table" style="display:none; position:absolute; width: 600px; top:50%; left:50%; margin-top:-130px; margin-left:-300px; text-align: center; border-collapse: collapse; background-color: rgba(0, 0, 0, 0.45);">
 				<tr> 
 					<th></th>
 					<th>PLAYER(S)</th>
@@ -409,10 +412,10 @@
 		<!--<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>-->
 		<div id="fps" class="fps no-selection" style="z-index: 9; background-color: transparent">00 fps</div>
 		<div id="time" class="no-events no-selection" style="z-index: 9; font-family: airstrike; width: 100%; font-size: 40px; position: absolute; color: darkorange; text-shadow: 0 0 10px white; background: url(./copperlichtdata/tp-background.png) 50% 50% no-repeat;"></div>
-		<div id="header" class="no-selection" style="z-index: 9; width: 100%; position: absolute; opacity: 0; display: none;">
-			<img id="pauseBtn" src="imgs/pause.png" class ="no-selection" style="float:left;">
-			<img id="resetBtn" src="imgs/restart.png" class ="element no-selection" style="float:left;">
-			<img id="cameraBtn" src="imgs/camera.png" class ="element no-selection" style="float:left;">
+		<div id="header" class="no-selection" style="z-index: 40; width: 90%; position: absolute; opacity: 0; display: none; padding-left: 5px;">
+			<img id="pauseBtn" src="imgs/pause.png" style="float:left;">
+			<img id="resetBtn" src="imgs/restart.png" style="float:left;">
+			<img id="cameraBtn" src="imgs/camera.png" style="float:left;">
 		</div>
 		<div id="pie" class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
 			<div style="height: 100%; width: 100%; position: absolute;">
@@ -507,7 +510,7 @@
 			}
 
 			//-> keydown Event Handler
-			$(document).keydown(function(e){
+			$(document).keyup(function(e){
 				if (isValidKey(e.keyCode)){
 					switch(e.keyCode){
 						case 13://space bar
@@ -520,11 +523,10 @@
 			//Play Button
 			$("#playBtn").mouseenter(function(e){
 				if (_Ready)
-					$("#playBtn").prop("src", "imgs/play_enter.png");
+					$(this).prop("src", "imgs/play_enter.png");
 			});
-			$("#playBtn").mouseleave(function(e){
-				$("#playBtn").prop("src", "imgs/play.png");
-			});
+			$("#playBtn").mouseleave(function(e){$(this).prop("src", "imgs/play.png")});
+
 			$("#playBtn").mouseup(function(e){
 
 				if (_Ready && !_Running){
@@ -535,8 +537,9 @@
 
 
 					$("#header").show();
-					$("#header").animate({opacity:1},500);
-					$(".title").animate({opacity:0},4000,function(){$(".title").hide()});
+					$("#header").animate({opacity:1},1000);
+					$(".title").animate({opacity:0},1000,function(){$(".title").hide()});
+					$("#pie").css("background-color", "transparent");
 
 					$("#logos-line").css({border:'none'});
 					$("#sb-logo").mouseleave();

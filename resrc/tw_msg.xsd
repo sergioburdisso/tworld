@@ -2,13 +2,12 @@
 <!--Author: Burdisso Sergio - 2014-->
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-
 	<!-- TILEWORLD MESSAGE (tw_msg) HIGH-LEVEL STRUCTURE -->
 	<!--tw_msg-->
 	<xs:element name="tw_msg">
 		<xs:complexType>
 			<xs:sequence>
-				<!--tw_msg.header (percept, start, end, ready_for_next_action, error)-->
+				<!--tw_msg.header (percept, start, end, message, ready_for_next_action, error)-->
 				<xs:element ref="header"/>
 
 				<!--tw_msg.data/desc-->
@@ -17,33 +16,11 @@
 					<xs:element name="data">
 						<xs:complexType>
 							<xs:all>
-								<!--tw_msg.data.grid-->
-								<xs:element ref="grid"/>
+								<!--tw_msg.data.environment-->
+								<xs:element ref="environment"/>
 
-								<!--tw_msg.data.time-->
-								<!--(optional, depending on whether the environment is dynamic or static)-->
-								<xs:element ref="time" minOccurs="0"/>
-
-								<!--tw_msg.data.score-->
-								<xs:element ref="score"/>
-
-								<!--tw_msg.data.rob-->
-								<xs:element ref="rob"/>
-
-								<!--tw_msg.data.battery (optional)-->
-								<xs:element ref="battery" minOccurs="0"/>
-
-								<!--tw_msg.data.battery_charger (optional)-->
-								<xs:element ref="battery_charger" minOccurs="0"/>
-
-								<!--tw_msg.data.holes-->
-								<xs:element ref="holes"/>
-
-								<!--tw_msg.data.tiles-->
-								<xs:element ref="tiles"/>
-
-								<!--tw_msg.data.tiles-->
-								<xs:element ref="obstacles"/>
+								<!--tw_msg.data.agent-->
+								<xs:element ref="agent"/>
 
 								<!--tw_msg.data.builtin_knowledge-->
 								<xs:element ref="builtin_knowledge"/>
@@ -53,7 +30,6 @@
 
 					<!--tw_msg.desc-->
 					<xs:element name="desc" type="xs:string"/>
-
 				</xs:choice>
 			</xs:sequence>
 		</xs:complexType>
@@ -75,75 +51,111 @@
 		</xs:simpleType>
 	</xs:element>
 
-	<!--tw_msg.data.grid-->
+	<!--tw_msg.data.environment-->
+	<xs:element name="environment">
+		<xs:complexType>
+			<xs:all>
+				<!--tw_msg.data.environment.grid-->
+				<xs:element ref="grid"/>
+
+				<!--tw_msg.data.environment.time-->
+				<!--(optional, depending on whether the environment is dynamic or static)-->
+				<xs:element ref="time" minOccurs="0"/>
+
+				<!--tw_msg.data.environment.battery_chargers (optional)-->
+				<xs:element ref="battery_chargers" minOccurs="0"/>
+
+				<!--tw_msg.data.environment.agents (optional)-->
+				<xs:element ref="agents" minOccurs="0"/>
+
+				<!--tw_msg.data.environment.holes-->
+				<xs:element ref="holes"/>
+
+				<!--tw_msg.data.environment.tiles-->
+				<xs:element ref="tiles"/>
+
+				<!--tw_msg.data.environment.tiles-->
+				<xs:element ref="obstacles"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.agent || tw_msg.data.environment.agents.agent[*]-->
+	<xs:element name="agent">
+		<xs:complexType>
+			<xs:all>
+				<!--tw_msg.data.agent.location-->
+				<xs:element ref="location"/>
+			</xs:all>
+			<!--tw_msg.data.agent.my_id (optional)-->
+			<xs:attribute name="id" type="xs:nonNegativeInteger"/>
+			<!--tw_msg.data.agent.team_id (optional)-->
+			<xs:attribute name="team_id" type="xs:nonNegativeInteger"/>
+			<!--tw_msg.data.agent.score-->
+			<xs:attribute name="score" type="xs:nonNegativeInteger" use="required"/>
+			<!--tw_msg.data.agent.battery (optional)-->
+			<xs:attribute name="battery" type="xs:nonNegativeInteger"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge-->
+	<xs:element name="builtin_knowledge">
+		<xs:complexType>
+			<xs:all>
+				<!--tw_msg.data.builtin_knowledge.grid_total_rows-->
+				<xs:element ref="grid_total_rows"/>
+
+				<!--tw_msg.data.builtin_knowledge.grid_total_columns-->
+				<xs:element ref="grid_total_columns"/>
+
+				<!--tw_msg.data.builtin_knowledge.teams (optional)-->
+				<xs:element ref="teams" minOccurs="0"/>
+
+				<!--tw_msg.data.builtin_knowledge.costs-->
+				<xs:element ref="costs"/>
+
+				<!--tw_msg.data.builtin_knowledge.probability-->
+				<xs:element ref="probability"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.environment.grid-->
 	<xs:element name="grid">
 		<xs:complexType>
 			<xs:sequence>
-				<!--tw_msg.data.grid.row[i]-->
+				<!--tw_msg.data.environment.grid.row[i]-->
 				<xs:element name="row" minOccurs="3" maxOccurs="unbounded"/><!--3..* row(s)-->
 			</xs:sequence>
-			<xs:attribute name="rows" type="xs:nonNegativeInteger" use="required"/>
-			<xs:attribute name="columns" type="xs:nonNegativeInteger" use="required"/>
 		</xs:complexType>
 	</xs:element>
 
-	<!--tw_msg.data.grid.row[i]-->
-	<xs:element name="row">
-		<xs:complexType>
-			<xs:sequence>
-				<!--tw_msg.data.grid.row[i].column[j]-->
-				<xs:element ref="column" minOccurs="3" maxOccurs="unbounded"/><!--3..* column(s)-->
-			</xs:sequence>
-			<xs:attribute name="index" type="xs:nonNegativeInteger"/>
-		</xs:complexType>
-	</xs:element>
-
-	<!--tw_msg.data.grid.row[i].column[j]-->
-	<xs:element name="column">
-		<xs:complexType>
-			<xs:attribute name="index" type="xs:nonNegativeInteger"/>
-			<xs:attribute name="value" type="xs:string" use="required"/>
-		</xs:complexType>
-	</xs:element>
-
-	<!--tw_msg.data.time-->
+	<!--tw_msg.data.environment.time-->
 	<xs:element name="time">
 		<xs:complexType>
 			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
 		</xs:complexType>
 	</xs:element>
 
-	<!--tw_msg.data.score-->
-	<xs:element name="score">
+	<!--tw_msg.data.environment.battery_chargers (optional)-->
+	<xs:element name="battery_chargers">
 		<xs:complexType>
-			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+			<xs:sequence>
+				<xs:element ref="location" minOccurs="0" maxOccurs="unbounded"/><!--0..* location(s)-->
+			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
-	<!--tw_msg.data.battery (optional)-->
-	<xs:element name="battery">
+	<!--tw_msg.data.environment.agents-->
+	<xs:element name="agents">
 		<xs:complexType>
-			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+			<xs:sequence>
+				<xs:element ref="agent" minOccurs="0" maxOccurs="unbounded"/><!--0..* hole(s)-->
+			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
-	<!--tw_msg.data.battery_charger (optional)-->
-	<xs:element name="battery_charger">
-		<xs:complexType>
-			<xs:attribute name="row" type="xs:integer" use="required"/>
-			<xs:attribute name="column" type="xs:integer" use="required"/>
-		</xs:complexType>
-	</xs:element>
-
-	<!--tw_msg.data.rob-->
-	<xs:element name="rob">
-		<xs:complexType>
-			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
-			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
-		</xs:complexType>
-	</xs:element>
-
-	<!--tw_msg.data.holes-->
+	<!--tw_msg.data.environment.holes-->
 	<xs:element name="holes">
 		<xs:complexType>
 			<xs:sequence>
@@ -152,29 +164,7 @@
 		</xs:complexType>
 	</xs:element>
 
-	<!--tw_msg.data.holes.hole[*]-->
-	<xs:element name="hole">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element ref="cell" minOccurs="1" maxOccurs="unbounded"/><!--1..* cell(s)-->
-			</xs:sequence>
-			<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
-			<xs:attribute name="size" type="xs:nonNegativeInteger" use="required"/>
-			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
-			<xs:attribute name="lifetime_left" type="xs:nonNegativeInteger"/><!--optional-->
-			<xs:attribute name="time_elapsed" type="xs:nonNegativeInteger"/><!--optional-->
-		</xs:complexType>
-	</xs:element>
-
-	<!--*.cell-->
-	<xs:element name="cell">
-		<xs:complexType>
-			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
-			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
-		</xs:complexType>
-	</xs:element>
-
-	<!--tw_msg.data.tiles-->
+	<!--tw_msg.data.environment.tiles-->
 	<xs:element name="tiles">
 		<xs:complexType>
 			<xs:sequence>
@@ -183,19 +173,7 @@
 		</xs:complexType>
 	</xs:element>
 
-	<!--tw_msg.data.tiles.tile[*]-->
-	<xs:element name="tile">
-		<xs:complexType>
-			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
-			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
-			<!--
-			<xs:attribute name="lifetime_left" type="xs:nonNegativeInteger"/>
-			<xs:attribute name="time_elapsed" type="xs:nonNegativeInteger"/>
-			-->
-		</xs:complexType>
-	</xs:element>
-
-	<!--tw_msg.data.obstacles-->
+	<!--tw_msg.data.environment.obstacles-->
 	<xs:element name="obstacles">
 		<xs:complexType>
 			<xs:sequence>
@@ -204,25 +182,12 @@
 		</xs:complexType>
 	</xs:element>
 
-	<!--tw_msg.data.obstacles.obstacle[*]-->
-	<xs:element name="obstacle">
+	<!--tw_msg.data.builtin_knowledge.teams (optional)-->
+	<xs:element name="teams">
 		<xs:complexType>
-			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
-			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
-			<xs:attribute name="lifetime_left" type="xs:nonNegativeInteger"/><!--optional-->
-			<xs:attribute name="time_elapsed" type="xs:nonNegativeInteger"/><!--optional-->
-		</xs:complexType>
-	</xs:element>
-
-	<!--tw_msg.data.builtin_knowledge-->
-	<xs:element name="builtin_knowledge">
-		<xs:complexType>
-			<xs:all>
-				<!--tw_msg.data.builtin_knowledge.costs-->
-				<xs:element ref="costs"/>
-				<!--tw_msg.data.builtin_knowledge.probability-->
-				<xs:element ref="probability"/>
-			</xs:all>
+			<xs:sequence>
+				<xs:element ref="team" minOccurs="0" maxOccurs="unbounded"/><!--1..* team(s)-->
+			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 
@@ -250,6 +215,90 @@
 					</xs:complexType>
 				</xs:element>
 			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.environment.grid.row[i]-->
+	<xs:element name="row">
+		<xs:complexType>
+			<xs:sequence>
+				<!--tw_msg.data.environment.grid.row[i].column[j]-->
+				<xs:element ref="column" minOccurs="3" maxOccurs="unbounded"/><!--3..* column(s)-->
+			</xs:sequence>
+			<xs:attribute name="index" type="xs:nonNegativeInteger"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.environment.grid.row[i].column[j]-->
+	<xs:element name="column">
+		<xs:complexType>
+			<xs:attribute name="index" type="xs:nonNegativeInteger"/>
+			<xs:attribute name="value" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.environment.holes.hole[*]-->
+	<xs:element name="hole">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="cell" minOccurs="1" maxOccurs="unbounded"/><!--1..* cell(s)-->
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="size" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="lifetime_left" type="xs:nonNegativeInteger"/><!--optional-->
+			<xs:attribute name="time_elapsed" type="xs:nonNegativeInteger"/><!--optional-->
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.environment.tiles.tile[*]-->
+	<xs:element name="tile">
+		<xs:complexType>
+			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
+			<!--
+			<xs:attribute name="lifetime_left" type="xs:nonNegativeInteger"/>
+			<xs:attribute name="time_elapsed" type="xs:nonNegativeInteger"/>
+			-->
+		</xs:complexType>
+	</xs:element>
+	
+	<!--tw_msg.data.environment.obstacles.obstacle[*]-->
+	<xs:element name="obstacle">
+		<xs:complexType>
+			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="lifetime_left" type="xs:nonNegativeInteger"/><!--optional-->
+			<xs:attribute name="time_elapsed" type="xs:nonNegativeInteger"/><!--optional-->
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.grid_total_rows-->
+	<xs:element name="grid_total_rows">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.grid_total_columns-->
+	<xs:element name="grid_total_columns">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--tw_msg.data.builtin_knowledge.teams.team[*]-->
+	<xs:element name="team">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="member" minOccurs="1" maxOccurs="unbounded"><!--1..* member(s)-->
+					<xs:complexType>
+						<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="leader" type="xs:nonNegativeInteger" use="required"/>
 		</xs:complexType>
 	</xs:element>
 
@@ -302,6 +351,22 @@
 			<xs:complexContent>
 				<xs:restriction base="xs:anyType"/>
 			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<!--*.cell-->
+	<xs:element name="cell">
+		<xs:complexType>
+			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+
+	<!--*location-->
+	<xs:element name="location">
+		<xs:complexType>
+			<xs:attribute name="row" type="xs:nonNegativeInteger" use="required"/>
+			<xs:attribute name="column" type="xs:nonNegativeInteger" use="required"/>
 		</xs:complexType>
 	</xs:element>
 
