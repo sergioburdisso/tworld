@@ -310,6 +310,13 @@
 </head>
 <body class="body-background">
 	<span id="robs-hud" class="no-events robsHudBackground" style="bottom: 0; position: absolute; width: 100%; z-index: 11; opacity:0; display: none;"></span>
+	<div class="no-events" style="z-index: 100; position:absolute; width:100%; height:100%; overflow:hidden">
+		<div style="overflow: hidden; position: absolute;  top:70px; background-color: transparent; height: 100%; width: 100%; text-align: left;">
+			<div style="position: absolute; bottom: 120px; width: 100%;">
+				<div id="console"></div>
+			</div>
+		</div>
+	</div>
 	<div id="loading" style="z-index:50; position:absolute; top:50%; left:50%; width: 300px; margin-left: -150px; color: white">
 		<div id="cube" class="animate-rot">
 			<div class="backgroundCube"></div>
@@ -324,13 +331,6 @@
 	</div>
 	<img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
 	<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; opacity:0">
-		<div class="no-events" style="position:absolute; width:100%; height:100%; overflow:hidden">
-			<div style="z-index: 100; overflow: hidden; position: absolute;  top:70px; background-color: transparent; height: 100%; width: 100%; text-align: left;">
-				<div style="position: absolute; bottom: 120px; width: 100%;">
-					<div id="console"></div>
-				</div>
-			</div>
-		</div>
 		<div id="black-screen" class="no-selection" style="display:none; opacity:0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); position: absolute; z-index: 40; font-size: 20px; font-family: airstrike;">
 			<div id="title" style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;">
 				TIME'S UP!
@@ -504,7 +504,7 @@
 			//Tileworld class guard
 			if (Tileworld){
 				_Tileworld = new Tileworld({
-								graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/tileworld.ccbjs'),
+								graphicEngine : startCopperLichtFromFile('tileworld', 'copperlichtdata/core.3d'),
 								dimension : [_ROWS, _COLUMNS]
 							});
 			}
