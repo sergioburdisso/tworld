@@ -7852,13 +7852,15 @@ startCopperLichtFromFile = function (b, a) {
 	var d = new CL3D.CopperLicht(b, true);
 	d.load(a);
 	return d
-};
+};var BORRAR;
 CL3D.CopperLicht = function (d, e, c, a) {
 	if ((e == null || e == true) && CL3D.gCCDebugOutput == null) {
 		CL3D.gCCDebugOutput = new CL3D.DebugOutput(d, a)
 	}
 	this.ElementIdOfCanvas = d;
 	this.MainElement = document.getElementById(this.ElementIdOfCanvas);
+	this.MainElement.height = this.MainElement.parentNode.clientHeight;
+	this.MainElement.width = this.MainElement.parentNode.clientWidth;
 	this.Document = new CL3D.CCDocument();
 	this.TheRenderer = null;
 	this.IsPaused = false;
