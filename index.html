@@ -314,8 +314,23 @@
 	</style>
 </head>
 <body>
-	<div id="tw-root" class="body-background" style="position: absolute; width: 100%; height: 100%">
-		<span id="robs-hud" class="no-events robsHudBackground" style="bottom: 0; position: absolute; width: 100%; z-index: 11; opacity:0; display: none;"></span>
+	<div id="tw-root" class="body-background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%">
+		<span id="robs-hud" class="no-events robsHudBackground" style="bottom: 0; position: absolute; width: 100%; z-index: 11; opacity:0; display: none;">
+			<span id= "controls" class="no-selection" style="pointer-events: all; width:192px; height:128px; float:left; margin-top: -128px">
+				<span style="width:64px; height:64px; float:left">
+				</span>
+				<span id="ctrl-up" style="width:64px; height:64px; float:left; background-image: url(imgs/up.png)">
+				</span>
+				<span id="ctrl-restore" style="width:64px; height:64px; float:left">
+				</span>
+				<span id="ctrl-left" style="width:64px; height:64px; float:left; background-image: url(imgs/left.png)">
+				</span>
+				<span id="ctrl-down" style="width:64px; height:64px; float:left; background-image: url(imgs/down.png)">
+				</span>
+				<span id="ctrl-right" style="width:64px; height:64px; float:left; background-image: url(imgs/right.png)">
+				</span>
+			</span>
+		</span>
 		<div class="no-events" style="z-index: 100; position:absolute; width:100%; height:100%; overflow:hidden">
 			<div style="overflow: hidden; position: absolute;  top:70px; background-color: transparent; height: 100%; width: 100%; text-align: left;">
 				<div style="position: absolute; bottom: 120px; width: 100%;">
