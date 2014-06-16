@@ -512,21 +512,6 @@
 				console.error(evt);
 		}
 		window.onload=function(){
-
-			//Reset Button
-			$("#resetBtn").mouseenter(function(e){
-				$("#resetBtn").prop("src", "imgs/restart_enter.png");
-			});
-			$("#resetBtn").mouseleave(function(e){
-				$("#resetBtn").prop("src", "imgs/restart.png");
-			});
-			$("#resetBtn").mouseup(function(e){
-				location.reload();
-			});
-
-			$("#tileworld").prop('width',$(window).width());
-			$("#tileworld").prop('height',$(window).height());
-
 			//Tileworld class guard
 			if (Tileworld){
 				_Tileworld = new Tileworld({
@@ -534,87 +519,6 @@
 								dimension : [_ROWS, _COLUMNS]
 							});
 			}
-
-			//-> keydown Event Handler
-			$(document).keyup(function(e){
-				if (isValidKey(e.keyCode)){
-					switch(e.keyCode){
-						case 13://space bar
-						if ($("#playBtn"))
-							$("#playBtn").mouseup();
-					}
-				}
-			});
-
-			//Play Button
-			$("#playBtn").mouseenter(function(e){
-				if (_Ready)
-					$(this).prop("src", (!_LOW_QUALITY_WORLD)? "imgs/play_enter.png" : "imgs/play_enter_inv.png");
-			});
-			$("#playBtn").mouseleave(function(e){$(this).prop("src",  (!_LOW_QUALITY_WORLD)? "imgs/play.png" : "imgs/play_inv.png")});
-			$("#playBtn").mouseleave();
-			$("#playBtn").mouseup(function(e){
-
-				if (_Ready && !_Running){
-
-					$('#tileworld').removeClass("blur");
-					$('#playBtn').hide();
-					$('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
-
-
-					$("#header").show();
-					$("#header").animate({opacity:1},1000);
-					$(".title").animate({opacity:0},1000,function(){$(".title").hide()});
-					$("#pie").css("background-color", "transparent");
-
-					$("#logos-line").css({border:'none'});
-					$("#sb-logo").mouseleave();
-					$("#unsl-logo").mouseleave();
-					$("#pie-derecho").animate(
-						{opacity:0},
-						500,
-						function(){
-							$("#pie-derecho").hide();
-							$("#robs-hud").show();
-							$("#robs-hud").animate({opacity:1},1000);
-						}
-					);
-
-					_Tileworld.start();
-					$("#playBtn").remove();
-				}
-			});
-
-			//Logos
-			$("#sb-logo").mouseenter(function(e){
-				$("#sb-logo").stop(true).animate({width:'119px', opacity: 1}, 100);
-			});
-			$("#sb-logo").mouseleave(function(e){
-				$("#sb-logo").stop(true).animate({width:'36px', opacity: 0.2}, 500);
-			});
-
-			$("#unsl-logo").mouseenter(function(e){
-				$("#unsl-logo").stop(true).animate({width:'107px', opacity: 1}, 100);
-			});
-			$("#unsl-logo").mouseleave(function(e){
-				$("#unsl-logo").stop(true).animate({width:'30px', opacity: 0.2}, 500);
-			});
-
-			$("#frameColor").hide();
-			$("#score-up").hide();
-			$(window).resize();
-
-			if (!_SHOW_FPS)
-				$("#fps").hide();
-
-			$("#frame").show();
-			$("#frame").animate({opacity : 1}, 4000, function(){$("tw-root").removeClass("body-background");});
-
-			$("#loading-shadow").animate({opacity: 0}, 4000, function(){$("#loading-shadow").remove()});
-			$("#loading").animate({opacity : 0}, 4000, function(){$("#loading").remove()});
-
-			$("#sb-logo").mouseleave();
-			$("#unsl-logo").mouseleave();
 		};
 
 	</script>
