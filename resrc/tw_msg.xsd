@@ -222,18 +222,13 @@
 	<xs:element name="row">
 		<xs:complexType>
 			<xs:sequence>
-				<!--tw_msg.data.environment.grid.row[i].column[j]-->
-				<xs:element ref="column" minOccurs="3" maxOccurs="unbounded"/><!--3..* column(s)-->
+				<!--tw_msg.data.environment.grid.row[i].cell_data[j]-->
+				<xs:element name="cell_data" minOccurs="3" maxOccurs="unbounded"><!--3..* cell_data(s)-->
+					<xs:complexType>
+						<xs:attribute name="value" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="index" type="xs:nonNegativeInteger"/>
-		</xs:complexType>
-	</xs:element>
-
-	<!--tw_msg.data.environment.grid.row[i].column[j]-->
-	<xs:element name="column">
-		<xs:complexType>
-			<xs:attribute name="index" type="xs:nonNegativeInteger"/>
-			<xs:attribute name="value" type="xs:string" use="required"/>
 		</xs:complexType>
 	</xs:element>
 
