@@ -8869,7 +8869,7 @@ CL3D.FlaceLoader = function () {
 			CL3D.gCCDebugOutput.printError("Error: Could not load file '" + c + "'\n(If your Internet connection is slow, try reloading the page)");
 			var d = navigator.appVersion;
 			if (d != null && d.indexOf("Chrome") != -1) {
-				CL3D.gCCDebugOutput.printError("<i>if you're opening this from your local files with Chrome,\nremember to add the parameter '--allow-file-access-from-files' when starting the browser.</i>", true)
+				CL3D.gCCDebugOutput.printError("if you're opening this from your local files with Chrome,\nremember to add the parameter '--allow-file-access-from-files' when starting the browser.", true)
 			}
 			return null
 		}
