@@ -86,6 +86,8 @@
 			<xs:all>
 				<!--tw_msg.data.agent.location-->
 				<xs:element name="location" type="row_column"/>
+				<!--tw_msg.data.agent.stats-->
+				<xs:element ref="stats"/>
 			</xs:all>
 			<!--tw_msg.data.agent.my_id (optional)-->
 			<xs:attribute name="id" type="xs:nonNegativeInteger"/>
@@ -178,6 +180,30 @@
 		</xs:complexType>
 	</xs:element>
 
+	<!--tw_msg.data.agent.stats-->
+	<xs:element name="stats">
+		<xs:complexType>
+			<xs:all>
+				<!--tw_msg.data.agent.stats.good_moves-->
+				<xs:element name="good_moves" type="value_int"/>
+				<!--tw_msg.data.agent.stats.bad_moves-->
+				<xs:element name="bad_moves" type="value_int"/>
+				<!--tw_msg.data.agent.stats.filled_cells-->
+				<xs:element name="filled_cells" type="value_int"/>
+				<!--tw_msg.data.agent.stats.filled_holes-->
+				<xs:element name="filled_holes" type="value_int"/>
+				<!--tw_msg.data.agent.stats.battery_used-->
+				<xs:element name="battery_used" type="value_int"/>
+				<!--tw_msg.data.agent.stats.battery_recharge-->
+				<xs:element name="battery_recharge" type="value_int"/>
+				<!--tw_msg.data.agent.stats.battery_restore-->
+				<xs:element name="battery_restore" type="value_int"/>
+				<!--tw_msg.data.agent.stats.total_score-->
+				<xs:element name="total_score" type="value_int"/>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+
 	<!--tw_msg.data.builtin_knowledge.teams (optional)-->
 	<xs:element name="teams">
 		<xs:complexType>
@@ -205,22 +231,22 @@
 	<xs:element name="costs">
 		<xs:complexType>
 			<xs:all>
-				<!--tw_msg.data.builtin_knowledge.costs.moves-->
-				<xs:element name="move" type="value_float"/>
-				<!--tw_msg.data.builtin_knowledge.costs.invalid_action-->
-				<xs:element name="invalid_action" type="value_float"/>
+				<!--tw_msg.data.builtin_knowledge.costs.good_move-->
+				<xs:element name="good_move" type="value_float"/>
+				<!--tw_msg.data.builtin_knowledge.costs.bad_move-->
+				<xs:element name="bad_move" type="value_float"/>
 				<!--tw_msg.data.builtin_knowledge.costs.filled_hole-->
 				<xs:element name="filled_hole" type="value_float"/>
 				<!--tw_msg.data.builtin_knowledge.costs.battery (optional)-->
 				<xs:element name="battery" minOccurs="0">
 					<xs:complexType>
 						<xs:all>
-							<!--tw_msg.data.builtin_knowledge.costs.battery.walk-->
-							<xs:element name="walk" type="value_int"/>
+							<!--tw_msg.data.builtin_knowledge.costs.battery.bad_move-->
+							<xs:element name="bad_move" type="value_int"/>
+							<!--tw_msg.data.builtin_knowledge.costs.battery.good_move-->
+							<xs:element name="good_move" type="value_int"/>
 							<!--tw_msg.data.builtin_knowledge.costs.battery.slide_tiles-->
-							<xs:element name="slide_tiles" type="value_int"/>
-							<!--tw_msg.data.builtin_knowledge.costs.battery.invalid_move-->
-							<xs:element name="invalid_move" type="value_int"/>
+							<xs:element name="slide_tile" type="value_int"/>
 						</xs:all>
 					</xs:complexType>
 				</xs:element>
@@ -351,7 +377,7 @@
 			<!--tw_msg.data.builtin_knowledge.endgame.*.bad_moves (optional)-->
 			<xs:element name="bad_moves" minOccurs="0" type="value_int"/>
 			<!--tw_msg.data.builtin_knowledge.endgame.*.battery_use (optional)-->
-			<xs:element name="battery_use" minOccurs="0" type="value_int"/>
+			<xs:element name="battery_used" minOccurs="0" type="value_int"/>
 			<!--tw_msg.data.builtin_knowledge.endgame.*.battery_recharge (optional)-->
 			<xs:element name="battery_recharge" minOccurs="0" type="value_int"/>
 			<!--tw_msg.data.builtin_knowledge.endgame.*.battery_restore (optional)-->
