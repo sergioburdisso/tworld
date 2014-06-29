@@ -23,7 +23,7 @@ if (!_JSON_NECESSARY)
 importScripts('../util/sprintf.min.js');
 
 
-this.perceptionFunction = function( environment ) /*returns a perception*/{
+this.perceptionFunction = function( environment ) /*returns a percept*/{
 	environment = environment.data;
 
 	var rVOEnvGrid, cVOEnvGrid; // VO stands for "Virtual Origin" (as if we were a compiler implementing multidimensional arrays XD)
@@ -452,9 +452,10 @@ this.perceptionFunction = function( environment ) /*returns a perception*/{
 	postMessage( _percept );
 }
 
-//transform the JSON perception into a JSON object that is prepared to be exported as an XML 
+//transform the JSON perception into a JSON object that is prepared to be exported as an XML
+//args:
 //	attrs:		attributes by force
-//	notAttrs:	not an attribute by force
+//	notAttrs:	not-an-attribute by force
 //	replace:	array of pairs "x:y", x is replaced by y whenever it appears (after conversion)
 function json2attr_json(json, attrs, notAttrs, replace){
 	var i, rProp, _attr_json = new Object();
@@ -494,6 +495,15 @@ function json2attr_json(json, attrs, notAttrs, replace){
 	return _attr_json;
 }
 
+//transform the JSON perception into a Prolog fact
+//args:
+//	skipFunctors:	array of functors to be omitted in the process of constructing the Prolog fact
+//	arrayFunctors:	array of pairs [A,B], where A is the name of the array property of <json>
+//					and B is the functor to be added to each element of the A array.
+//						e.g. if json.A = [1,2,3] then json2prolog_facts(_,[["A","elem"]..],_) will
+//						produce ...A([elem(1), elem(2), elem(3)])...
+//	parent:			internal parameter, you shoundn't care about it
+//					(pretend it doens't exist when calling this function)
 function json2prolog_facts(json, skipFunctors, arrayFunctors, parent){
 	var i, _arrFunctor, functor, facts = "";
 	var rowColumnCell = (parent == "obstacles" || parent == "tiles");
