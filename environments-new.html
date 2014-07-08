@@ -1,80 +1,34 @@
 <div>
 	<div class="row"></div>
-	<h2><b>Properties of your new task environment</b></h2>
-	<section class="text-justify">
-		<blockquote class="blockquote-reverse">
-			<p>The range of task environments that might arise in AI is obviously vast. We can, however, identify a fairly small number of dimensions along which task environments can be categorized. These dimensions determine, to a large extent, the appropriate agent design and the applicability of each of the principal families of techniques for agent implementation.</p>
-			<footer>Artificial Intelligence: A Modern Approach (Third edition) by Stuart Russell and Peter Norvig</footer>
-		</blockquote>
-	</section>
-	<br>
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-3"></div>
-			<form  name="newEnvironment1Form" role="form" class="col-md-6">
-				<div class="row text-left">
-					<p class="lead"><b>1.</b> Select the properties of your new task environment according to the dimension listed below.</p>
-				</div>
-				<div class="row ">
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default" ng-model="enc.task_env.prop.fullyObservable" btn-radio="true" tooltip="The robot's sensors give it access to the complete state of the environment at each point in time">Fully observable</label>
-						<label class="btn btn-default" ng-model="enc.task_env.prop.fullyObservable" btn-radio="false" tooltip-placement="right" tooltip="The environment might be partially observable because of noisy and inaccurate sensors or because parts of the state are simply missing from the sensor data">Partially observable</label>
-					</div>
-				</div>
-				<br>
-				<div class="row">
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent" btn-radio="false" tooltip="A single robot will perform in the environment">Single agent</label>
-						<label class="btn btn-default active" ng-model="enc.task_env.prop.multiagent" btn-radio="true" tooltip-placement="right" tooltip="The environment will have more than one robot">Multiagent</label>
-					</div>
-				</div>
-				<br>
-				<div class="container-fluid animate-show" ng-show="enc.task_env.prop.multiagent">
-					<div class="row" style="margin-top: -15px; padding-bottom: 20px">
-						<div class="btn-group">
-							<label class="btn btn-default" tooltip="one-vs-one match (single-robot teams)" ng-model="enc.task_env.prop.multiagent_type" btn-radio="0">Competitive</label>
-							<label class="btn btn-default active" ng-model="enc.task_env.prop.multiagent_type" btn-radio="1" tooltip-placement="bottom" tooltip="A single team with multiple robots">Cooperative</label>
-							<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" btn-radio="2" tooltip-placement="right" tooltip="Teams are composed of more than one robot">Competitive &amp; Cooperative</label>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default active" ng-model="enc.task_env.prop.deterministic" btn-radio="true" tooltip="The next state of the environment is completely determined by the current state and the action executed by the robot">Deterministic</label>
-						<label class="btn btn-default" ng-model="enc.task_env.prop.deterministic" btn-radio="false" tooltip-placement="right" tooltip="Nondeterministic plus uncertainty about outcomes is quantified in terms of probabilities">Stochastic</label>
-					</div>
-				</div>
-				<br>
-				<div class="row">
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default active" ng-model="enc.task_env.prop.dynamic" btn-radio="0" tooltip="The environment itself does not change">Static</label>
-						<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" btn-radio="1" tooltip-placement="bottom" tooltip="The environment itself does not change but scores associated with holes gradually decay in value">Semidynamic</label>
-						<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" btn-radio="2" tooltip-placement="right" tooltip="The environment can change while the robot is deliberating">Dynamic</label>
-					</div>
-				</div>
-				<br>
-				<div class="row">
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default active" ng-model="enc.task_env.prop.known" btn-radio="true" tooltip="The outcomes (or outcome probabilities if the environment is stochastic) for all actions are given">Known</label>
-						<label class="btn btn-default" ng-model="enc.task_env.prop.known" btn-radio="false" tooltip-placement="right" tooltip="The outcomes of actions are not given">Unknown</label>
-					</div>
-				</div>
-				<div class="separator"></div>
-				<div class="row text-left">
-					<label class="lead "><b>2.</b> Give your task environment a name.</label>
-					<input type="text" class="form-control" ng-model="enc.task_env.name" placeholder="Type a name e.g. 'single agent, moderately-paced dynamic environment'"></input>
-				</div>
-				<div class="separator"></div>
-				<div class="row text-left">
-					<label class="lead "><b>3.</b> Optionally, write something about your task environment.</label>
-					<textarea class="form-control" ng-model="enc.task_env.desc" rows="5" placeholder="Description"></textarea>
-				</div>
-				<div class="separator"></div><hr/>
-				<div class="row">
-					<button class="btn btn-success col-md-4 pull-left">Previous</button>
-					<button class="btn btn-success col-md-4 pull-right">Next</button>
-				</div>
-			</form>
+	<form name="newEnvironment1Form" role="form">
+
+		<properties ng-show="enc.isStep(0)"></properties>
+
+		<div class="container-fluid" ng-show="!enc.isStep(0)">
+
+			<ul class="nav nav-tabs nav-stacked col-md-2 col-xs-2">
+				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(1)}"><a>1</a></li>
+				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(2)}"><a>2</a></li>
+				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(3)}"><a>3</a></li>
+				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(4)}"><a>4</a></li>
+				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(5)}"><a>5</a></li>
+				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(6)}"><a>6</a></li>
+			</ul>
+
+			<div class="panel">
+				<step1 ng-show="enc.isStep(1)"></step1>
+				<step2 ng-show="enc.isStep(2)"></step2>
+				<step3 ng-show="enc.isStep(3)"></step3>
+				<step4 ng-show="enc.isStep(4)"></step4>
+				<step5 ng-show="enc.isStep(5)"></step5>
+				<step6 ng-show="enc.isStep(6)"></step6>
+			</div>
+
 		</div>
-	</div>
+		<div class="row">
+			<hr/>
+			<button ng-click="enc.prevStep()" ng-hide="enc.isStep(0)" class="btn btn-success col-md-2 col-xs-3 pull-left">Previous</button>
+			<button ng-click="enc.nextStep()" class="btn btn-success col-md-2 col-xs-3 pull-right">Next</button>
+		</div>
+	</form>
 </div>

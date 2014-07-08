@@ -1,5 +1,5 @@
 (function(){
-	var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironmentsNew', 'ui.bootstrap', 'ngRoute', 'ngAnimate']);
+	var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironmentsNew', 'ui.bootstrap', 'ui.slider', 'ngRoute', 'ngAnimate']);
 
 	var taskEnvironments = [];
 	var agentPrograms = [];
