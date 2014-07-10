@@ -69,3 +69,13 @@
 	]);
 
 })();
+
+Array.prototype.remove = function(index) {
+	var output=this[index];
+
+	for (var i= index; i < this.length; ++i)
+		this[i] = this[i+1];
+	this.length--;
+
+	return output;
+};

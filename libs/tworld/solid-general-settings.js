@@ -87,7 +87,7 @@ var _AI_NECESSARY = false;
 var _XML_NECESSARY = false;
 var _JSON_NECESSARY = false;
 
-//Note: _ENDGAME.*.VALUE = 0 to deactivate that condition
+//Note: _ENDGAME.<COND>.VALUE = 0 to deactivate condition <COND>
 var _ENDGAME = {
 	TIME: {
 		VALUE: 3*60/*seconds (0 means no time limits)*/,

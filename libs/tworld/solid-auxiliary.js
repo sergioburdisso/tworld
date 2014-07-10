@@ -17,6 +17,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 var _DEG_PI = Math.PI/180;
+
 function alert(msg){
 	if ($.type(msg) === "string"){
 		msg = he.encode(msg, {encodeEverything: true});
@@ -58,9 +59,13 @@ console.error	= function(msg){
 Array.prototype.clear = function() {this.length = 0;};
 
 Array.prototype.remove = function(index) {
+	var output=this[index];
+
 	for (var i= index; i < this.length; ++i)
 		this[i] = this[i+1];
 	this.length--;
+
+	return output;
 };
 
 Array.prototype.clone = function() {

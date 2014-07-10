@@ -43,6 +43,7 @@ function loadAllSync(){
 	importScript("./libs/jquery/jquery-1.7.2.min.js");
 	importScript("./libs/jquery/jquery.mousewheel.js");
 	importScript("./libs/jquery/jquery-ui.min.js");
+	importScript("./libs/util/he.min.js");
 
 	importScript("./libs/tworld/solid-auxiliary.js");
 
@@ -55,7 +56,6 @@ function loadAllSync(){
 		"_XML_NECESSARY"
 	);
 	importScript("./libs/util/sprintf.min.js");
-	importScript("./libs/util/he.min.js");
 	importScript(
 		"./libs/tworld/sound/buzz.min.js",
 		/*provided that the following condition is satisfied*/
