@@ -1,0 +1,145 @@
+<div class="container-fluid">
+	<h2><b>Environment</b></h2>
+	<div class="col-md-6 col-xs-6 text-left">
+		<label>Grid dimensions:</label>
+		<div class="row">
+			<div class="col-md-3 col-xs-3">
+				<input type="number" class="form-control" ng-model="enc.task_env.environment.rows" ng-change="enc.updateDimensions()" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Rows" required>
+			</div>
+			<div class="col-md-3 col-xs-3">
+				<input type="number" class="form-control" ng-model="enc.task_env.environment.columns" ng-change="enc.updateDimensions()" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Columns" required>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-6 col-xs-6">
+				<label>Variability of scores ({{(enc.task_env.environment.scores_variability*100).toFixed(1)}}%)</label><div class="ui-slider-size" ui-slider="{animate: true}" min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.environment.scores_variability"></div>
+			</div>
+		</div>
+		<br>
+
+		<div class="row " ng-hide="enc.task_env.prop.dynamic == 2">
+			<div class="btn-group btn-group-justified">
+				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="false" tooltip="percept-action pattern">User-defined initial state</label>
+				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="true" tooltip-placement="right" tooltip="percept is send periodically. Advanced mode">Random initial state</label>
+			</div>
+		</div>
+
+		<div class="panel panel-default" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.task_env.environment.random_initial_state">
+			<div class="panel-body text-center">
+				<div class="row">
+					<div class="btn-group btn-group">
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'A'" tooltip-placement="top" tooltip="Agent">A</label>
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'#'" tooltip-placement="top" tooltip="Obstacle">#</label>
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="' '" tooltip-placement="top" tooltip="Empty cell">_</label>
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'T'" tooltip-placement="top" tooltip="Tile">T</label>
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'C'" tooltip-placement="top" tooltip="Battery Charger" ng-show="enc.task_env.battery">C</label>
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="ismc.holeId" ng-dblclick="ismc.nextHoleId()" tooltip-placement="top" tooltip="Hole Cell">{{ismc.holeId}}</label>
+					</div>
+				</div>
+				<br>
+				<table class="no-selection">
+					<tr ng-repeat="row in ismc.grid track by $index" style="height:23px;">
+						<td ng-repeat="cell in row track by $index" ng-click="ismc.setCell(row, $index)" style="width:23px;">{{cell}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<div class="panel panel-default" ng-show="enc.task_env.prop.dynamic == 2 || enc.task_env.environment.random_initial_state">
+			<div class="panel-body">
+				<label>Hole size (closed interval: {{enc.task_env.environment.holes_size}})</label>
+				<div class="row">
+					<div class="col-md-10 col-xs-10">
+						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.holes_size"></div>
+					</div>
+				</div>
+				<br>
+				<label>Number of Holes (closed interval: {{enc.task_env.environment.num_holes}})</label>
+				<div class="row">
+					<div class="col-md-10 col-xs-10">
+						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.num_holes"></div>
+					</div>
+				</div>
+				<br>
+				<label>Number of obstacles (closed interval: {{enc.task_env.environment.num_obstacles}})</label>
+				<div class="row">
+					<div class="col-md-10 col-xs-10">
+						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.num_obstacles"></div>
+					</div>
+				</div>
+				<br>
+				<label>Distance of tile from hole cell (closed interval: {{enc.task_env.environment.difficulty}})</label>
+				<div class="row">
+					<div class="col-md-10 col-xs-10">
+						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.difficulty"></div>
+					</div>
+				</div>
+			</div>
+		</div><br>
+
+		<div class="panel panel-default" ng-show="enc.task_env.prop.dynamic == 2">
+			<div class="panel-heading">Dynamism knobs</div>
+			<div class="panel-body">
+				<label>Dynamism (closed interval: {{enc.task_env.environment.dynamic.dynamism}})</label>
+				<div class="row">
+					<div class="col-md-10 col-xs-10">
+						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="60" ng-model="enc.task_env.environment.dynamic.dynamism"></div>
+					</div>
+				</div>
+				<br>
+				<label>Hostility (closed interval: {{enc.task_env.environment.dynamic.hostility}})</label>
+				<div class="row">
+					<div class="col-md-10 col-xs-10">
+						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="60" ng-model="enc.task_env.environment.dynamic.hostility"></div>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="checkbox">
+						<label><input type="checkbox" ng-model="enc.task_env.environment.dynamic.hard_bounds"> Hard bounds.</label>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+		<div class="panel panel-default">
+			<div class="panel-heading">Game ends when...</div>
+			<div class="panel-body text-center">
+				<div ng-repeat="cond in enc.task_env.environment.final_state">
+					<div class="row">
+						<label class="col-md-2">{{cond.name}}</label>
+						<input type="number" class=" col-md-2" ng-model="cond.value" min="0" required ng-pattern="/^\d+$/">
+						<label class="col-md-2 col-xs-2">Game Result</label>
+						<div class="col-md-5 col-xs-5">
+							<select class="form-control" ng-model="cond.result">
+								<option value="0">just end</option>
+								<option value="1">ends with success</option>
+								<option value="2">ends with failure</option>
+							</select>
+						</div>
+						<button class="btn btn-default col-md-1 glyphicon glyphicon-remove" ng-click="enc.removeFinalStateCondition($index)"></button>
+					</div>
+					<hr/>
+				</div>
+				<button ng-click="enc.openModal('sm')" ng-disabled="!enc.end_game_cond.length" class="btn btn-success">Add</button>
+			</div>
+		</div>
+		</div>
+
+	</div>
+</div>
+<div class="separator"></div>
+
+<script type="text/ng-template" id="end_game_cond.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Click on a condition to add it</h3>
+	</div>
+	<div class="modal-body">
+		<button class="btn label label-default" ng-repeat="cond in end_game_cond | filter:byBattery" ng-click="ok($index)">{{ cond.name }}</button>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+	</div>
+</script>

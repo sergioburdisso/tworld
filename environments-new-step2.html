@@ -1,0 +1,23 @@
+<div class="container-fluid" ng-hide="enc.task_env.prop.deterministic">
+	<h2><b>Stochastic</b></h2>
+	<div class="col-md-6 col-xs-6 text-left">
+		<div class="row">
+			<div class="col-md-6 col-xs-6">
+				<label>Determinism ({{enc.task_env.agents.determinism}}%)</label><div class="ui-slider-size" ui-slider="{animate: true}" min="0" max="100" step="0.1" use-decimals ng-model="enc.task_env.agents.determinism"></div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-md-6 col-xs-6">
+				<label>Model of stochastic motion</label>
+				<select class="form-control" ng-model="enc.task_env.agents.stochastic_model">
+					<option value="0">No action</option>
+					<option value="1">Random Action</option>
+					<option value="2">Opposite action</option>
+					<option value="3">User defined</option>
+				</select>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="separator"></div>

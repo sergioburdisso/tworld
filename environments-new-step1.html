@@ -1,0 +1,53 @@
+<div class="container-fluid">
+	<h2><b>Perception</b></h2>
+	<div class="col-md-6 col-xs-6 text-left">
+		<section ng-hide="enc.task_env.prop.fullyObservable">
+			<div class="row">
+				<p class="lead"><b>-</b>Partially observable because of</p>
+			</div>
+			<div class="row">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="enc.task_env.agents.percept.partialGrid"> Visibility bounds.</label>
+				</div>
+			</div>
+			<div class="row" ng-show="enc.task_env.agents.percept.partialGrid">
+				<div class="col-md-4 col-xs-6">
+					<label>Radius</label><input type="number" class="form-control" ng-model="enc.task_env.agents.percept.radius" min="0" max="20" ng-required="enc.task_env.agents.percept.partialGrid" ng-pattern="/^\d+$/">
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="enc.task_env.agents.percept.noise"> Noisy and inaccurate sensors.</label>
+				</div>
+			</div>
+			<div class="row " ng-show="enc.task_env.agents.percept.noise">
+				<div class="row">
+					<label class="col-md-3">Holes noise ({{(enc.task_env.agents.percept.noise_cfg.hole*100).toFixed(1)}}%)</label>
+					<div class="ui-slider-size col-md-6" ui-slider="{animate: true}" min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.percept.noise_cfg.hole"></div>
+				</div>
+				<br>
+				<div class="row">
+					<label class="col-md-3">Tiles noise ({{(enc.task_env.agents.percept.noise_cfg.tile*100).toFixed(1)}}%)</label>
+					<div class="ui-slider-size col-md-6" ui-slider="{animate: true}" min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.percept.noise_cfg.tile"></div>
+				</div>
+				<br>
+				<div class="row">
+					<label class="col-md-3">Obstacles noise ({{(enc.task_env.agents.percept.noise_cfg.obstacle*100).toFixed(1)}}%)</label>
+					<div class="ui-slider-size col-md-6" ui-slider="{animate: true}" min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.percept.noise_cfg.obstacle"></div>
+				</div>
+			</div>
+			<div class="separator"></div>
+		</section>
+		<div class="row">
+			<p class="lead"><b>-</b>How do you want T-World to handle percept-action relationship?</p>
+		</div>
+		<div class="row ">
+			<div class="btn-group btn-group-justified">
+				<label class="btn btn-default" ng-model="enc.task_env.agents.percept.sync" btn-radio="true" tooltip="percept-action pattern">Synchronously (recommended)</label>
+				<label class="btn btn-default" ng-model="enc.task_env.agents.percept.sync" btn-radio="false" tooltip-placement="right" tooltip="percept is send periodically. Advanced mode">Asynchronously</label>
+			</div>
+		</div>
+		<div class="separator"></div>
+	</div>
+</div>
