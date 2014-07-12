@@ -4,22 +4,22 @@
 
 		<properties ng-show="enc.isStep(0)"></properties>
 
-		<div class="container-fluid" ng-show="!enc.isStep(0)">
+		<div class="container-fluid" ng-hide="enc.isStep(0)">
 
 			<ul class="nav nav-tabs nav-stacked col-md-2 col-xs-2">
-				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(1)}"><a>1</a></li>
-				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(2)}"><a>2</a></li>
-				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(3)}"><a>3</a></li>
-				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(4)}"><a>4</a></li>
-				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(5)}"><a>5</a></li>
-				<li class="active" ng-class="{'animate-zoom-loop':enc.isStep(6)}"><a>6</a></li>
+				<li ng-show="!enc.task_env.prop.known" ng-class="{'active':enc.isStep(1)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(1)}">Unknown Env.</span></a></li>
+				<li ng-class="{'active':enc.isStep(2)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(2)}">Percept</span></a></li>
+				<li ng-show="enc.task_env.prop.multiagent" ng-class="{'active':enc.isStep(3)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(3)}">Agents</span></a></li>
+				<li ng-show="!enc.task_env.prop.deterministic" ng-class="{'active':enc.isStep(4)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(4)}">Agent Actuators</span></a></li>
+				<li ng-class="{'active':enc.isStep(5)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(5)}">Environment</span></a></li>
+				<li ng-class="{'active':enc.isStep(6)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(6)}">Final Tweaks</span></a></li>
 			</ul>
 
-			<div class="panel">
-				<step1 ng-show="enc.isStep(1)"></step1>
+			<div class="container">
+				<step1 ng-show="(enc.isStep(1) && enc.task_env.prop.known && enc.correctStep()) || enc.isStep(1)"></step1>
 				<step2 ng-show="enc.isStep(2)"></step2>
-				<step3 ng-show="enc.isStep(3)"></step3>
-				<step4 ng-show="enc.isStep(4)"></step4>
+				<step3 ng-show="(enc.isStep(3) && !enc.task_env.prop.multiagent && enc.correctStep()) || enc.isStep(3)"></step3>
+				<step4 ng-show="(enc.isStep(4) && enc.task_env.prop.deterministic && enc.correctStep()) || enc.isStep(4)"></step4>
 				<step5 ng-show="enc.isStep(5)"></step5>
 				<step6 ng-show="enc.isStep(6)"></step6>
 			</div>

@@ -78,4 +78,13 @@ Array.prototype.remove = function(index) {
 	this.length--;
 
 	return output;
-};
+}
+
+Array.prototype.setTo = function(arr) {
+	if (arr.length != this.length)
+		this.length = arr.length;
+
+	var i= this.length;
+	while(i--)
+		this[i] = arr[i];
+}

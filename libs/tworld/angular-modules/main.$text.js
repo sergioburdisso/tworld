@@ -1,5 +1,3 @@
-var _LANGUAGES = {ENGLISH:"English", SPANISH:"Spanish"}
-
 if (typeof($text) == "undefined")
 var $text = {};
 

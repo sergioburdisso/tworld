@@ -30,9 +30,9 @@
 			<div class="container-fluid animate-show" ng-show="enc.task_env.prop.multiagent">
 				<div class="row" style="margin-top: -15px; padding-bottom: 20px">
 					<div class="btn-group">
-						<label class="btn btn-default" tooltip="one-vs-one match (single-robot teams)" ng-model="enc.task_env.prop.multiagent_type" btn-radio="0">Competitive</label>
-						<label class="btn btn-default active" ng-model="enc.task_env.prop.multiagent_type" btn-radio="1" tooltip-placement="bottom" tooltip="A single team with multiple robots">Cooperative</label>
-						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" btn-radio="2" tooltip-placement="right" tooltip="Teams are composed of more than one robot">Competitive &amp; Cooperative</label>
+						<label class="btn btn-default" tooltip="one-vs-one match (single-robot teams)" ng-model="enc.task_env.prop.multiagent_type" ng-click="enc.setCompetitive()" btn-radio="0">Competitive</label>
+						<label class="btn btn-default active" ng-model="enc.task_env.prop.multiagent_type" ng-click="enc.setCooperative()" btn-radio="1" tooltip-placement="bottom" tooltip="A single team with multiple robots">Cooperative</label>
+						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-click="enc.setCompetitiveCooperative()" btn-radio="2" tooltip-placement="right" tooltip="Teams are composed of more than one robot">Competitive &amp; Cooperative</label>
 					</div>
 				</div>
 			</div>

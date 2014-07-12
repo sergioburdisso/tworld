@@ -1,0 +1,31 @@
+<div class="container-fluid" ng-show="enc.task_env.prop.multiagent">
+	<h2><b>Agents</b></h2>
+	<div class="col-md-6 col-xs-6 text-left">
+		<div class="row" ng-repeat="team in enc.task_env.teams">
+			<div class="panel panel-default">
+				<div class="panel-heading" ng-hide="enc.isCooperative()">
+					Team 
+					<span ng-hide="enc.isCompetitive()">"{{team.name}}"</span>
+					<span ng-show="enc.isCompetitive()">{{$index + 1}}</span>
+				</div>
+				<div class="panel-body">
+					<button ng-if="$index > 1" class="btn btn-default pull-right glyphicon glyphicon-remove" ng-click="enc.removeTeam($index)" tooltip="remove"></button>
+					<section ng-show="enc.isCompetitiveCooperative()">
+						<label>Name </label><input type="text" size="8" ng-model="team.name">
+					</section>
+					<section ng-hide="enc.isCompetitive()">
+						<label> Number of agents </label>
+						<input type="number" style="width:60px" min="2" ng-model="team.members" ng-if="enc.isCooperative()">
+						<input type="number" style="width:60px" min="1" ng-model="team.members" ng-if="enc.isCompetitiveCooperative()">
+					</section>
+					<section ng-hide="enc.isCooperative()">
+						<label> Color </label><select ng-options="c for c in enc.teamColors" ng-model="team.color"></select>
+					</section>
+				</div>
+			</div>
+			<br>
+		</div>
+		<button class="btn btn-success col-md-2" ng-click="enc.addTeam()" ng-hide="enc.isCooperative()">Add</button>
+	</div>
+</div>
+<div class="separator"></div>
