@@ -22,43 +22,55 @@ var _KNOBS= localStorage.knobs? JSON.parse(localStorage.knobs) : null;
 var _LANGUAGE = _LANGUAGES.SPANISH;
 
 //TWorld dimension
-var _ROWS = 8;//9
-var _COLUMNS = 8;//9
+var _ROWS = _KNOBS.environment.rows;
+var _COLUMNS = _KNOBS.environment.columns;
 
-var _INITIAL_STATE = null;/*{/** /
-	grid: [
-			["C"," "," "," "," ","#"],
-			["#"," "," ","2"," ","#"],
-			[" ","#"," ","T"," ","A"],
-			["1","T"," "," "," ","#"],
-			["#"," "," "," ","T","#"],
-			[" ","#"," ","#","3"," "]
-		],
-	holes: {},
-	tiles: [],
-	obstacles: []
-}
-*/
+var _INITIAL_STATE = !_KNOBS.prop.dynamic && !_KNOBS.environment.random_initial_state?
+					{
+						grid:_KNOBS.environment.initial_state,
+						obstacles:[],
+						holes:{},
+						tiles:[]
+					}
+					:
+					null;
+_console.log(_INITIAL_STATE.grid)
 // Battery
 var _BATTERY_RANDOM_START	= true;
 var	_BATTERY_START_POSITION	= [/*{ROW : 0, COLUMN: 0}, {ROW : 1, COLUMN: 1} /*,...*/];
 
-var _BATTERY_INITIAL_CHARGE		= 1000;
-var _BATTERY_WALK_COST			= 20;
-var _BATTERY_SLIDE_COST			= 10;
-var _BATTERY_INVALID_MOVE_COST	= 5;
+var _BATTERY_INITIAL_CHARGE		= _KNOBS.final_tweaks.battery.level;
+var _BATTERY_WALK_COST			= _KNOBS.final_tweaks.battery.good_move;
+var _BATTERY_INVALID_MOVE_COST	= _KNOBS.final_tweaks.battery.bad_move;
+var _BATTERY_SLIDE_COST			= _KNOBS.final_tweaks.battery.sliding;
 
 // Players
-//var _AGENTS_RANDOM_START	= true;
-var _NUMBER_OF_AGENTS	= 2;
-var _AGENTS = new Array(_NUMBER_OF_AGENTS); for (var k=0; k < _NUMBER_OF_AGENTS; ++k) _AGENTS[k]={};
+if (_KNOBS.trial.test){
+	var _TEAMS = [{NAME:"", COLOR: _COLORS.ORANGE, MEMBERS:[0]}];
+	var _NUMBER_OF_AGENTS	= 1;
+	var _AGENTS = [{
+		NAME : "Rob, the agent",
+		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:17}/*Arrow keys + Ctrl*/
+	}];
+}else{
+	var _NUMBER_OF_AGENTS = 0;
+	var _TEAMS = []
+	for (team in _KNOBS.teams){
+		_TEAMS.push({
+			NAME: team.name,
+			COLOR: team.color,
+			MEMBERS: new Array(team.members)
+		});
 
-var _TEAMS = [
-	{NAME:"", COLOR: _COLORS.ORANGE, MEMBERS:[0]},
-	{NAME:"", COLOR: _COLORS.BLUE, MEMBERS:[1]}
-	];
+		_NUMBER_OF_AGENTS+= team.members;
+	}
+	var _AGENTS = new Array(_NUMBER_OF_AGENTS); for (var k=0; k < _NUMBER_OF_AGENTS; ++k) _AGENTS[k]={};
+}
 
-var _MULTIPLIER_TIME = 6;
+var _MULTIPLIER_TIME = _KNOBS.final_tweaks.multiplier.enabled?
+						_KNOBS.final_tweaks.multiplier.timeout
+						:
+						0;
 
 // Graphics
 var _LOW_QUALITY_GRID	= false;
@@ -208,69 +220,6 @@ var _ENDGAME = {
 	}
 }
 
-_AGENTS[0].NAME = "Pelado";
-_AGENTS[0].FINAL_LOCATION = {ROW : 0, COLUMN: 0};// used if _ENDGAME.WIN.AGENTS_LOCATION contains this rob id (0)
-_AGENTS[0].CONTROLS = {Up:38, Down:40, Left:37, Right:39, Restore:16/*17 35*/};/*Arrow keys + shift/Ctrl/[<end>]*/
-//_AGENTS[0].CONTROLLED_BY_AI = true;
-//_AGENTS[0].AI_SOURCE_CODE = "returnAction(Math.random()*4|0);"
-//_AGENTS[0].TEAM_MSG_SOURCE_CODE = "";
-/*_AGENTS[0].SOCKET_PROGRAM_AGENT =	{
-									ADDR: "localhost",//"192.168.1.7",//
-									PORT: 3313,//80,//
-									OUTPUT_FORMAT: _PERCEPT_FORMAT.JSON//XML//PROLOG//
-								}*/
-
-
-_AGENTS[1].NAME = "Solid";
-_AGENTS[1].FINAL_LOCATION = {ROW : 1, COLUMN: 1};
-_AGENTS[1].CONTROLS = {Up:87, Down:83, Left:65, Right:68, Restore:69};/*WSADE*/
-//_AGENTS[1].CONTROLLED_BY_AI = true;
-/*_AGENTS[1].SOCKET_PROGRAM_AGENT =	{
-									ADDR: "localhost",//"192.168.1.7",//
-									PORT: 3313,//80,
-									OUTPUT_FORMAT: _PERCEPT_FORMAT.JSON//XML//PROLOG//
-								}*/
-if (_AGENTS[_NUMBER_OF_AGENTS]){
-_AGENTS[2].NAME = "Sergio";
-_AGENTS[2].CONTROLS = {Up:80, Down:192, Left:76, Right:222, Restore:186};/*PÑL[+*/
-//_AGENTS[2].CONTROLLED_BY_AI = true;
-_AGENTS[2].SOCKET_PROGRAM_AGENT =	{
-									ADDR: "localhost",//"192.168.1.7",//
-									PORT: 3313,//80,
-									OUTPUT_FORMAT: _PERCEPT_FORMAT.JSON//PROLOG//XML//
-								}
-
-_AGENTS[3].NAME = "Caro";
-_AGENTS[3].CONTROLS = {Up:72, Down:78, Left:66, Right:77, Restore:74};/*HNBMJ*/
-//_AGENTS[3].CONTROLLED_BY_AI = true;
-/*_AGENTS[3].SOCKET_PROGRAM_AGENT =	{
-									ADDR: "localhost",//"192.168.1.7",//
-									PORT: 3313,//80,
-									OUTPUT_FORMAT: _PERCEPT_FORMAT.JSON//PROLOG//XML//
-								}
-*/
-
-_AGENTS[4].CONTROLS = {Up:80, Down:192, Left:76, Right:222, Restore:187};/*PÑL[+*/
-_AGENTS[4].CONTROLLED_BY_AI = true;
-
-_AGENTS[5].CONTROLS = {Up:80, Down:192, Left:76, Right:222, Restore:187};/*PÑL[+*/
-_AGENTS[5].CONTROLLED_BY_AI = true;
-
-
-_AGENTS[6].CONTROLS = {Up:80, Down:192, Left:76, Right:222, Restore:187};/*PÑL[+*/
-_AGENTS[6].CONTROLLED_BY_AI = true;
-
-_AGENTS[7].CONTROLS = {Up:80, Down:192, Left:76, Right:222, Restore:187};/*PÑL[+*/
-_AGENTS[7].CONTROLLED_BY_AI = true;
-
-_AGENTS[8].CONTROLS = {Up:80, Down:192, Left:76, Right:222, Restore:187};/*PÑL[+*/
-_AGENTS[8].CONTROLLED_BY_AI = true;
-
-_AGENTS[9].CONTROLS = {Up:80, Down:192, Left:76, Right:222, Restore:187};/*PÑL[+*/
-_AGENTS[9].CONTROLLED_BY_AI = true;
-}
-
-
 var _GET_TEAM_LEADER = function(rIndex){
 	var iteam = _TEAMS.length;
 	while (iteam--)
@@ -372,8 +321,6 @@ if (_INITIAL_STATE){
 				case _GRID_CELL.BATTERY_CHARGER:
 					_BATTERY_RANDOM_START = false;
 					_BATTERY_START_POSITION.push({ROW: r, COLUMN: c});
-					_AGENTS[0].FINAL_LOCATION.ROW = r;
-					_AGENTS[0].FINAL_LOCATION.COLUMN = c;
 					break;
 
 				default:

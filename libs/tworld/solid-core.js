@@ -37,7 +37,7 @@ function TWorld(){}
 	TWorld.VariabilityOfScores = 0; //[0, 1] (differences in hole scores)
 
 	//-> Dynamic or Static environment
-	TWorld.Dynamic = true;
+	TWorld.Dynamic = _KNOBS.prop.dynamic;
 
 	//-> to control the frequency of appearance and disappearance of each object type
 	TWorld.Dynamism = 13; // time in seconds (the rate at which new holes appear and disappear)

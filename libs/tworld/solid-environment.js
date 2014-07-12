@@ -46,7 +46,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 			this.ListOfObstacles = _listOfObstacles;
 
 			this.Costs = {};
-			this.Costs.good_move = _ROB_WALKSPEED/1000; // time it takes the agent to move (in "ticks") - calculated in graphic
+			this.Costs.good_move = _ROB_WALKSPEED/1000; // time it takes the agent to move (in "ticks")
 			this.Costs.bad_move = 1; // wasted time by the agent when it chooses and invalid action (1 "tick"--aprox. 1 second)
 			this.Costs.filled_hole = 1; // time the animation takes to fill a cell hole (1 "tick"--aprox. 1 second)
 	//end region Attributes
@@ -190,7 +190,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 					var timeLimit = _ENDGAME.TIME.VALUE;
 
 					if (TWorld.Dynamic){
-						//if "it's the first time this function's called", then create the persistent variables
+						//if "it's the first time this function's called", then create the 'persistent' variables
 						if (!this.holesSeconds){
 							this.holesSeconds = uncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold) + _TILES_TELEPORT_DELAY;
 							this.obstaclesSecons = uncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold);
@@ -285,6 +285,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 				_graphicTWorld.updateScore(rIndex, _rob[lIndex].Score, cells, filled, value, strPoints);
 			}
 
+			//--------------------------------------------------------------------------------------> updateStats
 			this.updateStats = function(rIndex, type){
 				switch(type){
 					case 0:
@@ -310,6 +311,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 				return sufficient;
 			}
 
+			//--------------------------------------------------------------------------------------> isABatteryCharger
 			this.isABatteryCharger = function(row, column){
 				for (var bc = _bChargerLoc.length-1; bc >= 0; --bc)
 					if (_bChargerLoc[bc].row == row && _bChargerLoc[bc].column == column)
@@ -326,6 +328,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 					return false;
 			}
 
+			//--------------------------------------------------------------------------------------> isThereAHoleFilling
 			this.isThereAHoleFilling = function(row /*or rIndex when column is null*/, column) {
 				if (column == null)
 					return _rob[row/*rIndex*/].CellFilling[0] != -1;
@@ -629,7 +632,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 		//end region Public
 		//
 		//region Private
-			//Used to call Rob's Program Agent in order to get the next action to do
+			//Used to call Rob's Agent Program in order to get the next action to do
 			//-----------------------------------------------------------------------------------------> _self.programAgentPerceive
 			this.programAgentPerceive = function(rIndex){
 				if (_Running && (TWorld.Percept || _percept.header == _PERCEPT_HEADER.START)){
