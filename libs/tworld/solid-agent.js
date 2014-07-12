@@ -50,7 +50,7 @@ var _PERCEPT = null;
 var _GRID;
 var _AGENT;
 
-function ProgramAgent(percept)/*returns accion*/{
+function AgentProgram(percept)/*returns accion*/{
 	percept = percept.data;
 
 	try{
@@ -150,7 +150,7 @@ function ProgramAgent(percept)/*returns accion*/{
 			}
 	}
 	}catch(e){console.error(e.stack);};
-}onmessage = ProgramAgent; 
+}onmessage = AgentProgram; 
 
 function chooseBestAction(percept /*n,s,w,e*/){
 	var actions = new Array();

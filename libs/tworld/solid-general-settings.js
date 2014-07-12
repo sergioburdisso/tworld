@@ -17,6 +17,8 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
+var _KNOBS= localStorage.knobs? JSON.parse(localStorage.knobs) : null;
+
 var _LANGUAGE = _LANGUAGES.SPANISH;
 
 //TWorld dimension

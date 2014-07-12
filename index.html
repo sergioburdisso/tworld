@@ -9,25 +9,25 @@
 </head>
 <body ng-app="tworld" ng-controller="TWorldController as twc">
 	<!-- HEADER -->
-	<div>
+	<div class="header">
 		<div id="header-images">
-			<div id="h-img-2" style="display:none; position:fixed; width:100%; height:606px; background: url(imgs/header2.png) center; z-index:-1"></div>
-			<div id="h-img-1" style="display:none; position:fixed; width:100%; height:606px; background: url(imgs/header1.png) center; z-index:-1"></div>
-			<div id="h-img-0" style="position:fixed; width:100%; height:606px; background: url(imgs/header0.png) center; z-index:-1"></div>
+			<div id="h-img-2" style="display:none; position:fixed; width:100%; height:606px; background: url(imgs/web-app/header2.png) center; z-index:-1"></div>
+			<div id="h-img-1" style="display:none; position:fixed; width:100%; height:606px; background: url(imgs/web-app/header1.png) center; z-index:-1"></div>
+			<div id="h-img-0" style="position:fixed; width:100%; height:606px; background: url(imgs/web-app/header0.png) center; z-index:-1"></div>
 		</div>
 		<div class="jumbotron container-fluid shadow-inset" style="background-color: transparent; padding-top: 200px; margin-bottom: 0;">
 			<span class="col-md-5 col-xs-8" style="color: white; background-color: rgba(85, 85, 85, 0.80); top:0; left:0">
 				<h1>T-World</h1>
 				<p ng-bind-html="twc.text.desc"></p>
-				<h5 class="pull-right" style="color:white"><span ng-bind-html="twc.text.martha_marc"></span></h5>
+				<h5 class="pull-right header" style="color:white"><span ng-bind-html="twc.text.martha_marc"></span></h5>
 			</span>
 		</div>
 	</div>
 
 	<ol class="breadcrumb pull-left">
-		<li><a href="#" ng-click="twc.goto('/')" class="ad">Home</a></li>
+		<li><a href="#" ng-click="twc.goto('/')">Home</a></li>
 		<li ng-repeat="n in twc.$loc.url().split('/') track by $index" ng-if="!$first">
-			<a href="#" ng-if="!$last" class="ad">{{n}}</a>
+			<a href="#" ng-if="!$last">{{n}}</a>
 			<span ng-if="$last">{{n}}</span>
 		</li>
 	</ol>
@@ -49,25 +49,25 @@
 	</div>
 
 	<!-- FOOTER -->
-	<div class="container text-white text-justify footer">
+	<div class="container text-white text-justify footer logo-center">
 		<p class="pull-right no-margin" style="width: 300px; margin-right: 10px">
 			<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" alt="Creative Commons License">
-				<img style="border-width:0" src="imgs/cc.png" width="32"/>
-				<img style="border-width:0" src="imgs/by.png" width="32"/>
-				<img style="border-width:0" src="imgs/nc.png" width="32"/>
-				<img style="border-width:0" src="imgs/sa.png" width="32"/>
+				<img style="border-width:0" src="imgs/web-app/cc.png" width="32"/>
+				<img style="border-width:0" src="imgs/web-app/by.png" width="32"/>
+				<img style="border-width:0" src="imgs/web-app/nc.png" width="32"/>
+				<img style="border-width:0" src="imgs/web-app/sa.png" width="32"/>
 			</a><br>
 			<span ng-bind-html="twc.text.cc"></span>.<br><br>
 			<span style="display:block; text-align: right;">&copy; 2014 Burdisso Sergio.</span>
 		</p>
 		<p class="pull-right" style="width: 300px; margin-right: 50px;">
 			<a rel="license" href="http://www.gnu.org/licenses/agpl-3.0.html" alt="GNU AGPL">
-				<img style="border-width:0" src="imgs/agplv3-88x31_white.png" height="32"/>
+				<img style="border-width:0" src="imgs/web-app/agplv3-88x31_white.png" height="32"/>
 			</a><br>
 			<span ng-bind-html="twc.text.agpl"></span>.<br>
 		</p>
-		<a href="http://www.w3.org/html/logo/">
-			<img src="imgs/html5-badge-h-connectivity-css3-graphics-multimedia-performance-storage.png" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, Semantics, and Offline &amp; Storage"  data-toggle="tooltip" data-placement="right" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, Semantics, and Offline &amp; Storage">
+		<a href="http://www.w3.org/html/logo/" target="_blank">
+			<img src="imgs/web-app/html5-badge-h-connectivity-css3-graphics-multimedia-performance-storage.png" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, Semantics, and Offline &amp; Storage"  data-toggle="tooltip" data-placement="right" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, Semantics, and Offline &amp; Storage">
 		</a>
 	</div>
 

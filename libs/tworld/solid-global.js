@@ -85,7 +85,7 @@ var _HoleCellAlpha		= 0.4;// from 0 to 1
 var _BatteryIconY		= 10;
 var _MultiplierFontSize	= 30;
 
-//-> Rob
+//-> Rob (the agent)
 var _ROB_WALKSPEED =350; // time it takes the agent to move (in milliseconds)
-var _ROB_ROTATION_FRAMES = 10; // how many frames does it take Rob to turn around?
+var _ROB_ROTATION_FRAMES = 10; // how many frames does it take the agent to turn around?
 //end region World Parameters

@@ -27,8 +27,9 @@
 		</div>
 		<div class="row">
 			<hr/>
-			<button ng-click="enc.prevStep()" ng-hide="enc.isStep(0)" class="btn btn-success col-md-2 col-xs-3 pull-left">Previous</button>
-			<button ng-click="enc.nextStep()" class="btn btn-success col-md-2 col-xs-3 pull-right">Next</button>
+			<button ng-click="enc.prevStep()" ng-hide="enc.isStep(0)" class="btn btn-default col-md-2 col-xs-3 pull-left">&laquo;Previous</button>
+			<button ng-if="!enc.isLastStep()" ng-click="enc.nextStep()" class="btn btn-default col-md-2 col-xs-3 pull-right">Next&raquo;</button>
+			<button ng-if="enc.isLastStep()" ng-click="enc.finish()" class="btn btn-success col-md-2 col-xs-3 pull-right">Finish</button>
 		</div>
 	</form>
 </div>

@@ -1,8 +1,17 @@
+var taskEnvironments = getEnvironments();
+var agentPrograms = [];
+
+//ver si no mover esto a otro archivo (tal vez el auxiliar)
+function getEnvironments(){return localStorage.taskEnvironments? JSON.parse(localStorage.taskEnvironments) : []}
+function saveEnvironments(){localStorage.taskEnvironments = JSON.stringify(taskEnvironments)}
+function clearEnvironments(){localStorage.removeItem("taskEnvironments")}
+
+function getKnobs(){return localStorage.knobs? JSON.parse(localStorage.knobs) : null}
+function saveKnobs(knobs){localStorage.knobs = JSON.stringify(knobs)}
+function clearKnobs(){localStorage.removeItem("knobs")}
+
 (function(){
 	var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironmentsNew', 'ui.bootstrap', 'ui.slider', 'ngRoute', 'ngAnimate']);
-
-	var taskEnvironments = [];
-	var agentPrograms = [];
 
 	main.config(['$routeProvider', '$locationProvider', '$tooltipProvider',
 		function($routeProvider, $locationProvider, $tooltipProvider) {
@@ -35,6 +44,8 @@
 			this.LANGUAGES = _LANGUAGES;
 			this.language = (window.navigator.userLanguage || window.navigator.language) == 'es'? this.LANGUAGES.SPANISH : this.LANGUAGES.ENGLISH;
 			this.text = {menu:{}};
+			this.taskEnvironments = taskEnvironments;
+			this.agentPrograms = agentPrograms;
 
 			this.goto = function(path){$location.url(path)}
 

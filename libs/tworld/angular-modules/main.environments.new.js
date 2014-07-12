@@ -1,141 +1,114 @@
 (function(){
 	var mod = angular.module('tworldEnvironmentsNew', []);
 
-	var taskEnvironment = {
-		name:'',
-		desc:'',
-		battery: false,
-		prop: {
-			fullyObservable: true,
-			multiagent: false,
-			multiagent_type: 0, //0 competitive; 1 cooperative; 2 both
-			deterministic: true,
-			dynamic: 0, //0 static; 1 semidynamic; 2 dynamic
-			known: true
-		},
-		agents:{
-			percept:{
-				sync:true,
-				partialGrid: true,
-				radius: 3,
-				noise: false,
-				noise_cfg:{
-					tile:0.3,
-					obstacle:0.3,
-					hole:0.3
-				}
-			},
-			determinism:80,
-			stochastic_model:1
-		},
-		environment:{
-			rows:6,
-			columns:6,
-			holes_size:{range:[1,3], prob:[]},
-			num_holes:{range:[2,3], prob:[]},
-			num_obstacles:{range:[1,2], prob:[]},
-			difficulty:{range:[0,0], prob:[]},
-			scores_variability: 0,
-			dynamic:{
-				dynamism:{range:[6,13], prob:[]},
-				hostility:{range:[1,13], prob:[]},
-				hard_bounds:true,
-				semidynamic_tick:{range:[6,13], prob:[]},
-			},
-			random_initial_state:false,
-			initial_state:[
-				["C"," "," "," "," ","#"],
-				["#"," "," ","2"," ","#"],
-				[" ","#"," ","T"," ","A"],
-				["1","T"," "," "," ","#"],
-				["#"," "," "," ","T","#"],
-				[" ","#"," ","#","3"," "]
-			],
-			final_state:[
-				{ //default value
-					name:"Time",
-					value:4*60,
-					result:0
-				}
-			]
-		},
-		teams:[],
-		final_tweaks:{
-			battery:{
-				level:1000,
-				good_move:20,
-				bad_move:5,
-				sliding:10
-			},
-			multiplier:{
-				enabled:false,
-				timeout:6
-			},
-			score:{
-				cell: true
-			},
-			shapes:false
-		}
-	}
-
-	var end_game_conditions=[
-		{
-			name:"Filled holes",
-			value:0,
-			result:1
-		},
-		{
-			name:"Filled cells",
-			value:0,
-			result:1
-		},
-		{
-			name:"Score",
-			value:0,
-			result:1
-		},
-		{
-			name:"Good moves",
-			value:0,
-			result:0
-		},
-		{
-			name:"Bad moves",
-			value:0,
-			result:2
-		},
-		{
-			name:"Battery use",
-			value:0,
-			result:2
-		},
-		{
-			name:"Battery recharge",
-			value:0,
-			result:2
-		},
-		{
-			name:"Battery restorations",
-			value:0,
-			result:2
-		}
-	];
-
 	var colors = []; for (color in _COLORS) colors.push(_COLORS[color]);
+	var taskEnvironment;
 
-	mod.controller('EnvNewController', ['$modal', function($modal){
+	mod.controller('EnvNewController', ['$modal','$location', function($modal, $location){
 		var _next = false;
 		var _self = this;
-		this.task_env = taskEnvironment;
 		this.nTeam = 0;
 		this.teamColors = colors;
 		this.step = 0;
-		this.end_game_cond = end_game_conditions;
+		this.end_game_cond = end_game_conditions = [
+			{name:"Filled holes", value:0, result:1},
+			{name:"Filled cells", value:0, result:1},
+			{name:"Score", value:0, result:1},
+			{name:"Good moves", value:0, result:0},
+			{name:"Bad moves", value:0, result:2},
+			{name:"Battery use", value:0, result:2},
+			{name:"Battery recharge", value:0, result:2},
+			{name:"Battery restorations", value:0, result:2}
+			/*{name:"Time", value:4*60, result:0} <-not here 'cause it's the default value*/ 
+		];
+		this.task_env = taskEnvironment = {
+			trial: {//Each trial is a self-contained simulation with a certain duration (in ticks of the clock)
+				test:false
+			},
+			name:'',
+			desc:'',
+			battery: false,
+			prop: {
+				fullyObservable: true,
+				multiagent: false,
+				multiagent_type: 0, //0 competitive; 1 cooperative; 2 both
+				deterministic: true,
+				dynamic: 0, //0 static; 1 semidynamic; 2 dynamic
+				known: true
+			},
+			agents:{
+				percept:{
+					sync:true,
+					partialGrid: true,
+					radius: 3,
+					noise: false,
+					noise_cfg:{
+						tile:0.3,
+						obstacle:0.3,
+						hole:0.3
+					}
+				},
+				determinism:80,
+				stochastic_model:1
+			},
+			environment:{
+				rows:6,
+				columns:6,
+				holes_size:{range:[1,3], prob:[]},
+				num_holes:{range:[2,3], prob:[]},
+				num_obstacles:{range:[1,2], prob:[]},
+				difficulty:{range:[0,0], prob:[]},
+				scores_variability: 0,
+				dynamic:{
+					dynamism:{range:[6,13], prob:[]},
+					hostility:{range:[1,13], prob:[]},
+					hard_bounds:true,
+					semidynamic_tick:{range:[6,13], prob:[]},
+				},
+				random_initial_state:false,
+				initial_state:[
+					["C"," "," "," "," ","#"],
+					["#"," "," ","2"," ","#"],
+					[" ","#"," ","T"," ","A"],
+					["1","T"," "," "," ","#"],
+					["#"," "," "," ","T","#"],
+					[" ","#"," ","#","3"," "]
+				],
+				final_state:[{name:"Time", value:4*60, result:0}] //default value
+			},
+			teams:[],
+			final_tweaks:{
+				battery:{
+					level:1000,
+					good_move:20,
+					bad_move:5,
+					sliding:10
+				},
+				multiplier:{
+					enabled:false,
+					timeout:6
+				},
+				score:{
+					cell: true
+				},
+				shapes:false
+			}
+		}
 
 		this.nextStep = function(){this.step++; _next= true}
 		this.prevStep = function(){this.step--; _next= false}
 		this.isStep = function(i){return this.step===i}
+		this.isLastStep = function(){return this.step===6}
 		this.correctStep = function(){if (_next) this.step++; else this.step--}
+
+		this.finish = function(){
+			taskEnvironments.push(taskEnvironment);
+			saveEnvironments();
+			$location.url('/')
+
+			taskEnvironment.trial.test = true;
+			saveKnobs(taskEnvironment);
+		}
 
 		this.isDynamic = function(){return taskEnvironment.prop.dynamic === 2}
 		this.isSemidynamic = function(){return taskEnvironment.prop.dynamic === 1}
