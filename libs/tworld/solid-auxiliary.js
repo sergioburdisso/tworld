@@ -201,9 +201,18 @@ function isMobile(){
 var _VALID_KEYS = [13/*enter*/,27/*esc*/, 32/*space*/, 16/*shift*/, 67/*C*/, 70/*F*/, 107/*+*/, 109/*-*/];
 function isValidKey(keyCode){return _VALID_KEYS.contains(keyCode);}
 
-//returns a random number between [value-_(value-1)*p, value] where _ means "floor" and p = uncertantyFactor
-function uncertaintyMaker(value, uncertantyFactor){//
-	return value - (random(0, value)*uncertantyFactor|0);
+//returns a number between the closed interval [<a>, <a>+<prob>.length-1] according to the given probability distribution <prob>
+function uncertaintyMaker(a, prob){ if (prob.length <= 1) return a;
+	var rnd = Math.random()*1000|0;
+	var len=prob.length-1;
+	var pAccumulated = 0
+
+	for (var p=0; p < len; ++p){
+		pAccumulated += prob[p];
+		if (rnd < pAccumulated)
+			return a + p;
+	}
+	return a+len;
 }
 
 function toMMSS(value){

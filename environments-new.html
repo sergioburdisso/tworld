@@ -29,7 +29,10 @@
 			<hr/>
 			<button ng-click="enc.prevStep()" ng-hide="enc.isStep(0)" class="btn btn-default col-md-2 col-xs-3 pull-left">&laquo;Previous</button>
 			<button ng-if="!enc.isLastStep()" ng-click="enc.nextStep()" class="btn btn-default col-md-2 col-xs-3 pull-right">Next&raquo;</button>
-			<button ng-if="enc.isLastStep()" ng-click="enc.finish()" class="btn btn-success col-md-2 col-xs-3 pull-right">Finish</button>
+			<section ng-if="enc.isLastStep()">
+				<button ng-click="enc.finish()" class="btn btn-success col-xs-offset-1 col-md-2 col-xs-3 pull-right">Finish</button>
+				<button ng-click="enc.testEnvironment()" class="btn btn-success col-md-2 col-xs-3 pull-right">Test</button>
+			</section>
 		</div>
 	</form>
 </div>

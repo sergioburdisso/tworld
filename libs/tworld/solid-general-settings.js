@@ -25,7 +25,7 @@ var _LANGUAGE = _LANGUAGES.SPANISH;
 var _ROWS = _KNOBS.environment.rows;
 var _COLUMNS = _KNOBS.environment.columns;
 
-var _INITIAL_STATE = !_KNOBS.prop.dynamic && !_KNOBS.environment.random_initial_state?
+var _INITIAL_STATE = (!_KNOBS.prop.dynamic && !_KNOBS.environment.random_initial_state)?
 					{
 						grid:_KNOBS.environment.initial_state,
 						obstacles:[],
@@ -34,7 +34,7 @@ var _INITIAL_STATE = !_KNOBS.prop.dynamic && !_KNOBS.environment.random_initial_
 					}
 					:
 					null;
-_console.log(_INITIAL_STATE.grid)
+
 // Battery
 var _BATTERY_RANDOM_START	= true;
 var	_BATTERY_START_POSITION	= [/*{ROW : 0, COLUMN: 0}, {ROW : 1, COLUMN: 1} /*,...*/];
@@ -332,3 +332,6 @@ if (_INITIAL_STATE){
 					}
 			}
 }
+
+document.title = "T-world ("+_KNOBS.name+")";
+//window.opener = null;

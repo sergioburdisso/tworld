@@ -126,8 +126,8 @@
 		<div class="row" ng-show="enc.isSemidynamic()">
 			<label>Scores associated with holes decay in value every {{enc.task_env.environment.dynamic.semidynamic_tick.range}} seconds</label>
 			<div class="col-md-6 col-xs-6">
-				<div class="ui-slider-size" ui-slider="{animate: true}" min="1" max="60" step="1" ng-if="enc.task_env.prop.deterministic" ng-model="enc.task_env.environment.dynamic.semidynamic_tick.range" ng-init="enc.task_env.environment.dynamic.semidynamic_tick.range=30"></div>
-				<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" step="1" ng-if="!enc.task_env.prop.deterministic" ng-model="enc.task_env.environment.dynamic.semidynamic_tick.range"></div>
+				<div class="ui-slider-size" ui-slider="{animate: true}" min="1" max="60" step="1" ng-if="enc.isDeterministic()" ng-model="enc.task_env.environment.dynamic.semidynamic_tick.range" ng-init="enc.task_env.environment.dynamic.semidynamic_tick.range=30"></div>
+				<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" step="1" ng-if="!enc.isDeterministic()" ng-model="enc.task_env.environment.dynamic.semidynamic_tick.range"></div>
 			</div>
 			<br><br><br>
 		</div>

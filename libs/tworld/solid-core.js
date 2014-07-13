@@ -22,53 +22,60 @@ function TWorld(){}
 
 //region "Knobs" (The knob settings control the evolution of a TWorld simulation)
 	//-> to control the number and average size of each object type
-	TWorld.HoleSize = 3;//3;
-	TWorld.HolesSize_UncertaintyThreshold = 1;
-	TWorld.NumberOfHoles = 3; // how many holes are going to appear each time?
-	TWorld.NumberOfHoles_UncertaintyThreshold = 0.2;
+	TWorld.HoleSize = _KNOBS.environment.holes_size.range[0];
+	TWorld.HolesSize_UncertaintyThreshold = _KNOBS.environment.holes_size.prob;
+	TWorld.NumberOfHoles = _KNOBS.environment.num_holes.range[0]; // how many holes are going to appear each time?
+	TWorld.NumberOfHoles_UncertaintyThreshold = _KNOBS.environment.num_holes.prob;
 
-	TWorld.NumberOfObstacles = 2; // how many obstacles are going to appear each time?
-	TWorld.NumberOfObstacles_UncertaintyThreshold = 0.5; 
+	TWorld.NumberOfObstacles = _KNOBS.environment.num_obstacles.range[0]; // how many obstacles are going to appear each time?
+	TWorld.NumberOfObstacles_UncertaintyThreshold = _KNOBS.environment.num_obstacles.prob;
 
 	//-> difficulty
-	TWorld.TileDistanceFromHole = 0; //when a hole is created, the number of cells between the hole and the tile to fill this hole
+	TWorld.TileDistanceFromHole = _KNOBS.environment.difficulty.range[0]; //when a hole is created, the number of cells between the hole and the tile to fill this hole
+	TWorld.TileDistanceFromHole_UncertaintyThreshold = _KNOBS.environment.difficulty.prob;
 
 	//-> to control factors such as the shape of the distribution of scores associated with holes
-	TWorld.VariabilityOfScores = 0; //[0, 1] (differences in hole scores)
+	TWorld.VariabilityOfScores = _KNOBS.environment.scores_variability; //[0, 1] (differences in hole scores)
 
 	//-> Dynamic or Static environment
 	TWorld.Dynamic = _KNOBS.prop.dynamic;
 
 	//-> to control the frequency of appearance and disappearance of each object type
-	TWorld.Dynamism = 13; // time in seconds (the rate at which new holes appear and disappear)
-	TWorld.Dynamism_UncertaintyThreshold = 0.5; //P(HoleTimeout= Dynamism) = 1/(Floor((Dynamism-1)*p) + 1)
+	TWorld.Dynamism = _KNOBS.environment.dynamic.dynamism.range[0]; // time in seconds (the rate at which new holes appear and disappear)
+	TWorld.Dynamism_UncertaintyThreshold = _KNOBS.environment.dynamic.dynamism.prob; //P(HoleTimeout= Dynamism) = 1/(Floor((Dynamism-1)*p) + 1)
 
-	TWorld.Hostility = 13; // time in seconds (the rate at which obstacles appear)
-	TWorld.Hostility_UncertaintyThreshold = 1; //P(ObstTimeout= Hostility) = 1/(Floor((Hostility-1)*p) + 1)
+	TWorld.Hostility = _KNOBS.environment.dynamic.hostility.range[0]; // time in seconds (the rate at which obstacles appear)
+	TWorld.Hostility_UncertaintyThreshold = _KNOBS.environment.dynamic.hostility.prob; //P(ObstTimeout= Hostility) = 1/(Floor((Hostility-1)*p) + 1)
 
 	//-> the choice between the instantaneous disappearance of a hole and a slow decrease in value
-	TWorld.HardBounds = true; //(holes having either hard timeouts or gradually decaying in value)
+	TWorld.HardBounds = _KNOBS.environment.dynamic.hard_bounds; //(holes having either hard timeouts or gradually decaying in value)
 
 	//-> Battery ON/OFF (This enabled the study of maintenance)
-	TWorld.Battery = true;
+	TWorld.Battery = _KNOBS.battery;
 
 	//-> Deterministic Actions
-	TWorld.DeterministicActions = 1; // [0,1] unreliable(stochastic) or deterministic actions? 
-	TWorld.ModelOfStochasticMotion = _STOCHASTIC_ACTIONS_MODEL.NO_ACTION;
+	TWorld.DeterministicActions =  _KNOBS.agents.determinism; // [0,1] unreliable(stochastic) or deterministic actions? 
+	TWorld.ModelOfStochasticMotion = _KNOBS.agents.stochastic_model;
 
 	//-> Perception
 		TWorld.Percept = true;
-		TWorld.PerceiveEveryTick = false; // perceive every tick or after each action
+		TWorld.PerceiveEveryTick = !_KNOBS.agents.percept.sync; // perceive every tick or after each action
 
 		// Noise
-		TWorld.ObstaclesNoisyPerception = 0;
-		TWorld.TilesNoisyPerception = 0;
-		TWorld.HolesNoisyPerception = 0;
+		TWorld.ObstaclesNoisyPerception =	_KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.noise?
+											0 :
+											_KNOBS.agents.percept.noise.obstacle;
+		TWorld.TilesNoisyPerception =	_KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.noise?
+											0 :
+											_KNOBS.agents.percept.noise.tile;
+		TWorld.HolesNoisyPerception =	_KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.noise?
+											0 :
+											_KNOBS.agents.percept.noise.hole;
 
-		TWorld.FullyObservableGrid = true; // fully observable grid or partially observable grid? 
-		TWorld.VisibilityRadius = 1; // in case the grid is partially observable, it specifies the maximum distance at which any object can be seen (in cells)
+		TWorld.FullyObservableGrid = _KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.partialGrid; // fully observable grid or partially observable grid? 
+		TWorld.VisibilityRadius = _KNOBS.agents.percept.radius; // in case the grid is partially observable, it specifies the maximum distance at which any object can be seen (in cells)
 
-		TWorld.ShowTimeLeft = false; // show holes and obstacles time remaining to timeout
+		TWorld.ShowTimeLeft = true; // show holes and obstacles time remaining to timeout
 
 	//--------------------------------------------------------------------------------------> utilityFillCell
 	TWorld.valueOfCellHoleFilled = function(sizeSoFar) {return sizeSoFar*2;}// it shoud be less than valueOfHoleFilledCompletely(1)
@@ -140,9 +147,21 @@ function TWorld(args) {
 				for (var i= 0; i < holeCells.getLength(); i++){
 					//...there must be created a tile for Rob to fill it
 					if (_TILES_TELEPORT_DELAY > 0)
-						CallWithDelay.Enqueue(createTile, [TWorld.TileDistanceFromHole, holeCells.getItemAt(i)[0], holeCells.getItemAt(i)[1]], _TILES_TELEPORT_DELAY /*time in seconds*/);
+						CallWithDelay.Enqueue(
+							createTile,
+							[
+							uncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
+							holeCells.getItemAt(i)[0],
+							holeCells.getItemAt(i)[1]
+							],
+							_TILES_TELEPORT_DELAY /*time in seconds*/
+						);
 					else
-						createTile(TWorld.TileDistanceFromHole, holeCells.getItemAt(i)[0], holeCells.getItemAt(i)[1]);
+						createTile(
+							uncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
+							holeCells.getItemAt(i)[0],
+							holeCells.getItemAt(i)[1]
+						);
 				}
 			}
 

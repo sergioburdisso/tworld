@@ -7,6 +7,7 @@
 	mod.controller('EnvNewController', ['$modal','$location', function($modal, $location){
 		var _next = false;
 		var _self = this;
+		this.isTWorldRunning = isTWorldRunning;
 		this.nTeam = 0;
 		this.teamColors = colors;
 		this.step = 0;
@@ -49,21 +50,21 @@
 					}
 				},
 				determinism:80,
-				stochastic_model:1
+				stochastic_model: _STOCHASTIC_ACTIONS_MODEL.ANOTHER_ACTION
 			},
 			environment:{
 				rows:6,
 				columns:6,
-				holes_size:{range:[1,3], prob:[]},
-				num_holes:{range:[2,3], prob:[]},
-				num_obstacles:{range:[1,2], prob:[]},
+				holes_size:{range:[1,3], prob:[333,333,334]},
+				num_holes:{range:[2,3], prob:[500,500]},
+				num_obstacles:{range:[1,2], prob:[500,500]},
 				difficulty:{range:[0,0], prob:[]},
 				scores_variability: 0,
 				dynamic:{
-					dynamism:{range:[6,13], prob:[]},
-					hostility:{range:[1,13], prob:[]},
+					dynamism:{range:[6,13], prob:[125,125,125,125,125,125,125,125]},
+					hostility:{range:[1,13], prob:[77,77,77,77,77,77,77,77,77,77,77,77,76]},
 					hard_bounds:true,
-					semidynamic_tick:{range:[6,13], prob:[]},
+					semidynamic_tick:{range:[6,13], prob:[125,125,125,125,125,125,125,125]},
 				},
 				random_initial_state:false,
 				initial_state:[
@@ -101,19 +102,24 @@
 		this.isLastStep = function(){return this.step===6}
 		this.correctStep = function(){if (_next) this.step++; else this.step--}
 
+		this.isDeterministic = function(){return taskEnvironment.prop.deterministic}
+		this.isDynamic = function(){return taskEnvironment.prop.dynamic === 2}
+		this.isSemidynamic = function(){return taskEnvironment.prop.dynamic === 1}
+		this.isRange = function(range){return range[0]!=range[1]}
+
 		this.finish = function(){
+			taskEnvironment.trial.test = false;
 			taskEnvironments.push(taskEnvironment);
 			saveEnvironments();
 			$location.url('/')
-
-			taskEnvironment.trial.test = true;
-			saveKnobs(taskEnvironment);
 		}
 
-		this.isDynamic = function(){return taskEnvironment.prop.dynamic === 2}
-		this.isSemidynamic = function(){return taskEnvironment.prop.dynamic === 1}
+		this.testEnvironment = function(){
+			taskEnvironment.trial.test = true;
+			saveKnobs(taskEnvironment);
 
-		this.isRange = function(range){return range[0]!=range[1]}
+			startTWorld()
+		}
 
 		//FINAL STATE
 		this.removeFinalStateCondition = function(index)

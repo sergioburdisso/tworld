@@ -234,7 +234,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 			}
 
 			//--------------------------------------------------------------------------------------> updateBattery
-			this.updateBattery = function(rIndex, value, restored) {
+			this.updateBattery = function(rIndex, value, restored) {if (!TWorld.Battery) return;
 				if (value < 0){
 					_rob[rIndex].Stats.battery_used-= value;
 
@@ -999,8 +999,8 @@ function Environment(rows, columns, graphicEngine, parent) {
 			if (_TEAMS[iteam].MEMBERS.length > maxTeamPlayers)
 				maxTeamPlayers = _TEAMS[iteam].MEMBERS.length;
 
-		_bChargerLoc = new Array(maxTeamPlayers);
-		_bChargerTimers = new Array(maxTeamPlayers);
+		_bChargerLoc = new Array(TWorld.Battery? maxTeamPlayers : 0);
+		_bChargerTimers = new Array(TWorld.Battery? maxTeamPlayers : 0);
 
 		//-> Grid Initialization
 		for (var irow= 0; irow < _grid.length; irow++)

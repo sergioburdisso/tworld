@@ -57,7 +57,7 @@
 		<div class="container-fluid">
 			<div class="col-md-4"></div>
 			<div class="col-md-4 panel-body">
-				<button id="startBtn" class="btn btn-success btn-lg btn-block" ng-disabled="mmc.tworldWindow" ng-bind-html="twc.text.menu.btn_start" ng-mouseenter="mmc.startEnter()" ng-mouseleave="mmc.startLeave()" ng-click="mmc.startTWorld()" ng-class="{ 'animate-zoom-out':mmc.isOnStart(), 'animate-zoom-in':!mmc.isOnStart()}"></button>
+				<button id="startBtn" class="btn btn-success btn-lg btn-block" ng-disabled="twc.isTWorldRunning()" ng-bind-html="twc.text.menu.btn_start" ng-mouseenter="mmc.startEnter()" ng-mouseleave="mmc.startLeave()" ng-click="mmc.startTWorld()" ng-class="{ 'animate-zoom-out':mmc.isOnStart(), 'animate-zoom-in':!mmc.isOnStart()}"></button>
 			</div>
 			<div class="col-md-4"></div>
 		</div>

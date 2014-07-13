@@ -566,7 +566,7 @@ function GraphicTWorld(graphicEngine, environment){
 			}
 		}
 
-		this.updateBattery = function(rIndex, value, restored) {
+		this.updateBattery = function(rIndex, value, restored) { if (!TWorld.Battery) return;
 			rIndex = _GET_TEAM_LEADER(rIndex);
 			var $id = "#rob-"+rIndex;
 
@@ -1756,6 +1756,7 @@ function GraphicTWorld(graphicEngine, environment){
 				StrPoints: "",
 				HoleFilledCells: new Array()//for glowing light animation
 			}
+			
 			_self.updateBattery(rob, _BATTERY_INITIAL_CHARGE);
 		}//for
 

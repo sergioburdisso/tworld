@@ -10,6 +10,15 @@ function getKnobs(){return localStorage.knobs? JSON.parse(localStorage.knobs) : 
 function saveKnobs(knobs){localStorage.knobs = JSON.stringify(knobs)}
 function clearKnobs(){localStorage.removeItem("knobs")}
 
+var _tworldWindow;
+function startTWorld(){
+	_tworldWindow = window.open('tworld.html','T-World','width=712, height=400');
+	_tworldWindow.focus();
+	$(_tworldWindow).unload(function(){_tworldWindow=null});
+	$(_tworldWindow).load(function(){_tworldWindow=true});
+}
+function isTWorldRunning(){return _tworldWindow}
+
 (function(){
 	var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironmentsNew', 'ui.bootstrap', 'ui.slider', 'ngRoute', 'ngAnimate']);
 
@@ -44,10 +53,12 @@ function clearKnobs(){localStorage.removeItem("knobs")}
 			this.LANGUAGES = _LANGUAGES;
 			this.language = (window.navigator.userLanguage || window.navigator.language) == 'es'? this.LANGUAGES.SPANISH : this.LANGUAGES.ENGLISH;
 			this.text = {menu:{}};
+			this.isTWorldRunning = isTWorldRunning;
 			this.taskEnvironments = taskEnvironments;
 			this.agentPrograms = agentPrograms;
 
 			this.goto = function(path){$location.url(path)}
+
 
 			this.setLanguage = function(){
 				this.text.desc			= $sce.trustAsHtml($text.main.description[ this.language ]);
