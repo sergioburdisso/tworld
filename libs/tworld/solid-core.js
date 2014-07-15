@@ -38,7 +38,8 @@ function TWorld(){}
 	TWorld.VariabilityOfScores = _KNOBS.environment.scores_variability; //[0, 1] (differences in hole scores)
 
 	//-> Dynamic or Static environment
-	TWorld.Dynamic = _KNOBS.prop.dynamic;
+	TWorld.Dynamic = (_KNOBS.prop.dynamic==2);
+	TWorld.Semidynamic = (_KNOBS.prop.dynamic==1);
 
 	//-> to control the frequency of appearance and disappearance of each object type
 	TWorld.Dynamism = _KNOBS.environment.dynamic.dynamism.range[0]; // time in seconds (the rate at which new holes appear and disappear)
@@ -62,15 +63,13 @@ function TWorld(){}
 		TWorld.PerceiveEveryTick = !_KNOBS.agents.percept.sync; // perceive every tick or after each action
 
 		// Noise
-		TWorld.ObstaclesNoisyPerception =	_KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.noise?
-											0 :
-											_KNOBS.agents.percept.noise.obstacle;
-		TWorld.TilesNoisyPerception =	_KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.noise?
-											0 :
-											_KNOBS.agents.percept.noise.tile;
-		TWorld.HolesNoisyPerception =	_KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.noise?
-											0 :
-											_KNOBS.agents.percept.noise.hole;
+		if (_KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.noise)
+			TWorld.ObstaclesNoisyPerception = TWorld.TilesNoisyPerception =	TWorld.HolesNoisyPerception = 0;
+		else{
+			TWorld.ObstaclesNoisyPerception = _KNOBS.agents.percept.noise.obstacle;
+			TWorld.TilesNoisyPerception = _KNOBS.agents.percept.noise.tile;
+			TWorld.HolesNoisyPerception = _KNOBS.agents.percept.noise.hole;
+		}
 
 		TWorld.FullyObservableGrid = _KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.partialGrid; // fully observable grid or partially observable grid? 
 		TWorld.VisibilityRadius = _KNOBS.agents.percept.radius; // in case the grid is partially observable, it specifies the maximum distance at which any object can be seen (in cells)

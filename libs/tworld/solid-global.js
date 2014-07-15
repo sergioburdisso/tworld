@@ -35,7 +35,6 @@ var _ACTION_REGEX = {
 					CONSOLE_LOG:	/^\s*(log|console_log|console.log)\s*(\(\s*'([^]*)'\s*\)|:([^]*))\s*$/i,
 					KEY_DOWN:		/(key_down|keydown|key_pressed)\s*(\(\s*([^)]*)\s*\)|:([^]*))/i,
 					KEY_UP:			/(key_up|keyup|key_released)\s*(\(\s*([^)]*)\s*\)|:([^]*))/i,
-					END: null //TODO!
 					/*stop percept, start percept*/
 				};
 
@@ -62,9 +61,104 @@ var _STOCHASTIC_ACTIONS_MODEL = {NO_ACTION: 0, ANOTHER_ACTION: 1, OPPOSITE_ACTIO
 var _LANGUAGES = {ENGLISH:"English", SPANISH:"Spanish"}
 var _COLORS = {RED:"red", BLUE:"blue", GREEN:"green", YELLOW:"yellow", PURPLE:"purple", ORANGE:"orange", CYAN:"cyan", PINK:"pink", BLACK:"black", WHITE:"white"}
 var _CAMERA_TYPE	= {FREE_ROB: 0, FIRST_PERSON: 1, PERCEPT: 2, ALIEN: 3, FREE_GRID: 4};
+var _GUI = {ON_GAME_SCREEN:{$:null, LEFT:0, MARGIN_TOP:0}}
 var _GAME_RESULT = {NEUTRAL:0, WON:1, LOST: 2}
-var _GUI = {
-	ON_GAME_SCREEN:{$:null, LEFT:0, MARGIN_TOP:0}
+var _ENDGAME = {
+	TIME: {
+		NAME:"Time",
+		$ID:"go-time",
+		$TEXT:{
+			PLURAL: "llegar a los %s de juego",
+			SINGULAR: "llegar a %s de juego"
+		},
+		MESSAGE:"TIME'S UP!"
+	},
+	AGENTS_LOCATION: {
+		NAME:"Agent(s) location",
+		$ID:"go-robs-location",
+		$TEXT:{
+			PLURAL: "ubicar los robots: %s",
+			SINGULAR: "ubicar al robot en %s"
+		},
+		MESSAGE:""
+	},
+	FILLED_HOLES: {
+		NAME:"Filled holes",
+		$ID:"go-holes",
+		$TEXT:{
+			PLURAL: "tapar %s huecos",
+			SINGULAR: "tapar %s hueco"
+		},
+		MESSAGE:""
+	},
+	FILLED_CELLS: {
+		NAME:"Filled cells",
+		$ID:"go-cells",
+		$TEXT:{
+			PLURAL:"tapar %s celdas",
+			SINGULAR:"tapar %s celda"
+		},
+		MESSAGE:""
+	},
+	SCORE: {
+		NAME:"Score",
+		$ID:"go-score",
+		$TEXT:{
+			PLURAL:"llegar a una puntuaci&oacute;n de %s",
+			SINGULAR:"llegar a una puntuaci&oacute;n de %s"
+		},
+		MESSAGE:""
+	},
+	GOOD_MOVES: {
+		NAME:"Good moves",
+		$ID:"go-movesok",
+		$TEXT:{
+			PLURAL: "realizar %s movimientos correctos",
+			SINGULAR: "realizar %s movimiento correcto"
+		},
+		MESSAGE:""
+	},
+	BAD_MOVES: {
+		NAME:"Bad moves",
+		$ID:"go-movesnotok",
+		$TEXT:{
+			PLURAL: "realizar %s movimientos incorrectos",
+			SINGULAR: "realizar %s movimiento incorrecto"
+		},
+		MESSAGE:"too many bad moves!"
+	},
+	BATTERY_USED: {
+		NAME:"Battery use",
+		$ID:"go-battery-use",
+		$TEXT:{
+			PLURAL: "gastar %s de bater&iacute;a",
+			SINGULAR: "gastar %s de bater&iacute;a"
+		},
+		MESSAGE:""
+	},
+	BATTERY_RECHARGE: {
+		NAME:"Battery recharge",
+		$ID:"go-battery-recharge",
+		$TEXT:{
+			PLURAL: "regargar %s veces la bater&iacute;a",
+			SINGULAR: "regargar %s vez la bater&iacute;a"
+		},
+		MESSAGE:""
+	},
+	BATTERY_RESTORE: {
+		NAME:"Battery restorations",
+		$ID:"go-battery-restore",
+		$TEXT:{
+			PLURAL: "restaurar el robot %s veces",
+			SINGULAR: "restaurar el robot %s vez"
+		},
+		MESSAGE:""
+	},
+	MESSAGES: {
+		NEUTRAL: {TEXT: "THE GAME<br>HAS ENDED", SUBTEXTS: ["GREAT!", "AMAZING!", "AWESOME!", "COOL!"]},
+		WON: {TEXT: "GOALS<br>ACHIEVED", SUBTEXTS: ["YOU WIN!", "CONGRATULATIONS!", "GREAT JOB!", "SOLVED!"]},
+		LOST: {TEXT: "GAME OVER", SUBTEXTS: ["YOU LOSE!", "YOU JUST LOST<br>THE GAME!", "UPS!", "SORRY"]}
+	}
 }
 
 var _Ready		= false;

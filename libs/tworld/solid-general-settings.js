@@ -25,7 +25,7 @@ var _LANGUAGE = _LANGUAGES.SPANISH;
 var _ROWS = _KNOBS.environment.rows;
 var _COLUMNS = _KNOBS.environment.columns;
 
-var _INITIAL_STATE = (!_KNOBS.prop.dynamic && !_KNOBS.environment.random_initial_state)?
+var _INITIAL_STATE = (!(_KNOBS.prop.dynamic == 2) && !_KNOBS.environment.random_initial_state)?
 					{
 						grid:_KNOBS.environment.initial_state,
 						obstacles:[],
@@ -101,123 +101,18 @@ var _AI_NECESSARY = false;
 var _XML_NECESSARY = false;
 var _JSON_NECESSARY = false;
 
-//Note: _ENDGAME.<COND>.VALUE = 0 to deactivate condition <COND>
-var _ENDGAME = {
-	TIME: {
-		VALUE: 3*60/*seconds (0 means no time limits)*/,
-		ACHIEVED: false,
-		RESULT: _GAME_RESULT.NEUTRAL,
-		$ID:"go-time",
-		$TEXT:{
-			PLURAL: "llegar a los %s de juego",
-			SINGULAR: "llegar a %s de juego"
-		},
-		MESSAGE:"TIME'S UP!"
-	},
-	AGENTS_LOCATION: {
-		VALUE: null,//[0/*robs id*/],//
-		ACHIEVED: false,
-		RESULT: _GAME_RESULT.WON,
-		$ID:"go-robs-location",
-		$TEXT:{
-			PLURAL: "ubicar los robots: %s",
-			SINGULAR: "ubicar al robot en %s"
-		},
-		MESSAGE:""
-	},
-	FILLED_HOLES: {
-		VALUE: 0,
-		ACHIEVED: false,
-		RESULT: _GAME_RESULT.WON,
-		$ID:"go-holes",
-		$TEXT:{
-			PLURAL: "tapar %s huecos",
-			SINGULAR: "tapar %s hueco"
-		},
-		MESSAGE:""
-	},
-	FILLED_CELLS: {
-		VALUE: 0,
-		ACHIEVED: false,
-		RESULT: _GAME_RESULT.WON,
-		$ID:"go-cells",
-		$TEXT:{
-			PLURAL:"tapar %s celdas",
-			SINGULAR:"tapar %s celda"
-		},
-		MESSAGE:""
-	},
-	SCORE: {
-		VALUE: 0,
-		ACHIEVED: false,
-		RESULT: _GAME_RESULT.WON,
-		$ID:"go-score",
-		$TEXT:{
-			PLURAL:"llegar a una puntuaci&oacute;n de %s",
-			SINGULAR:"llegar a una puntuaci&oacute;n de %s"
-		},
-		MESSAGE:""
-	},
-	GOOD_MOVES: {
-		VALUE: 0,
-		ACHIEVED: false,
-		RESULT: _GAME_RESULT.NEUTRAL,
-		$ID:"go-movesok",
-		$TEXT:{
-			PLURAL: "realizar %s movimientos correctos",
-			SINGULAR: "realizar %s movimiento correcto"
-		},
-		MESSAGE:""
-	},
-	BAD_MOVES: {
-		VALUE: 0,
-		ACHIEVED: false,
-		RESULT: _GAME_RESULT.LOST,
-		$ID:"go-movesnotok",
-		$TEXT:{
-			PLURAL: "realizar %s movimientos incorrectos",
-			SINGULAR: "realizar %s movimiento incorrecto"
-		},
-		MESSAGE:"too many bad moves!"
-	},
-	BATTERY_USED: {
-		VALUE: 0,
-		ACHIEVED: false,
-		RESULT: _GAME_RESULT.LOST,
-		$ID:"go-battery-use",
-		$TEXT:{
-			PLURAL: "gastar %s de bater&iacute;a",
-			SINGULAR: "gastar %s de bater&iacute;a"
-		},
-		MESSAGE:""
-	},
-	BATTERY_RECHARGE: {
-		VALUE: 0,
-		ACHIEVED: false,
-		RESULT: _GAME_RESULT.LOST,
-		$ID:"go-battery-recharge",
-		$TEXT:{
-			PLURAL: "regargar %s veces la bater&iacute;a",
-			SINGULAR: "regargar %s vez la bater&iacute;a"
-		},
-		MESSAGE:""
-	},
-	BATTERY_RESTORE: {
-		VALUE: 0,
-		ACHIEVED: false,
-		RESULT: _GAME_RESULT.LOST,
-		$ID:"go-battery-restore",
-		$TEXT:{
-			PLURAL: "restaurar el robot %s veces",
-			SINGULAR: "restaurar el robot %s vez"
-		},
-		MESSAGE:""
-	},
-	MESSAGES: {
-		NEUTRAL: {TEXT: "THE GAME<br>HAS ENDED", SUBTEXTS: ["GREAT!", "AMAZING!", "AWESOME!", "COOL!"]},
-		WON: {TEXT: "GOALS<br>ACHIEVED", SUBTEXTS: ["YOU WIN!", "CONGRATULATIONS!", "GREAT JOB!", "SOLVED!"]},
-		LOST: {TEXT: "GAME OVER", SUBTEXTS: ["YOU LOSE!", "YOU JUST LOST<br>THE GAME!", "UPS!", "SORRY"]}
-	}
+//Note: set _ENDGAME.<COND>.VALUE = 0 to disable condition <COND>
+var _KNOBS_Cond;
+for (COND in _ENDGAME){
+	_KNOBS_Cond = _KNOBS.environment.final_state.getObjectWith({name:_ENDGAME[COND].NAME});
+
+	if (_KNOBS_Cond){
+		_ENDGAME[COND].VALUE= _KNOBS_Cond.value;
+		_ENDGAME[COND].RESULT= _KNOBS_Cond.result|0;
+	}else
+		_ENDGAME[COND].RESULT= _ENDGAME[COND].VALUE= 0;
+
+	_ENDGAME[COND].ACHIEVED= false;
 }
 
 var _GET_TEAM_LEADER = function(rIndex){
@@ -263,7 +158,7 @@ if (_RENDER_AUTO_SIZE){
 		_RENDER_HEIGHT = $("#tw-root").parent().height();
 	}catch(e){}
 }
-updateScreenResolution(_RENDER_WIDTH, _RENDER_HEIGHT);
+try{updateScreenResolution(_RENDER_WIDTH, _RENDER_HEIGHT);}catch(e){}
 
 
 for (var k=0; k < _NUMBER_OF_AGENTS; ++k){

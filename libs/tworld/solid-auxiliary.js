@@ -130,6 +130,15 @@ Array.prototype.flatteningAllButTied = function() {
 
 	return flatten;
 }
+
+Array.prototype.getObjectWith = function(objPattern) {
+	if (objPattern instanceof Object)
+		for (var len= this.length, p=0; p < len; ++p){
+			for (prop in objPattern)
+				if (this[p][prop] == objPattern[prop])
+					return this[p];
+		}
+}
 //<-
 
 //-> improving Object class! XD
@@ -444,7 +453,7 @@ function ListOfHoles(size) {
 		// O(n^2) <- could it be improved?
 		for (var i= this.getLength()-1; i >= 0 ; --i) 
 			for (var j= holeCells.getLength()-1; j >= 0; --j)
-				this.getItemAt(i).shrinkHole(holeCells.getItemAt(j));
+				this.getItemAt(i).shrinkHole(holeCells.getItemAt(j), true);
 
 	}
 }

@@ -164,8 +164,6 @@ function GraphicTWorld(graphicEngine, environment){
 				_CLN_BatteryElect[bcIndex].setCurrentFrame(Math.random()*_CLN_BatteryElect[bcIndex].getNamedAnimationInfo(0).End);
 				_CLN_BatteryElect[bcIndex].setVisible(true);
 			}
-
-			this.batteryCharge
 		//end region Getters And Setters
 		//
 		//region Static
@@ -445,7 +443,8 @@ function GraphicTWorld(graphicEngine, environment){
 			$("#black-screen").show();
 			$("#black-screen").animate({opacity:1}, 3000, function(){$("#bs-mid").animate({opacity:1,"margin-top": (-$("#bs-mid").height()/2|0)+"px"}, 400)});
 
-			_self.toggleCamera(_CAMERA_TYPE.FREE_GRID);
+			while ( _ACTIVE_CAMERA < _CAMERA_TYPE.FREE_GRID )
+				_self.toggleCamera();
 			cameraCase = (Math.random() < 0.5 || _LOW_QUALITY_WORLD)? 0 : 1;
 			if (!firstOne) firstOne = _TEAMS[0];
 			_CL_CameraFlyCircle.Center.setTo((cameraCase == 0)? _CLN_Rob[firstOne.MEMBERS[0]].Pos : _CLN_S3AR.Pos);
@@ -494,7 +493,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 			$rob.find("#score").html(score);
 
-			if (points > 0){
+			if (points >= 0){
 				//_holeIsFilled = filled;
 				_scoreAnimation[rIndex].HoleFilledCells.length = holeCells.length;
 				_scoreAnimation[rIndex].Points = points;

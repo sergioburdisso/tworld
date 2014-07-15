@@ -1,3 +1,21 @@
+/*
+* main.environments.new.js - 
+*
+* Copyright (C) 2014 Burdisso Sergio (sergio.burdisso@gmail.com)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as
+* published by the Free Software Foundation, either version 3 of the
+* License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 (function(){
 	var mod = angular.module('tworldEnvironmentsNew', []);
 
@@ -12,15 +30,15 @@
 		this.teamColors = colors;
 		this.step = 0;
 		this.end_game_cond = end_game_conditions = [
-			{name:"Filled holes", value:0, result:1},
-			{name:"Filled cells", value:0, result:1},
-			{name:"Score", value:0, result:1},
-			{name:"Good moves", value:0, result:0},
-			{name:"Bad moves", value:0, result:2},
-			{name:"Battery use", value:0, result:2},
-			{name:"Battery recharge", value:0, result:2},
-			{name:"Battery restorations", value:0, result:2}
-			/*{name:"Time", value:4*60, result:0} <-not here 'cause it's the default value*/ 
+			{name:_ENDGAME.FILLED_HOLES.NAME		, value:0, result:_GAME_RESULT.WON		},
+			{name:_ENDGAME.FILLED_CELLS.NAME		, value:0, result:_GAME_RESULT.WON		},
+			{name:_ENDGAME.SCORE.NAME				, value:0, result:_GAME_RESULT.WON		},
+			{name:_ENDGAME.GOOD_MOVES.NAME			, value:0, result:_GAME_RESULT.NEUTRAL	},
+			{name:_ENDGAME.BAD_MOVES.NAME			, value:0, result:_GAME_RESULT.LOST		},
+			{name:_ENDGAME.BATTERY_USED.NAME		, value:0, result:_GAME_RESULT.LOST		},
+			{name:_ENDGAME.BATTERY_RECHARGE.NAME	, value:0, result:_GAME_RESULT.LOST		},
+			{name:_ENDGAME.BATTERY_RESTORE.NAME		, value:0, result:_GAME_RESULT.LOST		}
+			/*{name:_ENDGAME.TIME.NAME, value:0, result:_GAME_RESULT.NEUTRAL} <-not here 'cause it's the default value*/ 
 		];
 		this.task_env = taskEnvironment = {
 			trial: {//Each trial is a self-contained simulation with a certain duration (in ticks of the clock)
@@ -55,27 +73,26 @@
 			environment:{
 				rows:6,
 				columns:6,
-				holes_size:{range:[1,3], prob:[333,333,334]},
-				num_holes:{range:[2,3], prob:[500,500]},
-				num_obstacles:{range:[1,2], prob:[500,500]},
+				holes_size:{range:[1,3], prob:[]},
+				num_holes:{range:[2,3], prob:[]},
+				num_obstacles:{range:[1,2], prob:[]},
 				difficulty:{range:[0,0], prob:[]},
 				scores_variability: 0,
 				dynamic:{
-					dynamism:{range:[6,13], prob:[125,125,125,125,125,125,125,125]},
-					hostility:{range:[1,13], prob:[77,77,77,77,77,77,77,77,77,77,77,77,76]},
+					dynamism:{range:[6,13], prob:[]},
+					hostility:{range:[1,13], prob:[]},
 					hard_bounds:true,
-					semidynamic_tick:{range:[6,13], prob:[125,125,125,125,125,125,125,125]},
 				},
 				random_initial_state:false,
 				initial_state:[
-					["C"," "," "," "," ","#"],
+					[" "," "," "," "," ","#"],
 					["#"," "," ","2"," ","#"],
 					[" ","#"," ","T"," ","A"],
 					["1","T"," "," "," ","#"],
 					["#"," "," "," ","T","#"],
 					[" ","#"," ","#","3"," "]
 				],
-				final_state:[{name:"Time", value:4*60, result:0}] //default value
+				final_state:[{name:_ENDGAME.TIME.NAME, value:5*60, result:_GAME_RESULT.NEUTRAL}] //default value
 			},
 			teams:[],
 			final_tweaks:{
@@ -108,6 +125,7 @@
 		this.isRange = function(range){return range[0]!=range[1]}
 
 		this.finish = function(){
+			this.validate();
 			taskEnvironment.trial.test = false;
 			taskEnvironments.push(taskEnvironment);
 			saveEnvironments();
@@ -115,10 +133,20 @@
 		}
 
 		this.testEnvironment = function(){
+			this.validate();
 			taskEnvironment.trial.test = true;
 			saveKnobs(taskEnvironment);
 
 			startTWorld()
+		}
+
+		this.validate = function(){
+			_self.checkDistribution(taskEnvironment.environment.holes_size);
+			_self.checkDistribution(taskEnvironment.environment.num_holes);
+			_self.checkDistribution(taskEnvironment.environment.num_obstacles);
+			_self.checkDistribution(taskEnvironment.environment.difficulty);
+			_self.checkDistribution(taskEnvironment.environment.dynamic.dynamism);
+			_self.checkDistribution(taskEnvironment.environment.dynamic.hostility);
 		}
 
 		//FINAL STATE
@@ -147,6 +175,7 @@
 				);
 		}
 
+		//PROBABILITY DISTRIBUTION
 		this.openProbDistModal = function(knob){
 
 			var modalInstance = $modal.open({
@@ -159,7 +188,11 @@
 						var _oldValue=0;
 
 						$scope.knob = knob;
-
+						/*
+						$scope.$watch('knob.prob', function(v){
+						  $scope.TEST = v;
+						});
+						*/
 						$scope.ok = function (index) {$modalInstance.close()};
 						$scope.cancel = function () {$modalInstance.dismiss()};
 
@@ -167,9 +200,8 @@
 							orientation:'vertical',
 							range: 'min',
 							start: function (event, ui) {
-								_oldProbs.setTo(knob.prob);//knob.prob.slice();
+								_oldProbs.setTo(knob.prob);
 								_oldValue = ui.value
-
 							},
 							stop: function (event, ui) {
 								var index = knob.prob.length;
@@ -198,7 +230,7 @@
 									if (p != index){
 										decr = _dec;
 
-										if (_amount-_dec < 0)
+										if (_amount < _dec)
 											decr = _amount;
 
 										_amount-= decr;
@@ -212,21 +244,30 @@
 							}
 						}
 
-						//body
-						knob.prob.length = knob.range[1]-knob.range[0] + 1;
-
-						var add=0, i=knob.prob.length;
-						while(i--)
-							add += knob.prob[i];
-
-						if (add !== 1000){
-							for (var len=knob.prob.length, p= 0; p < len; ++p)
-								knob.prob[p] = 1/len*1000|0;
-							for (var len=knob.prob.length, remainder=1000 - (1/len*1000|0)*len, p= 0; remainder; ++p, --remainder)
-								knob.prob[p]++;
-						}
+						_self.checkDistribution(knob);
 					}
 			});
+		}
+
+		this.checkDistribution = function(knob){
+			var len = knob.range[1]-knob.range[0] + 1; if (len < 0) return;
+			knob.prob.length = len;
+
+			var add=0, i=len;
+			while(i--) add += knob.prob[i];
+
+			if (add !== 1000)
+				_self.setNormalDistribution(knob);
+		}
+
+		this.setNormalDistribution = function(knob){ if (knob.range[1]==knob.range[0]) return knob.prob.length= 0;
+			var len= knob.range[1]-knob.range[0] + 1;
+			knob.prob.length= len;
+
+			for (var p= 0; p < len; ++p)
+				knob.prob[p] = 1/len*1000|0;
+			for (var remainder=1000 - (1/len*1000|0)*len, p= 0; remainder; ++p, --remainder)
+				knob.prob[p]++;
 		}
 
 		//INITIAL STATE
@@ -260,30 +301,41 @@
 		this.isCooperative = function(){return taskEnvironment.prop.multiagent_type === 1}
 		this.isCompetitiveCooperative = function(){return taskEnvironment.prop.multiagent_type === 2}
 
-		this.setCompetitive = function(){
-			taskEnvironment.teams.length = this.nTeam = 0;
-			this.addTeam(1);
-			this.addTeam(1);
+		this.updateTeams = function(){
+			if (this.isCompetitive())
+				setCompetitive();
+			else
+			if (this.isCooperative())
+				setCooperative();
+			else
+			if (this.isCompetitiveCooperative())
+				setCompetitiveCooperative();
+		}
+
+		function setCompetitive(){
+			taskEnvironment.teams.length = _self.nTeam = 0;
+			_self.addTeam(1);
+			_self.addTeam(1);
 
 			taskEnvironment.prop.multiagent_type = 0;
 		}
 
-		this.setCooperative = function(){
-			taskEnvironment.teams.length = this.nTeam = 0;
-			this.addTeam(2);
+		function setCooperative(){
+			taskEnvironment.teams.length = _self.nTeam = 0;
+			_self.addTeam(2);
 
 			taskEnvironment.prop.multiagent_type = 1;
 		}
 
-		this.setCompetitiveCooperative = function(){
-			taskEnvironment.teams.length = this.nTeam = 0;
-			this.addTeam(2);
-			this.addTeam(2);
+		function setCompetitiveCooperative(){
+			taskEnvironment.teams.length = _self.nTeam = 0;
+			_self.addTeam(2);
+			_self.addTeam(2);
 
 			taskEnvironment.prop.multiagent_type = 2;
 		}
 
-		this.setCompetitive();
+		setCompetitive();
 	}]);
 
 	mod.controller('InitialStateMakerController', function(){

@@ -123,13 +123,17 @@ function Environment(rows, columns, graphicEngine, parent) {
 						_self.newObstacle(_INITIAL_STATE.obstacles.shift());
 
 					for (id in _INITIAL_STATE.holes)
-						_self.newHole(_INITIAL_STATE.holes[id],0,1-Math.random()*TWorld.VariabilityOfScores);
+						_self.newHole(
+							_INITIAL_STATE.holes[id],
+							uncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold),
+							1-Math.random()*TWorld.VariabilityOfScores
+						);
 				}else{
 					_self.AbstractLevel.createHoles();
 					_self.AbstractLevel.createObstacles();
 				}
 
-				if ( TWorld.Dynamic )
+				if ( TWorld.Dynamic || TWorld.Semidynamic )
 					_holesAndObstaclesTick();
 
 				if ( _AI_NECESSARY){
@@ -205,8 +209,10 @@ function Environment(rows, columns, graphicEngine, parent) {
 							this.AbstractLevel.createObstacles();
 							this.obstaclesSecons = uncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold);
 						}
-						_holesAndObstaclesTick();
 					}
+
+					if ( TWorld.Dynamic || TWorld.Semidynamic )
+						_holesAndObstaclesTick();
 
 					CallWithDelay.Tick();
 
@@ -765,7 +771,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 					}
 			}
 
-			//--------------------------------------------------------------------------------------> _holesAndObstaclesTick
+			//--------------------------------------------------------------------------------------> _gameIsOver
 			function _gameIsOver(goal) {
 				var r = _NUMBER_OF_AGENTS;
 
@@ -789,32 +795,30 @@ function Environment(rows, columns, graphicEngine, parent) {
 				for (var hole, i= _listOfHoles.getLength()-1; i >= 0; i--){
 					hole = _listOfHoles.getItemAt(i);
 
-					if (hole.tickAndTest()){
-						if (TWorld.HardBounds)
-							_removeHole(i);
-						else{
-							cellRemoved = hole.CurrentCells.getItemAt(random(0,hole.CurrentCells.getLength())|0);
+					if (hole.tickAndTest())
+						if (TWorld.Dynamic){
+							if (TWorld.HardBounds)
+								_removeHole(i);
+							else{
+								cellRemoved = hole.CurrentCells.getItemAt(random(0,hole.CurrentCells.getLength())|0);
 
-							removeHoleCell(cellRemoved, true);
-							removeHoleHelper(cellRemoved);
+								removeHoleCell(cellRemoved, true);
+								removeHoleHelper(cellRemoved);
 
-							if (hole) {
-								hole.shrinkHole(cellRemoved);
-								hole.LifeTime = uncertaintyMaker(
-									TWorld.Dynamism,
-									TWorld.Dynamism_UncertaintyThreshold
-								);
+								if (hole)
+									hole.shrinkHole(cellRemoved);
 							}
-						}
+						}else//if semidynamic
+							hole.shrinkScore();
+				}
+
+				if (TWorld.Dynamic)
+					for (var obstacle, i= _listOfObstacles.getLength()-1; i >= 0; i--){
+						obstacle = _listOfObstacles.getItemAt(i);
+
+						if (obstacle.tickAndTest())
+							_removeObstacle(i);
 					}
-				}
-
-				for (var obstacle, i= _listOfObstacles.getLength()-1; i >= 0; i--){
-					obstacle = _listOfObstacles.getItemAt(i);
-
-					if (obstacle.tickAndTest())
-						_removeObstacle(i);
-				}
 			}
 
 			//--------------------------------------------------------------------------------------> _updateScoreBattery
@@ -1210,7 +1214,7 @@ function Hole(environment, holeCells, holeLifetime, actualVariabilityOfUtility) 
 			if (this.Environment.isThereAHoleFilling(cell[0], cell[1]))
 				return false;
 		}
-
+ 
 		if (++_currentLifeTime >= _lifeTime) {
 			_currentLifeTime = 0;
 			return true;
@@ -1262,14 +1266,22 @@ function Hole(environment, holeCells, holeLifetime, actualVariabilityOfUtility) 
 		return (this.CurrentCells.getLength() == 0);
 	}
 
-	this.shrinkHole = function(cell) {
+	this.shrinkHole = function(cell, noLifetime) {
 		for (var i = 0; i < this.OriginalCells.length; i++)
 			if (this.OriginalCells[i][0] == cell[0] && this.OriginalCells[i][1] == cell[1]) {
 				this.Size--;
 				this.OriginalCells.remove(i);
 
 				this.Value = TWorld.valueOfHoleFilledCompletely(this.Size)*_variabilityOfUtility | 0;
+
+				if (!noLifetime)
+					_lifeTime = uncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold);
 			}
+	}
+
+	this.shrinkScore = function(){
+		this.Value = this.Value/2|0;
+		_lifeTime = uncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold);
 	}
 }
 //<-- Internal Classes
