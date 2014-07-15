@@ -12,10 +12,13 @@ function clearKnobs(){localStorage.removeItem("knobs")}
 
 var _tworldWindow;
 function startTWorld(){
-	_tworldWindow = window.open('tworld.html','T-World','width=712, height=400');
+	if (!_tworldWindow)
+		_tworldWindow = window.open('tworld.html','T-World','width=712, height=400');
+	else
+		_tworldWindow.location = 'tworld.html';
 	_tworldWindow.focus();
-	$(_tworldWindow).unload(function(){_tworldWindow=null});
-	$(_tworldWindow).load(function(){_tworldWindow=true});
+	/*$(_tworldWindow).unload(function(){_tworldWindow=null});
+	$(_tworldWindow).load(function(){_tworldWindow=true});*/
 }
 function isTWorldRunning(){return _tworldWindow}
 
@@ -53,7 +56,7 @@ function isTWorldRunning(){return _tworldWindow}
 			this.LANGUAGES = _LANGUAGES;
 			this.language = (window.navigator.userLanguage || window.navigator.language) == 'es'? this.LANGUAGES.SPANISH : this.LANGUAGES.ENGLISH;
 			this.text = {menu:{}};
-			this.isTWorldRunning = isTWorldRunning;
+			//this.isTWorldRunning = isTWorldRunning;
 			this.taskEnvironments = taskEnvironments;
 			this.agentPrograms = agentPrograms;
 

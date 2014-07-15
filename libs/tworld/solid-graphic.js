@@ -50,7 +50,7 @@ function GraphicTWorld(graphicEngine, environment){
 		var _FPSSum				= _FPS;
 		var _FPSAvgCounter		= 0;
 		var _timeAccumulador	= 0;
-		var _oldCurrentTime		= 0;
+		var _oldCurrentTime;
 
 		//used for camara animation
 		var _CL_ActiveCamera;
@@ -485,7 +485,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 			$rob.find("#score").html(score);
 
-			if (points >= 0){
+			if (points > 0){
 				//_holeIsFilled = filled;
 				_scoreAnimation[rIndex].HoleFilledCells.length = holeCells.length;
 				_scoreAnimation[rIndex].Points = points;
@@ -508,7 +508,8 @@ function GraphicTWorld(graphicEngine, environment){
 						.show()
 						.stop(true).animate({opacity:0}, 1000, function(){$("#frameColor").hide();});
 				}
-			}else{
+			}else
+			if (points < 0){
 				var $scoreUp = $("#score-up-" + lIndex);
 				
 
@@ -833,7 +834,10 @@ function GraphicTWorld(graphicEngine, environment){
 		var timeElapsed;
 		function display(CL_Scene, currentTime) {
 			if (!_Paused){
-				timeElapsed = currentTime - _oldCurrentTime;
+				if (!_oldCurrentTime)
+					timeElapsed = 0;
+				else
+					timeElapsed = currentTime - _oldCurrentTime;
 
 				//caching hashed values
 				_robPosX = _CLN_Rob[0].Pos.X;
@@ -1031,7 +1035,7 @@ function GraphicTWorld(graphicEngine, environment){
 						_CLN_UFO.Stop = false;
 					}else
 						for (var i=0; i < _CL_LaserBeams.length; i++){
-							if (_CL_LaserBeams[i].LifeTime-- <= 0){
+							if ((_CL_LaserBeams[i].LifeTime-=timeElapsed) <= 0){
 								_CL_LaserBeams[i].dispose();
 								_CL_LaserBeams.remove(i);
 								--i;
@@ -1045,9 +1049,9 @@ function GraphicTWorld(graphicEngine, environment){
 
 						if (_FPSAvgCounter == 0){
 							_FPSAvgCounter = 1;
-							_FPSSum = _FPS/(timeElapsed*_FPS/1000)|0;
+							_FPSSum = _FPS/(timeElapsed*_FPS/1000)*_SPEED|0;
 						}else
-							_FPSSum += _FPS/(timeElapsed*_FPS/1000)|0;
+							_FPSSum += _FPS/(timeElapsed*_FPS/1000)*_SPEED|0;
 
 						$fps.html((_FPSSum/_FPSAvgCounter|0) + " fps");
 					}
@@ -1272,7 +1276,7 @@ function GraphicTWorld(graphicEngine, environment){
 					this.VecT1 = new CL3D.Vect3d();
 					_CLN_UFO.Pos.setTo(_UFOFlyCenter);
 				}else
-					this.Time++;
+					this.Time+=_SPEED;
 
 				if(this.Time!=0){
 					var b=this.Time*_UFOFlySpeed;
@@ -1860,7 +1864,6 @@ function GraphicTWorld(graphicEngine, environment){
 					}
 				);
 
-				_oldCurrentTime = Date.now();
 				_TWorld.start();
 				$("#playBtn").remove();
 			}

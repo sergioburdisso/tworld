@@ -171,7 +171,7 @@ var _TILES_TELEPORT_DELAY	= 2; //how many seconds takes AstroMaxi to teletranspo
 var _ACTIVE_CAMERA = -1;
 
 //region 3D World Parameters
-var _LaserBeamLifeTime	= _FPS;//(in frames)
+var _LaserBeamLifeTime	= 1000;//(milliseconds)
 var _FloorCellSize		= 10;
 var _FloorCellHeight	= 20;
 var _HoleCellAlpha		= 0.4;// from 0 to 1

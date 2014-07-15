@@ -696,11 +696,11 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 									Animation_EyesBlinking();
 								}
 								,
-								50
+								50/(_SPEED?_SPEED:1)
 							);
 						}
 						,
-						random(100, 5000)
+						random(100, 5000)/(_SPEED?_SPEED:1)
 					);
 				}
 
@@ -752,7 +752,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 
 				//--------------------------------------------------------------------------------------> Animation_Walk
 				function Animation_Walk (){
-					if (_AUDIO_ENABLE)
+					if (_AUDIO_ENABLE && _SPEED === 1)
 						_sound_walk.play();
 
 					if (_listOfTilesToSlide.empty()){

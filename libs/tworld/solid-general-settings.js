@@ -72,6 +72,8 @@ var _MULTIPLIER_TIME = _KNOBS.final_tweaks.multiplier.enabled?
 						:
 						0;
 
+var _SPEED = 1/1;
+
 // Graphics
 var _LOW_QUALITY_GRID	= false;
 var _LOW_QUALITY_WORLD	= false;
@@ -83,7 +85,7 @@ var 	_RENDER_HEIGHT	= 400;
 // Hide/show enable/disable things
 var _SHOW_HOLES_HELPERS = true;
 var _SHOW_FPS = true;
-var _PAUSE_ENABLED = false;
+var _PAUSE_ENABLED = true;
 
 // Camera
 var _DEFAULT_CAMERA	= _CAMERA_TYPE.FREE_GRID;
