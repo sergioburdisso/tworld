@@ -1182,6 +1182,7 @@ function GraphicTWorld(graphicEngine, environment){
 					$('#time').stop(true).animate({opacity:1}, 1000);
 					$('#playPauseBtn').stop(true).animate({opacity: 0}, 500, function(){$(this).hide()});
 
+					_toggleOnScreenInfo(false);
 
 					for (var r=0; r < _NUMBER_OF_AGENTS; ++r)
 					for (var i=0; i < 4; ++i)
