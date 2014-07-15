@@ -13,7 +13,7 @@ function clearKnobs(){localStorage.removeItem("knobs")}
 var _tworldWindow;
 function startTWorld(){
 	if (!_tworldWindow)
-		_tworldWindow = window.open('tworld.html','T-World','width=712, height=400');
+		_tworldWindow = window.open('tworld.html');//,'T-World','width=712, height=450');//height=400
 	else
 		_tworldWindow.location = 'tworld.html';
 	_tworldWindow.focus();

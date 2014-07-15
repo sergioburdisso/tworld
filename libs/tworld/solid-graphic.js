@@ -74,6 +74,8 @@ function GraphicTWorld(graphicEngine, environment){
 
 		var _scoreAnimation = new Array(_NUMBER_OF_AGENTS);
 
+		var _targetSpeed = _SPEED;
+
 		//UFO Fly Cricle Animation
 		var _UFOFlySpeed	= 0.02;//0.01;
 		var _UFOFlyRadius	= -1;
@@ -833,242 +835,252 @@ function GraphicTWorld(graphicEngine, environment){
 		var oldYMouse=0, oldXMouse=0, fixedHeadRotY=0;
 		var timeElapsed;
 		function display(CL_Scene, currentTime) {
-			if (!_Paused){
-				if (!_oldCurrentTime)
-					timeElapsed = 0;
-				else
-					timeElapsed = currentTime - _oldCurrentTime;
+			if (!_oldCurrentTime)
+				timeElapsed = 0;
+			else
+				timeElapsed = currentTime - _oldCurrentTime;
 
-				//caching hashed values
-				_robPosX = _CLN_Rob[0].Pos.X;
-				_robPosZ = _CLN_Rob[0].Pos.Z;
-				_ufoPosX = _CLN_UFO.Pos.X;
-				_ufoPosY = _CLN_UFO.Pos.Y;
-				_ufoPosZ = _CLN_UFO.Pos.Z;
+			//caching hashed values
+			_robPosX = _CLN_Rob[0].Pos.X;
+			_robPosZ = _CLN_Rob[0].Pos.Z;
+			_ufoPosX = _CLN_UFO.Pos.X;
+			_ufoPosY = _CLN_UFO.Pos.Y;
+			_ufoPosZ = _CLN_UFO.Pos.Z;
 
-				//Rob's animation
-				var rob = _NUMBER_OF_AGENTS;
-				while (rob--)
-					_self.Rob[rob].animate(timeElapsed);
+			//Rob's animation
+			var rob = _NUMBER_OF_AGENTS;
+			while (rob--)
+				_self.Rob[rob].animate(timeElapsed);
 
-				//UFO animation
-				ShipFlyCircle();
+			//UFO animation
+			ShipFlyCircle();
 
-				//Camera animation
-				if (_cameraFirtPerson){
-					_robRotY= _CLN_Rob[0].Rot.Y;
+			//Camera animation
+			if (_cameraFirtPerson){
+				_robRotY= _CLN_Rob[0].Rot.Y;
 
-					tmp = headRotY*_DEG_PI;
-					var cosQ = Math.cos(tmp);
-					var sinQ = Math.sin(tmp);
-					tmp = headRotX*_DEG_PI;
-					var cosO = Math.cos(tmp);
-					var sinO = Math.sin(tmp);
+				tmp = headRotY*_DEG_PI;
+				var cosQ = Math.cos(tmp);
+				var sinQ = Math.sin(tmp);
+				tmp = headRotX*_DEG_PI;
+				var cosO = Math.cos(tmp);
+				var sinO = Math.sin(tmp);
 
-					if (_self.Rob[0].isWalking()){
-						tmp = Math.cos(currentTime/50);
-						headCenter.set(2 + tmp*.7, 21 + tmp*0.3, 2 + tmp*.7);
-					}else
-						headCenter.set(0, 20, 0);
+				if (_self.Rob[0].isWalking()){
+					tmp = Math.cos(currentTime/50);
+					headCenter.set(2 + tmp*.7, 21 + tmp*0.3, 2 + tmp*.7);
+				}else
+					headCenter.set(0, 20, 0);
 
-					_CLN_UFO.Rot.Y = CL3D.radToDeg(Math.atan2(_ufoPosX- _CLN_FloorBase.Pos.X, _ufoPosZ - _CLN_FloorBase.Pos.Z));
+				_CLN_UFO.Rot.Y = CL3D.radToDeg(Math.atan2(_ufoPosX- _CLN_FloorBase.Pos.X, _ufoPosZ - _CLN_FloorBase.Pos.Z));
 
 
-					//Spherical coordinate system
-					_cameraPos.Z = (6+headCenter.Z)*sinO*cosQ + _robPosZ;
-					_cameraPos.X = (6+headCenter.X)*sinO*sinQ + _robPosX;
-					_cameraPos.Y = 4*cosO + headCenter.Y + 0.03*(_ufoPosY - _UFOFlyCenter.Y);
+				//Spherical coordinate system
+				_cameraPos.Z = (6+headCenter.Z)*sinO*cosQ + _robPosZ;
+				_cameraPos.X = (6+headCenter.X)*sinO*sinQ + _robPosX;
+				_cameraPos.Y = 4*cosO + headCenter.Y + 0.03*(_ufoPosY - _UFOFlyCenter.Y);
 
-					//Spherical coordinate system
-					_CL_ActiveCameraTarget.Z = 20*sinO*cosQ + _robPosZ;
-					_CL_ActiveCameraTarget.X = 20*sinO*sinQ + _robPosX;
-					_CL_ActiveCameraTarget.Y = 20*cosO + headCenter.Y;
+				//Spherical coordinate system
+				_CL_ActiveCameraTarget.Z = 20*sinO*cosQ + _robPosZ;
+				_CL_ActiveCameraTarget.X = 20*sinO*sinQ + _robPosX;
+				_CL_ActiveCameraTarget.Y = 20*cosO + headCenter.Y;
 
-					if (_CL_CursorControl.MouseIsDown){
+				if (_CL_CursorControl.MouseIsDown){
 
-						tmp = (_CL_CursorControl.MouseY - oldYMouse)/3;
-						if (10 < headRotX + tmp && headRotX + tmp < 162)
-							headRotX += tmp;
+					tmp = (_CL_CursorControl.MouseY - oldYMouse)/3;
+					if (10 < headRotX + tmp && headRotX + tmp < 162)
+						headRotX += tmp;
 
-						tmp = (_CL_CursorControl.MouseX - oldXMouse)/3;
-						if (relativeAngleBetween(_robRotY, headRotY+tmp) > 88)
-							headRotY = relative180Angle(_robRotY, 88);
-						else
-						if (relativeAngleBetween(_robRotY, headRotY+tmp) < -88)
-							headRotY = relative180Angle(_robRotY, -88);
-						else
-							headRotY += tmp;
+					tmp = (_CL_CursorControl.MouseX - oldXMouse)/3;
+					if (relativeAngleBetween(_robRotY, headRotY+tmp) > 88)
+						headRotY = relative180Angle(_robRotY, 88);
+					else
+					if (relativeAngleBetween(_robRotY, headRotY+tmp) < -88)
+						headRotY = relative180Angle(_robRotY, -88);
+					else
+						headRotY += tmp;
 
-						fixedHeadRotY = 0;
-					}else{
-						if (!fixedHeadRotY)
-							fixedHeadRotY = headRotY - _robRotY;
-						else
-							headRotY = _robRotY + fixedHeadRotY;
-					}
-
-					oldYMouse = _CL_CursorControl.MouseY;
-					oldXMouse = _CL_CursorControl.MouseX;
+					fixedHeadRotY = 0;
 				}else{
-					_CLN_UFO.Rot.Y = CL3D.radToDeg(Math.atan2(_ufoPosX- _robPosX, _ufoPosZ - _robPosZ));
+					if (!fixedHeadRotY)
+						fixedHeadRotY = headRotY - _robRotY;
+					else
+						headRotY = _robRotY + fixedHeadRotY;
+				}
 
-					if (_cameraAnimationFlag){
-						var r;
-						if (_cameraAnimationFlag == 1){
-							var xt = (_cameraTargetFinalPos.X - _CL_ActiveCameraTarget.X);
-							var yt = (_cameraTargetFinalPos.Y - _CL_ActiveCameraTarget.Y);
-							var zt = (_cameraTargetFinalPos.Z - _CL_ActiveCameraTarget.Z);
-							var x = (_cameraFinalPos.X - _cameraPos.X);
-							var y = (_cameraFinalPos.Y - _cameraPos.Y);
-							var z = (_cameraFinalPos.Z - _cameraPos.Z);
-							
+				oldYMouse = _CL_CursorControl.MouseY;
+				oldXMouse = _CL_CursorControl.MouseX;
+			}else{
+				_CLN_UFO.Rot.Y = CL3D.radToDeg(Math.atan2(_ufoPosX- _robPosX, _ufoPosZ - _robPosZ));
 
-							if (Math.abs(xt)+Math.abs(yt)+Math.abs(zt) < 1){
-								_CL_ActiveCameraTarget.X = _cameraTargetFinalPos.X;
-								_CL_ActiveCameraTarget.Y = _cameraTargetFinalPos.Y;
-								_CL_ActiveCameraTarget.Z = _cameraTargetFinalPos.Z;
-							}else{
-								_CL_ActiveCameraTarget.X += xt/_AnimationFactor;
-								_CL_ActiveCameraTarget.Y += yt/_AnimationFactor;
-								_CL_ActiveCameraTarget.Z += zt/_AnimationFactor;
-							}
+				if (_cameraAnimationFlag){
+					var r;
+					if (_cameraAnimationFlag == 1){
+						var xt = (_cameraTargetFinalPos.X - _CL_ActiveCameraTarget.X);
+						var yt = (_cameraTargetFinalPos.Y - _CL_ActiveCameraTarget.Y);
+						var zt = (_cameraTargetFinalPos.Z - _CL_ActiveCameraTarget.Z);
+						var x = (_cameraFinalPos.X - _cameraPos.X);
+						var y = (_cameraFinalPos.Y - _cameraPos.Y);
+						var z = (_cameraFinalPos.Z - _cameraPos.Z);
+						
 
-							if (Math.abs(x)+Math.abs(y)+Math.abs(z) < 1){
-								_cameraPos.X = _cameraFinalPos.X;
-								_cameraPos.Y = _cameraFinalPos.Y;
-								_cameraPos.Z = _cameraFinalPos.Z;
-							}else{
-								_cameraPos.X += x/_AnimationFactor;
-								_cameraPos.Y += y/_AnimationFactor;
-								_cameraPos.Z += z/_AnimationFactor;
-							}
+						if (Math.abs(xt)+Math.abs(yt)+Math.abs(zt) < 1){
+							_CL_ActiveCameraTarget.X = _cameraTargetFinalPos.X;
+							_CL_ActiveCameraTarget.Y = _cameraTargetFinalPos.Y;
+							_CL_ActiveCameraTarget.Z = _cameraTargetFinalPos.Z;
+						}else{
+							_CL_ActiveCameraTarget.X += xt/_AnimationFactor;
+							_CL_ActiveCameraTarget.Y += yt/_AnimationFactor;
+							_CL_ActiveCameraTarget.Z += zt/_AnimationFactor;
+						}
 
-							if (xt+yt+zt+x+y+z == 0){
-								_cameraReadyFlag = !(_cameraAnimationFlag = 0);
+						if (Math.abs(x)+Math.abs(y)+Math.abs(z) < 1){
+							_cameraPos.X = _cameraFinalPos.X;
+							_cameraPos.Y = _cameraFinalPos.Y;
+							_cameraPos.Z = _cameraFinalPos.Z;
+						}else{
+							_cameraPos.X += x/_AnimationFactor;
+							_cameraPos.Y += y/_AnimationFactor;
+							_cameraPos.Z += z/_AnimationFactor;
+						}
 
-								if (_ACTIVE_CAMERA == _CAMERA_TYPE.FIRST_PERSON){
-									$("#frameColor")
-										.css({opacity: 1 , 'background-color' : 'rgb(6, 16, 23)'})
-										.show()
-										.stop(true).animate({opacity:0}, 1000, function(){$("#frameColor").hide();});
-									$("#frameShadow")
-										.css("background", "url('imgs/shadow_frame_rob.png') no-repeat")
-										.css("background-size", "100% 100%");
+						if (xt+yt+zt+x+y+z == 0){
+							_cameraReadyFlag = !(_cameraAnimationFlag = 0);
 
-									//hidding the head
-									for (var i=36;i<=44;i++){
-										_CLN_Rob[0].getMaterial(i).Tex1 = _CL_Engine.getTextureManager().getTexture("./copperlichtdata/transp.png", true);
-										_CLN_Rob[0].getMaterial(i).Type = CL3D.Material.EMT_TRANSPARENT_ALPHA_CHANNEL;
-									}
+							if (_ACTIVE_CAMERA == _CAMERA_TYPE.FIRST_PERSON){
+								$("#frameColor")
+									.css({opacity: 1 , 'background-color' : 'rgb(6, 16, 23)'})
+									.show()
+									.stop(true).animate({opacity:0}, 1000, function(){$("#frameColor").hide();});
+								$("#frameShadow")
+									.css("background", "url('imgs/shadow_frame_rob.png') no-repeat")
+									.css("background-size", "100% 100%");
 
-									headRotY = _CLN_Rob[0].Rot.Y;
-
-									_cameraPos.Y = 20;
-									_CL_ActiveCameraTarget.Y = -30;
-
-									_cameraFirtPerson = true;
+								//hidding the head
+								for (var i=36;i<=44;i++){
+									_CLN_Rob[0].getMaterial(i).Tex1 = _CL_Engine.getTextureManager().getTexture("./copperlichtdata/transp.png", true);
+									_CLN_Rob[0].getMaterial(i).Type = CL3D.Material.EMT_TRANSPARENT_ALPHA_CHANNEL;
 								}
-							}
-						}
 
-						if (_CL_ActiveCamera.Animators[0]){
-							r = (_cameraFinalRadius - _CL_ActiveCamera.Animators[0].Radius);
-							if (Math.abs(r)+((_cameraAnimationFlag == 1)? Math.abs(yt) : 0) < 0.3){
-								_CL_ActiveCamera.Animators[0].Radius = _cameraFinalRadius;
-								_cameraReadyFlag = !(_cameraAnimationFlag = 0);
-							}else
-								_CL_ActiveCamera.Animators[0].Radius += r/_AnimationFactor;
+								headRotY = _CLN_Rob[0].Rot.Y;
+
+								_cameraPos.Y = 20;
+								_CL_ActiveCameraTarget.Y = -30;
+
+								_cameraFirtPerson = true;
+							}
 						}
 					}
 
-					if (_ACTIVE_CAMERA == _CAMERA_TYPE.ALIEN)
-						if (!_cameraAnimationFlag){
-							_cameraPos.setTo(_CLN_UFO.Pos);
-							_cameraPos.Y += 1;
-						}else{
-							_cameraFinalPos.setTo(_CLN_UFO.Pos);
-							_cameraFinalPos.Y += 3.6;
-						}
-
-					if (_FollowRob){
-						if (_CAMERA_SMOOTH){
-							_cameraXPosOffset = (_robPosX - _CL_ActiveCameraTarget.X)/30;
-							_cameraZPosOffset = (_robPosZ - _CL_ActiveCameraTarget.Z)/30;
-
-							if (Math.abs(_cameraXPosOffset) > 0.05){
-								if (_ACTIVE_CAMERA == _CAMERA_TYPE.FREE_ROB)
-									_cameraPos.X += _cameraXPosOffset;
-								_CL_ActiveCameraTarget.X += _cameraXPosOffset;
-							}
-
-							if (Math.abs(_cameraZPosOffset) > 0.05){
-								if (_ACTIVE_CAMERA == _CAMERA_TYPE.FREE_ROB)
-									_cameraPos.Z += _cameraZPosOffset;
-								_CL_ActiveCameraTarget.Z += _cameraZPosOffset;
-							}
-						}else{
-							_CL_ActiveCameraTarget.X = _robPosX;
-							_CL_ActiveCameraTarget.Z = _robPosZ;
-						}
-					}
-
-					if (_cameraShakingFlag && _CL_CameraModelViewer.CursorControl.isMouseDown())
-						_cameraShakingFlag = false;
-
-					if (!_cameraAnimationFlag){
-						if (!_cameraShakingFlag && !CL3D.equals(_cameraPos.Y,_cameraFixedPosY)){
-							_cameraFixedPosY = _cameraPos.Y;
-							_cameraShakingOrg = _ufoPosY - _UFOFlyCenter.Y;
-						}else{
-							_cameraPos.Y = _cameraFixedPosY + /*(4/15)*/0.26*((_ufoPosY - _UFOFlyCenter.Y) - _cameraShakingOrg);
-							_cameraShakingFlag = true;
-						}
-					}
-				}
-
-				//region laser beams animation
-					if (_CL_LaserBeams.length == 0 && _CLN_LaserGlow.Visible){
-						if (_AUDIO_ENABLE)
-							_sound_ufo_laser.stop();
-
-						_CLN_LaserGlow.setVisible(false);
-						_CLN_UFO.Stop = false;
-					}else
-						for (var i=0; i < _CL_LaserBeams.length; i++){
-							if ((_CL_LaserBeams[i].LifeTime-=timeElapsed) <= 0){
-								_CL_LaserBeams[i].dispose();
-								_CL_LaserBeams.remove(i);
-								--i;
-							}
-						}
-				//end region laser beams
-
-				//region fps calculation
-					if (_SHOW_FPS){
-						_FPSAvgCounter = (_FPSAvgCounter + 1)%120;
-
-						if (_FPSAvgCounter == 0){
-							_FPSAvgCounter = 1;
-							_FPSSum = _FPS/(timeElapsed*_FPS/1000)*_SPEED|0;
+					if (_CL_ActiveCamera.Animators[0]){
+						r = (_cameraFinalRadius - _CL_ActiveCamera.Animators[0].Radius);
+						if (Math.abs(r)+((_cameraAnimationFlag == 1)? Math.abs(yt) : 0) < 0.3){
+							_CL_ActiveCamera.Animators[0].Radius = _cameraFinalRadius;
+							_cameraReadyFlag = !(_cameraAnimationFlag = 0);
 						}else
-							_FPSSum += _FPS/(timeElapsed*_FPS/1000)*_SPEED|0;
-
-						$fps.html((_FPSSum/_FPSAvgCounter|0) + " fps");
+							_CL_ActiveCamera.Animators[0].Radius += r/_AnimationFactor;
 					}
-				//end region fps calculation
-
-				//every second let the environment know a second has passed...
-				_oldCurrentTime = currentTime;
-				_timeAccumulador+= timeElapsed;
-				if (_timeAccumulador >= 1000){
-					_timeAccumulador = _timeAccumulador%1000;
-					_self.Environment.tick();
 				}
 
+				if (_ACTIVE_CAMERA == _CAMERA_TYPE.ALIEN)
+					if (!_cameraAnimationFlag){
+						_cameraPos.setTo(_CLN_UFO.Pos);
+						_cameraPos.Y += 1;
+					}else{
+						_cameraFinalPos.setTo(_CLN_UFO.Pos);
+						_cameraFinalPos.Y += 3.6;
+					}
 
-				//CL graphicEngine I let you do your stuff! (calling the original onAnimate function)
-				_clOnAnimateCallBack.apply(this, [CL_Scene, currentTime]);
+				if (_FollowRob){
+					if (_CAMERA_SMOOTH){
+						_cameraXPosOffset = (_robPosX - _CL_ActiveCameraTarget.X)/30;
+						_cameraZPosOffset = (_robPosZ - _CL_ActiveCameraTarget.Z)/30;
+
+						if (Math.abs(_cameraXPosOffset) > 0.05){
+							if (_ACTIVE_CAMERA == _CAMERA_TYPE.FREE_ROB)
+								_cameraPos.X += _cameraXPosOffset;
+							_CL_ActiveCameraTarget.X += _cameraXPosOffset;
+						}
+
+						if (Math.abs(_cameraZPosOffset) > 0.05){
+							if (_ACTIVE_CAMERA == _CAMERA_TYPE.FREE_ROB)
+								_cameraPos.Z += _cameraZPosOffset;
+							_CL_ActiveCameraTarget.Z += _cameraZPosOffset;
+						}
+					}else{
+						_CL_ActiveCameraTarget.X = _robPosX;
+						_CL_ActiveCameraTarget.Z = _robPosZ;
+					}
+				}
+
+				if (_cameraShakingFlag && _CL_CameraModelViewer.CursorControl.isMouseDown())
+					_cameraShakingFlag = false;
+
+				if (!_cameraAnimationFlag){
+					if (!_cameraShakingFlag && !CL3D.equals(_cameraPos.Y,_cameraFixedPosY)){
+						_cameraFixedPosY = _cameraPos.Y;
+						_cameraShakingOrg = _ufoPosY - _UFOFlyCenter.Y;
+					}else{
+						_cameraPos.Y = _cameraFixedPosY + /*(4/15)*/0.26*((_ufoPosY - _UFOFlyCenter.Y) - _cameraShakingOrg);
+						_cameraShakingFlag = true;
+					}
+				}
 			}
+
+			//pause animation
+
+			if (_PAUSE_ENABLED && _SPEED != _targetSpeed){
+
+				if (Math.abs(_targetSpeed - _SPEED) < 0.05){
+					_SPEED = _targetSpeed;
+				}else{
+					_SPEED += (_targetSpeed - _SPEED)/15;
+
+				}
+			}
+
+			//region laser beams animation
+				if (_CL_LaserBeams.length == 0 && _CLN_LaserGlow.Visible){
+					if (_AUDIO_ENABLE)
+						_sound_ufo_laser.stop();
+
+					_CLN_LaserGlow.setVisible(false);
+					_CLN_UFO.Stop = false;
+				}else
+					for (var i=0; i < _CL_LaserBeams.length; i++){
+						if ((_CL_LaserBeams[i].LifeTime-=timeElapsed) <= 0){
+							_CL_LaserBeams[i].dispose();
+							_CL_LaserBeams.remove(i);
+							--i;
+						}
+					}
+			//end region laser beams
+
+			//region fps calculation
+				if (_SHOW_FPS){
+					_FPSAvgCounter = (_FPSAvgCounter + 1)%120;
+
+					if (_FPSAvgCounter == 0){
+						_FPSAvgCounter = 1;
+						_FPSSum = _FPS/(timeElapsed*_FPS/1000)*_SPEED|0;
+					}else
+						_FPSSum += _FPS/(timeElapsed*_FPS/1000)*_SPEED|0;
+
+					$fps.html((_FPSSum/_FPSAvgCounter|0) + " fps");
+				}
+			//end region fps calculation
+
+			//every second let the environment know a second has passed...
+			_oldCurrentTime = currentTime;
+			_timeAccumulador+= timeElapsed;
+			if (_timeAccumulador >= 1000){
+				_timeAccumulador = _timeAccumulador%1000;
+				_self.Environment.tick();
+			}
+
+
+			//CL graphicEngine I let you do your stuff! (calling the original onAnimate function)
+			_clOnAnimateCallBack.apply(this, [CL_Scene, currentTime]);
 		}
 
 		function _CLNs_setMinimalUpdateDelay(frames){
@@ -1141,11 +1153,9 @@ function GraphicTWorld(graphicEngine, environment){
 		}
 
 		function _togglePause(){
-			if (_PAUSE_ENABLED && _Running){
-				if (!this.pauseTime)
-					this.pauseTime = null;
 
-				_CL_Engine.IsPaused = (_Paused = !_Paused);
+			if (_PAUSE_ENABLED && _Running){
+				_Paused = !_Paused;
 
 				if (_Paused){
 					if (_AUDIO_ENABLE){
@@ -1153,24 +1163,25 @@ function GraphicTWorld(graphicEngine, environment){
 						_sound_voice_pause.setPercent(0).setVolume(40).play();
 					}
 
-					this.pauseTime = CL3D.CLTimer.getTime();
-					
-					$("#tworld").addClass("blur");
-					$("#header").hide();
-					$("#black-screen").find("#title").css("font-size", "30px").html("PAUSE");
-					$('#playBtn').show();
-					$("#black-screen").show();
-					$("#black-screen").stop(true).animate({opacity:1}, 400);
-					$("#bs-mid").css("margin-top", (-$("#bs-mid").height()/2|0)+"px");
+					_targetSpeed = 0;
+
+					$('#header').stop(true).animate({opacity: 0}, 500, function(){$(this).hide()});
+					$('#robs-hud').stop(true).animate({opacity: 0}, 500);
+					$('#time').stop(true).animate({opacity: 0}, 500, function(){$(this).hide()});
+					$('#playPauseBtn').show();
+					$('#playPauseBtn').stop(true).animate({opacity:1}, 1000);
+					//$("#bs-mid").css("margin-top", (-$("#bs-mid").height()/2|0)+"px");*/
 					_toggleOnScreenInfo(true, true);
 				}else{
-					_oldCurrentTime += CL3D.CLTimer.getTime() - this.pauseTime;
-					$("#tworld").removeClass("blur");
+					_targetSpeed = 1;
+
 					$("#header").show();
-					$('#playBtn').hide();
-					$("#black-screen").hide();
-					$("#black-screen").css("opacity", "0");
-					_toggleOnScreenInfo(false);
+					$('#header').stop(true).animate({opacity:1}, 1000);
+					$('#robs-hud').stop(true).animate({opacity:1}, 1000);
+					$("#time").show();
+					$('#time').stop(true).animate({opacity:1}, 1000);
+					$('#playPauseBtn').stop(true).animate({opacity: 0}, 500, function(){$(this).hide()});
+
 
 					for (var r=0; r < _NUMBER_OF_AGENTS; ++r)
 					for (var i=0; i < 4; ++i)
@@ -1865,7 +1876,8 @@ function GraphicTWorld(graphicEngine, environment){
 				);
 
 				_TWorld.start();
-				$("#playBtn").remove();
+				$("#playPauseBtn").appendTo($("#tw-root"));
+				$("#playFrame").remove();
 			}
 		});
 
@@ -1908,8 +1920,8 @@ function GraphicTWorld(graphicEngine, environment){
 		}else
 			$("#pauseBtn").hide();
 		$("#playPauseBtn").mousedown(function(e){_togglePause()});
-		$("#playPauseBtn").mouseenter(function(e){$(this).prop("src", "imgs/play_enter.png")});
-		$("#playPauseBtn").mouseleave(function(e){$(this).prop("src", "imgs/play.png")});
+		$("#playPauseBtn").mouseenter(function(e){$(this).prop("src", "imgs/play_enter_inv.png")});
+		$("#playPauseBtn").mouseleave(function(e){$(this).prop("src", "imgs/play_inv.png")});
 
 		//Camera Button
 		$("#cameraBtn").mouseenter(function(e){$(this).prop("src", "imgs/camera_enter.png")});

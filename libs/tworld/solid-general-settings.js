@@ -72,7 +72,7 @@ var _MULTIPLIER_TIME = _KNOBS.final_tweaks.multiplier.enabled?
 						:
 						0;
 
-var _SPEED = 1/1;
+var _SPEED = 1;
 
 // Graphics
 var _LOW_QUALITY_GRID	= false;
