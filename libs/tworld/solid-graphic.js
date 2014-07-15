@@ -1137,7 +1137,7 @@ function GraphicTWorld(graphicEngine, environment){
 		}
 
 		function _togglePause(){
-			if (_Running){
+			if (_PAUSE_ENABLED && _Running){
 				if (!this.pauseTime)
 					this.pauseTime = null;
 
@@ -1898,9 +1898,12 @@ function GraphicTWorld(graphicEngine, environment){
 		$("#unsl-logo").mouseleave();
 
 		//Pause Button
-		$("#pauseBtn").mouseenter(function(e){$(this).prop("src", "imgs/pause_enter.png")});
-		$("#pauseBtn").mouseleave(function(e){$(this).prop("src", "imgs/pause.png")});
-		$("#pauseBtn").mouseup(function(e){_togglePause()});
+		if (_PAUSE_ENABLED){
+			$("#pauseBtn").mouseenter(function(e){$(this).prop("src", "imgs/pause_enter.png")});
+			$("#pauseBtn").mouseleave(function(e){$(this).prop("src", "imgs/pause.png")});
+			$("#pauseBtn").mouseup(function(e){_togglePause()});
+		}else
+			$("#pauseBtn").hide();
 		$("#playPauseBtn").mousedown(function(e){_togglePause()});
 		$("#playPauseBtn").mouseenter(function(e){$(this).prop("src", "imgs/play_enter.png")});
 		$("#playPauseBtn").mouseleave(function(e){$(this).prop("src", "imgs/play.png")});

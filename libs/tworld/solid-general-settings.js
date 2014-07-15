@@ -80,9 +80,10 @@ var _RENDER_AUTO_SIZE	= false;
 var 	_RENDER_WIDTH	= 712;
 var 	_RENDER_HEIGHT	= 400;
 
-// Hide/show things
+// Hide/show enable/disable things
 var _SHOW_HOLES_HELPERS = true;
 var _SHOW_FPS = true;
+var _PAUSE_ENABLED = false;
 
 // Camera
 var _DEFAULT_CAMERA	= _CAMERA_TYPE.FREE_GRID;
