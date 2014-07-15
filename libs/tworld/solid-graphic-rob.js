@@ -184,31 +184,29 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			//this function contains all the code to handle Rob's animation and it's executed each frame
 			//by the TWorldGraphic Class
 			//------------------------------------------------------------------------------------------> Animate
-			this.animate = function() {
+			this.animate = function(timeElapsed) {
 				// if Rob has to do something, then...
 				if (_currentAnimation != ANIMATION.None){
 					//-> Single cases
 					switch(_currentAnimation){
 						case ANIMATION.WalkEast: //does he have to walk forward?
-							Animation_WalkEast();
+							Animation_WalkEast(timeElapsed);
 							break;
 						case ANIMATION.WalkWest: //does he have to walk backward?
-							Animation_WalkWest();
+							Animation_WalkWest(timeElapsed);
 							break;
 						case ANIMATION.WalkSouth: //does he have to walk to his right?
-							Animation_WalkSouth();
+							Animation_WalkSouth(timeElapsed);
 							break;
 						case ANIMATION.WalkNorth: //does he have to walk to his left?
-							Animation_WalkNorth();
+							Animation_WalkNorth(timeElapsed);
 							break;
 						case  ANIMATION.CantDoThat: //does he have to say "I can't do that" to the user?
 							if (_isTheEndOf(CL_ANIMATION.CantWhileStanding, 10000)||
 								_isTheEndOf(CL_ANIMATION.CantWhileWalking, 20000))
 							{
 								_currentAnimation = ANIMATION.None;
-
 								nextMovementIfNecessary();
-
 							}
 							if (_ACTIVE_CAMERA == _CAMERA_TYPE.FIRST_PERSON && _turnAroundFlag && isCurrentAimation(CL_ANIMATION.CantWhileStanding))
 								_turnAroundFlag = false;
@@ -312,7 +310,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 						_environment.robWalkingToNorth(_index);
 
 						_currentAnimation = ANIMATION.WalkNorth;
-						_startTimeStamp = Date.now();
+						_startTimeStamp = 0;
 						_startLoc = _node.Pos.X;
 						Animation_Walk();
 					}else
@@ -346,7 +344,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 						_environment.robWalkingToSouth(_index);
 
 						_currentAnimation = ANIMATION.WalkSouth;
-						_startTimeStamp = Date.now();
+						_startTimeStamp = 0;
 						_startLoc = _node.Pos.X;
 						Animation_Walk();
 					}else
@@ -380,7 +378,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 						_environment.robWalkingToEast(_index);
 
 						_currentAnimation = ANIMATION.WalkEast;
-						_startTimeStamp = Date.now();
+						_startTimeStamp = 0;
 						_startLoc = _node.Pos.Z;
 						Animation_Walk();
 					}else
@@ -411,13 +409,15 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 					//if Rob's can move to West (that is, there's no holes or obstacles)
 					if (_environment.isAValidMovement(_index, robLocation.Row, robLocation.Column-1))
 					{
+
 						_targetXZ.Y -= _FloorCellSize;
 						_environment.robWalkingToWest(_index);
 
 						_currentAnimation = ANIMATION.WalkWest;
-						_startTimeStamp = Date.now();
+						_startTimeStamp = 0;
 						_startLoc = _node.Pos.Z;
 						Animation_Walk();
+
 					}else
 						Animation_cannotDoThat();
 				}
@@ -822,9 +822,9 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 				}
 
 				//--------------------------------------------------------------------------------------> Animation_WalkNorth
-				function Animation_WalkNorth(){
+				function Animation_WalkNorth(timeElapsed){
 					if (_node.Pos.X > _targetXZ.X){
-						var offset = _FloorCellSize*(Date.now()-_startTimeStamp)/_ROB_WALKSPEED;
+						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALKSPEED;
 						_node.Pos.X= _startLoc - ((offset <= _FloorCellSize)? offset : _FloorCellSize);
 
 						for (var i= 0, tileCoordinates, CL_Tile, length = _listOfTilesToSlide.getLength(); i < length; i++){
@@ -844,9 +844,9 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 				}
 
 				//--------------------------------------------------------------------------------------> Animation_WalkSouth
-				function Animation_WalkSouth(){
+				function Animation_WalkSouth(timeElapsed){
 					if (_node.Pos.X < _targetXZ.X){
-						var offset = _FloorCellSize*(Date.now()-_startTimeStamp)/_ROB_WALKSPEED;
+						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALKSPEED;
 						_node.Pos.X= _startLoc + ((offset <= _FloorCellSize)? offset : _FloorCellSize);
 
 						for (var i= 0, tileCoordinates, CL_Tile, length = _listOfTilesToSlide.getLength(); i < length; i++){
@@ -866,9 +866,9 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 				}
 
 				//--------------------------------------------------------------------------------------> Animation_WalkEast
-				function Animation_WalkEast(){
+				function Animation_WalkEast(timeElapsed){
 					if (_node.Pos.Z < _targetXZ.Y){
-						var offset = _FloorCellSize*(Date.now()-_startTimeStamp)/_ROB_WALKSPEED;
+						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALKSPEED;
 						_node.Pos.Z= _startLoc + ((offset <= _FloorCellSize)? offset : _FloorCellSize);
 
 						for (var i= 0, tileCoordinates, CL_Tile, length = _listOfTilesToSlide.getLength(); i < length; i++){
@@ -888,9 +888,9 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 				}
 
 				//--------------------------------------------------------------------------------------> Animation_WalkWest
-				function Animation_WalkWest(){
+				function Animation_WalkWest(timeElapsed){
 					if (_node.Pos.Z > _targetXZ.Y){
-						var offset = _FloorCellSize*(Date.now()-_startTimeStamp)/_ROB_WALKSPEED;
+						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALKSPEED;
 						_node.Pos.Z= _startLoc - ((offset <= _FloorCellSize)? offset : _FloorCellSize);
 
 						for (var i= 0, tileCoordinates, CL_Tile, length = _listOfTilesToSlide.getLength(); i < length; i++){

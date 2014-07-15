@@ -46,7 +46,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 		var _floorLimits = new Object();
 
-		//Fps
+		//Fps & time
 		var _FPSSum				= _FPS;
 		var _FPSFactor			= 10; //how fast fps are updated (<_FPSFactor> per 60 frames)
 		var _FPSTime			= 1000/_FPSFactor;
@@ -57,6 +57,7 @@ function GraphicTWorld(graphicEngine, environment){
 		var _oldCurrentFPS		= 0;
 		var _oldCurrentTime		= 1;
 		var _currentFPSCounter	= _FPS;
+		var _timeAccumulador	= 0;
 
 		//used for camara animation
 		var _CL_ActiveCamera;
@@ -843,8 +844,11 @@ function GraphicTWorld(graphicEngine, environment){
 		var $fps = $("#fps");
 		var tmp;
 		var oldYMouse=0, oldXMouse=0, fixedHeadRotY=0;
+		var timeElapsed;
 		function display(CL_Scene, currentTime) {
 			if (!_Paused){
+				timeElapsed = currentTime - _oldCurrentTime;
+
 				//caching hashed values
 				_robPosX = _CLN_Rob[0].Pos.X;
 				_robPosZ = _CLN_Rob[0].Pos.Z;
@@ -855,7 +859,7 @@ function GraphicTWorld(graphicEngine, environment){
 				//Rob's animation
 				var rob = _NUMBER_OF_AGENTS;
 				while (rob--)
-					_self.Rob[rob].animate();
+					_self.Rob[rob].animate(timeElapsed);
 
 				//UFO animation
 				ShipFlyCircle();
@@ -1049,7 +1053,8 @@ function GraphicTWorld(graphicEngine, environment){
 						}
 				//end region laser beams
 
-				//region fps calculation (how many time does it take the browser to render 60 frames?)
+				//region fps calculation (how much time does it take the browser to render 60 frames?)
+					/*
 					_framesCounter = (_framesCounter+1)%_FPSFactorFPS;
 					_currentFPSCounter = (_currentFPSCounter + 1)%_self.currentFPS;
 
@@ -1057,9 +1062,9 @@ function GraphicTWorld(graphicEngine, environment){
 						_FPSAvgCounter = (_FPSAvgCounter + 1)%10;
 						if (_FPSAvgCounter == 0){
 							_FPSAvgCounter = 2;
-							_FPSSum = _self.currentFPS + (_FPS/((currentTime - _oldCurrentTime)/_FPSTime))|0;
+							_FPSSum = _self.currentFPS + (_FPS/(timeElapsed/_FPSTime))|0;
 						}else
-							_FPSSum += (_FPS/((currentTime - _oldCurrentTime)/_FPSTime))|0;
+							_FPSSum += (_FPS/(timeElapsed/_FPSTime))|0;
 
 						_self.currentFPS = _FPSSum/_FPSAvgCounter|0;
 
@@ -1080,7 +1085,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 						if (_SHOW_FPS)
 							$fps.html(_self.currentFPS + " fps");
-
+*/
 						//waiting for the fps to stabilize
 						if (!_Ready){
 							if (_self.currentFPS > _oldCurrentFPS)
@@ -1096,13 +1101,16 @@ function GraphicTWorld(graphicEngine, environment){
 							}
 						}
 
-						_oldCurrentTime = currentTime;
-					}
+					//}
 				//end region fps calculation
 
 				//every second let the environment know a second has passed...
-				if (_currentFPSCounter  == 0)
+				_oldCurrentTime = currentTime;
+				_timeAccumulador+= timeElapsed;
+				if (_timeAccumulador >= 1000){
+					_timeAccumulador = _timeAccumulador%1000;
 					_self.Environment.tick();
+				}
 
 
 				//CL graphicEngine I let you do your stuff! (calling the original onAnimate function)
