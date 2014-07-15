@@ -32,9 +32,6 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 		var CAMERA_LOCATION = {West:0, East:1, North:2, South:3};
 	//end region Enums
 	//region Attributes
-		//-Static:
-		GraphicRob._rotationCurrentSpeed;
-
 		//private:
 			//-> 3D Rob and Pointer to the 3D world
 			var _node = CLNode; // Rob's CopperLicht Node
@@ -55,15 +52,18 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			//-> Temporal and auxiliary variables:
 			//used to compute the Animation of Rob turning
 			var _turnAroundFlag = false;
-			var _turnAroundCurrentAngle = 0;
+			var _turnAroundStartAngle;
+			var _turnAroundOffsetAngle = 0;
 			var _turnAroundFinalAngle;
-			var _turnAroundOffset = 0;
+			var _startRotationTimeStamp;
 
 			//-> To handle user's inputs from the keyboard
 			var _KeysPressed = [false, false, false, false]; // [LEFT pressed?, RIGHT pressed?, UP pressed?, DOWN pressed?]
 			var _LastKeyPressedIndex = -1; //what was the last key pressed by the user? (-1 none, 0 left, 1 right, 2 up, 3 down)
 			var _prevLastKeyPressedIndex = -1;
 			var _LastWalkingDirection = null; //pointer to the function that handled the last walking animation
+
+			var _tmp;
 
 			//sounds
 			if (_AUDIO_ENABLE){
@@ -86,13 +86,6 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 	//
 	//
 	//region Methods
-		//region Static methods
-			//every second auto calculate _WalkCurrentSpeed and _rotationCurrentSpeed according to user's PC performance
-			GraphicRob.AutocalculateSpeed = function(currentFPS){
-					GraphicRob._rotationCurrentSpeed = Math.ceil(_ROB_ROTATION_FRAMES/(_FPS/currentFPS));
-			}
-		//end Static methods
-		//
 		//region Public Methods
 			//region Getters and Setters
 				this.getTargetX = function() {return _targetXZ.X}
@@ -215,14 +208,14 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 
 					//case Rob's turning around
 					if (_turnAroundFlag){
-						if ( (_turnAroundOffset <= 0 && _turnAroundCurrentAngle <= _turnAroundFinalAngle) ||
-							 (_turnAroundOffset >  0 && _turnAroundCurrentAngle >= _turnAroundFinalAngle) )
+						_tmp = (_startRotationTimeStamp+=timeElapsed)/_ROB_ROTATION_TIME;
+						if ( _tmp >= 1 )
 						{
-							_node.Rot.Y = to180Degrees(_turnAroundFinalAngle);
+							_node.Rot.Y = to180Degrees(_turnAroundStartAngle + _turnAroundFinalAngle);
 							_turnAroundFlag = false;
 						}else{
-							_turnAroundCurrentAngle+= _turnAroundOffset;
-							_node.Rot.Y = to180Degrees(_turnAroundCurrentAngle);
+							_turnAroundOffsetAngle= _turnAroundFinalAngle*_tmp;
+							_node.Rot.Y = to180Degrees(_turnAroundStartAngle + _turnAroundOffsetAngle);
 						}
 					}
 
@@ -824,7 +817,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 				//--------------------------------------------------------------------------------------> Animation_WalkNorth
 				function Animation_WalkNorth(timeElapsed){
 					if (_node.Pos.X > _targetXZ.X){
-						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALKSPEED;
+						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALK_TIME;
 						_node.Pos.X= _startLoc - ((offset <= _FloorCellSize)? offset : _FloorCellSize);
 
 						for (var i= 0, tileCoordinates, CL_Tile, length = _listOfTilesToSlide.getLength(); i < length; i++){
@@ -846,7 +839,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 				//--------------------------------------------------------------------------------------> Animation_WalkSouth
 				function Animation_WalkSouth(timeElapsed){
 					if (_node.Pos.X < _targetXZ.X){
-						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALKSPEED;
+						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALK_TIME;
 						_node.Pos.X= _startLoc + ((offset <= _FloorCellSize)? offset : _FloorCellSize);
 
 						for (var i= 0, tileCoordinates, CL_Tile, length = _listOfTilesToSlide.getLength(); i < length; i++){
@@ -868,7 +861,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 				//--------------------------------------------------------------------------------------> Animation_WalkEast
 				function Animation_WalkEast(timeElapsed){
 					if (_node.Pos.Z < _targetXZ.Y){
-						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALKSPEED;
+						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALK_TIME;
 						_node.Pos.Z= _startLoc + ((offset <= _FloorCellSize)? offset : _FloorCellSize);
 
 						for (var i= 0, tileCoordinates, CL_Tile, length = _listOfTilesToSlide.getLength(); i < length; i++){
@@ -890,7 +883,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 				//--------------------------------------------------------------------------------------> Animation_WalkWest
 				function Animation_WalkWest(timeElapsed){
 					if (_node.Pos.Z > _targetXZ.Y){
-						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALKSPEED;
+						var offset = _FloorCellSize*(_startTimeStamp+=timeElapsed)/_ROB_WALK_TIME;
 						_node.Pos.Z= _startLoc - ((offset <= _FloorCellSize)? offset : _FloorCellSize);
 
 						for (var i= 0, tileCoordinates, CL_Tile, length = _listOfTilesToSlide.getLength(); i < length; i++){
@@ -920,9 +913,9 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 				//--------------------------------------------------------------------------------------> turnAroundUntilDegrees
 				function turnAroundUntilDegrees(finalDegrees){
 					//where is Rob looking at?
-					_turnAroundCurrentAngle = to360Degrees(_node.Rot.Y);
+					_turnAroundOffsetAngle = to360Degrees(_node.Rot.Y);
 					//taking into account where Rob's looking at, how many degrees should Rob turn around?
-					_turnAroundFinalAngle = finalDegrees - _turnAroundCurrentAngle;
+					_turnAroundFinalAngle = finalDegrees - _turnAroundOffsetAngle;
 
 					//Rob! don't turn more than 180º, there's another shorter way, for instance, turning more than 180º to your left could be achieved turning to 
 					//your right a less amount of degrees! an example of this would be, turning 270º to your left is the same as turning 90º to your right
@@ -934,12 +927,10 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 														:
 														_turnAroundFinalAngle;
 
-					//how many degrees Rob's gonna turn each frame of the turning animation
-					_turnAroundOffset = _turnAroundFinalAngle/GraphicRob._rotationCurrentSpeed;
-
-					_turnAroundFinalAngle = _turnAroundCurrentAngle + _turnAroundFinalAngle;
+					_turnAroundStartAngle = _turnAroundOffsetAngle;
 
 					_turnAroundFlag = true;
+					_startRotationTimeStamp = 0;
 				}
 			//end region Animation Functions
 		//end region Private Methods
@@ -992,8 +983,6 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			});
 		//end region User Input Handler
 		}
-
-		GraphicRob._rotationCurrentSpeed = _ROB_ROTATION_FRAMES;
 
 		_node.setCurrentFrame(_node.getNamedAnimationInfo(CL_ANIMATION.Standing).End*Math.random());
 

@@ -161,7 +161,6 @@ var _ENDGAME = {
 	}
 }
 
-var _Ready		= false;
 var _Running	= false;//did the user push the play button?
 var _Paused		= false;
 
@@ -180,6 +179,6 @@ var _BatteryIconY		= 10;
 var _MultiplierFontSize	= 30;
 
 //-> Rob (the agent)
-var _ROB_WALKSPEED =350; // time it takes the agent to move (in milliseconds)
-var _ROB_ROTATION_FRAMES = 10; // how many frames does it take the agent to turn around?
+var _ROB_WALK_TIME = 350; // time it takes the agent to move (in milliseconds)
+var _ROB_ROTATION_TIME = 170; // time it takes the agent to to turn around (in milliseconds)
 //end region World Parameters

@@ -89,8 +89,7 @@ var _DEFAULT_CAMERA	= _CAMERA_TYPE.FREE_GRID;
 var _CAMERA_SMOOTH	= true;
 
 // Animation
-var _AUTO_MINIMAL_UPDATE_DELAY = false;
-var 	_MINIMAL_UPDATE_DELAY = 0; //the less, the smoother animations are
+var _MINIMAL_UPDATE_DELAY = 0; //the less, the smoother animations are
 
 // Audio
 var _AUDIO_ENABLE = true;

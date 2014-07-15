@@ -48,16 +48,9 @@ function GraphicTWorld(graphicEngine, environment){
 
 		//Fps & time
 		var _FPSSum				= _FPS;
-		var _FPSFactor			= 10; //how fast fps are updated (<_FPSFactor> per 60 frames)
-		var _FPSTime			= 1000/_FPSFactor;
-		var _FPSFactorFPS		= _FPS/_FPSFactor;
 		var _FPSAvgCounter		= 0;
-		var _framesCounter		= 0;
-		var _oldCurrentFPS		= 0;
-		var _oldCurrentFPS		= 0;
-		var _oldCurrentTime		= 1;
-		var _currentFPSCounter	= _FPS;
 		var _timeAccumulador	= 0;
+		var _oldCurrentTime		= 0;
 
 		//used for camara animation
 		var _CL_ActiveCamera;
@@ -121,8 +114,6 @@ function GraphicTWorld(graphicEngine, environment){
 				_sound_voice_restore_energy[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_battery-restore"+i+".mp3");
 		}
 	//public
-
-		this.currentFPS = _FPS;
 		this.Environment = environment;
 		this.Rob  = new Array(1);
 //end region Attributes
@@ -582,7 +573,7 @@ function GraphicTWorld(graphicEngine, environment){
 					value = 1000;
 					$($id).find("#battery-charge-frame").css("box-shadow", "0 0 10px rgba(87, 255, 168, 0.57)");
 
-					if (_Ready){
+					if (_Running){
 
 						var _voice = !restored?
 										_sound_voice_full_energy[random(_sound_voice_full_energy.length)]:
@@ -805,12 +796,7 @@ function GraphicTWorld(graphicEngine, environment){
 			this.Environment.getListOfTilesToSlide(rIndex).remove(holeCell[0], holeCell[1]);
 
 			if (CL_Tile){
-				CL_Tile.setMinimalUpdateDelay(
-					(_AUTO_MINIMAL_UPDATE_DELAY)?
-						((_self.currentFPS <= _FPS)? _FPS - _self.currentFPS : 0)
-						:
-						_MINIMAL_UPDATE_DELAY
-				);
+				CL_Tile.setMinimalUpdateDelay(_MINIMAL_UPDATE_DELAY);
 
 				CL_Tile.setLoopMode(false);
 				CL_Tile.setAnimation('fill');
@@ -1053,55 +1039,18 @@ function GraphicTWorld(graphicEngine, environment){
 						}
 				//end region laser beams
 
-				//region fps calculation (how much time does it take the browser to render 60 frames?)
-					/*
-					_framesCounter = (_framesCounter+1)%_FPSFactorFPS;
-					_currentFPSCounter = (_currentFPSCounter + 1)%_self.currentFPS;
+				//region fps calculation
+					if (_SHOW_FPS){
+						_FPSAvgCounter = (_FPSAvgCounter + 1)%120;
 
-					if (_framesCounter == 0){
-						_FPSAvgCounter = (_FPSAvgCounter + 1)%10;
 						if (_FPSAvgCounter == 0){
-							_FPSAvgCounter = 2;
-							_FPSSum = _self.currentFPS + (_FPS/(timeElapsed/_FPSTime))|0;
+							_FPSAvgCounter = 1;
+							_FPSSum = _FPS/(timeElapsed*_FPS/1000)|0;
 						}else
-							_FPSSum += (_FPS/(timeElapsed/_FPSTime))|0;
+							_FPSSum += _FPS/(timeElapsed*_FPS/1000)|0;
 
-						_self.currentFPS = _FPSSum/_FPSAvgCounter|0;
-
-						if (_self.currentFPS < 1)
-							_self.currentFPS = 1;
-
-						if (_currentFPSCounter > _self.currentFPS)
-							_currentFPSCounter = 0;
-
-
-						_LaserBeamLifeTime = _self.currentFPS;
-
-						//auto calculate Rob's movements speed according to user's PC performance (current fps)
-						GraphicRob.AutocalculateSpeed(_self.currentFPS);
-
-						if (_AUTO_MINIMAL_UPDATE_DELAY)
-							_CLNs_setMinimalUpdateDelay(_self.currentFPS);
-
-						if (_SHOW_FPS)
-							$fps.html(_self.currentFPS + " fps");
-*/
-						//waiting for the fps to stabilize
-						if (!_Ready){
-							if (_self.currentFPS > _oldCurrentFPS)
-								_oldCurrentFPS = _self.currentFPS;
-							else{
-								_Ready = true;
-
-								//if everything is loaded
-								if (!CL3D.LoadingTimer){
-									$("#playFrame").show();
-									$("#playFrame").animate({opacity : 1}, 1000);
-								}
-							}
-						}
-
-					//}
+						$fps.html((_FPSSum/_FPSAvgCounter|0) + " fps");
+					}
 				//end region fps calculation
 
 				//every second let the environment know a second has passed...
@@ -1119,8 +1068,6 @@ function GraphicTWorld(graphicEngine, environment){
 		}
 
 		function _CLNs_setMinimalUpdateDelay(frames){
-				frames = (frames <= _FPS)? _FPS - frames : 0;
-
 				_CL_Scene.getSceneNodeFromName('ufo').setMinimalUpdateDelay(frames);
 				_CL_Scene.getSceneNodeFromName('astromaxi').setMinimalUpdateDelay(frames);
 				_CL_Scene.getSceneNodeFromName('laserbeam-hit').setMinimalUpdateDelay(frames);
@@ -1864,7 +1811,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 		_clOnAnimateCallBack = _CL_Scene.getRootSceneNode().OnAnimate;
 		_CL_Scene.getRootSceneNode().OnAnimate = display;
-		_CLNs_setMinimalUpdateDelay(_FPS - _MINIMAL_UPDATE_DELAY);
+		_CLNs_setMinimalUpdateDelay(_MINIMAL_UPDATE_DELAY);
 		
 
 		//region User Input Handler
@@ -1882,14 +1829,13 @@ function GraphicTWorld(graphicEngine, environment){
 
 		//Play Button
 		$("#playBtn").mouseenter(function(e){
-			if (_Ready)
-				$(this).prop("src", (!_LOW_QUALITY_WORLD)? "imgs/play_enter.png" : "imgs/play_enter_inv.png");
+			$(this).prop("src", (!_LOW_QUALITY_WORLD)? "imgs/play_enter.png" : "imgs/play_enter_inv.png");
 		});
 		$("#playBtn").mouseleave(function(e){$(this).prop("src",  (!_LOW_QUALITY_WORLD)? "imgs/play.png" : "imgs/play_inv.png")});
 		$("#playBtn").mouseleave();
 		$("#playBtn").mouseup(function(e){
 
-			if (_Ready && !_Running){
+			if (!_Running){
 
 				$('#tworld').removeClass("blur");
 				$('#playBtn').hide();
@@ -1914,6 +1860,7 @@ function GraphicTWorld(graphicEngine, environment){
 					}
 				);
 
+				_oldCurrentTime = Date.now();
 				_TWorld.start();
 				$("#playBtn").remove();
 			}

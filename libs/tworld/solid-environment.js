@@ -46,7 +46,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 			this.ListOfObstacles = _listOfObstacles;
 
 			this.Costs = {};
-			this.Costs.good_move = _ROB_WALKSPEED/1000; // time it takes the agent to move (in "ticks")
+			this.Costs.good_move = _ROB_WALK_TIME/1000; // time it takes the agent to move (in "ticks")
 			this.Costs.bad_move = 1; // wasted time by the agent when it chooses and invalid action (1 "tick"--aprox. 1 second)
 			this.Costs.filled_hole = 1; // time the animation takes to fill a cell hole (1 "tick"--aprox. 1 second)
 	//end region Attributes
@@ -187,7 +187,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 			}
 
 			//--------------------------------------------------------------------------------------> tick
-			//(this functions is called each second (i.e every <gTWorld.currentFPS> frames) from the GraphicTWorld)
+			//(this functions is called each second (i.e every "tick") from the GraphicTWorld)
 			this.tick = function() {
 				if (_Running){
 					var irob = _NUMBER_OF_AGENTS;
