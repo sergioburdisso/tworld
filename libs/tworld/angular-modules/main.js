@@ -12,7 +12,7 @@ function clearKnobs(){localStorage.removeItem("knobs")}
 
 var _tworldWindow;
 function startTWorld(){
-	if (!_tworldWindow)
+	if (!_tworldWindow || !_tworldWindow.window)
 		_tworldWindow = window.open('tworld.html');//,'T-World','width=712, height=450');//height=400
 	else
 		_tworldWindow.location = 'tworld.html';
@@ -20,7 +20,6 @@ function startTWorld(){
 	/*$(_tworldWindow).unload(function(){_tworldWindow=null});
 	$(_tworldWindow).load(function(){_tworldWindow=true});*/
 }
-function isTWorldRunning(){return _tworldWindow}
 
 (function(){
 	var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironmentsNew', 'ui.bootstrap', 'ui.slider', 'ngRoute', 'ngAnimate']);
@@ -54,9 +53,8 @@ function isTWorldRunning(){return _tworldWindow}
 		function($sce, $location){
 			this.$loc = $location;
 			this.LANGUAGES = _LANGUAGES;
-			this.language = (window.navigator.userLanguage || window.navigator.language) == 'es'? this.LANGUAGES.SPANISH : this.LANGUAGES.ENGLISH;
+			this.language = (window.navigator.userLanguage == 'es' || window.navigator.language == 'es')? this.LANGUAGES.SPANISH : this.LANGUAGES.ENGLISH;
 			this.text = {menu:{}};
-			//this.isTWorldRunning = isTWorldRunning;
 			this.taskEnvironments = taskEnvironments;
 			this.agentPrograms = agentPrograms;
 

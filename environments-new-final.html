@@ -39,7 +39,11 @@
 		<br>
 
 		<div class="checkbox">
-			<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.multiplier.enabled"> Multiplier</label>
+			<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.pause"> Enable Pause</label>
+		</div>
+
+		<div class="checkbox">
+			<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.multiplier.enabled"> Score Multiplier</label>
 		</div>
 		<div class="panel" ng-show="enc.task_env.final_tweaks.multiplier.enabled">
 			<label>Multiplier will last for {{enc.task_env.final_tweaks.multiplier.timeout}} seconds</label>
@@ -52,13 +56,21 @@
 
 
 		<div class="checkbox">
-			<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.score.cell"> Enable partial reward (Points per cell)</label>
+			<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.score.cell"> Enable partial reward (Points are rewarded not just per hole but also per cell)</label>
 		</div>
 
 		<div class="checkbox">
 			<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.shapes" disabled> Holes shapes</label>
 		</div>
 
+		<br>
+		<label>T-World speed {{
+			(enc.task_env.final_tweaks.speed < 0 && (-enc.task_env.final_tweaks.speed+1) + " times slower ("+(-enc.task_env.final_tweaks.speed+1)+" seconds per tick)")||
+			(enc.task_env.final_tweaks.speed == 0 && "is normal (1 tick per second)") ||
+			((enc.task_env.final_tweaks.speed+1) + " times faster ("+(enc.task_env.final_tweaks.speed+1)+" ticks per second)")}}</label>
+		<div class="col-md-6 col-xs-6">
+			<div class="ui-slider-size" ui-slider="{animate: true}" min="-9" max="9" step="1" ng-model="enc.task_env.final_tweaks.speed"></div>
+		</div>
 
 	</div>
 </div>

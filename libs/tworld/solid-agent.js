@@ -63,7 +63,7 @@ function AgentProgram(percept)/*returns accion*/{
 
 		case _PERCEPT_HEADER.START:
 			//resetEverything();
-			if (TWorld.PerceiveEveryTick)
+			if (TWorld.PerceiveAsync)
 				_READY_FOR_NEXT_ACTION = true;
 			else
 				returnAction(_ACTION.NONE);
@@ -83,9 +83,9 @@ function AgentProgram(percept)/*returns accion*/{
 			break;
 
 		default:
-			if (!TWorld.PerceiveEveryTick || _READY_FOR_NEXT_ACTION){
+			if (!TWorld.PerceiveAsync || _READY_FOR_NEXT_ACTION){
 				//HIDDEN
-				_READY_FOR_NEXT_ACTION = !TWorld.PerceiveEveryTick;
+				_READY_FOR_NEXT_ACTION = !TWorld.PerceiveAsync;
 				percept = percept.data;
 				_PERCEPT = percept;
 				_GRID = percept.environment.grid;

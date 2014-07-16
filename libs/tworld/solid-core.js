@@ -60,7 +60,8 @@ function TWorld(){}
 
 	//-> Perception
 		TWorld.Percept = true;
-		TWorld.PerceiveEveryTick = !_KNOBS.agents.percept.sync; // perceive every tick or after each action
+		TWorld.PerceiveAsync = !_KNOBS.agents.percept.sync; // perceive every <PerceptInterval> milliseconds or after each action
+		TWorld.PerceptInterval = _KNOBS.agents.percept.interval;
 
 		// Noise
 		if (_KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.noise)
@@ -77,7 +78,7 @@ function TWorld(){}
 		TWorld.ShowTimeLeft = true; // show holes and obstacles time remaining to timeout
 
 	//--------------------------------------------------------------------------------------> utilityFillCell
-	TWorld.valueOfCellHoleFilled = function(sizeSoFar) {return sizeSoFar*2;}// it shoud be less than valueOfHoleFilledCompletely(1)
+	TWorld.valueOfCellHoleFilled = function(sizeSoFar) {return sizeSoFar*_SCORE_CELLS_MULTIPLIER}// it shoud be less than valueOfHoleFilledCompletely(1)
 
 	/*
 	[..]Each hole varies in size and point value, so a hole may consist of three cells on
@@ -85,7 +86,7 @@ function TWorld(){}
 	agent gains the points. The agent knows how valuable each hole is in advance;
 	*/
 	//--------------------------------------------------------------------------------------> utilityFillHole
-	TWorld.valueOfHoleFilledCompletely = function(size) {return /*size**/size*10;}
+	TWorld.valueOfHoleFilledCompletely = function(size) {return size*_SCORE_HOLE_MULTIPLIER}
 
 //end region "Knobs"
 

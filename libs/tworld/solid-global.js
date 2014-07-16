@@ -166,7 +166,7 @@ var _Paused		= false;
 
 var _FPS		= 60; // maximum fps
 
-var _TILES_TELEPORT_DELAY	= 2; //how many seconds takes AstroMaxi to teletransport the tiles
+var _TILES_TELEPORT_DELAY = 2; //how many seconds takes AstroMaxi to teletransport the tiles
 
 var _ACTIVE_CAMERA = -1;
 

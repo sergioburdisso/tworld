@@ -25,7 +25,7 @@
 	mod.controller('EnvNewController', ['$modal','$location', function($modal, $location){
 		var _next = false;
 		var _self = this;
-		this.isTWorldRunning = isTWorldRunning;
+
 		this.nTeam = 0;
 		this.teamColors = colors;
 		this.step = 0;
@@ -58,6 +58,7 @@
 			agents:{
 				percept:{
 					sync:true,
+					interval:500,
 					partialGrid: true,
 					radius: 3,
 					noise: false,
@@ -85,7 +86,7 @@
 				},
 				random_initial_state:false,
 				initial_state:[
-					[" "," "," "," "," ","#"],
+					["C"," "," "," "," ","#"],
 					["#"," "," ","2"," ","#"],
 					[" ","#"," ","T"," ","A"],
 					["1","T"," "," "," ","#"],
@@ -109,7 +110,9 @@
 				score:{
 					cell: true
 				},
-				shapes:false
+				shapes:false,
+				speed:0, //[-9..9]
+				pause: true
 			}
 		}
 

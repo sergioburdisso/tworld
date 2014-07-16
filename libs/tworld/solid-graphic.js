@@ -50,7 +50,8 @@ function GraphicTWorld(graphicEngine, environment){
 		var _FPSSum				= _FPS;
 		var _FPSAvgCounter		= 0;
 		var _timeAccumulador	= 0;
-		var _oldCurrentTime;
+		var _oldCurrentTime		= 0;
+		var _perceptTimeAccum	= 0;
 
 		//used for camara animation
 		var _CL_ActiveCamera;
@@ -75,6 +76,7 @@ function GraphicTWorld(graphicEngine, environment){
 		var _scoreAnimation = new Array(_NUMBER_OF_AGENTS);
 
 		var _targetSpeed = _SPEED;
+		var _initialSpeed = _SPEED;
 
 		//UFO Fly Cricle Animation
 		var _UFOFlySpeed	= 0.02;//0.01;
@@ -86,6 +88,8 @@ function GraphicTWorld(graphicEngine, environment){
 			var _sound_beep				= new buzz.sound("./sounds/beep.mp3");
 			var _sound_timer			= new buzz.sound("./sounds/timer.mp3");
 			var _sound_game_won			= new buzz.sound("./sounds/game-won.mp3");
+			var _sound_pause_on			= new buzz.sound("./sounds/pause_on.mp3");
+			var _sound_pause_off		= new buzz.sound("./sounds/pause_off.mp3");
 			var _sound_ufo_laser		= new buzz.sound("./sounds/laser.mp3");
 			var _sound_game_lost		= [new buzz.sound("./sounds/game-lost0.mp3"), new buzz.sound("./sounds/game-lost1.mp3")];
 			var _sound_score_full		= new buzz.sound("./sounds/score-full2.mp3");
@@ -487,8 +491,8 @@ function GraphicTWorld(graphicEngine, environment){
 
 			$rob.find("#score").html(score);
 
-			if (points > 0){
-				//_holeIsFilled = filled;
+			if (points > 0 || (points == 0 && !_SCORE_CELLS_MULTIPLIER && holeCells)){
+
 				_scoreAnimation[rIndex].HoleFilledCells.length = holeCells.length;
 				_scoreAnimation[rIndex].Points = points;
 				_scoreAnimation[rIndex].StrPoints = strPoints;
@@ -1070,11 +1074,19 @@ function GraphicTWorld(graphicEngine, environment){
 				}
 			//end region fps calculation
 
+			//Asynchronous perception (if it is enabled)
+			if (TWorld.PerceiveAsync && (_perceptTimeAccum+= timeElapsed) >= TWorld.PerceptInterval){
+				_perceptTimeAccum = _perceptTimeAccum % TWorld.PerceptInterval;
+				for (var irob= _NUMBER_OF_AGENTS-1; irob >= 0; --irob)
+					if (_AGENTS[irob].CONTROLLED_BY_AI)
+						_self.Environment.programAgentPerceive(irob);
+			}
+
 			//every second let the environment know a second has passed...
 			_oldCurrentTime = currentTime;
 			_timeAccumulador+= timeElapsed;
 			if (_timeAccumulador >= 1000){
-				_timeAccumulador = _timeAccumulador%1000;
+				_timeAccumulador = _timeAccumulador % 1000;
 				_self.Environment.tick();
 			}
 
@@ -1161,6 +1173,7 @@ function GraphicTWorld(graphicEngine, environment){
 					if (_AUDIO_ENABLE){
 						buzz.all().setVolume(0);
 						_sound_voice_pause.setPercent(0).setVolume(40).play();
+						_sound_pause_on.setPercent(0).setVolume(40).play();
 					}
 
 					_targetSpeed = 0;
@@ -1170,10 +1183,14 @@ function GraphicTWorld(graphicEngine, environment){
 					$('#time').stop(true).animate({opacity: 0}, 500, function(){$(this).hide()});
 					$('#playPauseBtn').show();
 					$('#playPauseBtn').stop(true).animate({opacity:1}, 1000);
+					$("#frameColor")
+						.css({opacity: 0 , 'background-color' : 'green'})
+						.show()
+						.stop(true).animate({opacity:0.15}, 1000);
 					//$("#bs-mid").css("margin-top", (-$("#bs-mid").height()/2|0)+"px");*/
 					_toggleOnScreenInfo(true, true);
 				}else{
-					_targetSpeed = 1;
+					_targetSpeed = _initialSpeed;
 
 					$("#header").show();
 					$('#header').stop(true).animate({opacity:1}, 1000);
@@ -1181,6 +1198,7 @@ function GraphicTWorld(graphicEngine, environment){
 					$("#time").show();
 					$('#time').stop(true).animate({opacity:1}, 1000);
 					$('#playPauseBtn').stop(true).animate({opacity: 0}, 500, function(){$(this).hide()});
+					$('#frameColor').stop(true).animate({opacity: 0}, 500, function(){$(this).hide()});
 
 					_toggleOnScreenInfo(false);
 
@@ -1188,8 +1206,10 @@ function GraphicTWorld(graphicEngine, environment){
 					for (var i=0; i < 4; ++i)
 						_self.keyUp(r, i);
 
-					if (_AUDIO_ENABLE)
-					buzz.all().setVolume(_VOLUME_LEVEL);
+					if (_AUDIO_ENABLE){
+						buzz.all().setVolume(_VOLUME_LEVEL);
+						_sound_pause_off.setPercent(0).setVolume(40).play();
+					}
 				}
 			}
 		}
@@ -1640,6 +1660,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 		_CLN_UFO.addChild(ufoHud);
 		_CLN_UFO.addChild(ufoLaserAim);
+		_CL_Scene.getSceneNodeFromName('rob').getParent().addChild(_CLN_UFO);
 
 		_CLN_Tile = _CL_Scene.getSceneNodeFromName('tile');
 		_CLN_Tile.getMaterial(0).Tex1 = _CL_Engine.getTextureManager().getTexture("./copperlichtdata/tilecell_diffuse_map_tp.png", true);
@@ -1877,7 +1898,6 @@ function GraphicTWorld(graphicEngine, environment){
 				);
 
 				_TWorld.start();
-				$("#playPauseBtn").appendTo($("#tw-root"));
 				$("#playFrame").remove();
 			}
 		});

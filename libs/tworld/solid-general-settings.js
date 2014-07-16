@@ -51,6 +51,12 @@ if (_KNOBS.trial.test){
 	var _AGENTS = [{
 		NAME : "Rob, the agent",
 		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:17}/*Arrow keys + Ctrl*/
+		/*CONTROLLED_BY_AI : true,
+		SOCKET_PROGRAM_AGENT : {
+								ADDR: "localhost",//"192.168.1.7",//
+								PORT: 3313,//80,
+								OUTPUT_FORMAT: _PERCEPT_FORMAT.JSON//XML//PROLOG//
+							}*/
 	}];
 }else{
 	var _NUMBER_OF_AGENTS = 0;
@@ -72,7 +78,18 @@ var _MULTIPLIER_TIME = _KNOBS.final_tweaks.multiplier.enabled?
 						:
 						0;
 
-var _SPEED = 1;
+var _SPEED = _KNOBS.final_tweaks.speed < 0?
+				1/(-_KNOBS.final_tweaks.speed + 1)
+			:
+				(_KNOBS.final_tweaks.speed == 0?
+					1
+				:
+					_KNOBS.final_tweaks.speed + 1
+				)
+			;
+
+var _SCORE_CELLS_MULTIPLIER = _KNOBS.final_tweaks.score.cell? 2 : 0;
+var _SCORE_HOLE_MULTIPLIER = 10;
 
 // Graphics
 var _LOW_QUALITY_GRID	= false;
@@ -85,7 +102,7 @@ var 	_RENDER_HEIGHT	= 400;
 // Hide/show enable/disable things
 var _SHOW_HOLES_HELPERS = true;
 var _SHOW_FPS = true;
-var _PAUSE_ENABLED = true;
+var _PAUSE_ENABLED = _KNOBS.final_tweaks.pause;
 
 // Camera
 var _DEFAULT_CAMERA	= _CAMERA_TYPE.FREE_GRID;

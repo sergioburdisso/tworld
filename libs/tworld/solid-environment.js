@@ -147,7 +147,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			//--------------------------------------------------------------------------------------> askForNextAction
 			this.askForNextAction = function(rIndex) {
-				if ( TWorld.PerceiveEveryTick ){
+				if ( TWorld.PerceiveAsync ){
 					_percept.header = _PERCEPT_HEADER.READY_FOR_NEXT_ACTION;
 					_percept.data = "null";
 					_rob[rIndex].ProgramAgent.send( _percept );
@@ -215,11 +215,6 @@ function Environment(rows, columns, graphicEngine, parent) {
 						_holesAndObstaclesTick();
 
 					CallWithDelay.Tick();
-
-					if (TWorld.PerceiveEveryTick)
-						for (var irob= _NUMBER_OF_AGENTS-1; irob >= 0; --irob)
-							if (_AGENTS[irob].CONTROLLED_BY_AI)
-								_self.programAgentPerceive(irob);
 
 					while(irob--) 
 						if (_rob[irob].ScoreMultiplier.Timer > 0){
