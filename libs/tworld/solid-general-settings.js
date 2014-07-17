@@ -55,7 +55,7 @@ if (_KNOBS.trial.test){
 		SOCKET_PROGRAM_AGENT : {
 								ADDR: "localhost",//"192.168.1.7",//
 								PORT: 3313,//80,
-								OUTPUT_FORMAT: _PERCEPT_FORMAT.JSON//XML//PROLOG//
+								OUTPUT_FORMAT: _PERCEPT_FORMAT.PROLOG//JSON//XML//
 							}*/
 	}];
 }else{

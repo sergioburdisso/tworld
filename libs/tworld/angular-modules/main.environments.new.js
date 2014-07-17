@@ -68,7 +68,7 @@
 						hole:0.3
 					}
 				},
-				determinism:80,
+				determinism:0.8,
 				stochastic_model: _STOCHASTIC_ACTIONS_MODEL.ANOTHER_ACTION
 			},
 			environment:{
@@ -112,7 +112,7 @@
 				},
 				shapes:false,
 				speed:0, //[-9..9]
-				pause: true
+				pause: false
 			}
 		}
 

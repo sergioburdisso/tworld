@@ -46,9 +46,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 			this.ListOfObstacles = _listOfObstacles;
 
 			this.Costs = {};
-			this.Costs.good_move = _ROB_WALK_TIME/1000; // time it takes the agent to move (in "ticks")
-			this.Costs.bad_move = 1; // wasted time by the agent when it chooses and invalid action (1 "tick"--aprox. 1 second)
-			this.Costs.filled_hole = 1; // time the animation takes to fill a cell hole (1 "tick"--aprox. 1 second)
+			this.Costs.good_move = _ROB_WALK_TIME; // time it takes the agent to move (in "ticks")
+			this.Costs.bad_move = 1000; // wasted time by the agent when it chooses and invalid action (1 "tick"--aprox. 1 second)
+			this.Costs.filled_hole = 1000; // time the animation takes to fill a cell hole (1 "tick"--aprox. 1 second)
 	//end region Attributes
 	//
 	//region Methods
@@ -990,6 +990,32 @@ function Environment(rows, columns, graphicEngine, parent) {
 				);
 				_rob[irob].PerceptionFunction = new Worker("./libs/tworld/solid-perception.js");
 				_rob[irob].PerceptionFunction.onmessage = _rob[irob].ProgramAgent.send;
+				_rob[irob].PerceptionFunction.postMessage({
+					CFG_CONSTANTS:{
+						_ROWS						: _ROWS,
+						_COLUMNS					: _COLUMNS,
+						_NUMBER_OF_AGENTS			: _NUMBER_OF_AGENTS,
+						_AGENTS						: _AGENTS,
+						_BATTERY_INVALID_MOVE_COST	: _BATTERY_INVALID_MOVE_COST,
+						_BATTERY_WALK_COST			: _BATTERY_WALK_COST,
+						_BATTERY_SLIDE_COST			: _BATTERY_SLIDE_COST,
+						_TEAMS						: _TEAMS,
+						_ENDGAME					: _ENDGAME,
+						_SCORE_HOLE_MULTIPLIER		: _SCORE_HOLE_MULTIPLIER,
+						_XML_NECESSARY				: _XML_NECESSARY,
+						_JSON_NECESSARY				: _JSON_NECESSARY,
+						TWorld:{
+							FullyObservableGrid		: TWorld.FullyObservableGrid,
+							VisibilityRadius		: TWorld.VisibilityRadius,
+							Battery					: TWorld.Battery,
+							Dynamic					: TWorld.Dynamic,
+							Semidynamic				: TWorld.Semidynamic,
+							HolesNoisyPerception	: TWorld.HolesNoisyPerception,
+							ObstaclesNoisyPerception: TWorld.ObstaclesNoisyPerception,
+							TilesNoisyPerception	: TWorld.TilesNoisyPerception
+						}
+					}
+				})
 			}
 		}
 
@@ -1032,7 +1058,7 @@ function ProgramAgent(rIndex, isSocket, src, _env, _gtw){
 		if (!percept.header)
 			percept = percept.data;
 
-		// once the percept was created by the perception function (thread that runs the solid-percept.js)
+		// once the percept was created by the perception function (thread that runs the solid-perception.js)
 		// send the percept to the Rob's mind (i.e the Program Agent)
 		if (!_AGENTS[_index].SOCKET_PROGRAM_AGENT)
 			_programAgent.postMessage( percept );

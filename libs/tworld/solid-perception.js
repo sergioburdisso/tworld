@@ -16,12 +16,30 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-importScripts('solid-auxiliary.js', 'solid-global.js', 'solid-general-settings.js', 'solid-core.js'); //'solid-core.js' is included for readability's sake (TWorld.<aKnob>)
-if (_XML_NECESSARY)
-{importScripts('../util/xml2json.min.js'); var attrPrefix = "_attr_"; var _X2JS = new X2JS({attributePrefix : attrPrefix});}
-if (!_JSON_NECESSARY)
-importScripts('../util/sprintf.min.js');
+importScripts('solid-auxiliary.js', 'solid-global.js'/*, 'solid-general-settings.js', 'solid-core.js'*/); //'solid-core.js' is included for readability's sake (TWorld.<aKnob>)
 
+var _ROWS;
+var _COLUMNS;
+var _NUMBER_OF_AGENTS;
+var _AGENTS;
+var _BATTERY_INVALID_MOVE_COST;
+var _BATTERY_WALK_COST;
+var _BATTERY_SLIDE_COST;
+var _TEAMS;
+var _ENDGAME;
+var _SCORE_HOLE_MULTIPLIER
+var TWorld;
+var attrPrefix, _X2JS;
+
+var _GET_TEAM_INDEX_OF = function(rIndex){
+	var j,i = _TEAMS.length;
+
+	while (i--)
+		if (_TEAMS[i].MEMBERS.contains(rIndex))
+			break;
+
+	return i;
+}
 
 this.perceptionFunction = function( environment ) /*returns a percept*/{
 	environment = environment.data;
@@ -29,6 +47,35 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 	var rVOEnvGrid, cVOEnvGrid; // VO stands for "Virtual Origin" (as if we were a compiler implementing multidimensional arrays XD)
 	var _totalHoles, _percept, _grid, _bik;
 	var _robLoc = environment.RobLocation;
+
+	//Constants initialization (this chunk runs only once)
+	if (environment.CFG_CONSTANTS){
+		var _CFG = environment.CFG_CONSTANTS;
+
+		if (_CFG._XML_NECESSARY){
+			importScripts('../util/xml2json.min.js');
+			attrPrefix = "_attr_";
+			_X2JS = new X2JS({attributePrefix : attrPrefix});
+		}
+
+		if (!_CFG._JSON_NECESSARY)
+			importScripts('../util/sprintf.min.js');
+
+		_ROWS						= _CFG._ROWS;
+		_COLUMNS					= _CFG._COLUMNS;
+		_NUMBER_OF_AGENTS			= _CFG._NUMBER_OF_AGENTS;
+		_AGENTS						= _CFG._AGENTS;
+		_BATTERY_INVALID_MOVE_COST	= _CFG._BATTERY_INVALID_MOVE_COST;
+		_BATTERY_WALK_COST			= _CFG._BATTERY_WALK_COST;
+		_BATTERY_SLIDE_COST			= _CFG._BATTERY_SLIDE_COST;
+		_TEAMS						= _CFG._TEAMS;
+		_ENDGAME					= _CFG._ENDGAME;
+		_SCORE_HOLE_MULTIPLIER		= _CFG._SCORE_HOLE_MULTIPLIER;
+
+		TWorld = _CFG.TWorld;
+		TWorld.valueOfHoleFilledCompletely = function(size) {return size*_SCORE_HOLE_MULTIPLIER};
+		return;
+	}
 
 	//-> creating the Percept object for the very first time (this chunk of code below runs only once)
 	if (!this.Percept){
@@ -158,6 +205,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 			for (var _rows=_bik.grid_total_rows, _columns= _bik.grid_total_columns, r= 0; r < _rows; ++r)
 				_grid[r] = new Array(_columns);
 
+			this.Percept.data.environment.grid = _grid;
 		}else{
 			_bik.grid_total_rows = _ROWS;
 			_bik.grid_total_columns = _COLUMNS;
@@ -176,10 +224,12 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 		}
 
 		//time
-		if (!TWorld.Dynamic)
+		if (!TWorld.Dynamic && !TWorld.Semidynamic)
 			delete this.Percept.data.environment.time;
-	}else
+	}else{
 		this.Percept.header = _PERCEPT_HEADER.PERCEPT;
+		_grid = this.Percept.data.environment.grid;
+	}
 	//<-
 
 	_bik = this.Percept.data.builtin_knowledge;
@@ -206,7 +256,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 	this.Percept.data.environment.grid = _grid;
 
 	//-> time
-	if (TWorld.Dynamic)
+	if (TWorld.Dynamic || TWorld.Semidynamic)
 		this.Percept.data.environment.time = environment.Time;
 
 	//-> score

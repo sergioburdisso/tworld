@@ -55,10 +55,10 @@ function TWorld(){}
 	TWorld.Battery = _KNOBS.battery;
 
 	//-> Deterministic Actions
-	TWorld.DeterministicActions =  _KNOBS.agents.determinism; // [0,1] unreliable(stochastic) or deterministic actions? 
-	TWorld.ModelOfStochasticMotion = _KNOBS.agents.stochastic_model;
+	TWorld.DeterministicActions = _KNOBS.prop.deterministic? 1 : _KNOBS.agents.determinism; // [0,1] unreliable(stochastic) or deterministic actions? 
+	TWorld.ModelOfStochasticMotion = _KNOBS.agents.stochastic_model|0;
 
-	//-> Perception
+	//-> TilesNoisyPerception
 		TWorld.Percept = true;
 		TWorld.PerceiveAsync = !_KNOBS.agents.percept.sync; // perceive every <PerceptInterval> milliseconds or after each action
 		TWorld.PerceptInterval = _KNOBS.agents.percept.interval;
@@ -67,9 +67,9 @@ function TWorld(){}
 		if (_KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.noise)
 			TWorld.ObstaclesNoisyPerception = TWorld.TilesNoisyPerception =	TWorld.HolesNoisyPerception = 0;
 		else{
-			TWorld.ObstaclesNoisyPerception = _KNOBS.agents.percept.noise.obstacle;
-			TWorld.TilesNoisyPerception = _KNOBS.agents.percept.noise.tile;
-			TWorld.HolesNoisyPerception = _KNOBS.agents.percept.noise.hole;
+			TWorld.ObstaclesNoisyPerception = _KNOBS.agents.percept.noise_cfg.obstacle;
+			TWorld.TilesNoisyPerception = _KNOBS.agents.percept.noise_cfg.tile;
+			TWorld.HolesNoisyPerception = _KNOBS.agents.percept.noise_cfg.hole;
 		}
 
 		TWorld.FullyObservableGrid = _KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.partialGrid; // fully observable grid or partially observable grid? 

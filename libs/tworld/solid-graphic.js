@@ -1075,7 +1075,7 @@ function GraphicTWorld(graphicEngine, environment){
 			//end region fps calculation
 
 			//Asynchronous perception (if it is enabled)
-			if (TWorld.PerceiveAsync && (_perceptTimeAccum+= timeElapsed) >= TWorld.PerceptInterval){
+			if (TWorld.PerceiveAsync && _SPEED && (_perceptTimeAccum+= timeElapsed) >= TWorld.PerceptInterval*_SPEED){
 				_perceptTimeAccum = _perceptTimeAccum % TWorld.PerceptInterval;
 				for (var irob= _NUMBER_OF_AGENTS-1; irob >= 0; --irob)
 					if (_AGENTS[irob].CONTROLLED_BY_AI)
