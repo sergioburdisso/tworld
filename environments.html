@@ -1,0 +1,94 @@
+<div class="container-fluid text-left">
+	<div class="row">
+		<div class="col-md-2" style="padding-right:40px">
+			<!--Sidebar content-->
+
+			<button class="btn btn-primary" ng-click="twc.goto('/environments/new')">New Environment</button>
+
+			<hr>
+
+			Filter by name: <input class="form-control" ng-model="ec.query.name">
+
+			<div class="checkbox">
+				<label><input type="checkbox" ng-model="ec.allProps"> All properties</label>
+			</div>
+
+			<div class="animate-show-3d-top" ng-hide="ec.allProps">
+				<b>Only Task environment that are:</b>
+				<div class="btn-group btn-group-justified">
+					<label class="btn btn-default glyphicon glyphicon-eye-open" ng-model="ec.query.prop.fullyObservable" btn-radio="true" tooltip="Fully Observable"></label>
+					<label class="btn btn-default glyphicon glyphicon-eye-close" ng-model="ec.query.prop.fullyObservable" btn-radio="false" tooltip="Partially Observable"></label>
+				</div>
+				<div class="btn-group btn-group-justified">
+					<label class="btn btn-default" ng-model="ec.query.prop.multiagent" btn-radio="false" tooltip="Single agent"><img src="imgs/web-app/icon-single-agent.png"></label>
+					<label class="btn btn-default" ng-model="ec.query.prop.multiagent" btn-radio="true" tooltip="Multiagent"><img src="imgs/web-app/icon-multiagent.png"></label>
+				</div>
+				<div class="btn-group btn-group-justified">
+					<label class="btn btn-default glyphicon glyphicon-arrow-right" ng-model="ec.query.prop.deterministic" btn-radio="true" tooltip="Deterministic"></label>
+					<label class="btn btn-default glyphicon glyphicon-random" ng-model="ec.query.prop.deterministic" btn-radio="false" tooltip="Stochastic"></label>
+				</div>
+				<div class="btn-group btn-group-justified">
+					<label class="btn btn-default glyphicon glyphicon-record" ng-model="ec.query.prop.dynamic" btn-radio="0" tooltip="Static"></label>
+					<label class="btn btn-default" ng-model="ec.query.prop.dynamic" btn-radio="1" tooltip="Semidynamic"><img src="imgs/web-app/icon-semidynamic.png"></label>
+					<label class="btn btn-default glyphicon glyphicon-time" ng-model="ec.query.prop.dynamic" btn-radio="2" tooltip="Dynamic"></label>
+				</div>
+				<div class="btn-group btn-group-justified">
+					<label class="btn btn-default glyphicon glyphicon-ok" ng-model="ec.query.prop.known" btn-radio="true" tooltip="Known"></label>
+					<label class="btn btn-default glyphicon glyphicon-remove" ng-model="ec.query.prop.known" btn-radio="false" tooltip="Unknown"></label>
+				</div>
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="ec.query.battery"> Battery</label>
+				</div>
+			</div>
+
+			Sort by:
+			<select class="form-control" ng-model="ec.orderCond">
+				<option value="name">Alphabetical</option>
+				<option value="-date">Newest</option>
+			</select>
+		</div>
+		<div class="col-md-10">
+		<h2>Task Environments</h2>
+		<!--Body content-->
+		<div class="list-group mouse-cursor">
+			<a class="list-group-item animate-filter transition-400" ng-repeat="env in ec.taskEnvironments | filter:ec.userFilter | orderBy:ec.orderCond track by $index" ng-click="ec.setSelected(env.date)" ng-class="{active:ec.isSelected(env.date)}">
+				<!-- PROPERTIES ICONS-->
+				<div class="pull-right text-gray">
+					<div class="glyphicon glyphicon-eye-open" ng-show="env.prop.fullyObservable" tooltip="Fully observable"></div>
+					<div class="glyphicon glyphicon-eye-close" ng-hide="env.prop.fullyObservable" tooltip="Partially observable"></div>
+
+					<div class="solid-icon-16 icon-single-agent" ng-hide="env.prop.multiagent" tooltip="Single agent"></div>
+					<div class="solid-icon-16 icon-multiagent" ng-show="env.prop.multiagent" tooltip="Multiagent"></div>
+
+					<div class="glyphicon glyphicon-arrow-right" ng-show="env.prop.deterministic" tooltip="Deterministic"></div>
+					<div class="glyphicon glyphicon-random" ng-hide="env.prop.deterministic" tooltip="Stochastic"></div>
+
+					<div class="glyphicon glyphicon-record" ng-show="env.prop.dynamic == 0" tooltip="Static"></div>
+					<div class="solid-icon-16 icon-semidynamic" ng-show="env.prop.dynamic == 1" tooltip="Semidynamic"></div>
+					<div class="glyphicon glyphicon-time" ng-show="env.prop.dynamic == 2" tooltip="Dynamic"></div>
+
+					<div class="glyphicon glyphicon-ok" ng-show="env.prop.known" tooltip="Known"></div>
+					<div class="glyphicon glyphicon-remove" ng-hide="env.prop.known" tooltip="Unknown"></div>
+
+					<div class="glyphicon glyphicon-flash" ng-show="env.battery" tooltip="Battery"></div>
+				</div>
+
+				<h4 class="list-group-item-heading">{{env.name}} <span class="badge active">{{env.date | date:'dd/MM/yyyy - HH:mm:ss'}}</span></h4>
+				<p class="list-group-item-text">{{env.desc}}</p>
+
+
+				<div class="row panel-body">
+					<br>
+					<div class="pull-right animate-only-show" ng-show="ec.isSelected(env.date)">
+						<button class="btn btn-success">Run!</button>
+						<button class="btn btn-info" ng-click="ec.testIt()">Test</button>
+						<button class="btn btn-info">Details</button>
+						<button class="btn btn-danger">Delete</button>
+					</div>
+				</div>
+			</a>
+			<div class="separator"></div>
+		</div>
+		</div>
+	</div>
+</div>
