@@ -46,6 +46,7 @@
 			},
 			name:'',
 			desc:'',
+			date:0,
 			battery: false,
 			prop: {
 				fullyObservable: true,
@@ -129,6 +130,7 @@
 
 		this.finish = function(){
 			this.validate();
+			taskEnvironment.date = Date.now();
 			taskEnvironment.trial.test = false;
 			taskEnvironments.push(taskEnvironment);
 			saveEnvironments();

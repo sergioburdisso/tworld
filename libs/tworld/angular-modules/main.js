@@ -5,9 +5,19 @@ var agentPrograms = [];
 function getEnvironments(){return localStorage.taskEnvironments? JSON.parse(localStorage.taskEnvironments) : []}
 function saveEnvironments(){localStorage.taskEnvironments = JSON.stringify(taskEnvironments)}
 function clearEnvironments(){localStorage.removeItem("taskEnvironments")}
+function getEnvironmentByDate(date){
+	var i = taskEnvironments.length;
+	while (i--)
+		if (taskEnvironments[i].date === date)
+			return taskEnvironments[i];
+	return null;
+}
 
 function getKnobs(){return localStorage.knobs? JSON.parse(localStorage.knobs) : null}
-function saveKnobs(knobs){localStorage.knobs = JSON.stringify(knobs)}
+function saveKnobs(knobs){
+	localStorage.knobs = JSON.stringify(knobs);
+	knobs.trial.test = false;
+}
 function clearKnobs(){localStorage.removeItem("knobs")}
 
 var _tworldWindow;
@@ -17,12 +27,10 @@ function startTWorld(){
 	else
 		_tworldWindow.location = 'tworld.html';
 	_tworldWindow.focus();
-	/*$(_tworldWindow).unload(function(){_tworldWindow=null});
-	$(_tworldWindow).load(function(){_tworldWindow=true});*/
 }
 
 (function(){
-	var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironmentsNew', 'ui.bootstrap', 'ui.slider', 'ngRoute', 'ngAnimate']);
+	var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironments', 'tworldEnvironmentsNew', 'ui.bootstrap', 'ui.slider', 'ngRoute', 'ngAnimate']);
 
 	main.config(['$routeProvider', '$locationProvider', '$tooltipProvider',
 		function($routeProvider, $locationProvider, $tooltipProvider) {
@@ -31,6 +39,11 @@ function startTWorld(){
 					templateUrl: 'main-manu.html',
 					controller: 'MainMenuController',
 					controllerAs: 'mmc'
+				})
+				.when('/environments', {
+					templateUrl: 'environments.html',
+					controller: 'EnvController',
+					controllerAs: 'ec'
 				})
 				.when('/environments/new', {
 					templateUrl: 'environments-new.html',
@@ -43,7 +56,7 @@ function startTWorld(){
 
 			$tooltipProvider.options({
 				appendToBody: true,
-				placement: 'left',
+				//placement: 'left',
 				popupDelay: 200
 			});
 		}]
@@ -90,7 +103,6 @@ function startTWorld(){
 			this.setLanguage();
 		}
 	]);
-
 })();
 
 Array.prototype.remove = function(index) {
