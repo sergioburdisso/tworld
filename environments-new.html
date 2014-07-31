@@ -2,37 +2,47 @@
 	<div class="row"></div>
 	<form name="newEnvironment1Form" role="form">
 
-		<properties ng-show="enc.isStep(0)"></properties>
+		<properties class="animate-only-show" ng-show="enc.isStep(0)"></properties>
 
-		<div class="container-fluid" ng-hide="enc.isStep(0)">
+		<div class="container-fluid text-left" ng-hide="enc.isStep(0)">
+			<div class="row">
+				<div class="col-md-2">
 
-			<ul class="nav nav-tabs nav-stacked col-md-2 col-xs-2">
-				<li ng-show="!enc.task_env.prop.known" ng-class="{'active':enc.isStep(1)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(1)}">Unknown Env.</span></a></li>
-				<li ng-class="{'active':enc.isStep(2)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(2)}">Percept</span></a></li>
-				<li ng-show="enc.task_env.prop.multiagent" ng-class="{'active':enc.isStep(3)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(3)}">Agents</span></a></li>
-				<li ng-show="!enc.task_env.prop.deterministic" ng-class="{'active':enc.isStep(4)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(4)}">Agent Actuators</span></a></li>
-				<li ng-class="{'active':enc.isStep(5)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(5)}">Environment</span></a></li>
-				<li ng-class="{'active':enc.isStep(6)}"><a class="ad"><span ng-class="{'animate-zoom-loop':enc.isStep(6)}">Final Tweaks</span></a></li>
-			</ul>
+					<div class="list-group">
+						<a class="list-group-item step no-animation" ng-show="!enc.task_env.prop.known" ng-class="{'active':enc.isStep(1)}">Unknown Env.</a>
+						<a class="list-group-item step no-animation" ng-class="{'active':enc.isStep(2)}">Perception</a>
+						<a class="list-group-item step no-animation" ng-show="enc.task_env.prop.multiagent" ng-class="{'active':enc.isStep(3)}">Agents</a>
+						<a class="list-group-item step no-animation" ng-show="!enc.task_env.prop.deterministic" ng-class="{'active':enc.isStep(4)}">Agent Actuators</a>
+						<a class="list-group-item step no-animation" ng-class="{'active':enc.isStep(5)}">Environment</a>
+						<a class="list-group-item step no-animation" ng-class="{'active':enc.isStep(6)}">Final Tweaks</a>
+					</div>
 
-			<div class="container">
-				<step1 class="animate-only-show-3d-left" ng-show="(enc.isStep(1) && enc.task_env.prop.known && enc.correctStep()) || enc.isStep(1)"></step1>
-				<step2 class="animate-only-show-3d-left" ng-show="enc.isStep(2)"></step2>
-				<step3 class="animate-only-show-3d-left" ng-show="(enc.isStep(3) && !enc.task_env.prop.multiagent && enc.correctStep()) || enc.isStep(3)"></step3>
-				<step4 class="animate-only-show-3d-left" ng-show="(enc.isStep(4) && enc.task_env.prop.deterministic && enc.correctStep()) || enc.isStep(4)"></step4>
-				<step5 class="animate-only-show-3d-left" ng-show="enc.isStep(5)"></step5>
-				<step6 class="animate-only-show-3d-left" ng-show="enc.isStep(6)"></step6>
+				</div>
+
+				<div class="col-md-10 text-left">
+
+					<step1 class="animate-only-show-3d-left" ng-show="(enc.isStep(1) && enc.task_env.prop.known && enc.correctStep()) || enc.isStep(1)"></step1>
+					<step2 class="animate-only-show-3d-left" ng-show="enc.isStep(2)"></step2>
+					<step3 class="animate-only-show-3d-left" ng-show="(enc.isStep(3) && !enc.task_env.prop.multiagent && enc.correctStep()) || enc.isStep(3)"></step3>
+					<step4 class="animate-only-show-3d-left" ng-show="(enc.isStep(4) && enc.task_env.prop.deterministic && enc.correctStep()) || enc.isStep(4)"></step4>
+					<step5 class="animate-only-show-3d-left" ng-show="enc.isStep(5)"></step5>
+					<step6 class="animate-only-show-3d-left" ng-show="enc.isStep(6)"></step6>
+
+				</div>
+
 			</div>
-
+			<div class="separator"></div>
 		</div>
+
 		<div class="row">
 			<hr/>
-			<button ng-click="enc.prevStep()" ng-hide="enc.isStep(0)" class="btn btn-default col-md-2 col-xs-3 pull-left">&laquo;Previous</button>
-			<button ng-if="!enc.isLastStep()" ng-click="enc.nextStep()" class="btn btn-default col-md-2 col-xs-3 pull-right">Next&raquo;</button>
+			<button ng-click="enc.prevStep()" ng-hide="enc.isStep(0)" class="btn btn-primary col-md-2 col-xs-3 pull-left">&laquo;Previous</button>
+			<button ng-if="!enc.isLastStep()" ng-click="enc.nextStep()" class="btn btn-primary col-md-2 col-xs-3 pull-right">Next&raquo;</button>
 			<section ng-if="enc.isLastStep()">
-				<button ng-click="enc.finish()" class="btn btn-success col-xs-offset-1 col-md-2 col-xs-3 pull-right">Finish</button>
+				<button ng-click="enc.finish()" class="btn btn-success col-xs-offset-1 col-md-2 col-xs-3 pull-right">Save</button>
 				<button ng-click="enc.testEnvironment()" class="btn btn-success col-md-2 col-xs-3 pull-right">Test</button>
 			</section>
 		</div>
+
 	</form>
 </div>

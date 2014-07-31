@@ -24,10 +24,9 @@
 		</div>
 	</div>
 
-	<ol class="breadcrumb pull-left">
-		<li><a href="#" ng-click="twc.goto('/')">Home</a></li>
-		<li ng-repeat="n in twc.$loc.url().split('/') track by $index" ng-if="!$first">
-			<a href="#" ng-if="!$last">{{n}}</a>
+	<ol id="top" class="breadcrumb pull-left">
+		<li ng-repeat="n in twc.$loc.url().split('/') track by $index">
+			<a ng-href="{{twc.getSubPath($index)}}" ng-if="!$last">{{n||"home"}}</a>
 			<span ng-if="$last">{{n}}</span>
 		</li>
 	</ol>
@@ -44,22 +43,24 @@
 	</div>
 
 	<!-- CONTENT -->
-	<div class="loading"></div>
-	<div class="container-fluid main-content">
+	<div id="content" class="loading"></div>
+	<div class="container-fluid main-content min-height">
 		<div ng-view class="container border-sides animate-view"></div>
 	</div>
-
+	<div class="container-fluid main-content">
+		<div class="glyphicon glyphicon-hand-up pull-right to-top" ng-click="twc.gotoTop()" tooltip="to the top" tooltip-placement="left"></div>
+	</div>
 	<!-- FOOTER -->
-	<div class="container text-white text-justify footer logo-center">
+	<div class="container text-white text-justify footer logo-center overflow-hidden">
 		<p class="pull-right no-margin" style="width: 300px; margin-right: 10px">
-			<a rel="license"  target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" alt="Creative Commons License">
+			<a rel="license" class="a-image" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" alt="Creative Commons License">
 				<img style="border-width:0" src="imgs/web-app/cc.png" width="32"/>
 				<img style="border-width:0" src="imgs/web-app/by.png" width="32"/>
 				<img style="border-width:0" src="imgs/web-app/nc.png" width="32"/>
 				<img style="border-width:0" src="imgs/web-app/sa.png" width="32"/>
 			</a><br>
-			<span ng-bind-html="twc.text.cc"></span>.<br><br>
-			<span style="display:block; text-align: right;">&copy; 2014 Burdisso Sergio.</span>
+			<span ng-bind-html="twc.text.cc"></span><br><br>
+			<span id="copyright" style="display:block; text-align: right;">&copy; Burdisso Sergio</span>
 		</p>
 		<p class="pull-right" style="width: 300px; margin-right: 50px;">
 			<a rel="license" href="http://www.gnu.org/licenses/agpl-3.0.html" alt="GNU AGPL">
@@ -81,20 +82,54 @@
 <script type="text/javascript" src="libs/angularjs/ui-bootstrap-tpls-0.11.0.min.js"></script>
 <script type="text/javascript" src="libs/angularjs/ui-slider.js"></script>
 
+<script type="text/javascript" src="libs/solid/solid-vector.js"></script>
+<script type="text/javascript" src="libs/solid/solid-bot.js"></script>
+<script type="text/javascript" src="libs/solid/solid-bots.js"></script>
+
 <script type="text/javascript" src="libs/tworld/solid-global.js"></script>
+
+<script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="libs/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+<script src="libs/ace/theme-ambiance.js" type="text/javascript" charset="utf-8"></script>
+<script src="libs/ace/worker-javascript.js" type="text/javascript" charset="utf-8"></script>
+<script src="libs/ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+<script src="libs/ace/snippets/text.js" type="text/javascript" charset="utf-8"></script>
+<script src="libs/ace/snippets/javascript.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript" src="libs/tworld/angular-modules/main.$text.js"></script>
 <script type="text/javascript" src="libs/tworld/angular-modules/main.js"></script>
 <script type="text/javascript" src="libs/tworld/angular-modules/main.menu.$text.js"></script>
 <script type="text/javascript" src="libs/tworld/angular-modules/main.menu.js"></script>
 <script type="text/javascript" src="libs/tworld/angular-modules/main.environments.js"></script>
-<script type="text/javascript" src="libs/tworld/angular-modules/main.environments.new.$text.js"></script>
-<script type="text/javascript" src="libs/tworld/angular-modules/main.environments.new.js"></script>
+<script type="text/javascript" src="libs/tworld/angular-modules/main.agent-programs.js"></script>
 
 <script type="text/javascript">
+	var bots = null;
+	var mouseBot = [new SolidBot({location:new Vector(0,0)})];
+	window.requestAnimationFrame =	window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+																	window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
 	$(document).ready(function(){
 		var img_i = 0;
 		var imgs_length = $("#header-images").children().length;
+
+		function display(){
+			bots.flockAndFlee(mouseBot);
+			bots.display();
+			requestAnimationFrame(display);
+		}
+
+		$(document).mousemove(function(e){mouseBot[0].setLocation(e.pageX, e.pageY)})
+
+		$("#copyright").dblclick(function(){
+			if (!bots){
+				bots = new SolidBots({
+					$bots: $("#copyright"),
+					idDOMParent: document
+				});
+				requestAnimationFrame(display);
+			}
+		});
 
 		function toggleHeaderImgs(){
 			if (img_i < imgs_length-1){

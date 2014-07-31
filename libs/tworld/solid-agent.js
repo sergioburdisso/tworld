@@ -94,7 +94,7 @@ function AgentProgram(percept)/*returns accion*/{
 				_AGENT = percept.agent;
 				_ACTION_SENT = false;
 /*
-				//CODE EXCECUTE ONLY ONCE WHEN PROGRAM AGENT IS CREATED
+				//CODE EXCECUTE ONLY ONCE WHEN AGENT PROGRAM IS CREATED
 				if (!this.FirstTimeFlag){
 					this.FirstTimeFlag = true;
 

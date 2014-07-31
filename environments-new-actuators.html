@@ -1,9 +1,9 @@
 <div class="container-fluid" ng-hide="enc.task_env.prop.deterministic">
-	<h2><b>Agent Actuators</b></h2>
-	<div class="col-md-6 col-xs-6 text-left">
+	<h2>Agent Actuators</h2>
+	<div class="text-left">
 		<div class="row">
 			<div class="col-md-6 col-xs-6">
-				<label>Determinism ({{(enc.task_env.agents.determinism*100).toFixed(1)}}%)</label><div class="ui-slider-size" ui-slider="{animate: true}" min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.determinism"></div>
+				<label>Determinism ({{(enc.task_env.agents.determinism*100).toFixed(1)}}%)</label><div class="ui-slider-size" ui-slider min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.determinism"></div>
 			</div>
 		</div>
 		<br>

@@ -1,0 +1,61 @@
+<div class="text-left">
+	<div class="row"></div>
+	<div class="row">
+		<div class="panel panel-default">
+			<div class="panel-heading">{{apscc.agent_prog.name}}</div>
+			<div class="panel-body">
+				<button id="save" ng-click="apscc.save()" class="btn btn-success pull-right margin-10">Save</button>
+				<button ng-click="" class="btn btn-primary pull-right margin-10">Run</button>
+				<span class="pull-right cursor-pointer margin-10">{{apscc.task_env.name || "..."}}</span>
+				<span class="pull-right">Task Environment: {{twc.language}}</span>
+				<div id="source-code"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	ace.require("ace/ext/language_tools");
+
+	var editor = ace.edit("source-code");
+
+	editor.setOptions({
+		theme: "ace/theme/ambiance",
+		enableBasicAutocompletion: true,
+		enableLiveAutocompletion: false,
+		enableSnippets: true,
+		cursorStyle: "smooth",
+		autoScrollEditorIntoView: true,
+		animatedScroll: true,
+		showInvisibles: true,
+		displayIndentGuides: true,
+		showPrintMargin: true,
+		mode:"ace/mode/javascript",
+		useWorker: true,
+		useSoftTabs:true,
+		tabSize:2
+	});
+
+	editor.session.on("change", function(e){
+		if (e.data.action == "removeLines" || (e.data.action == "removeText" && e.data.range.end.row == editor.session.getLength()) ){
+			//editor.insert("\n}");
+			//CANCEL THE CHANGE!!!
+		}
+	});
+
+	editor.session.selection.on("changeCursor",
+		function(){
+			var selection = editor.session.selection;
+			var row = editor.session.getLength()-1;
+
+			editor.setReadOnly(
+				(selection.lead.row == 0 || !selection.isEmpty() && selection.anchor.row == 0) ||
+				(selection.lead.row == row || !selection.isEmpty() && selection.anchor.row == row)/* ||
+				((selection.lead.row == row-1 && selection.lead.column == editor.session.getLine(row-1).length) || !selection.isEmpty() && (selection.anchor.row == row-1 && selection.anchor.column == editor.session.getLine(row-1).length ))*/
+				);
+		}
+	);
+
+	editor.on('input', function() {$('#save').removeClass("disabled")});
+	$('#save').on("click", function() {$('#save').addClass("disabled")});
+</script>

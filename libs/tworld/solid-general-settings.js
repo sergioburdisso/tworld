@@ -17,7 +17,10 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-var _KNOBS= localStorage.knobs? JSON.parse(localStorage.knobs) : null;
+var _KNOBS= localStorage.knobs?
+		JSON.parse(localStorage.knobs)
+		:
+		{trial:{test:true},name:"DEFAULT",desc:"",date:0,battery:true,prop:{fullyObservable:true,multiagent:false,multiagent_type:0,deterministic:true,dynamic:2,known:true},agents:{percept:{sync:true,interval:500,partialGrid:true,radius:3,noise:false,noise_cfg:{tile:0.3,obstacle:0.3,hole:0.3}},determinism:0.8,stochastic_model:1},environment:{rows:8,columns:11,holes_size:{range:[1,3],prob:[334,333,333]},num_holes:{range:[2,3],prob:[500,500]},num_obstacles:{range:[1,2],prob:[500,500]},difficulty:{range:[0,0],prob:[]},scores_variability:0,dynamic:{dynamism:{range:[6,13],prob:[125,125,125,125,125,125,125,125]},hostility:{range:[1,13],prob:[77,77,77,77,77,77,77,77,77,77,77,77,76]},hard_bounds:true},random_initial_state:false,initial_state:[],final_state:[{name:"Time",value:300,result:0}]},teams:[{name:"Team0",color:"red",members:1},{name:"Team1",color:"blue",members:1}],final_tweaks:{battery:{level:1000,good_move:20,bad_move:5,sliding:10},multiplier:{enabled:true,timeout:6},score:{cell:true},shapes:false,speed:0,pause:true}};
 
 var _LANGUAGE = _LANGUAGES.SPANISH;
 
@@ -46,10 +49,10 @@ var _BATTERY_SLIDE_COST			= _KNOBS.final_tweaks.battery.sliding;
 
 // Players
 if (_KNOBS.trial.test){
-	var _TEAMS = [{NAME:"", COLOR: _COLORS.ORANGE, MEMBERS:[0]}];
-	var _NUMBER_OF_AGENTS	= 1;
+	var _TEAMS = [{NAME:"", COLOR: _COLORS.ORANGE, MEMBERS:[0]},{NAME:"", COLOR: _COLORS.RED, MEMBERS:[1]}];
+	var _NUMBER_OF_AGENTS	= 2;
 	var _AGENTS = [{
-		NAME : "Rob, the agent",
+		NAME : "Sergio",
 		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:17}/*Arrow keys + Ctrl*/
 		/*CONTROLLED_BY_AI : true,
 		SOCKET_PROGRAM_AGENT : {
@@ -57,6 +60,10 @@ if (_KNOBS.trial.test){
 								PORT: 3313,//80,
 								OUTPUT_FORMAT: _PERCEPT_FORMAT.PROLOG//JSON//XML//
 							}*/
+	},
+	{
+		NAME : "Denise",
+		CONTROLS : {Up:87, Down:83, Left:65, Right:68, Restore:69}
 	}];
 }else{
 	var _NUMBER_OF_AGENTS = 0;

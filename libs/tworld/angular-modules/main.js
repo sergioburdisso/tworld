@@ -1,15 +1,27 @@
 var taskEnvironments = getEnvironments();
-var agentPrograms = [];
+var agentPrograms = getAgentPrograms();
 
 //ver si no mover esto a otro archivo (tal vez el auxiliar)
 function getEnvironments(){return localStorage.taskEnvironments? JSON.parse(localStorage.taskEnvironments) : []}
+function getAgentPrograms(){return localStorage.agentPrograms? JSON.parse(localStorage.agentPrograms) : []}
 function saveEnvironments(){localStorage.taskEnvironments = JSON.stringify(taskEnvironments)}
+function saveAgentPrograms(){localStorage.agentPrograms = JSON.stringify(agentPrograms)}
 function clearEnvironments(){localStorage.removeItem("taskEnvironments")}
+function clearAgentPrograms(){localStorage.removeItem("agentPrograms")}
+
 function getEnvironmentByDate(date){
 	var i = taskEnvironments.length;
 	while (i--)
 		if (taskEnvironments[i].date === date)
 			return taskEnvironments[i];
+	return null;
+}
+
+function getAgentProgramByDate(date){date=parseInt(date);
+	var i = agentPrograms.length;
+	while (i--)
+		if (agentPrograms[i].date === date)
+			return agentPrograms[i];
 	return null;
 }
 
@@ -30,7 +42,7 @@ function startTWorld(){
 }
 
 (function(){
-	var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironments', 'tworldEnvironmentsNew', 'ui.bootstrap', 'ui.slider', 'ngRoute', 'ngAnimate']);
+	var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironments', 'tworldAgentPrograms', 'ui.bootstrap', 'ui.slider', 'ngRoute', 'ngAnimate']);
 
 	main.config(['$routeProvider', '$locationProvider', '$tooltipProvider',
 		function($routeProvider, $locationProvider, $tooltipProvider) {
@@ -49,6 +61,16 @@ function startTWorld(){
 					templateUrl: 'environments-new.html',
 					controller: 'EnvNewController',
 					controllerAs: 'enc'
+				})
+				.when('/agent-programs/new', {
+					templateUrl: 'agent-programs-new.html',
+					controller: 'AgentProgNewController',
+					controllerAs: 'apnc'
+				})
+				.when('/agent-programs/source-code/:id', {
+					templateUrl: 'agent-programs-source-code.html',
+					controller: 'AgentProgSourceCodeController',
+					controllerAs: 'apscc'
 				})
 				.otherwise({
 					templateUrl: '404.html'
@@ -72,7 +94,22 @@ function startTWorld(){
 			this.agentPrograms = agentPrograms;
 
 			this.goto = function(path){$location.url(path)}
+			this.gotoTop = function(){
+				$('html, body').animate({
+					scrollTop: $("#top").offset().top
+				}, 1000, "easeOutExpo")
+			}
 
+			this.getSubPath = function(fi){
+				var subPath = "#";
+				var _$subLoc = $location.url().split('/');
+
+				for (var len= _$subLoc.length, i= 0; i < len; ++i)
+					if (i <= fi)
+						subPath+= (i > 0?"/":"") + _$subLoc[i]
+					else
+						return subPath;
+			}
 
 			this.setLanguage = function(){
 				this.text.desc			= $sce.trustAsHtml($text.main.description[ this.language ]);

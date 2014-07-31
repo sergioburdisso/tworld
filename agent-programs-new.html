@@ -1,0 +1,61 @@
+<div>
+	<div class="row"></div>
+	<h2><b>Your new Agent Program</b></h2>
+	<section class="text-justify">
+		<blockquote class="blockquote-reverse">
+			<p>An <b>agent</b> is anything that can be viewed as perceiving its environment through sensors and acting upon that environment through actuators. We use the term <b>percept</b> to refer to the agent's perceptual inputs at any given instant. Mathematically speaking, we say that an agent's behavior is described by the <b>agent function</b> that maps any given percept sequence to an action. Internally, the agent function for an artificial agent will be implemented by an <b>agent program</b>.
+</p>
+			<footer>Artificial Intelligence: A Modern Approach (Third edition) by Stuart Russell and Peter Norvig</footer>
+		</blockquote>
+	</section>
+	<br>
+	<div class="container-fluid">
+		<div class="row text-left">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<label class="lead "><b>1.</b> Agent will be controlled by...</label>
+				<div class="row ">
+					<div class="btn-group btn-group-justified">
+						<label class="btn btn-default" ng-model="apnc.agent_prog.ai" btn-radio="true" tooltip-placement="left" tooltip="">Algorithm</label>
+						<label class="btn btn-default" ng-model="apnc.agent_prog.ai" btn-radio="false" tooltip-placement="right" tooltip="">Human</label>
+					</div>
+				</div>
+				<div class="panel panel-default animate-only-show" ng-show="apnc.agent_prog.ai">
+					<div class="panel-heading">Written in...</div>
+					<div class="panel-body text-center">
+						<div class="btn-group">
+							<label class="btn btn-default" ng-model="apnc.agent_prog.javascript" btn-radio="true" tooltip-placement="left" tooltip="">JavaScript</label>
+							<label class="btn btn-default" ng-model="apnc.agent_prog.javascript" btn-radio="false" tooltip-placement="right" tooltip="">Another language</label>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default animate-only-show" ng-hide="apnc.agent_prog.ai">
+					<div class="panel-heading">Using a...</div>
+					<div class="panel-body text-center">
+						<div class="btn-group">
+							<label class="btn btn-default" ng-model="apnc.agent_prog.keyboard" btn-radio="true" tooltip-placement="left" tooltip="">Keyboard</label>
+							<label class="btn btn-default" ng-model="apnc.agent_prog.keyboard" btn-radio="false" tooltip-placement="right" tooltip="">Remote Control</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="separator"></div>
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<div class="row text-left">
+					<label class="lead "><b>3.</b> Give your Agent Program a name.</label>
+					<input type="text" class="form-control" ng-model="apnc.agent_prog.name" placeholder="Name"></input>
+				</div>
+				<div class="separator"></div>
+				<div class="row text-left">
+					<label class="lead "><b>4.</b> Optionally, write something about your Agent Program.</label>
+					<textarea class="form-control" ng-model="apnc.agent_prog.desc" rows="5" placeholder="Description"></textarea>
+				</div>
+				<div class="separator"></div>
+			</div>
+		</div>
+		<button ng-click="apnc.save()" class="btn btn-success col-xs-offset-1 col-md-2 col-xs-3 pull-right">Save</button>
+	</div>
+</div>
