@@ -4,10 +4,10 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">{{apscc.agent_prog.name}}</div>
 			<div class="panel-body">
-				<button id="save" ng-click="apscc.save()" class="btn btn-success pull-right margin-10">Save</button>
-				<button ng-click="" class="btn btn-primary pull-right margin-10">Run</button>
-				<span class="pull-right cursor-pointer margin-10">{{apscc.task_env.name || "..."}}</span>
-				<span class="pull-right">Task Environment: {{twc.language}}</span>
+				<button id="save" ng-click="apscc.save()" class="btn btn-success glyphicon pull-right margin-10"></button>
+				<button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play pull-right margin-10"></button>
+				<span class="pull-right cursor-pointer margin-10" ng-click="apscc.openEnvironmentsModal()"><b>{{apscc.task_env.name || "..."}}</b></span>
+				<span class="pull-right margin-10">Task Environment:</span>
 				<div id="source-code"></div>
 			</div>
 		</div>
@@ -56,6 +56,6 @@
 		}
 	);
 
-	editor.on('input', function() {$('#save').removeClass("disabled")});
-	$('#save').on("click", function() {$('#save').addClass("disabled")});
+	editor.on('input', function() {$('#save').removeClass("disabled glyphicon-floppy-saved").addClass("glyphicon-floppy-save")});
+	$('#save').on("click", function() {$('#save').addClass("disabled glyphicon-floppy-saved").removeClass("glyphicon-floppy-save")});
 </script>

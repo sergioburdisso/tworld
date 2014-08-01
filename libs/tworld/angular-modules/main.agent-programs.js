@@ -21,8 +21,9 @@
 
 	var formats = []; for (p in _PERCEPT_FORMAT) formats.push(p);
 
-	mod.controller('AgentProgSourceCodeController', ['$routeParams','$location',
-		function($routeParams, $location){
+	mod.controller('AgentProgSourceCodeController', ['$routeParams','$modal',
+		function($routeParams, $modal){
+			var _self = this;
 			this.task_env = null;
 			this.agent_prog = getAgentProgramByDate($routeParams.id);
 			if (!this.agent_prog){$location.url('/404');return}
@@ -36,6 +37,23 @@
 				this.agent_prog.source.cursor = editor.getCursorPosition();
 				this.agent_prog.source.code = editor.getValue();
 				saveAgentPrograms()
+			}
+
+			this.run = function(){
+				if (!this.task_env)
+					this.openEnvironmentsModal();
+				else
+					this.openRunModal();
+			}
+
+			this.openEnvironmentsModal = function(){
+				var modalInstance = $modal.open({
+						size: 'lg',//size,
+						templateUrl: 'environments-list.html',
+						controller: environmentsListController
+					});
+
+				modalInstance.result.then(function (id) {_self.task_env = getEnvironmentByDate(id)});
 			}
 		}]
 	);

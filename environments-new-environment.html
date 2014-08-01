@@ -150,12 +150,12 @@
 						<label class="col-md-2 col-xs-2">Game Result</label>
 						<div class="col-md-5 col-xs-5">
 							<select class="form-control" ng-model="cond.result">
-								<option value="0">just end</option>
-								<option value="1">ends with success</option>
-								<option value="2">ends with failure</option>
+								<option value="0">neutral (show positions)</option>
+								<option value="1">success</option>
+								<option value="2">failure</option>
 							</select>
 						</div>
-						<button class="btn btn-default col-md-1 glyphicon glyphicon-remove" ng-click="enc.removeFinalStateCondition($index)"></button>
+						<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="enc.removeFinalStateCondition($index)"></button>
 					</div>
 					<hr/>
 				</div>
@@ -195,6 +195,5 @@
 			</div>
 			{{knob.range[1]}}
 		</div>
-		{{knob.prob}}
 	</div>
 </script>
