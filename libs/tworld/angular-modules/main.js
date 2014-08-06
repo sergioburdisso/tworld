@@ -19,6 +19,11 @@
 					controller: 'EnvNewController',
 					controllerAs: 'enc'
 				})
+				.when('/agent-programs', {
+					templateUrl: 'agent-programs.html',
+					controller: 'AgentProgController',
+					controllerAs: 'apc'
+				})
 				.when('/agent-programs/new', {
 					templateUrl: 'agent-programs-new.html',
 					controller: 'AgentProgNewController',
@@ -50,15 +55,16 @@
 			this.taskEnvironments = taskEnvironments;
 			this.agentPrograms = agentPrograms;
 
-			this.goto = function(path){$location.url(path)}
-			this.gotoTop = function(){
-				$('html, body').animate({
-					scrollTop: $("#top").offset().top
-				}, 1000, "easeOutExpo")
+			this.gotoTop = gotoTop;
+			this.goto = function(path){
+				$location.url(path);
+				gotoTop()
 			}
 
-			this.getSubPath = function(fi){
-				var subPath = "#";
+			this.toggleFullScreen = function(id){toggleFullScreen(document.getElementById(id))}
+
+			this.getSubPath = function(fi){if (fi == 0) return "/";
+				var subPath = "";
 				var _$subLoc = $location.url().split('/');
 
 				for (var len= _$subLoc.length, i= 0; i < len; ++i)
@@ -98,22 +104,3 @@
 		}
 	]);
 })();
-
-Array.prototype.remove = function(index) {
-	var output=this[index];
-
-	for (var i= index; i < this.length; ++i)
-		this[i] = this[i+1];
-	this.length--;
-
-	return output;
-}
-
-Array.prototype.setTo = function(arr) {
-	if (arr.length != this.length)
-		this.length = arr.length;
-
-	var i= this.length;
-	while(i--)
-		this[i] = arr[i];
-}

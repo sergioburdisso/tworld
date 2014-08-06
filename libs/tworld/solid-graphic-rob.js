@@ -159,7 +159,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 
 				//--------------------------------------------------------------------------------------> restoreBattery
 				this.restoreBattery = function(noStats){
-					if (_Running && !_Paused && !_environment.isBatteryChargeSufficient(_index)){
+					if ( (_Running && !_Paused) && !_environment.isBatteryChargeSufficient(_index)){
 						if (_index == _GET_TEAM_LEADER(_index)){
 							if (_AUDIO_ENABLE) _sound_battery_restore.setPercent(0).play();
 
@@ -281,7 +281,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			this.WalkNorth = function(deterministic){
 				var robLocation, iRow, tilesToSlide;
 
-				if ( _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.NORTH)) &&
+				if ( (_Running && !_Paused) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.NORTH)) &&
 					 (!TWorld.Battery || _environment.isBatteryChargeSufficient(_index))
 					){
 
@@ -315,7 +315,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			this.WalkSouth = function(deterministic){
 				var robLocation, iRow;
 
-				if ( _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.SOUTH)) &&
+				if ( (_Running && !_Paused) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.SOUTH)) &&
 					 (!TWorld.Battery || _environment.isBatteryChargeSufficient(_index))
 					){
 
@@ -349,7 +349,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			this.WalkEast = function(deterministic){
 				var robLocation, iColumn;
 
-				if ( _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.EAST)) &&
+				if ( (_Running && !_Paused) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.EAST)) &&
 					 (!TWorld.Battery || _environment.isBatteryChargeSufficient(_index))
 					){
 
@@ -383,7 +383,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			this.WalkWest = function(deterministic){
 				var robLocation, iColumn;
 
-				if ( _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.WEST)) &&
+				if ( (_Running && !_Paused) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.WEST)) &&
 					 (!TWorld.Battery || _environment.isBatteryChargeSufficient(_index))
 					){
 
@@ -602,76 +602,74 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			//region behavior
 				//--------------------------------------------------------------------------------------> Walk
 				function walk(keyPressedCase){
-					if (_Running && !_Paused){
-						if (_currentAnimation == ANIMATION.None){
-							switch(getWalkingCaseAccordingToCameraLocation()){
-								case CAMERA_LOCATION.West: //Camera is west of Rob
-									switch(keyPressedCase){
-										case KEY_PRESSED.Left:
-											_self.WalkWest();
-											break;
-										case KEY_PRESSED.Right:
-											_self.WalkEast();
-											break;
-										case KEY_PRESSED.Up:
-											_self.WalkNorth();
-											break;
-										case KEY_PRESSED.Down:
-											_self.WalkSouth();
-											break;
-									}
-									break;
-								case CAMERA_LOCATION.South: //Camera is south of Rob
-									switch(keyPressedCase){
-										case KEY_PRESSED.Left:
-											_self.WalkNorth();
-											break;
-										case KEY_PRESSED.Right:
-											_self.WalkSouth();
-											break;
-										case KEY_PRESSED.Up:
-											_self.WalkEast();
-											break;
-										case KEY_PRESSED.Down:
-											_self.WalkWest();
-											break;
-									}
-									break;
-								case CAMERA_LOCATION.East: //Camera is east of Rob
-									switch(keyPressedCase){
-										case KEY_PRESSED.Left:
-											_self.WalkEast();
-											break;
-										case KEY_PRESSED.Right:
-											_self.WalkWest();
-											break;
-										case KEY_PRESSED.Up:
-											_self.WalkSouth();
-											break;
-										case KEY_PRESSED.Down:
-											_self.WalkNorth();
-											break;
-									}
-									break;
-								case CAMERA_LOCATION.North: //Camera is north of Rob
-									switch(keyPressedCase){
-										case KEY_PRESSED.Left:
-											_self.WalkSouth();
-											break;
-										case KEY_PRESSED.Right:
-											_self.WalkNorth();
-											break;
-										case KEY_PRESSED.Up:
-											_self.WalkWest();
-											break;
-										case KEY_PRESSED.Down:
-											_self.WalkEast();
-											break;
-									}
-									break;
-							}//switch
-						}//if ANIMATION is NONE
-					}//if running
+					if (_currentAnimation == ANIMATION.None){
+						switch(getWalkingCaseAccordingToCameraLocation()){
+							case CAMERA_LOCATION.West: //Camera is west of Rob
+								switch(keyPressedCase){
+									case KEY_PRESSED.Left:
+										_self.WalkWest();
+										break;
+									case KEY_PRESSED.Right:
+										_self.WalkEast();
+										break;
+									case KEY_PRESSED.Up:
+										_self.WalkNorth();
+										break;
+									case KEY_PRESSED.Down:
+										_self.WalkSouth();
+										break;
+								}
+								break;
+							case CAMERA_LOCATION.South: //Camera is south of Rob
+								switch(keyPressedCase){
+									case KEY_PRESSED.Left:
+										_self.WalkNorth();
+										break;
+									case KEY_PRESSED.Right:
+										_self.WalkSouth();
+										break;
+									case KEY_PRESSED.Up:
+										_self.WalkEast();
+										break;
+									case KEY_PRESSED.Down:
+										_self.WalkWest();
+										break;
+								}
+								break;
+							case CAMERA_LOCATION.East: //Camera is east of Rob
+								switch(keyPressedCase){
+									case KEY_PRESSED.Left:
+										_self.WalkEast();
+										break;
+									case KEY_PRESSED.Right:
+										_self.WalkWest();
+										break;
+									case KEY_PRESSED.Up:
+										_self.WalkSouth();
+										break;
+									case KEY_PRESSED.Down:
+										_self.WalkNorth();
+										break;
+								}
+								break;
+							case CAMERA_LOCATION.North: //Camera is north of Rob
+								switch(keyPressedCase){
+									case KEY_PRESSED.Left:
+										_self.WalkSouth();
+										break;
+									case KEY_PRESSED.Right:
+										_self.WalkNorth();
+										break;
+									case KEY_PRESSED.Up:
+										_self.WalkWest();
+										break;
+									case KEY_PRESSED.Down:
+										_self.WalkEast();
+										break;
+								}
+								break;
+						}//switch
+					}//if ANIMATION is NONE
 				}
 			//end region behavior
 			//

@@ -27,7 +27,7 @@ $text.main.menu.agentPrograms.btn_new={}
 $text.main.menu.agentPrograms.btn_new[_LANGUAGES.ENGLISH] = "New agent program";
 $text.main.menu.agentPrograms.btn_new[_LANGUAGES.SPANISH] = "Nuevo programa agente";
 $text.main.menu.agentPrograms.btn_manage={}
-$text.main.menu.agentPrograms.btn_manage[_LANGUAGES.ENGLISH] = "Manage agent program";
+$text.main.menu.agentPrograms.btn_manage[_LANGUAGES.ENGLISH] = "Manage agent programs";
 $text.main.menu.agentPrograms.btn_manage[_LANGUAGES.SPANISH] = "Administrar";
 
 $text.main.menu.stats = {}

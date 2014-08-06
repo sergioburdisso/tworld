@@ -22,8 +22,8 @@
 			<br>
 			<div class="row">
 				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent" btn-radio="false" tooltip-placement="left" tooltip="A single robot will perform in the environment">Single agent</label>
-					<label class="btn btn-default active" ng-model="enc.task_env.prop.multiagent" btn-radio="true" tooltip-placement="right" tooltip="The environment will have more than one robot">Multiagent</label>
+					<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent" ng-change="enc.updateTeams()" btn-radio="false" tooltip-placement="left" tooltip="A single robot will perform in the environment">Single agent</label>
+					<label class="btn btn-default active" ng-model="enc.task_env.prop.multiagent" ng-change="enc.updateTeams()" btn-radio="true" tooltip-placement="right" tooltip="The environment will have more than one robot">Multiagent</label>
 				</div>
 			</div>
 			<br>

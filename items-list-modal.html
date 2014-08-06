@@ -13,7 +13,7 @@
 			</div>
 
 			<div class="animate-show-3d-top" ng-hide="query.allProps">
-				<b>Only Task environment that are:</b>
+				<b>{{text.filter}}</b>
 				<div class="btn-group btn-group-justified">
 					<label class="btn btn-default glyphicon glyphicon-eye-open" ng-model="query.prop.fullyObservable" btn-radio="true" title="Fully Observable"></label>
 					<label class="btn btn-default glyphicon glyphicon-eye-close" ng-model="query.prop.fullyObservable" btn-radio="false" title="Partially Observable"></label>
@@ -47,39 +47,39 @@
 			</select>
 		</div>
 		<div class="col-md-9">
-			<h2>Select A Task Environment</h2>
+			<h2>{{text.title}}</h2>
 			<!--Body content-->
 			<div class="list-group mouse-cursor" style="min-height: 300px">
-				<a class="list-group-item animate-filter transition-400" ng-repeat="env in taskEnvironments | filter:userFilter | orderBy:orderCond track by $index" ng-click="setSelected(env.date)" ng-dblclick="ok()" ng-class="{active:isSelected(env.date)}">
+				<a class="list-group-item animate-filter transition-400" ng-repeat="item in items | filter:userFilter | orderBy:orderCond track by $index" ng-click="setSelected(item.date)" ng-dblclick="ok()" ng-class="{active:isSelected(item.date)}">
 					<!-- PROPERTIES ICONS-->
 					<div class="pull-right text-gray">
-						<div class="glyphicon glyphicon-eye-open" ng-show="env.prop.fullyObservable" title="Fully observable"></div>
-						<div class="glyphicon glyphicon-eye-close" ng-hide="env.prop.fullyObservable" title="Partially observable"></div>
+						<div class="glyphicon glyphicon-eye-open" ng-show="item.prop.fullyObservable" title="Fully observable"></div>
+						<div class="glyphicon glyphicon-eye-close" ng-hide="item.prop.fullyObservable" title="Partially observable"></div>
 
-						<div class="solid-icon-16 icon-single-agent" ng-hide="env.prop.multiagent" title="Single agent"></div>
-						<div class="solid-icon-16 icon-multiagent" ng-show="env.prop.multiagent" title="Multiagent"></div>
+						<div class="solid-icon-16 icon-single-agent" ng-hide="item.prop.multiagent" title="Single agent"></div>
+						<div class="solid-icon-16 icon-multiagent" ng-show="item.prop.multiagent" title="Multiagent"></div>
 
-						<div class="glyphicon glyphicon-arrow-right" ng-show="env.prop.deterministic" title="Deterministic"></div>
-						<div class="glyphicon glyphicon-random" ng-hide="env.prop.deterministic" title="Stochastic"></div>
+						<div class="glyphicon glyphicon-arrow-right" ng-show="item.prop.deterministic" title="Deterministic"></div>
+						<div class="glyphicon glyphicon-random" ng-hide="item.prop.deterministic" title="Stochastic"></div>
 
-						<div class="glyphicon glyphicon-record" ng-show="env.prop.dynamic == 0" title="Static"></div>
-						<div class="solid-icon-16 icon-semidynamic" ng-show="env.prop.dynamic == 1" title="Semidynamic"></div>
-						<div class="glyphicon glyphicon-time" ng-show="env.prop.dynamic == 2" title="Dynamic"></div>
+						<div class="glyphicon glyphicon-record" ng-show="item.prop.dynamic == 0" title="Static"></div>
+						<div class="solid-icon-16 icon-semidynamic" ng-show="item.prop.dynamic == 1" title="Semidynamic"></div>
+						<div class="glyphicon glyphicon-time" ng-show="item.prop.dynamic == 2" title="Dynamic"></div>
 
-						<div class="glyphicon glyphicon-ok" ng-show="env.prop.known" title="Known"></div>
-						<div class="glyphicon glyphicon-remove" ng-hide="env.prop.known" title="Unknown"></div>
+						<div class="glyphicon glyphicon-ok" ng-show="item.prop.known" title="Known"></div>
+						<div class="glyphicon glyphicon-remove" ng-hide="item.prop.known" title="Unknown"></div>
 
-						<div class="glyphicon glyphicon-flash" ng-show="env.battery" title="Battery"></div>
+						<div class="glyphicon glyphicon-flash" ng-show="item.battery" title="Battery"></div>
 					</div>
 
-					<h4 class="list-group-item-heading">{{env.name}} <span class="badge active">{{env.date | date:'dd/MM/yyyy - HH:mm:ss'}}</span></h4>
-					<p class="list-group-item-text">{{env.desc}}</p>
+					<h4 class="list-group-item-heading">{{item.name}} <span class="badge active">{{item.date | date:'dd/MM/yyyy - HH:mm:ss'}}</span></h4>
+					<p class="list-group-item-text">{{item.desc}}</p>
 				</a>
 			</div>
 			<div class="separator"></div>
 		</div>
 	</div>
-	<div class="row text-center">
-	<button class="btn btn-success glyphicon glyphicon-ok margin-10 pull-right" ng-click="ok()"></button>
+	<div class="modal-footer">
+		<button class="btn btn-success glyphicon glyphicon-ok margin-10 pull-right" ng-click="ok()"></button>
 	</div>
 </div>

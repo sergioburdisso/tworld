@@ -26,7 +26,7 @@
 
 	<ol id="top" class="breadcrumb pull-left">
 		<li ng-repeat="n in twc.$loc.url().split('/') track by $index">
-			<a ng-href="{{twc.getSubPath($index)}}" ng-if="!$last">{{n||"home"}}</a>
+			<a href="" ng-click="twc.goto(twc.getSubPath($index))" ng-if="!$last">{{n||"home"}}</a>
 			<span ng-if="$last">{{n}}</span>
 		</li>
 	</ol>
@@ -60,7 +60,7 @@
 				<img style="border-width:0" src="imgs/web-app/sa.png" width="32"/>
 			</a><br>
 			<span ng-bind-html="twc.text.cc"></span><br><br>
-			<span id="copyright" style="display:block; text-align: right;">&copy; Burdisso Sergio</span>
+			<span id="copyright" style="display:block; text-align: right;">&copy; <a href="mailto:sergio.burdisso@gmail.com">Burdisso Sergio</a></span>
 		</p>
 		<p class="pull-right" style="width: 300px; margin-right: 50px;">
 			<a rel="license" href="http://www.gnu.org/licenses/agpl-3.0.html" alt="GNU AGPL">

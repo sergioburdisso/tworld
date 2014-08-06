@@ -3,8 +3,7 @@
 	<h2><b>Your new Agent Program</b></h2>
 	<section class="text-justify">
 		<blockquote class="blockquote-reverse">
-			<p>An <b>agent</b> is anything that can be viewed as perceiving its environment through sensors and acting upon that environment through actuators. We use the term <b>percept</b> to refer to the agent's perceptual inputs at any given instant. Mathematically speaking, we say that an agent's behavior is described by the <b>agent function</b> that maps any given percept sequence to an action. Internally, the agent function for an artificial agent will be implemented by an <b>agent program</b>.
-</p>
+			<p>An <b>agent</b> is anything that can be viewed as perceiving its environment through sensors and acting upon that environment through actuators. We use the term <b>percept</b> to refer to the agent's perceptual inputs at any given instant. Mathematically speaking, we say that an agent's behavior is described by the <b>agent function</b> that maps any given percept sequence to an action. Internally, the agent function for an artificial agent will be implemented by an <b>agent program</b>.</p>
 			<footer>Artificial Intelligence: A Modern Approach (Third edition) by Stuart Russell and Peter Norvig</footer>
 		</blockquote>
 	</section>
@@ -13,7 +12,17 @@
 		<div class="row text-left">
 			<div class="col-md-3"></div>
 			<div class="col-md-6">
-				<label class="lead "><b>1.</b> Agent will be controlled by...</label>
+				<div class="row">
+					<label class="lead "><b>1.</b> Give your Agent Program a name.</label>
+					<input type="text" class="form-control" ng-model="apnc.agent_prog.name" ng-change="apnc.nameUpdate()" placeholder="Name"></input>
+				</div>
+				<div class="separator"></div>
+			</div>
+		</div>
+		<div class="row text-left">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				<label class="lead"><b>2.</b> Agent will be controlled by...</label>
 				<div class="row ">
 					<div class="btn-group btn-group-justified">
 						<label class="btn btn-default" ng-model="apnc.agent_prog.ai" btn-radio="true" tooltip-placement="left" tooltip="">Algorithm</label>
@@ -38,19 +47,41 @@
 						</div>
 					</div>
 				</div>
+				<div class="panel panel-default animate-show-3d-top" ng-show="(apnc.agent_prog.ai && !apnc.agent_prog.javascript) || (!apnc.agent_prog.ai && !apnc.agent_prog.keyboard)">
+					<div class="panel-body">
+						<label class="lead">T-World proxy <small>(<a href="">download it</a>)<small></label>
+						<br>
+						<label for="ip-address">IP Address</label><input type="text" id="ip-address" class="form-control" ng-model="apnc.agent_prog.socket.ip_address" placeholder="IPv4 Address"></input>
+						<br>
+						<label for="port">Port</label><input type="number" id="port" min="1" max="65535" class="form-control" ng-model="apnc.agent_prog.socket.port" placeholder="Port number"></input>
+						<br>
+						<label for="magic-string">The magic string</label><input type="text" id="magic-string" class="form-control" ng-model="apnc.agent_prog.socket.magic_string" placeholder="Magic string" value="localhost"></input>
+						<section ng-show="apnc.agent_prog.ai" class="animate-show">
+							<hr>
+							<label>Percept Format</label>
+							<select class="form-control" ng-model="apnc.agent_prog.socket.percept_format" ng-options="value as format for (format, value) in apnc.PERCEPT_FORMAT"></select>
+						</section>
+					</div>
+				</div>
+				<div class="panel panel-default animate-show-3d-top text-center" ng-show="!apnc.agent_prog.ai && apnc.agent_prog.keyboard">
+					<div class="panel-body">
+						<label class="lead text-left">Controls</label>
+						<br>
+						<button class="btn btn-default">Up</button>
+						<button class="btn btn-default">Down</button>
+						<button class="btn btn-default">Left</button>
+						<button class="btn btn-default">Right</button>
+						<button class="btn btn-default">Battery restoration</button>
+					</div>
+				</div>
 			</div>
 		</div>
-		<div class="separator"></div>
 		<div class="row">
 			<div class="col-md-3"></div>
 			<div class="col-md-6">
-				<div class="row text-left">
-					<label class="lead "><b>3.</b> Give your Agent Program a name.</label>
-					<input type="text" class="form-control" ng-model="apnc.agent_prog.name" placeholder="Name"></input>
-				</div>
 				<div class="separator"></div>
 				<div class="row text-left">
-					<label class="lead "><b>4.</b> Optionally, write something about your Agent Program.</label>
+					<label class="lead "><b>3.</b> Optionally, write something about your Agent Program.</label>
 					<textarea class="form-control" ng-model="apnc.agent_prog.desc" rows="5" placeholder="Description"></textarea>
 				</div>
 				<div class="separator"></div>

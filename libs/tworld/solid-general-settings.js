@@ -49,35 +49,61 @@ var _BATTERY_SLIDE_COST			= _KNOBS.final_tweaks.battery.sliding;
 
 // Players
 if (_KNOBS.trial.test){
-	var _TEAMS = [{NAME:"", COLOR: _COLORS.ORANGE, MEMBERS:[0]},{NAME:"", COLOR: _COLORS.RED, MEMBERS:[1]}];
-	var _NUMBER_OF_AGENTS	= 2;
-	var _AGENTS = [{
+	var _TEAMS = [{NAME:"", COLOR: _COLORS.BLUE, MEMBERS:[0]}/*,{NAME:"", COLOR: _COLORS.RED, MEMBERS:[1]}*/];
+	var _NUMBER_OF_AGENTS	= 1;
+	var _AGENTS = [
+	{
 		NAME : "Sergio",
-		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:17}/*Arrow keys + Ctrl*/
-		/*CONTROLLED_BY_AI : true,
-		SOCKET_PROGRAM_AGENT : {
-								ADDR: "localhost",//"192.168.1.7",//
-								PORT: 3313,//80,
-								OUTPUT_FORMAT: _PERCEPT_FORMAT.PROLOG//JSON//XML//
-							}*/
-	},
+		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:16}/*Arrow keys + Ctrl*/
+	}/*,
 	{
 		NAME : "Denise",
 		CONTROLS : {Up:87, Down:83, Left:65, Right:68, Restore:69}
-	}];
+	}*/
+	];
 }else{
-	var _NUMBER_OF_AGENTS = 0;
+	var _KNOBS_Agents = _KNOBS.trial.agents;
+
+	var _NUMBER_OF_AGENTS = _KNOBS_Agents.length;
 	var _TEAMS = []
-	for (team in _KNOBS.teams){
+	for (var t= 0; t < _KNOBS.teams.length; ++t)
 		_TEAMS.push({
-			NAME: team.name,
-			COLOR: team.color,
-			MEMBERS: new Array(team.members)
+			NAME: _KNOBS.teams[t].name,
+			COLOR: _KNOBS.teams[t].color,
+			MEMBERS: []
 		});
 
-		_NUMBER_OF_AGENTS+= team.members;
-	}
 	var _AGENTS = new Array(_NUMBER_OF_AGENTS); for (var k=0; k < _NUMBER_OF_AGENTS; ++k) _AGENTS[k]={};
+
+	for (var len = _KNOBS_Agents.length, i=0; i < len; ++i){
+		_TEAMS[_KNOBS_Agents[i].team].MEMBERS.push(i);
+
+		_AGENTS[i].NAME = _KNOBS_Agents[i].program.name;
+
+		if (_KNOBS_Agents[i].program.ai){
+			_AGENTS[i].CONTROLLED_BY_AI = true;
+			
+			if (_KNOBS_Agents[i].program.javascript){
+				_AGENTS[i].AI_SOURCE_CODE = _KNOBS_Agents[i].program.source.code;
+				_AGENTS[i].TEAM_MSG_SOURCE_CODE = _KNOBS_Agents[i].program.source.msg_code;
+			}else{
+				_AGENTS[i].SOCKET_PROGRAM_AGENT =	{
+					ADDR: _KNOBS_Agents[i].program.socket.ip_address,
+					PORT: _KNOBS_Agents[i].program.socket.port,
+					OUTPUT_FORMAT: _KNOBS_Agents[i].program.socket.percept_format
+				}
+			}
+		}else
+			if (_KNOBS_Agents[i].program.keyboard)
+				_AGENTS[i].CONTROLS = _KNOBS_Agents[i].program.controls;
+			else{
+				_AGENTS[i].SOCKET_PROGRAM_AGENT =	{
+					ADDR: _KNOBS_Agents[i].program.socket.ip_address,
+					PORT: _KNOBS_Agents[i].program.socket.port,
+					OUTPUT_FORMAT: _PERCEPT_FORMAT.JSON
+				}
+			}
+	}
 }
 
 var _MULTIPLIER_TIME = _KNOBS.final_tweaks.multiplier.enabled?

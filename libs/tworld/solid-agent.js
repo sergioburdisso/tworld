@@ -17,8 +17,9 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-importScripts('solid-auxiliary.js', 'solid-global.js', 'solid-general-settings.js', 'solid-core.js'); 
+importScripts('solid-auxiliary.js', 'solid-global.js'); 
 
+function chooseRandomAction(){return random(4)}
 /*API
 -coordenate_relativesToAgent(){ - porque como lo voy a hacer multi agente no puedo hacer que las cosas sean relativas al agente, para eso uso esta funcion
 	object[0] = _agentPos.Row - object[0];
@@ -39,33 +40,31 @@ get as many points as possible by filling in holes.
 */
 
 var alert = function(msg){ returnAction(_ACTION.CONSOLE_LOG + msg); }
-var console = {};
+//console guard
+console = {};
 console.error = function(msg){ returnAction(_ACTION.CONSOLE_ERROR + msg); }
 console.clear = function(msg){ returnAction(_ACTION.CONSOLE_CLEAR); }
 console.log = alert;
 
 var _ACTION_SENT;
-var _READY_FOR_NEXT_ACTION = false;
 var _PERCEPT = null;
 var _GRID;
 var _AGENT;
+var AgentProgram;
+var MsgReceived;
 
-function AgentProgram(percept)/*returns accion*/{
+function _agentProgram(percept)/*returns accion*/{
 	percept = percept.data;
 
 	try{
 	switch(percept.header){
 		case _PERCEPT_HEADER.INTERNAL:
-			//inicializar el codigo de los eval()s que se vana  usar para el cuerpo y para los mensajes en equipo
-			//percept.data.ai_src
-			//percept.data.tm_msg_src (opcional, usualmente viene undefined)
+			eval("AgentProgram = "+ percept.data.ai_src);
+			eval("MsgReceived = " + percept.data.tm_msg_src);//(opcional, usualmente viene undefined)
 			break;
 
 		case _PERCEPT_HEADER.START:
 			//resetEverything();
-			if (TWorld.PerceiveAsync)
-				_READY_FOR_NEXT_ACTION = true;
-			else
 				returnAction(_ACTION.NONE);
 			break;
 
@@ -74,85 +73,89 @@ function AgentProgram(percept)/*returns accion*/{
 			break;
 
 		case _PERCEPT_HEADER.MESSAGE:
-			this.goal = JSON.parse(percept.data);
+			this.goal = JSON.parse(percept.data);//MsgReceived(percept.data)
 			perceive();
 			break;
 
 		case _PERCEPT_HEADER.READY_FOR_NEXT_ACTION:
-			_READY_FOR_NEXT_ACTION = true;
 			break;
 
 		default:
-			if (!TWorld.PerceiveAsync || _READY_FOR_NEXT_ACTION){
-				//HIDDEN
-				_READY_FOR_NEXT_ACTION = !TWorld.PerceiveAsync;
-				percept = percept.data;
-				_PERCEPT = percept;
-				_GRID = percept.environment.grid;
-				_GRID.ROWS = _GRID.length;
-				_GRID.COLUMNS = _GRID[0].length;
-				_AGENT = percept.agent;
-				_ACTION_SENT = false;
+			//HIDDEN
+			percept = percept.data;
+			_PERCEPT = percept;
+			_GRID = percept.environment.grid;
+			_GRID.ROWS = _GRID.length;
+			_GRID.COLUMNS = _GRID[0].length;
+			_AGENT = percept.agent;
+			_ACTION_SENT = false;
+
+			AgentProgram(percept);
 /*
-				//CODE EXCECUTE ONLY ONCE WHEN AGENT PROGRAM IS CREATED
-				if (!this.FirstTimeFlag){
-					this.FirstTimeFlag = true;
+			//CODE EXCECUTE ONLY ONCE WHEN AGENT PROGRAM IS CREATED
+			if (!this.FirstTimeFlag){
+				this.FirstTimeFlag = true;
 
-					var my_team;
-					for (var teams = percept.builtin_knowledge.teams, i= 0; i < teams.length; ++i)
-						if (teams[i].id == percept.agent.team_id)
-							my_team = teams[i];
+				var my_team;
+				for (var teams = percept.builtin_knowledge.teams, i= 0; i < teams.length; ++i)
+					if (teams[i].id == percept.agent.team_id)
+						my_team = teams[i];
 
-					//if I am the leader of my team
-					if (percept.agent.id == my_team.leader){
-						this.goal = {row:random(_GRID.ROWS - 2), column:random(_GRID.COLUMNS)};
-						//sendTeamMessage(this.goal);
-						for (var r=0, m= 0; m < my_team.members.length; ++m)
-							if (my_team.members[m] != percept.agent.id){
-								r+=2;
-								sendMessage(my_team.members[m], {row: this.goal.row + r, column: this.goal.column});
-							}
-					}
+				//if I am the leader of my team
+				if (percept.agent.id == my_team.leader){
+					this.goal = {row:random(_GRID.ROWS - 2), column:random(_GRID.COLUMNS)};
+					//sendTeamMessage(this.goal);
+					for (var r=0, m= 0; m < my_team.members.length; ++m)
+						if (my_team.members[m] != percept.agent.id){
+							r+=2;
+							sendMessage(my_team.members[m], {row: this.goal.row + r, column: this.goal.column});
+						}
 				}
-
-				//CODE EXCECUTE EACH TIME ROB PERCEIVES
-				if (this.goal){
-					if (this.goal.row < percept.agent.location.row){
-						if (isValidMove(_ACTION.NORTH))
-							returnAction(_ACTION.NORTH);
-					}
-					else
-					if (this.goal.row > percept.agent.location.row){
-						if (isValidMove(_ACTION.SOUTH))
-							returnAction(_ACTION.SOUTH);
-					}
-					if (this.goal.column < percept.agent.location.column){
-						if (isValidMove(_ACTION.WEST))
-							returnAction(_ACTION.WEST);
-					}
-					else
-					if (this.goal.column > percept.agent.location.column){
-						if (isValidMove(_ACTION.EAST))
-							returnAction(_ACTION.EAST);
-					}
-				}
-*/
-				//printGrid();
-				var action = chooseBestAction(/*memory*/);
-				returnAction(action);
-
-				if (_AGENT.battery !== undefined && _AGENT.battery == 0)
-					returnAction(_ACTION.RESTORE);
-
-				//ACTIONS GUARD
-				if (!_ACTION_SENT)
-					perceive();
 			}
-	}
-	}catch(e){console.error(e.stack);};
-}onmessage = AgentProgram; 
 
-function chooseBestAction(percept /*n,s,w,e*/){
+			//CODE EXCECUTE EACH TIME ROB PERCEIVES
+			if (this.goal){
+				if (this.goal.row < percept.agent.location.row){
+					if (isValidMove(_ACTION.NORTH))
+						returnAction(_ACTION.NORTH);
+				}
+				else
+				if (this.goal.row > percept.agent.location.row){
+					if (isValidMove(_ACTION.SOUTH))
+						returnAction(_ACTION.SOUTH);
+				}
+				if (this.goal.column < percept.agent.location.column){
+					if (isValidMove(_ACTION.WEST))
+						returnAction(_ACTION.WEST);
+				}
+				else
+				if (this.goal.column > percept.agent.location.column){
+					if (isValidMove(_ACTION.EAST))
+						returnAction(_ACTION.EAST);
+				}
+			}
+*/
+			//printGrid();
+			//var action = chooseRandomValidAction(/*memory*/);
+			/*returnAction(action);
+
+			if (_AGENT.battery !== undefined && _AGENT.battery == 0)
+				returnAction(_ACTION.RESTORE);*/
+
+			//ACTIONS GUARD
+			if (!_ACTION_SENT)
+				perceive();
+	}
+	}catch(e){
+		var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
+		if (!matchs)
+			console.error(e.stack);
+		else
+			console.error(e.name + ": " + e.message + " at AgentProgram (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+	};
+}onmessage = _agentProgram; 
+
+function chooseRandomValidAction(percept /*n,s,w,e*/){
 	var actions = new Array();
 
 	if (isValidMove(_ACTION.NORTH))

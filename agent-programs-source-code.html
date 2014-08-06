@@ -1,12 +1,13 @@
 <div class="text-left">
 	<div class="row"></div>
 	<div class="row">
-		<div class="panel panel-default">
+		<div id="editor" class="panel panel-primary">
 			<div class="panel-heading">{{apscc.agent_prog.name}}</div>
-			<div class="panel-body">
-				<button id="save" ng-click="apscc.save()" class="btn btn-success glyphicon pull-right margin-10"></button>
-				<button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play pull-right margin-10"></button>
-				<span class="pull-right cursor-pointer margin-10" ng-click="apscc.openEnvironmentsModal()"><b>{{apscc.task_env.name || "..."}}</b></span>
+			<div class="panel-body no-padding">
+				<button ng-click="twc.toggleFullScreen('editor')" class="btn btn-default glyphicon glyphicon glyphicon-resize-full pull-right margin-10" tooltip="toggle full screen"></button>
+				<button id="save" ng-click="apscc.save()" class="btn btn-success glyphicon pull-right margin-10" tooltip="Save"></button>
+				<button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play pull-right margin-10" tooltip="Run agent program"></button>
+				<span class="pull-right cursor-pointer margin-10" ng-click="apscc.openEnvironmentsModal()" tooltip="Select task environment"><b>{{apscc.task_env.name || "(empty)"}}</b></span>
 				<span class="pull-right margin-10">Task Environment:</span>
 				<div id="source-code"></div>
 			</div>

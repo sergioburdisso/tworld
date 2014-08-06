@@ -983,6 +983,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 			if (_AGENTS[irob].CONTROLLED_BY_AI || _AGENTS[irob].SOCKET_PROGRAM_AGENT){
 				_rob[irob].ProgramAgent = new ProgramAgent(
 					irob,
+					_X2JS,
 					_AGENTS[irob].SOCKET_PROGRAM_AGENT,
 					"./libs/tworld/solid-agent.js",
 					this,
@@ -1038,12 +1039,12 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 //--> Internal Classes
 //Class ProgramAgent
-function ProgramAgent(rIndex, isSocket, src, _env, _gtw){
+function ProgramAgent(rIndex, _X2JS, isSocket, src, _env, _gtw){
 	//private atributes
+	var _address = _AGENTS[rIndex].SOCKET_PROGRAM_AGENT.ADDR+":"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.PORT;
 	var _programAgent = isSocket?
-							new WebSocket("ws://"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.ADDR+":"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.PORT):
+							new WebSocket("ws://"+_address):
 							new Worker(src);
-
 	var _index = rIndex;
 	var _myTeam = _GET_TEAM_OF(rIndex);
 	var _percept = {header: null, data:""};
@@ -1136,12 +1137,12 @@ function ProgramAgent(rIndex, isSocket, src, _env, _gtw){
 		//case _ACTION.CONSOLE_ERROR
 		if ( _ACTION_REGEX.CONSOLE_ERROR.test(action) )
 			{matchs = action.match(_ACTION_REGEX.CONSOLE_ERROR);
-			console.error( matchs[3] || matchs[4] );}
+			console.error( (_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "") + matchs[3] || matchs[4] );}
 		else
 		//case _ACTION.CONSOLE_LOG
 		if ( _ACTION_REGEX.CONSOLE_LOG.test(action) )
 			{matchs = action.match(_ACTION_REGEX.CONSOLE_LOG);
-			console.log( matchs[3] || matchs[4] );}
+			console.log( (_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "") + matchs[3] || matchs[4] );}
 		else
 		//case _ACTION.KEY_UP
 		if ( _ACTION_REGEX.KEY_UP.test(action) ){
@@ -1181,12 +1182,14 @@ function ProgramAgent(rIndex, isSocket, src, _env, _gtw){
 
 	_programAgent.onerror = function(event){
 		if (isSocket)
-			console.error((_NUMBER_OF_AGENTS > 1? "rob "+_index+": " : "")+"An error occurred while trying to connect to the remote Program Agent");
+			console.error(
+				(_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "")+"An error occurred while trying to connect to the T-World Proxy ("+_address+")"
+			);
 		//else
 	}
 
 	_programAgent.onclose = function(event) {
-		console.error((_NUMBER_OF_AGENTS > 1? "rob "+_index+": " : "")+"connection was closed with code: " + event.code + "\n(can't connect to the tworld proxy)");
+		console.error((_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "")+"connection was closed with code: " + event.code + "\n(can't connect to the T-World Proxy)");
 	}
 }
 

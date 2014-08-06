@@ -16,7 +16,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-importScripts('solid-auxiliary.js', 'solid-global.js'/*, 'solid-general-settings.js', 'solid-core.js'*/); //'solid-core.js' is included for readability's sake (TWorld.<aKnob>)
+importScripts('solid-auxiliary.js', 'solid-global.js', '../util/sprintf.min.js');
 
 var _ROWS;
 var _COLUMNS;
@@ -57,9 +57,6 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 			attrPrefix = "_attr_";
 			_X2JS = new X2JS({attributePrefix : attrPrefix});
 		}
-
-		if (!_CFG._JSON_NECESSARY)
-			importScripts('../util/sprintf.min.js');
 
 		_ROWS						= _CFG._ROWS;
 		_COLUMNS					= _CFG._COLUMNS;

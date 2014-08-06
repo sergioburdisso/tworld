@@ -23,7 +23,7 @@
 	var colors = []; for (color in _COLORS) colors.push(_COLORS[color]);
 	var taskEnvironment;
 
-	mod.controller("EnvController", function(){
+	mod.controller("EnvController", ["$modal", function($modal){
 		var _self = this;
 		var _selected = -1;
 
@@ -53,6 +53,25 @@
 			startTWorld()
 		}
 
+		this.remove = function(){
+			for (var t=taskEnvironments.length; t--;)
+				if (taskEnvironments[t].date == _selected)
+					taskEnvironments.remove(t);
+			saveEnvironments();
+		}
+
+		this.openRunModal = function(){
+			$modal.open({
+					size: 'lg',//size,
+					templateUrl: 'run-modal.html',
+					controller: runModalController,
+					resolve:{
+						taskEnv: function(){return getEnvironmentByDate(_selected)}, 
+						agentProgs: function(){return []}
+					}
+				});
+		}
+
 		this.userFilter = function(task_env){
 			var regEx = new RegExp(_self.query.name,"i");
 			var p = _self.query.prop;
@@ -69,7 +88,7 @@
 			);
 		}
 
-	});
+	}]);
 
 	mod.controller('EnvNewController', ['$modal', '$location',
 		function($modal, $location){
@@ -190,7 +209,8 @@
 				taskEnvironment.trial.test = false;
 				taskEnvironments.push(taskEnvironment);
 				saveEnvironments();
-				$location.url('/')
+				$location.url('/');
+				gotoTop()
 			}
 
 			this.testEnvironment = function(){
@@ -359,7 +379,7 @@
 				taskEnvironment.teams.push({
 					name:"Team"+this.nTeam,
 					color: colors[this.nTeam%colors.length],
-					members:nMembers
+					members:nMembers //number of members
 				});
 
 				this.nTeam++;
@@ -372,6 +392,11 @@
 			this.isCompetitiveCooperative = function(){return taskEnvironment.prop.multiagent_type === 2}
 
 			this.updateTeams = function(){
+				taskEnvironment.teams.length = _self.nTeam = 0;
+
+				if (!this.task_env.prop.multiagent)
+					setSingleAgent();
+				else
 				if (this.isCompetitive())
 					setCompetitive();
 				else
@@ -383,29 +408,25 @@
 			}
 
 			function setCompetitive(){
-				taskEnvironment.teams.length = _self.nTeam = 0;
 				_self.addTeam(1);
 				_self.addTeam(1);
-
 				taskEnvironment.prop.multiagent_type = 0;
 			}
 
-			function setCooperative(){
-				taskEnvironment.teams.length = _self.nTeam = 0;
-				_self.addTeam(2);
+			function setSingleAgent(){_self.addTeam(1)}
 
+			function setCooperative(){
+				_self.addTeam(2);
 				taskEnvironment.prop.multiagent_type = 1;
 			}
 
 			function setCompetitiveCooperative(){
-				taskEnvironment.teams.length = _self.nTeam = 0;
 				_self.addTeam(2);
 				_self.addTeam(2);
-
 				taskEnvironment.prop.multiagent_type = 2;
 			}
 
-			setCompetitive();
+			this.updateTeams();
 	}]);
 
 	mod.controller('InitialStateMakerController', function(){

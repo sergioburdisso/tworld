@@ -195,7 +195,7 @@ function toggleFullScreen(e) {
 							d.webkitCancelFullScreen	|| d.webkitCancelFullscreen	|| d.webkitExitFullScreen	|| d.webkitExitFullscreen;
 	toogleFullWindowRender(e);
 
-	if ( d.fullscreenElement		|| d.webkitFullscreenElement ||
+	if ( d.fullscreenElement	|| d.webkitFullscreenElement ||
 		 d.mozFullScreenElement	|| d.msFullscreenElement) {
 		if (_cancelFullScreen) _cancelFullScreen.call(d);
 	}else{

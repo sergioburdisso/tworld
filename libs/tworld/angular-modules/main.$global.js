@@ -1,6 +1,26 @@
 var taskEnvironments = getEnvironments();
 var agentPrograms = getAgentPrograms();
 
+
+Array.prototype.remove = function(index) {
+	var output=this[index];
+
+	for (var i= index; i < this.length; ++i)
+		this[i] = this[i+1];
+	this.length--;
+
+	return output;
+}
+
+Array.prototype.setTo = function(arr) {
+	if (arr.length != this.length)
+		this.length = arr.length;
+
+	var i= this.length;
+	while(i--)
+		this[i] = arr[i];
+}
+
 function getEnvironments(){return localStorage.taskEnvironments? JSON.parse(localStorage.taskEnvironments) : []}
 function getAgentPrograms(){return localStorage.agentPrograms? JSON.parse(localStorage.agentPrograms) : []}
 function saveEnvironments(){localStorage.taskEnvironments = JSON.stringify(taskEnvironments)}
@@ -31,6 +51,9 @@ function saveKnobs(knobs){
 }
 function clearKnobs(){localStorage.removeItem("knobs")}
 
+
+
+
 var _tworldWindow;
 function startTWorld(){
 	if (!_tworldWindow || !_tworldWindow.window)
@@ -40,10 +63,19 @@ function startTWorld(){
 	_tworldWindow.focus();
 }
 
-function environmentsListController($scope, $modalInstance){
+
+
+
+function gotoTop(){
+	$('html, body').animate({
+		scrollTop: $("#top").offset().top
+	}, 1000, "easeOutExpo")
+}
+
+function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
 	var _selected = -1;
 
-	$scope.taskEnvironments = taskEnvironments;
+	$scope.items = items;
 	$scope.orderCond = "-date";
 	$scope.query = {
 		name:"",
@@ -57,6 +89,11 @@ function environmentsListController($scope, $modalInstance){
 			known: true
 		}
 	};
+
+	$scope.text = {
+		title: agentProgramsFlag? "Select An Agent Program" : "Select A Task Environment",
+		filter: agentProgramsFlag? "Only Agent Programs that are:" : "Only Task environments that are:"
+	}
 
 	$scope.ok = function () {$modalInstance.close(_selected)};
 	$scope.close = function () {$modalInstance.dismiss()};
@@ -80,3 +117,77 @@ function environmentsListController($scope, $modalInstance){
 		);
 	}
 };
+
+function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs){
+	$scope.agents = [];
+	$scope.task_env = taskEnv;
+	$scope.teams = new Array(taskEnv.teams.length);
+
+	$scope.run = function () {
+		$scope.task_env.trial.agents = $scope.agents;
+		saveKnobs($scope.task_env);
+		startTWorld();
+		$modalInstance.close()
+	};
+	$scope.close = function () {$modalInstance.dismiss()};
+
+	$scope.singleTeam = function(){return $scope.task_env.teams.length === 1}
+	$scope.singleAgent = function(){return !$scope.task_env.prop.multiagent}
+
+	$scope.selectAgentProgram = function(agent_id){
+		var modalInstance = $modal.open({
+				size: 'lg',//size,
+				templateUrl: 'items-list-modal.html',
+				controller: itemsListController,
+				resolve:{
+					items:function(){return agentPrograms},
+					agentProgramsFlag:function(){return true}
+				}
+			});
+
+		modalInstance.result.then(
+			function (agent_program_id) {
+				if (!$scope.agents[agent_id].program || $scope.agents[agent_id].program.date != agent_program_id)
+					$scope.agents[agent_id].program = getAgentProgramByDate(agent_program_id); 
+			}
+		);
+	}
+
+	for (var elen=taskEnv.teams.length, a=0, t=0; t < elen; ++t){
+		$scope.teams[t] = new Array(taskEnv.teams[t].members)
+		for (var tlen=$scope.teams[t].length, m=0; m < tlen; ++m, ++a){
+			$scope.agents.push({
+				team: t,
+				id: a,
+				program: agentProgs[a]
+			});
+
+			$scope.teams[t][m] = $scope.agents[a];
+		}
+	}
+
+}
+
+function toggleFullScreen(e) {
+	var d = document;
+	var _requestFullScreen =e.requestFullScreen			|| e.requestFullscreen		||
+							e.msRequestFullScreen		|| e.msRequestFullscreen	||
+							e.mozRequestFullScreen		|| e.mozRequestFullscreen	||
+							e.webkitRequestFullScreen	|| e.webkitRequestFullscreen;
+	var _cancelFullScreen =	d.cancelFullScreen			|| d.cancelFullscreen		|| d.exitFullScreen			|| d.exitFullscreen			||
+							d.msCancelFullScreen		|| d.msCancelFullscreen		|| d.msExitFullScreen		|| d.msExitFullscreen		||
+							d.mozCancelFullScreen		|| d.mozCancelFullscreen	|| d.mozExitFullScreen		|| d.mozExitFullscreen		||
+							d.webkitCancelFullScreen	|| d.webkitCancelFullscreen	|| d.webkitExitFullScreen	|| d.webkitExitFullscreen;
+
+	if ( d.fullscreenElement	|| d.webkitFullscreenElement ||
+		 d.mozFullScreenElement	|| d.msFullscreenElement) {
+		if (_cancelFullScreen){
+			$(e).removeClass("full-screen");
+			_cancelFullScreen.call(d);
+		}
+	}else
+		if (_requestFullScreen){
+			$(e).addClass("full-screen");
+			_requestFullScreen.call(e);
+		}
+}

@@ -1,35 +1,37 @@
-<h2>Agents</h2>
+<div class="modal-header">
+	<h3 class="modal-title">
+		Starting T-World ({{task_env.name}})
+		<button class="btn btn-danger glyphicon glyphicon-remove pull-right margin-10" ng-click="close()"></button>
+	</h3>
+</div>
 
-<div class="panel panel-default solid">
-	<div class="panel-body">
-
-		<div class="container animate-filter col-md-6" ng-repeat="team in enc.task_env.teams">
-			<div class="panel panel-default">
-				<div class="panel-heading" ng-hide="enc.isCooperative()">
-					Team 
-					<span ng-hide="enc.isCompetitive()">"{{team.name}}"</span>
-					<span ng-show="enc.isCompetitive()">{{$index + 1}}</span>
-				</div>
-				<div class="panel-body">
-					<button ng-if="$index > 1" class="btn btn-danger pull-right glyphicon glyphicon-remove" ng-click="enc.removeTeam($index)" tooltip="remove"></button>
-					<section ng-show="enc.isCompetitiveCooperative()">
-						<label>Name: </label><input type="text" size="8" ng-model="team.name">
-					</section>
-					<section ng-hide="enc.isCompetitive()">
-						<label> Number of agents: </label>
-						<input type="number" style="width:60px" min="2" ng-model="team.members" ng-if="enc.isCooperative()">
-						<input type="number" style="width:60px" min="1" ng-model="team.members" ng-if="enc.isCompetitiveCooperative()">
-					</section>
-					<section ng-hide="enc.isCooperative()">
-						<label> Color: </label><select ng-options="c for c in enc.teamColors" ng-model="team.color"></select>
-					</section>
+<div class="container-fluid text-left">
+	<div class="row">
+		<div class="panel panel-default solid">
+			<div class="panel-body">
+				<div class="container animate-filter col-md-6" ng-repeat="team in teams track by $index">
+					<div class="panel panel-default">
+						<div class="panel-heading" ng-if="singleTeam() && !singleAgent()">Agents</div>
+						<div class="panel-heading" ng-if="!singleTeam()">{{task_env.teams[$index].name}}</div>
+						<div class="panel-body">
+							<div ng-repeat="agent in team track by $index">
+								<span ng-if="!singleAgent()">Agent (id {{agent.id}}): </span>
+								<span ng-if="singleAgent()">Agent: </span>
+								<label class="cursor-pointer" ng-click="selectAgentProgram(agent.id)"> 
+									<span ng-if="agent.program"> {{agent.program.name}}</span>
+									<span ng-if="!agent.program" class="text-red"> (empty)</span>
+								</label>
+								<br>
+							</div>
+						</div>
+					</div>
+					<br>
 				</div>
 			</div>
-			<br>
 		</div>
-		<div class="row">
-			<button class="btn btn-success col-md-1" ng-click="enc.addTeam()" ng-hide="enc.isCooperative()">Add</button>
-		</div>
-
 	</div>
+</div>
+
+<div class="modal-footer">
+	<button class="btn btn-success margin-10 pull-right" ng-click="run()">Let's go!</button>
 </div>
