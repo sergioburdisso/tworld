@@ -77,7 +77,9 @@ function _agentProgram(percept)/*returns accion*/{
 			perceive();
 			break;
 
-		case _PERCEPT_HEADER.READY_FOR_NEXT_ACTION:
+		case _PERCEPT_HEADER.PAUSE:
+			if (percept.data == "off")
+				perceive();
 			break;
 
 		default:
@@ -253,5 +255,5 @@ function printGrid(){
 	}
 
 	console.clear();
-	console.log(strgLine + strgGrid + strgLine);
+	console.log("\n" + strgLine + strgGrid + strgLine);
 }

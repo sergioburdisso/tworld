@@ -51,7 +51,7 @@
 		<h2>Task Environments</h2>
 		<!--Body content-->
 		<div class="list-group mouse-cursor" style="min-height: 300px">
-			<a class="list-group-item animate-filter transition-400" ng-repeat="env in ec.taskEnvironments | filter:ec.userFilter | orderBy:ec.orderCond track by $index" ng-click="ec.setSelected(env.date)" ng-class="{active:ec.isSelected(env.date)}">
+			<a class="list-group-item animate-filter transition-400" ng-repeat="env in ec.taskEnvironments | filter:ec.userFilter | orderBy:ec.orderCond track by $index" ng-click="ec.setSelected(env.date)" ng-dblclick="ec.openRunModal()" ng-class="{active:ec.isSelected(env.date)}">
 				<!-- PROPERTIES ICONS-->
 				<div class="pull-right text-gray">
 					<div class="glyphicon glyphicon-eye-open" ng-show="env.prop.fullyObservable" tooltip="Fully observable"></div>

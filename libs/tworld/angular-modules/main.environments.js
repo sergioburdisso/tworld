@@ -47,8 +47,7 @@
 
 		this.testIt = function(){
 			var env = getEnvironmentByDate(_selected);
-			env.trial.test = true;
-			saveKnobs(env);
+			saveKnobs(env, true);
 
 			startTWorld()
 		}
@@ -110,8 +109,14 @@
 				/*{name:_ENDGAME.TIME.NAME, value:0, result:_GAME_RESULT.NEUTRAL} <-not here 'cause it's the default value*/ 
 			];
 			this.task_env = taskEnvironment = {
-				trial: {//Each trial is a self-contained simulation with a certain duration (in ticks of the clock)
-					test:false
+				trial: {//Each trial is a self-contained simulation
+					/*default trial*/
+					test: false,
+					runs: 1,
+					agents : [],
+					speed: 0, //[-9..9]
+					pause:  true,
+					camera: _CAMERA_TYPE.FREE_GRID
 				},
 				name:'',
 				desc:'',
@@ -180,9 +185,7 @@
 					score:{
 						cell: true
 					},
-					shapes:false,
-					speed:0, //[-9..9]
-					pause: false
+					shapes:false
 				}
 			}
 
@@ -215,8 +218,7 @@
 
 			this.testEnvironment = function(){
 				this.validate();
-				taskEnvironment.trial.test = true;
-				saveKnobs(taskEnvironment);
+				saveKnobs(taskEnvironment, true);
 
 				startTWorld()
 			}

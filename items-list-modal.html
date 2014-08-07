@@ -8,7 +8,7 @@
 
 			Filter by name: <input class="form-control" ng-model="query.name">
 
-			<div class="checkbox">
+			<div class="checkbox" ng-if="environments">
 				<label><input type="checkbox" ng-model="query.allProps"> All properties</label>
 			</div>
 
@@ -52,7 +52,7 @@
 			<div class="list-group mouse-cursor" style="min-height: 300px">
 				<a class="list-group-item animate-filter transition-400" ng-repeat="item in items | filter:userFilter | orderBy:orderCond track by $index" ng-click="setSelected(item.date)" ng-dblclick="ok()" ng-class="{active:isSelected(item.date)}">
 					<!-- PROPERTIES ICONS-->
-					<div class="pull-right text-gray">
+					<div class="pull-right text-gray" ng-if="environments">
 						<div class="glyphicon glyphicon-eye-open" ng-show="item.prop.fullyObservable" title="Fully observable"></div>
 						<div class="glyphicon glyphicon-eye-close" ng-hide="item.prop.fullyObservable" title="Partially observable"></div>
 

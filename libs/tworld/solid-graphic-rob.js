@@ -281,7 +281,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			this.WalkNorth = function(deterministic){
 				var robLocation, iRow, tilesToSlide;
 
-				if ( (_Running && !_Paused) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.NORTH)) &&
+				if ( (_Running && _SPEED) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.NORTH)) &&
 					 (!TWorld.Battery || _environment.isBatteryChargeSufficient(_index))
 					){
 
@@ -315,7 +315,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			this.WalkSouth = function(deterministic){
 				var robLocation, iRow;
 
-				if ( (_Running && !_Paused) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.SOUTH)) &&
+				if ( (_Running && _SPEED) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.SOUTH)) &&
 					 (!TWorld.Battery || _environment.isBatteryChargeSufficient(_index))
 					){
 
@@ -349,7 +349,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			this.WalkEast = function(deterministic){
 				var robLocation, iColumn;
 
-				if ( (_Running && !_Paused) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.EAST)) &&
+				if ( (_Running && _SPEED) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.EAST)) &&
 					 (!TWorld.Battery || _environment.isBatteryChargeSufficient(_index))
 					){
 
@@ -383,7 +383,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			this.WalkWest = function(deterministic){
 				var robLocation, iColumn;
 
-				if ( (_Running && !_Paused) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.WEST)) &&
+				if ( (_Running && _SPEED) && _currentAnimation == ANIMATION.None && (deterministic || _takeStochasticAction(_ACTION.WEST)) &&
 					 (!TWorld.Battery || _environment.isBatteryChargeSufficient(_index))
 					){
 

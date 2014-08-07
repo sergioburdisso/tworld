@@ -1169,6 +1169,8 @@ function GraphicTWorld(graphicEngine, environment){
 			if (_PAUSE_ENABLED && _Running){
 				_Paused = !_Paused;
 
+				_self.Environment.togglePause();
+
 				if (_Paused){
 					if (_AUDIO_ENABLE){
 						buzz.all().setVolume(0);
@@ -1896,7 +1898,7 @@ function GraphicTWorld(graphicEngine, environment){
 						$("#robs-hud").animate({opacity:1},1000);
 					}
 				);
-
+				console.clear();
 				_TWorld.start();
 				$("#playFrame").remove();
 			}

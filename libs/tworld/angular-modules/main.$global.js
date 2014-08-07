@@ -45,9 +45,9 @@ function getAgentProgramByDate(date){date=parseInt(date);
 }
 
 function getKnobs(){return localStorage.knobs? JSON.parse(localStorage.knobs) : null}
-function saveKnobs(knobs){
-	localStorage.knobs = JSON.stringify(knobs);
-	knobs.trial.test = false;
+function saveKnobs(env, test){
+	if (test) env.trial.test= true; //default trial (test trial)
+	localStorage.knobs = JSON.stringify(env);
 }
 function clearKnobs(){localStorage.removeItem("knobs")}
 
@@ -77,6 +77,7 @@ function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
 
 	$scope.items = items;
 	$scope.orderCond = "-date";
+	$scope.environments = !agentProgramsFlag;
 	$scope.query = {
 		name:"",
 		allProps: true,
@@ -119,13 +120,18 @@ function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
 };
 
 function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs){
-	$scope.agents = [];
 	$scope.task_env = taskEnv;
+	$scope.agents = $scope.task_env.trial.agents;
 	$scope.teams = new Array(taskEnv.teams.length);
+	$scope.cameras = _CAMERA_TYPE;
 
 	$scope.run = function () {
 		$scope.task_env.trial.agents = $scope.agents;
+		$scope.task_env.trial.test= false;
+
 		saveKnobs($scope.task_env);
+		saveEnvironments();
+
 		startTWorld();
 		$modalInstance.close()
 	};
@@ -156,11 +162,15 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 	for (var elen=taskEnv.teams.length, a=0, t=0; t < elen; ++t){
 		$scope.teams[t] = new Array(taskEnv.teams[t].members)
 		for (var tlen=$scope.teams[t].length, m=0; m < tlen; ++m, ++a){
-			$scope.agents.push({
-				team: t,
-				id: a,
-				program: agentProgs[a]
-			});
+			if (!$scope.agents[a])
+				$scope.agents.push({
+					team: t,
+					id: a,
+					program: agentProgs[a]
+				});
+			else
+				if (agentProgs[a])
+					$scope.agents[a].program = agentProgs[a];
 
 			$scope.teams[t][m] = $scope.agents[a];
 		}

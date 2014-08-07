@@ -145,6 +145,18 @@ function Environment(rows, columns, graphicEngine, parent) {
 				}
 			}
 
+			//--------------------------------------------------------------------------------------> togglePause
+			this.togglePause = function() {
+				if ( _AI_NECESSARY){
+					//sending the 'pause' percept message!
+					_percept.header =_PERCEPT_HEADER.PAUSE;
+					_percept.data = _Paused? "on":"off";
+					for (var irob= _NUMBER_OF_AGENTS-1; irob >= 0; --irob)
+						if (_AGENTS[irob].CONTROLLED_BY_AI)
+							_rob[irob].ProgramAgent.send( _percept );
+				}
+			}
+
 			//--------------------------------------------------------------------------------------> askForNextAction
 			this.askForNextAction = function(rIndex) {
 				if ( TWorld.PerceiveAsync ){
@@ -1041,9 +1053,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 //Class ProgramAgent
 function ProgramAgent(rIndex, _X2JS, isSocket, src, _env, _gtw){
 	//private atributes
-	var _address = _AGENTS[rIndex].SOCKET_PROGRAM_AGENT.ADDR+":"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.PORT;
+	var _address;
 	var _programAgent = isSocket?
-							new WebSocket("ws://"+_address):
+							new WebSocket("ws://"+(_address = _AGENTS[rIndex].SOCKET_PROGRAM_AGENT.ADDR+":"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.PORT)):
 							new Worker(src);
 	var _index = rIndex;
 	var _myTeam = _GET_TEAM_OF(rIndex);
@@ -1051,6 +1063,7 @@ function ProgramAgent(rIndex, _X2JS, isSocket, src, _env, _gtw){
 	var _self = this;
 
 	//public Methods
+	this.Ready = !isSocket;
 
 	//send to Program Agent
 	this.send = function( percept ) {
@@ -1137,23 +1150,35 @@ function ProgramAgent(rIndex, _X2JS, isSocket, src, _env, _gtw){
 		//case _ACTION.CONSOLE_ERROR
 		if ( _ACTION_REGEX.CONSOLE_ERROR.test(action) )
 			{matchs = action.match(_ACTION_REGEX.CONSOLE_ERROR);
-			console.error( (_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "") + matchs[3] || matchs[4] );}
+			console.error(
+				(_NUMBER_OF_AGENTS > 1? "agent "+_index : "") +
+				"(" + _AGENTS[rIndex].NAME + "): " +
+				(matchs[3] || matchs[4])
+			)}
 		else
 		//case _ACTION.CONSOLE_LOG
 		if ( _ACTION_REGEX.CONSOLE_LOG.test(action) )
 			{matchs = action.match(_ACTION_REGEX.CONSOLE_LOG);
-			console.log( (_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "") + matchs[3] || matchs[4] );}
+			console.log(
+				(_NUMBER_OF_AGENTS > 1? "agent "+_index : "") +
+				"("+ _AGENTS[rIndex].NAME + "): " +
+				(matchs[3] || matchs[4])
+			)}
 		else
 		//case _ACTION.KEY_UP
-		if ( _ACTION_REGEX.KEY_UP.test(action) ){
-			matchs = action.match(_ACTION_REGEX.KEY_UP);
-			_gtw.keyUp(_index, (matchs[3]||matchs[4]).toUpperCase());
-		}else
+		if ( _ACTION_REGEX.KEY_UP.test(action) )
+			{matchs = action.match(_ACTION_REGEX.KEY_UP);
+			_gtw.keyUp(_index, (matchs[3]||matchs[4]).toUpperCase())}
+		else
 		//case _ACTION.KEY_DOWN
-		if ( _ACTION_REGEX.KEY_DOWN.test(action) ){
-			matchs = action.match(_ACTION_REGEX.KEY_DOWN);
-			_gtw.keyDown(_index, (matchs[3]||matchs[4]).toUpperCase());
-		}
+		if ( _ACTION_REGEX.KEY_DOWN.test(action) )
+			{matchs = action.match(_ACTION_REGEX.KEY_DOWN);
+			_gtw.keyDown(_index, (matchs[3]||matchs[4]).toUpperCase())}
+		else
+		//case _ACTION._CONNECTED_
+		if ( _ACTION_REGEX._CONNECTED_.test(action) )
+			{console.log((_NUMBER_OF_AGENTS > 1? "agent "+_index+": '" : "'") + _AGENTS[rIndex].NAME + "' connected")
+			_self.Ready = true}
 		//case INVALID ACTION
 		else{
 			_percept.header = _PERCEPT_HEADER.ERROR;
@@ -1178,18 +1203,19 @@ function ProgramAgent(rIndex, _X2JS, isSocket, src, _env, _gtw){
 
 	_programAgent.onmessage = _programAgentActionReceived;
 
-	_programAgent.onopen = function(){/*console.log("Socket has been opened!");*/}
+	_programAgent.onopen = function(){_programAgent.send("CONNECT:"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.MAGIC_STRING)}
 
 	_programAgent.onerror = function(event){
 		if (isSocket)
 			console.error(
 				(_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "")+"An error occurred while trying to connect to the T-World Proxy ("+_address+")"
 			);
-		//else
+		_self.Ready = false;
 	}
 
 	_programAgent.onclose = function(event) {
 		console.error((_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "")+"connection was closed with code: " + event.code + "\n(can't connect to the T-World Proxy)");
+		_self.Ready = false;
 	}
 }
 

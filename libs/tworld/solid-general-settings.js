@@ -20,7 +20,7 @@
 var _KNOBS= localStorage.knobs?
 		JSON.parse(localStorage.knobs)
 		:
-		{trial:{test:true},name:"DEFAULT",desc:"",date:0,battery:true,prop:{fullyObservable:true,multiagent:false,multiagent_type:0,deterministic:true,dynamic:2,known:true},agents:{percept:{sync:true,interval:500,partialGrid:true,radius:3,noise:false,noise_cfg:{tile:0.3,obstacle:0.3,hole:0.3}},determinism:0.8,stochastic_model:1},environment:{rows:8,columns:11,holes_size:{range:[1,3],prob:[334,333,333]},num_holes:{range:[2,3],prob:[500,500]},num_obstacles:{range:[1,2],prob:[500,500]},difficulty:{range:[0,0],prob:[]},scores_variability:0,dynamic:{dynamism:{range:[6,13],prob:[125,125,125,125,125,125,125,125]},hostility:{range:[1,13],prob:[77,77,77,77,77,77,77,77,77,77,77,77,76]},hard_bounds:true},random_initial_state:false,initial_state:[],final_state:[{name:"Time",value:300,result:0}]},teams:[{name:"Team0",color:"red",members:1},{name:"Team1",color:"blue",members:1}],final_tweaks:{battery:{level:1000,good_move:20,bad_move:5,sliding:10},multiplier:{enabled:true,timeout:6},score:{cell:true},shapes:false,speed:0,pause:true}};
+		{trial:{test:true,speed:0,pause:true},name:"DEFAULT",desc:"",date:0,battery:true,prop:{fullyObservable:true,multiagent:false,multiagent_type:0,deterministic:true,dynamic:2,known:true},agents:{percept:{sync:true,interval:500,partialGrid:true,radius:3,noise:false,noise_cfg:{tile:0.3,obstacle:0.3,hole:0.3}},determinism:0.8,stochastic_model:1},environment:{rows:8,columns:11,holes_size:{range:[1,3],prob:[334,333,333]},num_holes:{range:[2,3],prob:[500,500]},num_obstacles:{range:[1,2],prob:[500,500]},difficulty:{range:[0,0],prob:[]},scores_variability:0,dynamic:{dynamism:{range:[6,13],prob:[125,125,125,125,125,125,125,125]},hostility:{range:[1,13],prob:[77,77,77,77,77,77,77,77,77,77,77,77,76]},hard_bounds:true},random_initial_state:false,initial_state:[],final_state:[{name:"Time",value:300,result:0}]},teams:[{name:"Team0",color:"red",members:1},{name:"Team1",color:"blue",members:1}],final_tweaks:{battery:{level:1000,good_move:20,bad_move:5,sliding:10},multiplier:{enabled:true,timeout:6},score:{cell:true},shapes:false}};
 
 var _LANGUAGE = _LANGUAGES.SPANISH;
 
@@ -46,23 +46,38 @@ var _BATTERY_INITIAL_CHARGE		= _KNOBS.final_tweaks.battery.level;
 var _BATTERY_WALK_COST			= _KNOBS.final_tweaks.battery.good_move;
 var _BATTERY_INVALID_MOVE_COST	= _KNOBS.final_tweaks.battery.bad_move;
 var _BATTERY_SLIDE_COST			= _KNOBS.final_tweaks.battery.sliding;
-
+console.log("_KNOBS.trial.test " + _KNOBS.trial.test)
+console.log("_KNOBS.trial.pause "+_KNOBS.trial.pause)
+console.log(_KNOBS.trial.speed)
 // Players
 if (_KNOBS.trial.test){
-	var _TEAMS = [{NAME:"", COLOR: _COLORS.BLUE, MEMBERS:[0]}/*,{NAME:"", COLOR: _COLORS.RED, MEMBERS:[1]}*/];
-	var _NUMBER_OF_AGENTS	= 1;
+	var _PAUSE_ENABLED = true;
+	var _SPEED = 1;
+	var _TEAMS = [{NAME:"", COLOR: _COLORS.BLUE, MEMBERS:[0]},{NAME:"", COLOR: _COLORS.RED, MEMBERS:[1]}];
+	var _NUMBER_OF_AGENTS	= 2;
 	var _AGENTS = [
 	{
 		NAME : "Sergio",
 		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:16}/*Arrow keys + Ctrl*/
-	}/*,
+	},
 	{
 		NAME : "Denise",
 		CONTROLS : {Up:87, Down:83, Left:65, Right:68, Restore:69}
-	}*/
+	}
 	];
 }else{
 	var _KNOBS_Agents = _KNOBS.trial.agents;
+
+	var _PAUSE_ENABLED = _KNOBS.trial.pause;
+	var _SPEED = _KNOBS.trial.speed < 0?
+				1/(-_KNOBS.trial.speed + 1)
+			:
+				(_KNOBS.trial.speed == 0?
+					1
+				:
+					_KNOBS.trial.speed + 1
+				)
+			;
 
 	var _NUMBER_OF_AGENTS = _KNOBS_Agents.length;
 	var _TEAMS = []
@@ -90,6 +105,7 @@ if (_KNOBS.trial.test){
 				_AGENTS[i].SOCKET_PROGRAM_AGENT =	{
 					ADDR: _KNOBS_Agents[i].program.socket.ip_address,
 					PORT: _KNOBS_Agents[i].program.socket.port,
+					MAGIC_STRING: _KNOBS_Agents[i].program.socket.magic_string,
 					OUTPUT_FORMAT: _KNOBS_Agents[i].program.socket.percept_format
 				}
 			}
@@ -100,6 +116,7 @@ if (_KNOBS.trial.test){
 				_AGENTS[i].SOCKET_PROGRAM_AGENT =	{
 					ADDR: _KNOBS_Agents[i].program.socket.ip_address,
 					PORT: _KNOBS_Agents[i].program.socket.port,
+					MAGIC_STRING: _KNOBS_Agents[i].program.socket.magic_string,
 					OUTPUT_FORMAT: _PERCEPT_FORMAT.JSON
 				}
 			}
@@ -110,16 +127,6 @@ var _MULTIPLIER_TIME = _KNOBS.final_tweaks.multiplier.enabled?
 						_KNOBS.final_tweaks.multiplier.timeout
 						:
 						0;
-
-var _SPEED = _KNOBS.final_tweaks.speed < 0?
-				1/(-_KNOBS.final_tweaks.speed + 1)
-			:
-				(_KNOBS.final_tweaks.speed == 0?
-					1
-				:
-					_KNOBS.final_tweaks.speed + 1
-				)
-			;
 
 var _SCORE_CELLS_MULTIPLIER = _KNOBS.final_tweaks.score.cell? 2 : 0;
 var _SCORE_HOLE_MULTIPLIER = 10;
@@ -135,10 +142,9 @@ var 	_RENDER_HEIGHT	= 400;
 // Hide/show enable/disable things
 var _SHOW_HOLES_HELPERS = true;
 var _SHOW_FPS = true;
-var _PAUSE_ENABLED = _KNOBS.final_tweaks.pause;
 
 // Camera
-var _DEFAULT_CAMERA	= _CAMERA_TYPE.FREE_GRID;
+var _DEFAULT_CAMERA	= _KNOBS.trial.camera;
 var _CAMERA_SMOOTH	= true;
 
 // Animation
