@@ -139,7 +139,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 				if ( _AI_NECESSARY){
 					//sending the 'start' percept message!
 					_percept.header =_PERCEPT_HEADER.START;
-					for (var irob= _NUMBER_OF_AGENTS-1; irob >= 0; --irob)
+					for (var irob= _NUMBER_OF_AGENTS; irob--;)
 						if (_AGENTS[irob].CONTROLLED_BY_AI)
 							_self.programAgentPerceive(irob);
 				}
@@ -151,9 +151,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 					//sending the 'pause' percept message!
 					_percept.header =_PERCEPT_HEADER.PAUSE;
 					_percept.data = _Paused? "on":"off";
-					for (var irob= _NUMBER_OF_AGENTS-1; irob >= 0; --irob)
+					for (var irob= _NUMBER_OF_AGENTS; irob--;)
 						if (_AGENTS[irob].CONTROLLED_BY_AI)
-							_rob[irob].ProgramAgent.send( _percept );
+							_rob[irob].AgentProgram.send( _percept );
 				}
 			}
 
@@ -162,7 +162,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 				if ( TWorld.PerceiveAsync ){
 					_percept.header = _PERCEPT_HEADER.READY_FOR_NEXT_ACTION;
 					_percept.data = "null";
-					_rob[rIndex].ProgramAgent.send( _percept );
+					_rob[rIndex].AgentProgram.send( _percept );
 				}else
 					_self.programAgentPerceive(rIndex);
 			}
@@ -172,7 +172,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 			this.onLoadingCompleteCallback = function() {
 				var emptyCell;
 
-				for (var pos, i = _rob.length-1; i >= 0; --i){
+				for (var pos, i = _rob.length; i--;){
 					if (_AGENTS[i].START_POSITION){
 						this.initializeRobAt(i, _AGENTS[i].START_POSITION.ROW, _AGENTS[i].START_POSITION.COLUMN);
 						_listOfEmptyCells.remove(_AGENTS[i].START_POSITION.ROW, _AGENTS[i].START_POSITION.COLUMN);
@@ -315,6 +315,34 @@ function Environment(rows, columns, graphicEngine, parent) {
 			}
 
 			//--------------------------------------------------------------------------------------> isBatteryChargeSufficient
+			this.checkIfAgentProgramsReady = function(){
+				var nReady = 0, nTotal = 0;
+				var msg_status = "Waiting for agent programs to connect (";
+				var msg_ap_list = "";
+
+				for (var irob= _NUMBER_OF_AGENTS; irob--;)
+					if (_rob[irob].AgentProgram && _AGENTS[irob].SOCKET_PROGRAM_AGENT){
+						nTotal++;
+						if (_rob[irob].AgentProgram.Ready){
+							nReady++;
+							msg_ap_list+="	Agent "+irob+": '"+_AGENTS[irob].NAME+"' is READY!\n";
+						}else
+							msg_ap_list+="	Agent "+irob+": '"+_AGENTS[irob].NAME+"' is disconnected!\n";
+					}
+
+				_Ready = nReady === nTotal;
+
+				if (_Ready)
+					$("#playFrame").show();
+				else
+					$("#playFrame").hide();
+
+				msg_status += (nReady + "/" + nTotal + ")\n");
+				console.clear();
+				console.log(msg_status + msg_ap_list);
+			}
+
+			//--------------------------------------------------------------------------------------> isBatteryChargeSufficient
 			this.isBatteryChargeSufficient = function(rIndex){
 				var sufficient;
 				rIndex = _GET_TEAM_LEADER(rIndex);
@@ -326,7 +354,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			//--------------------------------------------------------------------------------------> isABatteryCharger
 			this.isABatteryCharger = function(row, column){
-				for (var bc = _bChargerLoc.length-1; bc >= 0; --bc)
+				for (var bc = _bChargerLoc.length; bc--;)
 					if (_bChargerLoc[bc].row == row && _bChargerLoc[bc].column == column)
 						return bc+1;
 				return 0;
@@ -346,7 +374,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 				if (column == null)
 					return _rob[row/*rIndex*/].CellFilling[0] != -1;
 				else{
-					for (var r= _rob.length-1; r >= 0; --r)
+					for (var r= _rob.length; r--;)
 						if (_rob[r].CellFilling[0] == row && _rob[r].CellFilling[1] == column)
 							return true;
 					return false;
@@ -355,7 +383,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			//--------------------------------------------------------------------------------------> isAnEmptyCell
 			this.isASlidingTile = function(rIndex, row, column) {
-				for (var rt = _rob.length-1; rt >= 0; --rt)
+				for (var rt = _rob.length; rt--;)
 					if (rt != rIndex && _rob[rt].ListOfTilesToSlide.contains(row, column))
 						return true;
 				return false;
@@ -746,7 +774,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			//--------------------------------------------------------------------------------------> sendTeamMessage
 			this.sendTeamMessage = function(team, data){
-				for (var ipeer = team.length-1; ipeer >= 0; --ipeer)
+				for (var ipeer = team.length; ipeer--;)
 					_self.sendPeerMessage(team[ipeer], data);
 			}
 
@@ -755,8 +783,8 @@ function Environment(rows, columns, graphicEngine, parent) {
 				_percept.header = _PERCEPT_HEADER.MESSAGE;
 				_percept.data = data;
 
-				if (_rob[robId].ProgramAgent)
-					_rob[robId].ProgramAgent.send( _percept );
+				if (_rob[robId].AgentProgram)
+					_rob[robId].AgentProgram.send( _percept );
 			}
 
 			//--------------------------------------------------------------------------------------> _checkIfGameOver
@@ -789,7 +817,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 						if (_AGENTS[r].CONTROLLED_BY_AI){
 							_percept.header = _PERCEPT_HEADER.END;
 							_percept.data = goal.RESULT;
-							_rob[r].ProgramAgent.send( _percept );
+							_rob[r].AgentProgram.send( _percept );
 						}
 
 					_graphicTWorld.gameIsOver(_rob, goal, _time);
@@ -799,7 +827,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 			//--------------------------------------------------------------------------------------> _holesAndObstaclesTick
 			function _holesAndObstaclesTick() {
 				var cellRemoved;
-				for (var hole, i= _listOfHoles.getLength()-1; i >= 0; i--){
+				for (var hole, i= _listOfHoles.getLength(); i--;){
 					hole = _listOfHoles.getItemAt(i);
 
 					if (hole.tickAndTest())
@@ -820,7 +848,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 				}
 
 				if (TWorld.Dynamic)
-					for (var obstacle, i= _listOfObstacles.getLength()-1; i >= 0; i--){
+					for (var obstacle, i= _listOfObstacles.getLength(); i--;){
 						obstacle = _listOfObstacles.getItemAt(i);
 
 						if (obstacle.tickAndTest())
@@ -906,7 +934,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 						_listOfEmptyCells.appendUnique(tileCell);
 					}
 
-					for (var t= _rob.length-1; t >= 0; --t)
+					for (var t= _rob.length; t--;)
 						if (_rob[t].ListOfTilesToSlide.remove(tileCell[0], tileCell[1]))
 							break;
 
@@ -993,7 +1021,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 							};
 
 			if (_AGENTS[irob].CONTROLLED_BY_AI || _AGENTS[irob].SOCKET_PROGRAM_AGENT){
-				_rob[irob].ProgramAgent = new ProgramAgent(
+				_rob[irob].AgentProgram = new AgentProgram(
 					irob,
 					_X2JS,
 					_AGENTS[irob].SOCKET_PROGRAM_AGENT,
@@ -1002,7 +1030,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 					_graphicTWorld
 				);
 				_rob[irob].PerceptionFunction = new Worker("./libs/tworld/solid-perception.js");
-				_rob[irob].PerceptionFunction.onmessage = _rob[irob].ProgramAgent.send;
+				_rob[irob].PerceptionFunction.onmessage = _rob[irob].AgentProgram.send;
 				_rob[irob].PerceptionFunction.postMessage({
 					CFG_CONSTANTS:{
 						_ROWS						: _ROWS,
@@ -1030,10 +1058,12 @@ function Environment(rows, columns, graphicEngine, parent) {
 					}
 				})
 			}
-		}
+		}// for
+
+		this.checkIfAgentProgramsReady();
 
 		var maxTeamPlayers = 0;
-		for (var iteam=_TEAMS.length-1; iteam >= 0; --iteam)
+		for (var iteam=_TEAMS.length; iteam--;)
 			if (_TEAMS[iteam].MEMBERS.length > maxTeamPlayers)
 				maxTeamPlayers = _TEAMS[iteam].MEMBERS.length;
 
@@ -1050,11 +1080,11 @@ function Environment(rows, columns, graphicEngine, parent) {
 }
 
 //--> Internal Classes
-//Class ProgramAgent
-function ProgramAgent(rIndex, _X2JS, isSocket, src, _env, _gtw){
+//Class AgentProgram
+function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 	//private atributes
 	var _address;
-	var _programAgent = isSocket?
+	var _agentProgram = isSocket?
 							new WebSocket("ws://"+(_address = _AGENTS[rIndex].SOCKET_PROGRAM_AGENT.ADDR+":"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.PORT)):
 							new Worker(src);
 	var _index = rIndex;
@@ -1075,7 +1105,7 @@ function ProgramAgent(rIndex, _X2JS, isSocket, src, _env, _gtw){
 		// once the percept was created by the perception function (thread that runs the solid-perception.js)
 		// send the percept to the Rob's mind (i.e the Program Agent)
 		if (!_AGENTS[_index].SOCKET_PROGRAM_AGENT)
-			_programAgent.postMessage( percept );
+			_agentProgram.postMessage( percept );
 		else{
 
 			if (percept.header)
@@ -1091,14 +1121,21 @@ function ProgramAgent(rIndex, _X2JS, isSocket, src, _env, _gtw){
 					break;
 			}
 
-			_programAgent.send( percept );
+			_agentProgram.send( percept );
 		}
 	}
 
 	//private methods
 
+	//is this agent program "ready" (connected)?
+	function _setReady(value){
+		_self.Ready = value;
+		if (!_Running)
+			_env.checkIfAgentProgramsReady();
+	}
+
 	//used to receive the Rob's Program Agent action
-	function _programAgentActionReceived(action) {
+	function _agentProgramActionReceived(action) {
 		var matchs, noMoves = false;
 
 		action = action.data;
@@ -1177,8 +1214,15 @@ function ProgramAgent(rIndex, _X2JS, isSocket, src, _env, _gtw){
 		else
 		//case _ACTION._CONNECTED_
 		if ( _ACTION_REGEX._CONNECTED_.test(action) )
-			{console.log((_NUMBER_OF_AGENTS > 1? "agent "+_index+": '" : "'") + _AGENTS[rIndex].NAME + "' connected")
-			_self.Ready = true}
+			_setReady(true);
+		else
+		//case _ACTION._DISCONNECTED_
+		if ( _ACTION_REGEX._DISCONNECTED_.test(action) ){
+			_setReady(false);
+			if (_Running)
+				console.error((_NUMBER_OF_AGENTS > 1? "agent "+_index : "") +
+					"(" + _AGENTS[rIndex].NAME + "): Program Agent was closed by the other side"
+				)}
 		//case INVALID ACTION
 		else{
 			_percept.header = _PERCEPT_HEADER.ERROR;
@@ -1187,35 +1231,35 @@ function ProgramAgent(rIndex, _X2JS, isSocket, src, _env, _gtw){
 				_self.send( _percept );
 			}else
 				if (!_Running){
-					_percept.data = "'TWorld haven't started, this action is not allowed yet. (allowed actions: <CONSOLE_LOG>,<ERROR> and <CLEAR>)'";
+					_percept.data = "'TWorld have not started, this action is not allowed yet. (allowed actions: <CONSOLE_LOG>,<ERROR> and <CLEAR>)'";
 					_self.send( _percept );
 				}
 		}
 	}
 
-	//constructor logic
+	/* constructor logic */
 
 	if (!isSocket){
 		_percept.header = _PERCEPT_HEADER.INTERNAL;
 		_percept.data = {ai_src: _AGENTS[rIndex].AI_SOURCE_CODE, tm_msg_src: _AGENTS[rIndex].TEAM_MSG_SOURCE_CODE}
-		_programAgent.postMessage( _percept );
+		_agentProgram.postMessage( _percept );
 	}
 
-	_programAgent.onmessage = _programAgentActionReceived;
+	_agentProgram.onmessage = _agentProgramActionReceived;
 
-	_programAgent.onopen = function(){_programAgent.send("CONNECT:"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.MAGIC_STRING)}
+	_agentProgram.onopen = function(){_agentProgram.send("CONNECT:"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.MAGIC_STRING)}
 
-	_programAgent.onerror = function(event){
+	_agentProgram.onerror = function(event){
 		if (isSocket)
 			console.error(
 				(_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "")+"An error occurred while trying to connect to the T-World Proxy ("+_address+")"
 			);
-		_self.Ready = false;
+		_setReady(false);
 	}
 
-	_programAgent.onclose = function(event) {
+	_agentProgram.onclose = function(event) {
 		console.error((_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "")+"connection was closed with code: " + event.code + "\n(can't connect to the T-World Proxy)");
-		_self.Ready = false;
+		_setReady(false);
 	}
 }
 

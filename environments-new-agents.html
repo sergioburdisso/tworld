@@ -6,6 +6,7 @@
 		<div class="container animate-filter col-md-6" ng-repeat="team in enc.task_env.teams">
 			<div class="panel panel-default">
 				<div class="panel-heading" ng-hide="enc.isCooperative()">
+					<img ng-src="copperlichtdata/color-{{team.color}}.png" height="32" style="margin-top:-16px">
 					Team 
 					<span ng-hide="enc.isCompetitive()">"{{team.name}}"</span>
 					<span ng-show="enc.isCompetitive()">{{$index + 1}}</span>

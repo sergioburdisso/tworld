@@ -110,13 +110,13 @@ function GraphicTWorld(graphicEngine, environment){
 			var _sound_voice_countdown		= new Array(11);
 			var _sound_voice_pause			= new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_pause.mp3");
 			
-			for (var i=_sound_voice_countdown.length-1; i>=0;--i)
+			for (var i=_sound_voice_countdown.length; i--;)
 				_sound_voice_countdown[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_"+i+".mp3");
-			for (var i=_sound_voice_full_energy.length-1; i>=0;--i)
+			for (var i=_sound_voice_full_energy.length; i--;)
 				_sound_voice_full_energy[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_full-energy"+i+".mp3");
-			for (var i=_sound_voice_battery_danger.length-1; i>=0;--i)
+			for (var i=_sound_voice_battery_danger.length; i--;)
 				_sound_voice_battery_danger[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_battery-danger"+i+".mp3");
-			for (var i=_sound_voice_restore_energy.length-1; i>=0;--i)
+			for (var i=_sound_voice_restore_energy.length; i--;)
 				_sound_voice_restore_energy[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_battery-restore"+i+".mp3");
 		}
 	//public
@@ -279,7 +279,7 @@ function GraphicTWorld(graphicEngine, environment){
 									mBattery_Restore:0,
 									mBattery_Recharge:0,
 								};
-				for (var m=_TEAMS[i].MEMBERS.length-1; m >= 0; --m){
+				for (var m=_TEAMS[i].MEMBERS.length; m--;){
 					_TEAMS[i].STATS.MTotalScore += robs[_TEAMS[i].MEMBERS[m]].Stats.total_score;
 					_TEAMS[i].STATS.MHoles += robs[_TEAMS[i].MEMBERS[m]].Stats.filled_holes;
 					_TEAMS[i].STATS.MCells += robs[_TEAMS[i].MEMBERS[m]].Stats.filled_cells;
@@ -590,7 +590,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 						_self.showTeleport(_CLN_Rob[rIndex], true, false, true);
 
-						for (var team= _GET_TEAM_OF(rIndex), irob=team.length-1; irob >= 0; --irob)
+						for (var team= _GET_TEAM_OF(rIndex), irob=team.length; irob--;)
 							_self.showTeleport(_CLN_Rob[team[irob]], true, false, true);
 					}
 				}
@@ -1077,7 +1077,7 @@ function GraphicTWorld(graphicEngine, environment){
 			//Asynchronous perception (if it is enabled)
 			if (TWorld.PerceiveAsync && _SPEED && (_perceptTimeAccum+= timeElapsed) >= TWorld.PerceptInterval*_SPEED){
 				_perceptTimeAccum = _perceptTimeAccum % TWorld.PerceptInterval;
-				for (var irob= _NUMBER_OF_AGENTS-1; irob >= 0; --irob)
+				for (var irob= _NUMBER_OF_AGENTS; irob--;)
 					if (_AGENTS[irob].CONTROLLED_BY_AI)
 						_self.Environment.programAgentPerceive(irob);
 			}
@@ -1324,7 +1324,7 @@ function GraphicTWorld(graphicEngine, environment){
 					_CLN_UFO.Pos.Y = 60 + Math.sin(this.Time/50)*15;
 
 					if (TWorld.Battery)
-						for (var bc= _CLN_BatteryIcon.length-1; bc >=0; --bc)
+						for (var bc= _CLN_BatteryIcon.length; bc--;)
 							_CLN_BatteryIcon[bc].Pos.Y = _BatteryIconY + (_CLN_UFO.Pos.Y - 60)/8;
 				}
 			}
@@ -1717,7 +1717,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 			_self.Rob[rob] = new GraphicRob(_CLN_Rob[rob], _self, rob);
 
-			for (var iteam = _TEAMS.length-1; iteam >= 0; --iteam)
+			for (var iteam = _TEAMS.length; iteam--;)
 				if (_TEAMS[iteam].MEMBERS[0] == rob){
 
 					$("#robs-hud").append(

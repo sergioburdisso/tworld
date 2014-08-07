@@ -53,16 +53,15 @@ console.log(_KNOBS.trial.speed)
 if (_KNOBS.trial.test){
 	var _PAUSE_ENABLED = true;
 	var _SPEED = 1;
-	var _TEAMS = [{NAME:"", COLOR: _COLORS.BLUE, MEMBERS:[0]},{NAME:"", COLOR: _COLORS.RED, MEMBERS:[1]}];
-	var _NUMBER_OF_AGENTS	= 2;
+	var _TEAMS = [{NAME:"", COLOR: _COLORS.BLUE, MEMBERS:[0]}];
+	var _NUMBER_OF_AGENTS	= 1;
 	var _AGENTS = [
 	{
 		NAME : "Sergio",
 		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:16}/*Arrow keys + Ctrl*/
-	},
-	{
-		NAME : "Denise",
-		CONTROLS : {Up:87, Down:83, Left:65, Right:68, Restore:69}
+		//CONTROLS : {Up:87, Down:83, Left:65, Right:68, Restore:69} /*WASDE*/
+		//CONTROLS : {Up:72, Down:78, Left:66, Right:77, Restore:74};/*HNBMJ*/
+		//CONTROLS : {Up:80, Down:192, Left:76, Right:222, Restore:187};/*PÑL[+*/
 	}
 	];
 }else{
@@ -286,5 +285,5 @@ if (_INITIAL_STATE){
 			}
 }
 
-document.title = "T-world ("+_KNOBS.name+")";
+document.title = "T-World ("+_KNOBS.name+")";
 //window.opener = null;

@@ -5,73 +5,66 @@
 	</h3>
 </div>
 
-<div class="container-fluid text-left">
+<div class="modal-body">
 	<div class="row">
-		<div class="panel panel-default">
-			<div class="panel-body">
-
-				<div class="container animate-filter col-md-6" ng-repeat="team in teams track by $index">
-					<div class="panel panel-default">
-						<div class="panel-heading" ng-if="singleTeam() && !singleAgent()">Agents</div>
-						<div class="panel-heading" ng-if="!singleTeam()">
-							<img ng-src="copperlichtdata/color-{{task_env.teams[$index].color}}.png" height="32" style="margin-top:-16px">
-							{{task_env.teams[$index].name}}
-						</div>
-						<div class="panel-body">
-							<div ng-repeat="agent in team track by $index">
-								<span ng-if="!singleAgent()">Agent (id {{agent.id}}): </span>
-								<span ng-if="singleAgent()">Agent: </span>
-								<label class="cursor-pointer" ng-click="selectAgentProgram(agent.id)"> 
-									<span ng-if="agent.program"> {{agent.program.name}}</span>
-									<span ng-if="!agent.program" class="text-red"> (empty)</span>
-								</label>
-							</div>
-						</div>
+		<div class="col-md-6" ng-repeat="team in teams track by $index">
+			<div class="panel panel-default">
+				<div class="panel-heading" ng-if="singleTeam() && !singleAgent()">Agents</div>
+				<div class="panel-heading" ng-if="!singleTeam()">
+					<img ng-src="copperlichtdata/color-{{task_env.teams[$index].color}}.png" height="32" style="margin-top:-16px">
+					{{task_env.teams[$index].name}}
+				</div>
+				<div class="panel-body">
+					<div ng-repeat="agent in team track by $index">
+						<span ng-if="!singleAgent()">Agent (id {{agent.id}}): </span>
+						<span ng-if="singleAgent()">Agent: </span>
+						<label class="cursor-pointer" ng-click="selectAgentProgram(agent.id)"> 
+							<span ng-if="agent.program"> {{agent.program.name}}</span>
+							<span ng-if="!agent.program" class="text-red"> (empty)</span>
+						</label>
 					</div>
 				</div>
-
 			</div>
 		</div>
+	</div>
 
-		<div class="panel panel-default">
-			<div class="panel-body">
+	<div class="panel panel-default">
+		<div class="panel-body">
 
-				
-				<br>
-				<div class="col-md-4">
-					T-World speed is {{
-						(task_env.trial.speed < 0 && (-task_env.trial.speed+1) + " times slower.")||
-						(task_env.trial.speed == 0 && "normal.") ||
-						((task_env.trial.speed+1) + " times faster.")}}
-					<div class="ui-slider-size" ui-slider min="-9" max="9" step="1" ng-model="task_env.trial.speed"></div>
-					<label>({{
-						(task_env.trial.speed < 0 && (-task_env.trial.speed+1)+ " seconds = 1 t-second")||
-						(task_env.trial.speed == 0 && "1 t-second = 1 second") ||
-						(task_env.trial.speed+1)+" t-seconds = 1 second"}})
-					</label>
-				</div>
-
-				<div class="col-md-2">
-					<div class="checkbox">
-						<label><input type="checkbox" ng-model="task_env.trial.pause"> Enable Pause</label>
-					</div>
-					<div class="checkbox">
-						<label><input type="checkbox" ng-model="task_env.trial.saveStats"> Save stats</label>
-					</div>
-				</div>
-
-				<div class="col-md-2">
-					<label># of Runs</label><input type="number" min="0" class="form-control" ng-model="task_env.trial.runs">
-				</div>
-
-				<div class="col-md-4">
-					<label>Default Camera</label>
-					<select class="form-control" ng-model="task_env.trial.camera" ng-options="value as camera for (camera, value) in cameras"></select>
-				</div>
-
+			
+			<br>
+			<div class="col-md-4">
+				T-World speed is {{
+					(task_env.trial.speed < 0 && (-task_env.trial.speed+1) + " times slower.")||
+					(task_env.trial.speed == 0 && "normal.") ||
+					((task_env.trial.speed+1) + " times faster.")}}
+				<div class="ui-slider-size" ui-slider min="-9" max="9" step="1" ng-model="task_env.trial.speed"></div>
+				<label>({{
+					(task_env.trial.speed < 0 && (-task_env.trial.speed+1)+ " seconds = 1 t-second")||
+					(task_env.trial.speed == 0 && "1 t-second = 1 second") ||
+					(task_env.trial.speed+1)+" t-seconds = 1 second"}})
+				</label>
 			</div>
-		</div>
 
+			<div class="col-md-3">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="task_env.trial.pause"> Enable Pause</label>
+				</div>
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="task_env.trial.saveStats"> Save stats</label>
+				</div>
+			</div>
+
+			<div class="col-md-2">
+				<label># of Runs</label><input type="number" min="0" class="form-control" ng-model="task_env.trial.runs">
+			</div>
+
+			<div class="col-md-3">
+				<label>Default Camera</label>
+				<select class="form-control" ng-model="task_env.trial.camera" ng-options="value as camera for (camera, value) in cameras"></select>
+			</div>
+
+		</div>
 	</div>
 </div>
 

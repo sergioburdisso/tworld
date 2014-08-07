@@ -38,7 +38,8 @@ var _ACTION_REGEX = {
 
 					//internal action used only by the t-world proxy
 					//(user shouldn't be aware of this action)
-					_CONNECTED_:	/^_connected_$/i
+					_CONNECTED_:	/^_connected_$/i,
+					_DISCONNECTED_:	/^_disconnected_$/i
 					/*stop percept, start percept*/
 				};
 
@@ -167,6 +168,7 @@ var _ENDGAME = {
 
 var _Running	= false;//did the user push the play button?
 var _Paused		= false;
+var _Ready		= false;//are all the agent programs ready?
 
 var _FPS		= 60; // maximum fps
 
