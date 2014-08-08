@@ -108,16 +108,16 @@ function GraphicTWorld(graphicEngine, environment){
 			var _sound_voice_battery_danger	= new Array(2);
 			var _sound_voice_full_energy	= new Array(2);
 			var _sound_voice_countdown		= new Array(11);
-			var _sound_voice_pause			= new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_pause.mp3");
+			var _sound_voice_pause			= new buzz.sound("./sounds/voices/"+_LANGUAGE.toLowerCase()+"/voice_pause.mp3");
 			
 			for (var i=_sound_voice_countdown.length; i--;)
-				_sound_voice_countdown[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_"+i+".mp3");
+				_sound_voice_countdown[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE.toLowerCase()+"/voice_"+i+".mp3");
 			for (var i=_sound_voice_full_energy.length; i--;)
-				_sound_voice_full_energy[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_full-energy"+i+".mp3");
+				_sound_voice_full_energy[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE.toLowerCase()+"/voice_full-energy"+i+".mp3");
 			for (var i=_sound_voice_battery_danger.length; i--;)
-				_sound_voice_battery_danger[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_battery-danger"+i+".mp3");
+				_sound_voice_battery_danger[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE.toLowerCase()+"/voice_battery-danger"+i+".mp3");
 			for (var i=_sound_voice_restore_energy.length; i--;)
-				_sound_voice_restore_energy[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_battery-restore"+i+".mp3");
+				_sound_voice_restore_energy[i] = new buzz.sound("./sounds/voices/"+_LANGUAGE.toLowerCase()+"/voice_battery-restore"+i+".mp3");
 		}
 	//public
 		this.Environment = environment;

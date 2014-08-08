@@ -67,19 +67,21 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 
 			//sounds
 			if (_AUDIO_ENABLE){
+				_tmp = "./sounds/voices/"+_LANGUAGE.toLowerCase();
+
 				var _sound_walk = new buzz.sound("./sounds/rob-walk.mp3").loop();
 				var _sound_walk_tile = new buzz.sound("./sounds/rob-walk-tile.mp3");
 				var _sound_battery_restore	= new buzz.sound("./sounds/battery-restore.mp3");
 
 				var _sound_voice_cant_walking = [
-					new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_rob-cant-walking0.mp3"),
-					new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_rob-cant-walking1.mp3"),
-					new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_rob-cant-walking2.mp3")
+					new buzz.sound(_tmp+"/voice_rob-cant-walking0.mp3"),
+					new buzz.sound(_tmp+"/voice_rob-cant-walking1.mp3"),
+					new buzz.sound(_tmp+"/voice_rob-cant-walking2.mp3")
 				];
 				var _sound_voice_cant = [
-					new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_rob-cant0.mp3"),
-					new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_rob-cant1.mp3"),//ah ah
-					new buzz.sound("./sounds/voices/"+_LANGUAGE+"/voice_rob-cant2.mp3")
+					new buzz.sound(_tmp+"/voice_rob-cant0.mp3"),
+					new buzz.sound(_tmp+"/voice_rob-cant1.mp3"),//ah ah
+					new buzz.sound(_tmp+"/voice_rob-cant2.mp3")
 				];
 			}
 	//end region Attributes
