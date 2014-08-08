@@ -60,8 +60,6 @@ function TWorld(){}
 
 	//-> TilesNoisyPerception
 		TWorld.Percept = true;
-		TWorld.PerceiveAsync = !_KNOBS.agents.percept.sync; // perceive every <PerceptInterval> milliseconds or after each action
-		TWorld.PerceptInterval = _KNOBS.agents.percept.interval;
 
 		// Noise
 		if (_KNOBS.prop.fullyObservable || !_KNOBS.agents.percept.noise)

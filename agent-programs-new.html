@@ -56,11 +56,34 @@
 						<label for="port">Port</label><input type="number" id="port" min="1" max="65535" class="form-control" ng-model="apnc.agent_prog.socket.port" placeholder="Port number"></input>
 						<br>
 						<label for="magic-string">The magic string</label><input type="text" id="magic-string" class="form-control" ng-model="apnc.agent_prog.socket.magic_string" placeholder="Magic string" value="localhost" maxlength="128">
-						<section ng-show="apnc.agent_prog.ai" class="animate-show">
-							<hr>
-							<label>Percept Format</label>
-							<select class="form-control" ng-model="apnc.agent_prog.socket.percept_format" ng-options="value as format for (format, value) in apnc.PERCEPT_FORMAT"></select>
-						</section>
+						<br>
+						<div ng-show="apnc.agent_prog.ai" class="panel panel-default animate-show">
+							<div class="panel-heading"><b>Perception</b></div>
+
+							<div class="panel-body">
+								<div class="container-fluid">
+									<div class="row">
+										<label>Percept-action relationship</label>
+
+										<div class="btn-group btn-group-justified">
+											<label class="btn btn-default" ng-model="apnc.agent_prog.percept.sync" btn-radio="true" tooltip="percept-action pattern (recommended)">Synchronously</label>
+											<label class="btn btn-default" ng-model="apnc.agent_prog.percept.sync" btn-radio="false" tooltip="percept is send periodically. Advanced mode">Asynchronously</label>
+										</div>
+
+										<div class="list-group animate-show-3d-top" ng-hide="apnc.agent_prog.percept.sync">
+											<a class="list-group-item no-animation">
+												<label>Percept will be sent every {{apnc.agent_prog.percept.interval}} milliseconds</label>
+												<div class="ui-slider-size" ui-slider min="10" max="1000" step="1" ng-model="apnc.agent_prog.percept.interval"></div>
+											</a>
+										</div>
+									</div>
+									<div class="row">
+										<label>Format</label>
+										<select class="form-control" ng-model="apnc.agent_prog.socket.percept_format" ng-options="value as format for (format, value) in apnc.PERCEPT_FORMAT"></select>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="panel panel-default animate-show-3d-top text-center" ng-show="!apnc.agent_prog.ai && apnc.agent_prog.keyboard">

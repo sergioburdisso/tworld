@@ -189,6 +189,10 @@
 					magic_string: "",
 					percept_format: _PERCEPT_FORMAT.JSON
 				},
+				percept:{
+						sync:true,
+						interval:500
+				},
 				keyboard:true,
 				controls:{Up:38, Down:40, Left:37, Right:39, Restore:16},
 				prop: {

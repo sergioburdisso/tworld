@@ -51,7 +51,7 @@ function GraphicTWorld(graphicEngine, environment){
 		var _FPSAvgCounter		= 0;
 		var _timeAccumulador	= 0;
 		var _oldCurrentTime		= 0;
-		var _perceptTimeAccum	= 0;
+		var _perceptTimeAccum	= new Uint32Array(_NUMBER_OF_AGENTS);
 
 		//used for camara animation
 		var _CL_ActiveCamera;
@@ -1075,12 +1075,13 @@ function GraphicTWorld(graphicEngine, environment){
 			//end region fps calculation
 
 			//Asynchronous perception (if it is enabled)
-			if (TWorld.PerceiveAsync && _SPEED && (_perceptTimeAccum+= timeElapsed) >= TWorld.PerceptInterval*_SPEED){
-				_perceptTimeAccum = _perceptTimeAccum % TWorld.PerceptInterval;
-				for (var irob= _NUMBER_OF_AGENTS; irob--;)
-					if (_AGENTS[irob].CONTROLLED_BY_AI)
-						_self.Environment.programAgentPerceive(irob);
-			}
+			for (var irob= _NUMBER_OF_AGENTS; irob--;)
+				if ((_AGENTS[irob].CONTROLLED_BY_AI) && (!_AGENTS[irob].PERCEPT.SYNC && _SPEED &&
+					(_perceptTimeAccum[irob]+= timeElapsed) >= _AGENTS[irob].PERCEPT.INTERVAL*_SPEED))
+				{
+					_perceptTimeAccum[irob] = _perceptTimeAccum[irob] % _AGENTS[irob].PERCEPT.INTERVAL;
+					_self.Environment.programAgentPerceive(irob);
+				}
 
 			//every second let the environment know a second has passed...
 			_oldCurrentTime = currentTime;

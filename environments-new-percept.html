@@ -45,21 +45,5 @@
 			<hr>
 		</div>
 
-		<p class="lead">How do you want T-World to handle percept-action relationship?</p>
-
-		<div class="col-md-6">
-			<div class="btn-group btn-group-justified">
-				<label class="btn btn-default" ng-model="enc.task_env.agents.percept.sync" btn-radio="true" tooltip="percept-action pattern (recommended)">Synchronously</label>
-				<label class="btn btn-default" ng-model="enc.task_env.agents.percept.sync" btn-radio="false" tooltip="percept is send periodically. Advanced mode">Asynchronously</label>
-			</div>
-		</div>
-
-		<div class="list-group col-md-4 animate-show-3d-left" ng-hide="enc.task_env.agents.percept.sync">
-			<a class="list-group-item no-animation">
-				<label>Percept will be sent every {{enc.task_env.agents.percept.interval}} milliseconds</label>
-				<div class="ui-slider-size" ui-slider min="10" max="1000" step="1" ng-model="enc.task_env.agents.percept.interval"></div>
-			</a>
-		</div>
-
 	</div>
 </div>

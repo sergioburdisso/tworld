@@ -159,7 +159,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			//--------------------------------------------------------------------------------------> askForNextAction
 			this.askForNextAction = function(rIndex) {
-				if ( TWorld.PerceiveAsync ){
+				if ( !_AGENTS[rIndex].PERCEPT.SYNC ){
 					_percept.header = _PERCEPT_HEADER.READY_FOR_NEXT_ACTION;
 					_percept.data = "null";
 					_rob[rIndex].AgentProgram.send( _percept );
@@ -178,6 +178,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 						_listOfEmptyCells.remove(_AGENTS[i].START_POSITION.ROW, _AGENTS[i].START_POSITION.COLUMN);
 					}else{
 						pos = _listOfEmptyCells.removeItemAt( random(_listOfEmptyCells.getLength()) );
+
+						if (!pos) pos = [0,0];
+
 						this.initializeRobAt(i, pos[0], pos[1]);
 					}
 				}
@@ -338,8 +341,11 @@ function Environment(rows, columns, graphicEngine, parent) {
 					$("#playFrame").hide();
 
 				msg_status += (nReady + "/" + nTotal + ")\n");
-				console.clear();
-				console.log(msg_status + msg_ap_list);
+
+				if (nTotal){
+					console.clear();
+					console.log(msg_status + msg_ap_list);
+				}
 			}
 
 			//--------------------------------------------------------------------------------------> isBatteryChargeSufficient

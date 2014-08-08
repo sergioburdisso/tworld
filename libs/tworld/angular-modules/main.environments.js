@@ -132,8 +132,6 @@
 				},
 				agents:{
 					percept:{
-						sync:true,
-						interval:500,
 						partialGrid: true,
 						radius: 3,
 						noise: false,

@@ -53,13 +53,20 @@ console.log(_KNOBS.trial.speed)
 if (_KNOBS.trial.test){
 	var _PAUSE_ENABLED = true;
 	var _SPEED = 1;
-	var _TEAMS = [{NAME:"", COLOR: _COLORS.BLUE, MEMBERS:[0]}];
-	var _NUMBER_OF_AGENTS	= 1;
+	var _TEAMS = [{NAME:"", COLOR: _COLORS.BLUE, MEMBERS:[0]}, {NAME:"", COLOR: _COLORS.ORANGE, MEMBERS:[1]}];
+	var _NUMBER_OF_AGENTS	= 2;
 	var _AGENTS = [
 	{
-		NAME : "Sergio",
+		NAME : "AntoT",
 		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:16}/*Arrow keys + Ctrl*/
 		//CONTROLS : {Up:87, Down:83, Left:65, Right:68, Restore:69} /*WASDE*/
+		//CONTROLS : {Up:72, Down:78, Left:66, Right:77, Restore:74};/*HNBMJ*/
+		//CONTROLS : {Up:80, Down:192, Left:76, Right:222, Restore:187};/*PÑL[+*/
+	},
+	{
+		NAME : "Solid",
+		//CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:16}/*Arrow keys + Ctrl*/
+		CONTROLS : {Up:87, Down:83, Left:65, Right:68, Restore:69} /*WASDE*/
 		//CONTROLS : {Up:72, Down:78, Left:66, Right:77, Restore:74};/*HNBMJ*/
 		//CONTROLS : {Up:80, Down:192, Left:76, Right:222, Restore:187};/*PÑL[+*/
 	}
@@ -93,6 +100,7 @@ if (_KNOBS.trial.test){
 		_TEAMS[_KNOBS_Agents[i].team].MEMBERS.push(i);
 
 		_AGENTS[i].NAME = _KNOBS_Agents[i].program.name;
+		_AGENTS[i].PERCEPT = {};
 
 		if (_KNOBS_Agents[i].program.ai){
 			_AGENTS[i].CONTROLLED_BY_AI = true;
@@ -108,6 +116,8 @@ if (_KNOBS.trial.test){
 					OUTPUT_FORMAT: _KNOBS_Agents[i].program.socket.percept_format
 				}
 			}
+			_AGENTS[i].PERCEPT.SYNC = _KNOBS_Agents[i].program.percept.sync; // perceive every <interval> milliseconds or after each action
+			_AGENTS[i].PERCEPT.INTERVAL = _KNOBS_Agents[i].program.percept.interval;
 		}else
 			if (_KNOBS_Agents[i].program.keyboard)
 				_AGENTS[i].CONTROLS = _KNOBS_Agents[i].program.controls;
