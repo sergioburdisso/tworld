@@ -23,7 +23,7 @@
 	var colors = []; for (color in _COLORS) colors.push(_COLORS[color]);
 	var taskEnvironment;
 
-	mod.controller("EnvController", ["$modal", function($modal){
+	mod.controller("EnvController", ["$modal", '$location', function($modal, $location){
 		var _self = this;
 		var _selected = -1;
 
@@ -51,6 +51,8 @@
 
 			startTWorld()
 		}
+
+		this.open = function(){$location.url('/environments/view/'+_selected)}
 
 		this.remove = function(){
 			for (var t=taskEnvironments.length; t--;)
@@ -89,8 +91,8 @@
 
 	}]);
 
-	mod.controller('EnvNewController', ['$modal', '$location',
-		function($modal, $location){
+	mod.controller('EnvNewController', ['$modal', '$location', 'taskEnv',
+		function($modal, $location, taskEnv){
 			var _next = false;
 			var _self = this;
 
@@ -108,84 +110,7 @@
 				{name:_ENDGAME.BATTERY_RESTORE.NAME		, value:0, result:_GAME_RESULT.LOST		}
 				/*{name:_ENDGAME.TIME.NAME, value:0, result:_GAME_RESULT.NEUTRAL} <-not here 'cause it's the default value*/ 
 			];
-			this.task_env = taskEnvironment = {
-				trial: {//Each trial is a self-contained simulation
-					/*default trial*/
-					test: false,
-					runs: 1,
-					agents : [],
-					speed: 0, //[-9..9]
-					pause:  true,
-					camera: _CAMERA_TYPE.FREE_GRID
-				},
-				name:'',
-				desc:'',
-				date:0,
-				battery: false,
-				prop: {
-					fullyObservable: true,
-					multiagent: false,
-					multiagent_type: 0, //0 competitive; 1 cooperative; 2 both
-					deterministic: true,
-					dynamic: 0, //0 static; 1 semidynamic; 2 dynamic
-					known: true
-				},
-				agents:{
-					percept:{
-						partialGrid: true,
-						radius: 3,
-						noise: false,
-						noise_cfg:{
-							tile:0.3,
-							obstacle:0.3,
-							hole:0.3
-						}
-					},
-					determinism:0.8,
-					stochastic_model: _STOCHASTIC_ACTIONS_MODEL.ANOTHER_ACTION
-				},
-				environment:{
-					rows:6,
-					columns:6,
-					holes_size:{range:[1,3], prob:[]},
-					num_holes:{range:[2,3], prob:[]},
-					num_obstacles:{range:[1,2], prob:[]},
-					difficulty:{range:[0,0], prob:[]},
-					scores_variability: 0,
-					dynamic:{
-						dynamism:{range:[6,13], prob:[]},
-						hostility:{range:[1,13], prob:[]},
-						hard_bounds:true,
-					},
-					random_initial_state:false,
-					initial_state:[
-						["C"," "," "," "," ","#"],
-						["#"," "," ","2"," ","#"],
-						[" ","#"," ","T"," ","A"],
-						["1","T"," "," "," ","#"],
-						["#"," "," "," ","T","#"],
-						[" ","#"," ","#","3"," "]
-					],
-					final_state:[{name:_ENDGAME.TIME.NAME, value:5*60, result:_GAME_RESULT.NEUTRAL}] //default value
-				},
-				teams:[],
-				final_tweaks:{
-					battery:{
-						level:1000,
-						good_move:20,
-						bad_move:5,
-						sliding:10
-					},
-					multiplier:{
-						enabled:false,
-						timeout:6
-					},
-					score:{
-						cell: true
-					},
-					shapes:false
-				}
-			}
+			this.task_env = taskEnvironment = taskEnv;
 
 			this.nextStep = function(){
 				this.step++; _next= true;
@@ -206,9 +131,15 @@
 
 			this.finish = function(){
 				this.validate();
-				taskEnvironment.date = Date.now();
+
 				taskEnvironment.trial.test = false;
-				taskEnvironments.push(taskEnvironment);
+
+				if (!taskEnvironment.date){
+					taskEnvironment.date = Date.now();
+					taskEnvironments.push(taskEnvironment);
+				}else
+					taskEnvironments[ getEnvironmentIndexByDate(taskEnvironment.date) ] = taskEnvironment;
+
 				saveEnvironments();
 				$location.url('/');
 				gotoTop()

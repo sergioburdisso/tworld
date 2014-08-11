@@ -50,6 +50,8 @@
 			saveAgentPrograms();
 		}
 
+		this.open = function(){$location.url('/agent-programs/view/'+_selected)}
+
 		this.run = function(){
 			var modalInstance = $modal.open({
 						size: 'lg',//size,
@@ -164,50 +166,22 @@
 		}]
 	);
 
-	mod.controller('AgentProgNewController', ['$location',
-		function($location){
+	mod.controller('AgentProgNewController', ['$location', 'agentProg',
+		function($location, agentProg){
 			var _self = this;
 
 			this.PERCEPT_FORMAT = _PERCEPT_FORMAT;
 
 			this.perceptFormats = formats;
-			this.agent_prog = {
-				name:"",
-				desc:"",
-				date:0,
-				team:-1,
-				ai: true,
-				javascript:true,
-				source:{
-					code: "function AgentProgram(percept){\n\t\n}",
-					msg_code: "function onMsgReceived(msg){\n\t\n}",
-					cursor:{row:0, column:0}
-				},
-				socket:{
-					ip_address: "localhost",
-					port:3313,
-					magic_string: "",
-					percept_format: _PERCEPT_FORMAT.JSON
-				},
-				percept:{
-						sync:true,
-						interval:500
-				},
-				keyboard:true,
-				controls:{Up:38, Down:40, Left:37, Right:39, Restore:16},
-				prop: {
-					fullyObservable: true,
-					multiagent: false,
-					multiagent_type: 0, //0 competitive; 1 cooperative; 2 both
-					deterministic: true,
-					dynamic: 0, //0 static; 1 semidynamic; 2 dynamic
-					known: true
-				}
-			}
+			this.agent_prog = agentProg;
 
 			this.save = function(){
-				this.agent_prog.date = Date.now();
-				agentPrograms.push(this.agent_prog);
+				if (!agentProg.date){
+					agentProg.date = Date.now();
+					agentPrograms.push(this.agent_prog);
+				}else
+					agentPrograms[ getAgentProgramIndexByDate(agentProg.date) ] = agentProg;
+
 				saveAgentPrograms();
 				if (this.agent_prog.javascript && this.agent_prog.ai)
 					$location.url('/agent-programs/source-code/'+this.agent_prog.date)

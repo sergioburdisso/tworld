@@ -24,7 +24,7 @@ function alert(msg){
 		msg = msg.replace(/&#xA;/g,"<br>").replace(/&#x9;/g,"&nbsp;&nbsp;").replace(/&#x20;/g, "&nbsp;");
 	}
 	$("#console").append(
-		'<div class="console header">'+
+		'<div class="console log header">'+
 			new Date().toLocaleTimeString()+
 		'&nbsp;&gt;</div><div class="console log">'+
 			msg +
@@ -41,7 +41,7 @@ try{
  }catch(e){ var console = {} };
 
 console.log		= alert;
-console.clear	= function(){$("#console").children().remove();}
+console.clear	= function(){$("#console").find(".console.log").remove();}
 console.error	= function(msg){
 	msg = he.encode(msg, {encodeEverything: true});
 	msg = msg.replace(/&#xA;/g,"<br>").replace(/&#x9;/g,"&nbsp;&nbsp;");

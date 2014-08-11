@@ -80,10 +80,10 @@
 				<div class="row panel-body">
 					<br>
 					<div class="pull-right animate-only-show" ng-show="ec.isSelected(env.date)">
-						<button class="btn btn-success glyphicon glyphicon-play" ng-click="ec.openRunModal()"></button>
-						<button class="btn btn-info glyphicon glyphicon-user" ng-click="ec.testIt()"></button>
-						<button class="btn btn-info glyphicon glyphicon-list"></button>
-						<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="ec.remove()"></button>
+						<button class="btn btn-success glyphicon glyphicon-play" ng-click="ec.openRunModal()" tooltip="Run"></button>
+						<button class="btn btn-info glyphicon glyphicon-user" ng-click="ec.testIt()" tooltip="Test as human"></button>
+						<button class="btn btn-info glyphicon glyphicon-list" ng-click="ec.open()" tooltip="View/Change values"></button>
+						<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="ec.remove()" tooltip="Delete"></button>
 					</div>
 				</div>
 			</a>

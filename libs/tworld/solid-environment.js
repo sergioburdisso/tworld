@@ -335,17 +335,17 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 				_Ready = nReady === nTotal;
 
-				if (_Ready)
-					$("#playFrame").show();
-				else
-					$("#playFrame").hide();
-
 				msg_status += (nReady + "/" + nTotal + ")\n");
 
 				if (nTotal){
 					console.clear();
-					console.log(msg_status + msg_ap_list);
+					console.log((_Ready? "All agent programs are ready =)\n" : msg_status) + msg_ap_list);
 				}
+
+				if (_Ready)
+					$("#playFrame").show();
+				else
+					$("#playFrame").hide();
 			}
 
 			//--------------------------------------------------------------------------------------> isBatteryChargeSufficient

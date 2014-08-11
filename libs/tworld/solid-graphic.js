@@ -1899,7 +1899,7 @@ function GraphicTWorld(graphicEngine, environment){
 						$("#robs-hud").animate({opacity:1},1000);
 					}
 				);
-				console.clear();
+				//console.clear();
 				_TWorld.start();
 				$("#playFrame").remove();
 			}

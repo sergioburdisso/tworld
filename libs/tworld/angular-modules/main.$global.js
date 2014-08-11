@@ -21,6 +21,8 @@ Array.prototype.setTo = function(arr) {
 		this[i] = arr[i];
 }
 
+function clone(obj){return JSON.parse(JSON.stringify(obj))}
+
 function getEnvironments(){return localStorage.taskEnvironments? JSON.parse(localStorage.taskEnvironments) : []}
 function getAgentPrograms(){return localStorage.agentPrograms? JSON.parse(localStorage.agentPrograms) : []}
 function saveEnvironments(){localStorage.taskEnvironments = JSON.stringify(taskEnvironments)}
@@ -28,20 +30,29 @@ function saveAgentPrograms(){localStorage.agentPrograms = JSON.stringify(agentPr
 function clearEnvironments(){localStorage.removeItem("taskEnvironments")}
 function clearAgentPrograms(){localStorage.removeItem("agentPrograms")}
 
-function getEnvironmentByDate(date){
+function getEnvironmentIndexByDate(date){date=parseInt(date);
 	var i = taskEnvironments.length;
 	while (i--)
 		if (taskEnvironments[i].date === date)
-			return taskEnvironments[i];
-	return null;
+			return i;
+	return -1;
+}
+function getEnvironmentByDate(date){
+	var i = getEnvironmentIndexByDate(date);
+	return (i != -1)? taskEnvironments[i] : null;
 }
 
-function getAgentProgramByDate(date){date=parseInt(date);
+function getAgentProgramIndexByDate(date){date=parseInt(date);
 	var i = agentPrograms.length;
 	while (i--)
 		if (agentPrograms[i].date === date)
-			return agentPrograms[i];
-	return null;
+			return i;
+	return -1;
+}
+
+function getAgentProgramByDate(date){date=parseInt(date);
+	var i = getAgentProgramIndexByDate(date);
+	return (i != -1)? agentPrograms[i] : null;
 }
 
 function getKnobs(){return localStorage.knobs? JSON.parse(localStorage.knobs) : null}
