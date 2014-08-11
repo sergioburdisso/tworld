@@ -16,28 +16,16 @@
 			<div class="animate-show-3d-top" ng-hide="apc.allProps">
 				<b>Only Agent Programs that are:</b>
 				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default glyphicon glyphicon-eye-open" ng-model="apc.query.prop.fullyObservable" btn-radio="true" tooltip="Fully Observable"></label>
-					<label class="btn btn-default glyphicon glyphicon-eye-close" ng-model="apc.query.prop.fullyObservable" btn-radio="false" tooltip="Partially Observable"></label>
+					<label class="btn btn-default" ng-model="apc.query.ai" btn-radio="true" tooltip="Controlled by Algorithm"><img src="imgs/web-app/icon-single-agent.png"></label>
+					<label class="btn btn-default glyphicon glyphicon-user" ng-model="apc.query.ai" btn-radio="false" tooltip="Controlled by Human"></label>
 				</div>
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default" ng-model="apc.query.prop.multiagent" btn-radio="false" tooltip="Single agent"><img src="imgs/web-app/icon-single-agent.png"></label>
-					<label class="btn btn-default" ng-model="apc.query.prop.multiagent" btn-radio="true" tooltip="Multiagent"><img src="imgs/web-app/icon-multiagent.png"></label>
+				<div class="btn-group btn-group-justified animate-only-show" ng-show="apc.query.ai">
+					<label class="btn btn-default" ng-model="apc.query.javascript" btn-radio="true" tooltip="JavaScript"><img src="imgs/web-app/icon-js.png"></label>
+					<label class="btn btn-default glyphicon glyphicon-link" ng-model="apc.query.javascript" btn-radio="false" tooltip="Extern language"></label>
 				</div>
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default glyphicon glyphicon-arrow-right" ng-model="apc.query.prop.deterministic" btn-radio="true" tooltip="Deterministic"></label>
-					<label class="btn btn-default glyphicon glyphicon-random" ng-model="apc.query.prop.deterministic" btn-radio="false" tooltip="Stochastic"></label>
-				</div>
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default glyphicon glyphicon-record" ng-model="apc.query.prop.dynamic" btn-radio="0" tooltip="Static"></label>
-					<label class="btn btn-default" ng-model="apc.query.prop.dynamic" btn-radio="1" tooltip="Semidynamic"><img src="imgs/web-app/icon-semidynamic.png"></label>
-					<label class="btn btn-default glyphicon glyphicon-time" ng-model="apc.query.prop.dynamic" btn-radio="2" tooltip="Dynamic"></label>
-				</div>
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default glyphicon glyphicon-ok" ng-model="apc.query.prop.known" btn-radio="true" tooltip="Known"></label>
-					<label class="btn btn-default glyphicon glyphicon-remove" ng-model="apc.query.prop.known" btn-radio="false" tooltip="Unknown"></label>
-				</div>
-				<div class="checkbox">
-					<label><input type="checkbox" ng-model="apc.query.battery"> Battery</label>
+				<div class="btn-group btn-group-justified animate-only-show" ng-hide="apc.query.ai">
+					<label class="btn btn-default" ng-model="apc.query.keyboard" btn-radio="true" tooltip="Keyboard"><img src="imgs/web-app/icon-keyboard.png"></label>
+					<label class="btn btn-default glyphicon glyphicon-phone" ng-model="apc.query.keyboard" btn-radio="false" tooltip="Remote Control"></label>
 				</div>
 			</div>
 
@@ -53,24 +41,19 @@
 		<div class="list-group mouse-cursor" style="min-height: 300px">
 			<a class="list-group-item animate-filter transition-400" ng-repeat="ap in apc.agentPrograms | filter:apc.userFilter | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="twc.goto('/agent-programs/source-code/'+ap.date)" ng-class="{active:apc.isSelected(ap.date)}">
 				<!-- PROPERTIES ICONS-->
-				<div class="pull-right text-gray" ng-if="ap.hide">
-					<div class="glyphicon glyphicon-eye-open" ng-show="ap.prop.fullyObservable" tooltip="Fully observable"></div>
-					<div class="glyphicon glyphicon-eye-close" ng-hide="ap.prop.fullyObservable" tooltip="Partially observable"></div>
+				<div class="pull-right text-gray">
+					<div class="solid-icon-16 icon-single-agent" ng-show="ap.ai" tooltip="Controlled by Algorithm"></div>
+					<div class="glyphicon glyphicon-user" ng-hide="ap.ai" tooltip="Controlled by Human"></div>
 
-					<div class="solid-icon-16 icon-single-agent" ng-hide="ap.prop.multiagent" tooltip="Single agent"></div>
-					<div class="solid-icon-16 icon-multiagent" ng-show="ap.prop.multiagent" tooltip="Multiagent"></div>
+					<span ng-if="ap.ai">
+						<div class="solid-icon-16 icon-js" ng-show="ap.javascript" tooltip="JavaScript"></div>
+						<div class="glyphicon glyphicon-link" ng-hide="ap.javascript" tooltip="Extern language"></div>
+					</span>
 
-					<div class="glyphicon glyphicon-arrow-right" ng-show="ap.prop.deterministic" tooltip="Deterministic"></div>
-					<div class="glyphicon glyphicon-random" ng-hide="ap.prop.deterministic" tooltip="Stochastic"></div>
-
-					<div class="glyphicon glyphicon-record" ng-show="ap.prop.dynamic == 0" tooltip="Static"></div>
-					<div class="solid-icon-16 icon-semidynamic" ng-show="ap.prop.dynamic == 1" tooltip="Semidynamic"></div>
-					<div class="glyphicon glyphicon-time" ng-show="ap.prop.dynamic == 2" tooltip="Dynamic"></div>
-
-					<div class="glyphicon glyphicon-ok" ng-show="ap.prop.known" tooltip="Known"></div>
-					<div class="glyphicon glyphicon-remove" ng-hide="ap.prop.known" tooltip="Unknown"></div>
-
-					<div class="glyphicon glyphicon-flash" ng-show="ap.battery" tooltip="Battery"></div>
+					<span ng-if="!ap.ai">
+						<div class="solid-icon-16 icon-keyboard" ng-show="ap.keyboard" tooltip="Keyboard"></div>
+						<div class="glyphicon glyphicon-phone" ng-hide="ap.keyboard" tooltip="Remote Control"></div>
+					</span>
 				</div>
 
 				<h4 class="list-group-item-heading">{{ap.name}} <span class="badge active">{{ap.date | date:'dd/MM/yyyy - HH:mm:ss'}}</span></h4>

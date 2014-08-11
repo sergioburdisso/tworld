@@ -30,14 +30,9 @@
 		this.allProps = true;
 		this.query = {
 			name:"",
-			battery: false,
-			prop: {
-				fullyObservable: true,
-				multiagent: false,
-				deterministic: true,
-				dynamic: 0, //0 static; 1 semidynamic; 2 dynamic
-				known: true
-			}
+			ai:true,
+			javascript:true,
+			keyboard:true
 		};
 
 		this.setSelected = function(value){_selected = value}
@@ -80,18 +75,17 @@
 
 		this.editor = function(agent_prog){return (agent_prog && agent_prog.ai && agent_prog.javascript)}
 
-		this.userFilter = function(task_env){
+		this.userFilter = function(agentProg){
 			var regEx = new RegExp(_self.query.name,"i");
-			var p = _self.query.prop;
-			return regEx.test(task_env.name) && (
+			var q = _self.query;
+			return regEx.test(agentProg.name) && (
 					_self.allProps ||
 					(
-						_self.query.battery == task_env.battery &&
-						p.fullyObservable == task_env.prop.fullyObservable &&
-						p.multiagent == task_env.prop.multiagent &&
-						p.deterministic == task_env.prop.deterministic &&
-						p.dynamic == task_env.prop.dynamic &&
-						p.known == task_env.prop.known
+						q.ai == agentProg.ai && (
+							(q.ai && q.javascript == agentProg.javascript)
+							||
+							(!q.ai && q.keyboard == agentProg.keyboard)
+						)
 					)
 			);
 		}
