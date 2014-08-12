@@ -116,6 +116,7 @@
 			}
 
 			this.run = function(){
+				this.save();
 				if (!this.task_env)
 					this.openEnvironmentsModal(true);
 				else

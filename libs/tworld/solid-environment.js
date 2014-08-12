@@ -813,7 +813,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 						stats: _rob[i].Stats
 					};
 
-				trials = localStorage[trialsPath]? localStorage[trialsPath] : [];
+				trials = localStorage[trialsPath]? JSON.parse(localStorage[trialsPath]) : [];
 
 				trials.push(trial);
 
