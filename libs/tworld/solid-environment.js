@@ -793,6 +793,33 @@ function Environment(rows, columns, graphicEngine, parent) {
 					_rob[robId].AgentProgram.send( _percept );
 			}
 
+			//--------------------------------------------------------------------------------------> _saveStats
+			function _saveStats(){if (_SAVE_STATS){
+				var trials,
+					trialsPath = _KNOBS.date+"/trials",
+					trial={
+						date: Date.now(),
+						//task_env_id: _KNOBS.date,
+						stats:{
+							total_holes: Hole.Counter
+						},
+						agents: new Array(_NUMBER_OF_AGENTS)
+					}
+
+				for (var i=0; i < _NUMBER_OF_AGENTS; ++i)
+					trial.agents[i] = {
+						program_id: _KNOBS_Agents[i].program.date,
+						team: _KNOBS_Agents[i].team,
+						stats: _rob[i].Stats
+					};
+
+				trials = localStorage[trialsPath]? localStorage[trialsPath] : [];
+
+				trials.push(trial);
+
+				localStorage[trialsPath] = JSON.stringify(trials);
+			}}
+
 			//--------------------------------------------------------------------------------------> _checkIfGameOver
 			function _checkIfGameOver(goal, value){
 				if ((!goal.ACHIEVED && value >= goal.VALUE) || value == undefined){
@@ -826,6 +853,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 							_rob[r].AgentProgram.send( _percept );
 						}
 
+					_saveStats();
 					_graphicTWorld.gameIsOver(_rob, goal, _time);
 				}
 			}

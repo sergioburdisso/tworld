@@ -8,36 +8,53 @@
 
 			Filter by name: <input class="form-control" ng-model="query.name">
 
-			<div class="checkbox" ng-if="environments">
+			<div class="checkbox">
 				<label><input type="checkbox" ng-model="query.allProps"> All properties</label>
 			</div>
 
 			<div class="animate-show-3d-top" ng-hide="query.allProps">
 				<b>{{text.filter}}</b>
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default glyphicon glyphicon-eye-open" ng-model="query.prop.fullyObservable" btn-radio="true" title="Fully Observable"></label>
-					<label class="btn btn-default glyphicon glyphicon-eye-close" ng-model="query.prop.fullyObservable" btn-radio="false" title="Partially Observable"></label>
-				</div>
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default" ng-model="query.prop.multiagent" btn-radio="false" title="Single agent"><img src="imgs/web-app/icon-single-agent.png"></label>
-					<label class="btn btn-default" ng-model="query.prop.multiagent" btn-radio="true" title="Multiagent"><img src="imgs/web-app/icon-multiagent.png"></label>
-				</div>
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default glyphicon glyphicon-arrow-right" ng-model="query.prop.deterministic" btn-radio="true" title="Deterministic"></label>
-					<label class="btn btn-default glyphicon glyphicon-random" ng-model="query.prop.deterministic" btn-radio="false" title="Stochastic"></label>
-				</div>
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default glyphicon glyphicon-record" ng-model="query.prop.dynamic" btn-radio="0" title="Static"></label>
-					<label class="btn btn-default" ng-model="query.prop.dynamic" btn-radio="1" title="Semidynamic"><img src="imgs/web-app/icon-semidynamic.png"></label>
-					<label class="btn btn-default glyphicon glyphicon-time" ng-model="query.prop.dynamic" btn-radio="2" title="Dynamic"></label>
-				</div>
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default glyphicon glyphicon-ok" ng-model="query.prop.known" btn-radio="true" title="Known"></label>
-					<label class="btn btn-default glyphicon glyphicon-remove" ng-model="query.prop.known" btn-radio="false" title="Unknown"></label>
-				</div>
-				<div class="checkbox">
-					<label><input type="checkbox" ng-model="query.battery"> Battery</label>
-				</div>
+				<span ng-if="environments">
+					<div class="btn-group btn-group-justified">
+						<label class="btn btn-default glyphicon glyphicon-eye-open" ng-model="query.prop.fullyObservable" btn-radio="true" title="Fully Observable"></label>
+						<label class="btn btn-default glyphicon glyphicon-eye-close" ng-model="query.prop.fullyObservable" btn-radio="false" title="Partially Observable"></label>
+					</div>
+					<div class="btn-group btn-group-justified">
+						<label class="btn btn-default" ng-model="query.prop.multiagent" btn-radio="false" title="Single agent"><img src="imgs/web-app/icon-single-agent.png"></label>
+						<label class="btn btn-default" ng-model="query.prop.multiagent" btn-radio="true" title="Multiagent"><img src="imgs/web-app/icon-multiagent.png"></label>
+					</div>
+					<div class="btn-group btn-group-justified">
+						<label class="btn btn-default glyphicon glyphicon-arrow-right" ng-model="query.prop.deterministic" btn-radio="true" title="Deterministic"></label>
+						<label class="btn btn-default glyphicon glyphicon-random" ng-model="query.prop.deterministic" btn-radio="false" title="Stochastic"></label>
+					</div>
+					<div class="btn-group btn-group-justified">
+						<label class="btn btn-default glyphicon glyphicon-record" ng-model="query.prop.dynamic" btn-radio="0" title="Static"></label>
+						<label class="btn btn-default" ng-model="query.prop.dynamic" btn-radio="1" title="Semidynamic"><img src="imgs/web-app/icon-semidynamic.png"></label>
+						<label class="btn btn-default glyphicon glyphicon-time" ng-model="query.prop.dynamic" btn-radio="2" title="Dynamic"></label>
+					</div>
+					<div class="btn-group btn-group-justified">
+						<label class="btn btn-default glyphicon glyphicon-ok" ng-model="query.prop.known" btn-radio="true" title="Known"></label>
+						<label class="btn btn-default glyphicon glyphicon-remove" ng-model="query.prop.known" btn-radio="false" title="Unknown"></label>
+					</div>
+					<div class="checkbox">
+						<label><input type="checkbox" ng-model="query.battery"> Battery</label>
+					</div>
+				</span>
+
+				<span ng-if="!environments">
+					<div class="btn-group btn-group-justified">
+						<label class="btn btn-default" ng-model="query.ai" btn-radio="true" title="Controlled by Algorithm"><img src="imgs/web-app/icon-single-agent.png"></label>
+						<label class="btn btn-default glyphicon glyphicon-user" ng-model="query.ai" btn-radio="false" title="Controlled by Human"></label>
+					</div>
+					<div class="btn-group btn-group-justified animate-only-show" ng-show="query.ai">
+						<label class="btn btn-default" ng-model="query.javascript" btn-radio="true" title="JavaScript"><img src="imgs/web-app/icon-js.png"></label>
+						<label class="btn btn-default glyphicon glyphicon-link" ng-model="query.javascript" btn-radio="false" title="Extern language"></label>
+					</div>
+					<div class="btn-group btn-group-justified animate-only-show" ng-hide="query.ai">
+						<label class="btn btn-default" ng-model="query.keyboard" btn-radio="true" title="Keyboard"><img src="imgs/web-app/icon-keyboard.png"></label>
+						<label class="btn btn-default glyphicon glyphicon-phone" ng-model="query.keyboard" btn-radio="false" title="Remote Control"></label>
+					</div>
+				</span>
 			</div>
 
 			Sort by:
@@ -70,6 +87,21 @@
 						<div class="glyphicon glyphicon-remove" ng-hide="item.prop.known" title="Unknown"></div>
 
 						<div class="glyphicon glyphicon-flash" ng-show="item.battery" title="Battery"></div>
+					</div>
+
+					<div class="pull-right text-gray" ng-if="!environments">
+						<div class="solid-icon-16 icon-single-agent" ng-show="item.ai" title="Controlled by Algorithm"></div>
+						<div class="glyphicon glyphicon-user" ng-hide="item.ai" title="Controlled by Human"></div>
+
+						<span ng-if="item.ai">
+							<div class="solid-icon-16 icon-js" ng-show="item.javascript" title="JavaScript"></div>
+							<div class="glyphicon glyphicon-link" ng-hide="item.javascript" title="Extern language"></div>
+						</span>
+
+						<span ng-if="!item.ai">
+							<div class="solid-icon-16 icon-keyboard" ng-show="item.keyboard" title="Keyboard"></div>
+							<div class="glyphicon glyphicon-phone" ng-hide="item.keyboard" title="Remote Control"></div>
+						</span>
 					</div>
 
 					<h4 class="list-group-item-heading">{{item.name}} <span class="badge active">{{item.date | date:'dd/MM/yyyy - HH:mm:ss'}}</span></h4>

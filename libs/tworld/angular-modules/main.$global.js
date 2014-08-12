@@ -89,18 +89,27 @@ function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
 	$scope.items = items;
 	$scope.orderCond = "-date";
 	$scope.environments = !agentProgramsFlag;
-	$scope.query = {
-		name:"",
-		allProps: true,
-		battery: false,
-		prop: {
-			fullyObservable: true,
-			multiagent: false,
-			deterministic: true,
-			dynamic: 0, //0 static; 1 semidynamic; 2 dynamic
-			known: true
-		}
-	};
+	$scope.query = agentProgramsFlag?
+				{
+					name:"",
+					ai:true,
+					javascript:true,
+					keyboard:true,
+					allProps: true,
+				}
+				:
+				{
+					name:"",
+					allProps: true,
+					battery: false,
+					prop: {
+						fullyObservable: true,
+						multiagent: false,
+						deterministic: true,
+						dynamic: 0, //0 static; 1 semidynamic; 2 dynamic
+						known: true
+					}
+				};
 
 	$scope.text = {
 		title: agentProgramsFlag? "Select An Agent Program" : "Select A Task Environment",
@@ -112,21 +121,35 @@ function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
 
 	$scope.setSelected = function(value){_selected = value}
 	$scope.isSelected = function(value){return _selected == value}
-	$scope.userFilter = function(task_env){
+	$scope.userFilter = function(item){
 		var regEx = new RegExp($scope.query.name,"i");
-		var p = $scope.query.prop;
 
-		return regEx.test(task_env.name) && (
-				$scope.query.allProps ||
-				(
-					$scope.query.battery == task_env.battery &&
-					p.fullyObservable == task_env.prop.fullyObservable &&
-					p.multiagent == task_env.prop.multiagent &&
-					p.deterministic == task_env.prop.deterministic &&
-					p.dynamic == task_env.prop.dynamic &&
-					p.known == task_env.prop.known
-				)
-		);
+		if (agentProgramsFlag){
+			var q = $scope.query;
+			return regEx.test(item.name) && (
+					$scope.query.allProps ||
+					(
+						q.ai == item.ai && (
+							(q.ai && q.javascript == item.javascript)
+							||
+							(!q.ai && q.keyboard == item.keyboard)
+						)
+					)
+				);
+		}else{
+			var p = $scope.query.prop;
+			return regEx.test(item.name) && (
+					$scope.query.allProps ||
+					(
+						$scope.query.battery == item.battery &&
+						p.fullyObservable == item.prop.fullyObservable &&
+						p.multiagent == item.prop.multiagent &&
+						p.deterministic == item.prop.deterministic &&
+						p.dynamic == item.prop.dynamic &&
+						p.known == item.prop.known
+					)
+			);
+		}
 	}
 };
 

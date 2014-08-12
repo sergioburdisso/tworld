@@ -22,9 +22,10 @@
 						taskEnv : function(){ 
 						return {
 								trial: {//Each trial is a self-contained simulation
-									/*default trial*/
+									/*default trial values*/
 									test: false,
 									runs: 1,
+									saveStats: true,
 									agents : [],
 									speed: 0, //[-9..9]
 									pause:  true,

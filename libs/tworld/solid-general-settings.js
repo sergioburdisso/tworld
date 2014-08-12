@@ -46,11 +46,10 @@ var _BATTERY_INITIAL_CHARGE		= _KNOBS.final_tweaks.battery.level;
 var _BATTERY_WALK_COST			= _KNOBS.final_tweaks.battery.good_move;
 var _BATTERY_INVALID_MOVE_COST	= _KNOBS.final_tweaks.battery.bad_move;
 var _BATTERY_SLIDE_COST			= _KNOBS.final_tweaks.battery.sliding;
-console.log("_KNOBS.trial.test " + _KNOBS.trial.test)
-console.log("_KNOBS.trial.pause "+_KNOBS.trial.pause)
-console.log(_KNOBS.trial.speed)
+
 // Players
 if (_KNOBS.trial.test){
+	var _SAVE_STATS = false;
 	var _PAUSE_ENABLED = true;
 	var _SPEED = 1;
 	var _TEAMS = [{NAME:"", COLOR: _COLORS.BLUE, MEMBERS:[0]}];
@@ -67,6 +66,7 @@ if (_KNOBS.trial.test){
 }else{
 	var _KNOBS_Agents = _KNOBS.trial.agents;
 
+	var _SAVE_STATS = _KNOBS.trial.saveStats;
 	var _PAUSE_ENABLED = _KNOBS.trial.pause;
 	var _SPEED = _KNOBS.trial.speed < 0?
 				1/(-_KNOBS.trial.speed + 1)
