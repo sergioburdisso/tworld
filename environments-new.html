@@ -37,10 +37,10 @@
 		<div class="row">
 			<hr/>
 			<button ng-click="enc.prevStep()" ng-hide="enc.isStep(0)" class="btn btn-primary col-md-2 col-xs-3 pull-left">&laquo;Previous</button>
-			<button ng-if="!enc.isLastStep()" ng-click="enc.nextStep()" class="btn btn-primary col-md-2 col-xs-3 pull-right">Next&raquo;</button>
+			<button ng-if="!enc.isLastStep()" ng-click="enc.nextStep()" class="btn btn-primary col-md-2 col-xs-3 pull-right animate-none">Next&raquo;</button>
 			<section ng-if="enc.isLastStep()">
 				<button ng-click="enc.finish()" class="btn btn-success col-xs-offset-1 col-md-2 col-xs-3 pull-right glyphicon glyphicon-floppy-save"></button>
-				<button ng-click="enc.testEnvironment()" class="btn btn-primary col-md-2 col-xs-3 pull-right">Test it</button>
+				<button ng-click="enc.testEnvironment()" class="btn btn-primary col-md-2 col-xs-3 pull-right">Test as human</button>
 			</section>
 		</div>
 

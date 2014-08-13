@@ -47,30 +47,33 @@
 
 		this.open = function(){$location.url('/agent-programs/view/'+_selected)}
 
-		this.run = function(){
-			var modalInstance = $modal.open({
-						size: 'lg',//size,
-						templateUrl: 'items-list-modal.html',
-						controller: itemsListController,
-						resolve:{
-							items:function(){return taskEnvironments},
-							agentProgramsFlag:function(){return false}
-						}
-					});
-
-			modalInstance.result.then(
-				function (id) {
-					$modal.open({
-						size: 'lg',//size,
-						templateUrl: 'run-modal.html',
-						controller: runModalController,
-						resolve:{
-							taskEnv: function(){return getEnvironmentByDate(id)}, 
-							agentProgs: function(){return [getAgentProgramByDate(_selected)]}
-						}
-					});
-				}
-			);
+		this.run = function(jsap){
+			if (jsap&&_self.editor(jsap)){
+				$location.url('/agent-programs/source-code/'+jsap.date);
+				gotoTop();
+			}else{
+				modalInstance = $modal.open({
+					size: 'lg',//size,
+					templateUrl: 'items-list-modal.html',
+					controller: itemsListController,
+					resolve:{
+						items:function(){return taskEnvironments},
+						agentProgramsFlag:function(){return false}
+					}
+				}).result.then(
+					function (id) {
+						$modal.open({
+							size: 'lg',//size,
+							templateUrl: 'run-modal.html',
+							controller: runModalController,
+							resolve:{
+								taskEnv: function(){return getEnvironmentByDate(id)}, 
+								agentProgs: function(){return [getAgentProgramByDate(_selected)]}
+							}
+						});
+					}
+				);
+			}
 		}
 
 		this.editor = function(agent_prog){return (agent_prog && agent_prog.ai && agent_prog.javascript)}

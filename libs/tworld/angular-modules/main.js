@@ -43,7 +43,7 @@
 									/*default trial values*/
 									test: false,
 									runs: 1,
-									saveStats: true,
+									saveStats: false,
 									agents : [],
 									speed: 0, //[-9..9]
 									pause:  true,

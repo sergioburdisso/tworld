@@ -39,7 +39,7 @@
 		<h2>Agent Programs</h2>
 		<!--Body content-->
 		<div class="list-group mouse-cursor" style="min-height: 300px">
-			<a class="list-group-item animate-filter transition-400" ng-repeat="ap in apc.agentPrograms | filter:apc.userFilter | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="twc.goto('/agent-programs/source-code/'+ap.date)" ng-class="{active:apc.isSelected(ap.date)}">
+			<a class="list-group-item animate-filter transition-400" ng-repeat="ap in apc.agentPrograms | filter:apc.userFilter | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="apc.run(ap)" ng-class="{active:apc.isSelected(ap.date)}">
 				<!-- PROPERTIES ICONS-->
 				<div class="pull-right text-gray">
 					<div class="solid-icon-16 icon-single-agent" ng-show="ap.ai" tooltip="Controlled by Algorithm"></div>
@@ -63,7 +63,7 @@
 				<div class="row panel-body">
 					<br>
 					<div class="pull-right animate-only-show" ng-show="apc.isSelected(ap.date)">
-						<button class="btn btn-success glyphicon glyphicon-list-alt" ng-click="twc.goto('/agent-programs/source-code/'+ap.date)" ng-if="apc.editor(ap)" tooltip="View Source Code/Run"></button>
+						<button class="btn btn-success glyphicon glyphicon-list-alt" ng-click="apc.run(ap)" ng-if="apc.editor(ap)" tooltip="View Source Code/Run"></button>
 						<button class="btn btn-success glyphicon glyphicon-play" ng-click="apc.run()" ng-if="!apc.editor(ap)" tooltip="Run"></button>
 						<button class="btn btn-info glyphicon glyphicon-list" ng-click="apc.open()" tooltip="View/Change values"></button>
 						<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="apc.remove()" tooltip="Delete"></button>

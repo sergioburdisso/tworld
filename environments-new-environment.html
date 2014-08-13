@@ -15,8 +15,8 @@
 		<!-- INITIAL RADIO BUTTONS -->
 		<div class="row " ng-hide="enc.isDynamic()">
 			<div class="btn-group btn-group-justified">
-				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="false" tooltip="percept-action pattern">User-defined initial state</label>
-				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="true" tooltip-placement="right" tooltip="percept is send periodically. Advanced mode">Random initial state</label>
+				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="false" tooltip="Draw the initial state on the grid below">User-defined initial state</label>
+				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="true" tooltip="Inital state is randomly generated every execution">Random initial state</label>
 			</div>
 		</div>
 
@@ -30,7 +30,7 @@
 						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="' '" tooltip-placement="top" tooltip="Empty cell">_</label>
 						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'T'" tooltip-placement="top" tooltip="Tile">T</label>
 						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'C'" tooltip-placement="top" tooltip="Battery Charger" ng-show="enc.task_env.battery">C</label>
-						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="ismc.holeId" ng-dblclick="ismc.nextHoleId()" tooltip-placement="top" tooltip="Hole Cell">{{ismc.holeId}}</label>
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="ismc.holeId" ng-dblclick="ismc.nextHoleId()" tooltip-placement="top" tooltip="Hole Cell (doble-click to change id)">{{ismc.holeId}}</label>
 					</div>
 				</div>
 				<br>
@@ -131,10 +131,13 @@
 				</div>
 			</section>
 			<section ng-if="!enc.isDeterministic()">
-				<label>Scores associated with holes decay in value every {{enc.task_env.environment.dynamic.dynamism.range}} seconds</label>
+				<label>Scores associated with holes decay in value within {{enc.task_env.environment.dynamic.dynamism.range}} seconds</label>
 				<div class="col-md-6 col-xs-6">
 					<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" step="1" ng-model="enc.task_env.environment.dynamic.dynamism.range"></div>
 				</div>
+				<div class="col-md-1">
+						<button class="btn btn-default glyphicon glyphicon-stats" ng-show="enc.isRange(enc.task_env.environment.dynamic.dynamism.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.dynamism)"></button>
+					</div>
 			</section>
 			<br><br><br>
 		</div>
@@ -166,7 +169,6 @@
 
 	</div>
 </div>
-<div class="separator"></div>
 
 <script type="text/ng-template" id="end_game_cond.html">
 	<div class="modal-header">

@@ -18,8 +18,8 @@
 					<div ng-repeat="agent in team track by $index">
 						<span ng-if="!singleAgent()">Agent (id {{agent.id}}): </span>
 						<span ng-if="singleAgent()">Agent: </span>
-						<label class="cursor-pointer" ng-click="selectAgentProgram(agent.id)"> 
-							<span ng-if="agent.program"> {{agent.program.name}}</span>
+						<label class="cursor-pointer" ng-click="selectAgentProgram(agent.id)" title="Click to select an agent program"> 
+							<span ng-if="agent.program" class="text-blue"> {{agent.program.name}}</span>
 							<span ng-if="!agent.program" class="text-red"> (empty)</span>
 						</label>
 					</div>
