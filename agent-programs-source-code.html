@@ -7,7 +7,12 @@
 				<button ng-click="twc.toggleFullScreen('editor')" class="btn btn-default glyphicon glyphicon glyphicon-resize-full pull-right margin-10" tooltip="toggle full screen"></button>
 				<button id="save" ng-click="apscc.save()" class="btn btn-success glyphicon pull-right margin-10" tooltip="Save"></button>
 				<button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play pull-right margin-10" tooltip="Run agent program"></button>
-				<span class="pull-right cursor-pointer margin-10" ng-click="apscc.openEnvironmentsModal()" tooltip="Select task environment"><b>{{apscc.task_env.name || "(empty)"}}</b></span>
+				<span class="pull-right cursor-pointer margin-10" ng-click="apscc.openEnvironmentsModal()" tooltip="Select task environment">
+					<b>
+						<span ng-if="apscc.task_env.name"> {{apscc.task_env.name}}</span>
+						<span ng-if="!apscc.task_env.name" class="text-red"> (empty)</span>
+					</b>
+				</span>
 				<span class="pull-right margin-10">Task Environment:</span>
 				<div id="source-code"></div>
 			</div>

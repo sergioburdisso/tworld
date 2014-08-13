@@ -800,6 +800,8 @@ function Environment(rows, columns, graphicEngine, parent) {
 					trial={
 						date: Date.now(),
 						//task_env_id: _KNOBS.date,
+						speed: _KNOBS.trial.speed,
+						pause: _KNOBS.trial.pause,
 						stats:{
 							total_holes: Hole.Counter
 						},
@@ -810,6 +812,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 					trial.agents[i] = {
 						program_id: _KNOBS_Agents[i].program.date,
 						team: _KNOBS_Agents[i].team,
+						socre: _rob[i].Score,
 						stats: _rob[i].Stats
 					};
 

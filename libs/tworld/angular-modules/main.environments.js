@@ -95,6 +95,18 @@
 		function($modal, $location, taskEnv){
 			var _next = false;
 			var _self = this;
+			var _default = {
+					teams:{
+						single: [],
+						//0 competitive; 1 cooperative; 2 both
+						comp: taskEnv.prop.multiagent && taskEnv.prop.multiagent_type==0?
+								taskEnv.teams : [],
+						coop: taskEnv.prop.multiagent && taskEnv.prop.multiagent_type==1?
+								taskEnv.teams : [],
+						coopComp: taskEnv.prop.multiagent && taskEnv.prop.multiagent_type==2?
+								taskEnv.teams : []
+					}
+				}
 
 			this.nTeam = 0;
 			this.teamColors = colors;
@@ -304,27 +316,27 @@
 			}
 
 			//MULTIAGENT
-			this.addTeam = function(nMembers){
+			function _addTeam(teams, nMembers){
 				nMembers = nMembers || 1;
 
-				taskEnvironment.teams.push({
-					name:"Team"+this.nTeam,
-					color: colors[this.nTeam%colors.length],
+				teams.push({
+					name:"Team"+_self.nTeam,
+					color: colors[_self.nTeam%colors.length],
 					members:nMembers //number of members
 				});
 
-				this.nTeam++;
+				_self.nTeam++;
 			}
 
-			this.removeTeam = function(index){taskEnvironment.teams.remove(index)}
+			this.addTeam = function(nMembers){_addTeam(_self.task_env.teams, nMembers)}
+
+			this.removeTeam = function(index){teams.remove(index)}
 
 			this.isCompetitive = function(){return taskEnvironment.prop.multiagent_type === 0}
 			this.isCooperative = function(){return taskEnvironment.prop.multiagent_type === 1}
 			this.isCompetitiveCooperative = function(){return taskEnvironment.prop.multiagent_type === 2}
 
 			this.updateTeams = function(){
-				taskEnvironment.teams.length = _self.nTeam = 0;
-
 				if (!this.task_env.prop.multiagent)
 					setSingleAgent();
 				else
@@ -339,22 +351,40 @@
 			}
 
 			function setCompetitive(){
-				_self.addTeam(1);
-				_self.addTeam(1);
+				taskEnvironment.teams = _default.teams.comp;
 				taskEnvironment.prop.multiagent_type = 0;
 			}
 
-			function setSingleAgent(){_self.addTeam(1)}
+			function setSingleAgent(){taskEnvironment.teams=_default.teams.single}
 
 			function setCooperative(){
-				_self.addTeam(2);
+				taskEnvironment.teams = _default.teams.coop;
 				taskEnvironment.prop.multiagent_type = 1;
 			}
 
 			function setCompetitiveCooperative(){
-				_self.addTeam(2);
-				_self.addTeam(2);
+				taskEnvironment.teams = _default.teams.coopComp;
 				taskEnvironment.prop.multiagent_type = 2;
+			}
+
+			//default teams values
+			_addTeam(_default.teams.single, 1);
+
+			if (!_default.teams.comp.length){
+				this.nTeam = 0;
+				_addTeam(_default.teams.comp, 1);
+				_addTeam(_default.teams.comp, 1);
+			}
+
+			if (!_default.teams.coop.length){
+				this.nTeam = 0;
+				_addTeam(_default.teams.coop, 2);
+			}
+
+			if (!_default.teams.coopComp.length){
+				this.nTeam = 0;
+				_addTeam(_default.teams.coopComp, 2);
+				_addTeam(_default.teams.coopComp, 2);
 			}
 
 			this.updateTeams();

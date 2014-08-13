@@ -1839,7 +1839,7 @@ function GraphicTWorld(graphicEngine, environment){
 				teamIcon.Pos.set(0, 28, 0);
 
 				playerIcon = new CL3D.BillboardSceneNode();
-				playerIcon.getMaterial(0).Tex1 = _CL_Engine.getTextureManager().getTexture("./copperlichtdata/p" + rob + ".png", true);
+				playerIcon.getMaterial(0).Tex1 = _CL_Engine.getTextureManager().getTexture("./copperlichtdata/p" + rob%10 + ".png", true);
 				playerIcon.getMaterial(0).Type = CL3D.Material.EMT_TRANSPARENT_ALPHA_CHANNEL;
 				playerIcon.SizeX = playerIcon.SizeY = 4;
 				playerIcon.Pos.set(0, 28, 0);

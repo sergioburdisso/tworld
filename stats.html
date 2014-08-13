@@ -1,0 +1,77 @@
+<div class="container-fluid text-left">
+	<div class="row">
+		<div class="col-md-2" style="padding-right:40px">
+			<!--Sidebar content-->
+
+			<button class="btn btn-primary" ng-click="twc.goto('/agent-programs/new')">New Agent Program</button>
+
+			<hr>
+
+			Filter by name: <input class="form-control" ng-model="apc.query.name">
+
+			<div class="checkbox">
+				<label><input type="checkbox" ng-model="apc.allProps"> All properties</label>
+			</div>
+
+			<div class="animate-show-3d-top" ng-hide="apc.allProps">
+				<b>Only Agent Programs that are:</b>
+				<div class="btn-group btn-group-justified">
+					<label class="btn btn-default" ng-model="apc.query.ai" btn-radio="true" tooltip="Controlled by Algorithm"><img src="imgs/web-app/icon-single-agent.png"></label>
+					<label class="btn btn-default glyphicon glyphicon-user" ng-model="apc.query.ai" btn-radio="false" tooltip="Controlled by Human"></label>
+				</div>
+				<div class="btn-group btn-group-justified animate-only-show" ng-show="apc.query.ai">
+					<label class="btn btn-default" ng-model="apc.query.javascript" btn-radio="true" tooltip="JavaScript"><img src="imgs/web-app/icon-js.png"></label>
+					<label class="btn btn-default glyphicon glyphicon-link" ng-model="apc.query.javascript" btn-radio="false" tooltip="Extern language"></label>
+				</div>
+				<div class="btn-group btn-group-justified animate-only-show" ng-hide="apc.query.ai">
+					<label class="btn btn-default" ng-model="apc.query.keyboard" btn-radio="true" tooltip="Keyboard"><img src="imgs/web-app/icon-keyboard.png"></label>
+					<label class="btn btn-default glyphicon glyphicon-phone" ng-model="apc.query.keyboard" btn-radio="false" tooltip="Remote Control"></label>
+				</div>
+			</div>
+
+			Sort by:
+			<select class="form-control" ng-model="apc.orderCond">
+				<option value="name">Alphabetical</option>
+				<option value="-date">Newest</option>
+			</select>
+		</div>
+		<div class="col-md-10">
+		<h2>Agent Programs</h2>
+		<!--Body content-->
+		<div class="list-group mouse-cursor" style="min-height: 300px">
+			<a class="list-group-item animate-filter transition-400" ng-repeat="ap in apc.agentPrograms | filter:apc.userFilter | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="twc.goto('/agent-programs/source-code/'+ap.date)" ng-class="{active:apc.isSelected(ap.date)}">
+				<!-- PROPERTIES ICONS-->
+				<div class="pull-right text-gray">
+					<div class="solid-icon-16 icon-single-agent" ng-show="ap.ai" tooltip="Controlled by Algorithm"></div>
+					<div class="glyphicon glyphicon-user" ng-hide="ap.ai" tooltip="Controlled by Human"></div>
+
+					<span ng-if="ap.ai">
+						<div class="solid-icon-16 icon-js" ng-show="ap.javascript" tooltip="JavaScript"></div>
+						<div class="glyphicon glyphicon-link" ng-hide="ap.javascript" tooltip="Extern language"></div>
+					</span>
+
+					<span ng-if="!ap.ai">
+						<div class="solid-icon-16 icon-keyboard" ng-show="ap.keyboard" tooltip="Keyboard"></div>
+						<div class="glyphicon glyphicon-phone" ng-hide="ap.keyboard" tooltip="Remote Control"></div>
+					</span>
+				</div>
+
+				<h4 class="list-group-item-heading">{{ap.name}} <span class="badge active">{{ap.date | date:'dd/MM/yyyy - HH:mm:ss'}}</span></h4>
+				<p class="list-group-item-text">{{ap.desc}}</p>
+
+
+				<div class="row panel-body">
+					<br>
+					<div class="pull-right animate-only-show" ng-show="apc.isSelected(ap.date)">
+						<button class="btn btn-success glyphicon glyphicon-list-alt" ng-click="twc.goto('/agent-programs/source-code/'+ap.date)" ng-if="apc.editor(ap)" tooltip="View Source Code/Run"></button>
+						<button class="btn btn-success glyphicon glyphicon-play" ng-click="apc.run()" ng-if="!apc.editor(ap)" tooltip="Run"></button>
+						<button class="btn btn-info glyphicon glyphicon-list" ng-click="apc.open()" tooltip="View/Change values"></button>
+						<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="apc.remove()" tooltip="Delete"></button>
+					</div>
+				</div>
+			</a>
+		</div>
+		<div class="separator"></div>
+		</div>
+	</div>
+</div>

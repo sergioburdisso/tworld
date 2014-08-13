@@ -1,3 +1,21 @@
+/*
+* main.$global.js - 
+*
+* Copyright (C) 2014 Burdisso Sergio (sergio.burdisso@gmail.com)
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU Affero General Public License as
+* published by the Free Software Foundation, either version 3 of the
+* License, or (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU Affero General Public License for more details.
+*
+* You should have received a copy of the GNU Affero General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>
+*/
 var taskEnvironments = getEnvironments();
 var agentPrograms = getAgentPrograms();
 
@@ -193,15 +211,24 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 		);
 	}
 
+	//updating previously saved list of agents and teams (from the last execution)
+	for (var a=$scope.agents.length; a--;)
+		if ($scope.agents[a].program)
+			$scope.agents[a].program = getAgentProgramByDate($scope.agents[a].program.date)
+
+	//initializing list of agents and teams
 	for (var elen=taskEnv.teams.length, a=0, t=0; t < elen; ++t){
 		$scope.teams[t] = new Array(taskEnv.teams[t].members)
 		for (var tlen=$scope.teams[t].length, m=0; m < tlen; ++m, ++a){
+			if ($scope.agents.length <= a)
+				$scope.agents.push(null);
+
 			if (!$scope.agents[a])
-				$scope.agents.push({
+				$scope.agents[a] = {
 					team: t,
 					id: a,
 					program: agentProgs[a]
-				});
+				};
 			else
 				if (agentProgs[a])
 					$scope.agents[a].program = agentProgs[a];
