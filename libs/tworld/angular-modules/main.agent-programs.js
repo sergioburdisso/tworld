@@ -16,6 +16,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
+var _editor;
 (function(){
 	var mod = angular.module('tworldAgentPrograms', []);
 
@@ -95,10 +96,41 @@
 
 	}]);
 
-	mod.controller('AgentProgSourceCodeController', ['$routeParams','$modal', '$location',
-		function($routeParams, $modal, $location){
+	mod.controller('AgentProgSourceCodeController', ['$scope','$routeParams','$modal', '$location',
+		function($scope, $routeParams, $modal, $location){
 			var _self = this;
+			var _doc;
+			var _source;
+			//var _editor;
+			var Range = ace.require('ace/range').Range;
+			var _anchors = {
+				agentProgram:{start:null, end:null, highlightRange: new Range()},
+				onStart:{start:null, end:null, highlightRange: new Range()},
+				onMessage:{start:null, end:null, highlightRange: new Range()}
+			}
 
+			ace.require("ace/ext/language_tools");
+			_editor = ace.edit("source-code");
+
+			_editor.setOptions({
+				theme: "ace/theme/ambiance",
+				enableBasicAutocompletion: true,
+				enableLiveAutocompletion: false,
+				enableSnippets: true,
+				cursorStyle: "smooth",
+				autoScrollEditorIntoView: true,
+				animatedScroll: true,
+				showInvisibles: true,
+				displayIndentGuides: true,
+				showPrintMargin: true,
+				mode:"ace/mode/javascript",
+				useWorker: true,
+				useSoftTabs:true,
+				tabSize:2
+			});
+
+			this.fullScreen = false;
+			this.saved = true;
 			this.agent_prog = getAgentProgramByDate($routeParams.id);
 			if (!this.agent_prog.ai || !this.agent_prog.javascript){$location.url('/404');return}
 
@@ -107,14 +139,53 @@
 								:
 								null;
 
-			editor.setValue(this.agent_prog.source.code);
-			editor.focus();
-			editor.gotoLine(this.agent_prog.source.cursor.row+1, this.agent_prog.source.cursor.column, true);
-			editor.scrollToRow(this.agent_prog.source.cursor.row);
+			_source = this.agent_prog.source;
+
+			_editor.setValue(_source.code);
+			_editor.focus();
+			_editor.gotoLine(_source.cursor.row+1, _source.cursor.column, true);
+			_editor.scrollToRow(_source.cursor.row);
+
+			_doc = _editor.getSession().getDocument();
+
+			//set anchors
+			_anchors.agentProgram.start = _doc.createAnchor(_source.agentProgram.anchor.start, 0);
+			_anchors.agentProgram.end = _doc.createAnchor(_source.agentProgram.anchor.end, 0);
+
+			_anchors.onStart.start = _doc.createAnchor(_source.onStart.anchor.start, 0);
+			_anchors.onStart.end = _doc.createAnchor(_source.onStart.anchor.end, 0);
+
+			_anchors.onMessage.start = _doc.createAnchor(_source.onMessage.anchor.start, 0);
+			_anchors.onMessage.end = _doc.createAnchor(_source.onMessage.anchor.end, 0);
 
 			this.save = function(){
-				this.agent_prog.source.cursor = editor.getCursorPosition();
-				this.agent_prog.source.code = editor.getValue();
+				_source.cursor = _editor.getCursorPosition();
+
+				//converting (row,colums) to character indexes
+				//(used to split every part of the source code, later on used within solid-agent.js)
+				_source.agentProgram.anchor.start = _anchors.agentProgram.start.row;
+				_source.agentProgram.anchor.end = _anchors.agentProgram.end.row;
+
+				_source.onStart.anchor.start = _anchors.onStart.start.row;
+				_source.onStart.anchor.end = _anchors.onStart.end.row;
+
+				_source.onMessage.anchor.start = _anchors.onMessage.start.row;
+				_source.onMessage.anchor.end = _anchors.onMessage.end.row;
+
+
+				_source.agentProgram.char.start = _doc.positionToIndex(_anchors.agentProgram.start);
+				_source.agentProgram.char.end = _doc.positionToIndex(_anchors.agentProgram.end);
+
+				_source.onStart.char.start = _doc.positionToIndex(_anchors.onStart.start);
+				_source.onStart.char.end = _doc.positionToIndex(_anchors.onStart.end);
+
+				_source.onMessage.char.start = _doc.positionToIndex(_anchors.onMessage.start);
+				_source.onMessage.char.end = _doc.positionToIndex(_anchors.onMessage.end);
+
+				_source.code = _editor.getValue();
+
+				_self.saved = true;
+
 				saveAgentPrograms()
 			}
 
@@ -124,6 +195,21 @@
 					this.openEnvironmentsModal(true);
 				else
 					this.openRunModal();
+			}
+
+			this.toggleFullScreen = function(){
+				_self.fullScreen = !_self.fullScreen;
+				if (_self.fullScreen){
+					_editor.setOptions({autoScrollEditorIntoView: false});
+					$('body').scrollTop(0).css("overflow","hidden");
+					$('#source-code').css("height", $(window).height()-100+"px")
+				}else{
+					_editor.setOptions({autoScrollEditorIntoView: true});
+					$('#source-code').css("height", "")
+					$('body').css("overflow","initial");
+					gotoTop()
+				}
+				_editor.resize();
 			}
 
 			this.openEnvironmentsModal = function(run){
@@ -161,6 +247,61 @@
 						}
 					});
 			}
+
+			function _onChangeCursor(){
+				var selection = _editor.session.selection;
+				var hitTest = false;
+
+				function selectionHit(row){
+					return (selection.lead.row == row || !selection.isEmpty() && selection.anchor.row == row)
+				}
+
+				for (chunk in _anchors){
+					hitTest = hitTest || (
+						selectionHit(_anchors[chunk].start.row) ||
+						selectionHit(_anchors[chunk].end.row)
+					);
+
+					if (!self[chunk])
+						self[chunk] = {};
+
+					//if anchors have changed
+					if (self[chunk].start != _anchors[chunk].start.row || self[chunk].end != _anchors[chunk].end.row){
+						_anchors[chunk].highlightRange.setStart(_anchors[chunk].start.row+1,0);
+						_anchors[chunk].highlightRange.setEnd(_anchors[chunk].end.row-1,1);
+
+						_editor.session.removeMarker(self[chunk].anchorID);
+						self[chunk].anchorID = _editor.session.addMarker(_anchors[chunk].highlightRange, "highlight-readonly", "fullLine");
+
+						self[chunk].start = _anchors[chunk].start.row;
+						self[chunk].end = _anchors[chunk].end.row;
+					}
+
+				}
+
+				_editor.setReadOnly(hitTest);
+			}
+
+			//constructor logic
+
+			_onChangeCursor();
+
+			_editor.session.on("change", function(e){
+				if (e.data.action == "removeLines" || (e.data.action == "removeText" && e.data.range.end.row == _editor.session.getLength()) ){
+					//_editor.insert("\n}");
+					//CANCEL THE CHANGE!!!
+				}
+			});
+
+			_editor.session.selection.on("changeCursor",_onChangeCursor);
+
+			_editor.on('input', function() {
+				if (_self.saved){
+					_self.saved = false;
+					$scope.$apply()//update the binding values
+				}
+			});
+
 		}]
 	);
 
@@ -174,14 +315,16 @@
 			this.agent_prog = agentProg;
 
 			this.save = function(){
-				if (!agentProg.date){
+				var _newFlag = !agentProg.date;
+
+				if (_newFlag){
 					agentProg.date = Date.now();
 					agentPrograms.push(this.agent_prog);
 				}else
 					agentPrograms[ getAgentProgramIndexByDate(agentProg.date) ] = agentProg;
 
 				saveAgentPrograms();
-				if (this.agent_prog.javascript && this.agent_prog.ai)
+				if (this.agent_prog.javascript && this.agent_prog.ai && _newFlag)
 					$location.url('/agent-programs/source-code/'+this.agent_prog.date)
 				else
 					$location.url('/');

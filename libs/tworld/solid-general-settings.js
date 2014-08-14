@@ -99,8 +99,19 @@ if (_KNOBS.trial.test){
 			_AGENTS[i].CONTROLLED_BY_AI = true;
 			
 			if (_KNOBS_Agents[i].program.javascript){
-				_AGENTS[i].AI_SOURCE_CODE = _KNOBS_Agents[i].program.source.code;
-				_AGENTS[i].TEAM_MSG_SOURCE_CODE = _KNOBS_Agents[i].program.source.msg_code;
+				var _source = _KNOBS_Agents[i].program.source;
+				_AGENTS[i].AI_SOURCE_CODE = _source.code.substring(
+												_source.agentProgram.char.start,
+												_source.agentProgram.char.end+1
+											);
+				_AGENTS[i].TEAM_MSG_SOURCE_CODE = _source.code.substring(
+													_source.onMessage.char.start,
+													_source.onMessage.char.end+1
+												);
+				_AGENTS[i].START_SOURCE_CODE = _source.code.substring(
+													_source.onStart.char.start,
+													_source.onStart.char.end+1
+												);
 			}else{
 				_AGENTS[i].SOCKET_PROGRAM_AGENT =	{
 					ADDR: _KNOBS_Agents[i].program.socket.ip_address,

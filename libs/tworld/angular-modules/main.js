@@ -151,7 +151,7 @@
 					controllerAs: 'apnc',
 					resolve:{
 						agentProg:function(){
-						return {
+						return { 
 								name:"",
 								desc:"",
 								date:0,
@@ -159,8 +159,32 @@
 								ai: true,
 								javascript:true,
 								source:{
-									code: "function AgentProgram(percept){\n\t\n}",
-									msg_code: "function onMsgReceived(msg){\n\t\n}",
+									code:
+											"\n"+
+											"function AGENT_PROGRAM(percept){\n"+
+											"\t\n"+
+											"}\n"+
+											"\n"+
+											"function onStart(percept){\n"+
+											"\t\n"+
+											"}\n"+
+											"\n"+
+											"function onMessageReceived(message){\n"+
+											"\t\n"+
+											"}"
+									,
+									agentProgram:{
+										anchor: {start:1, end:3}, // rows indexes
+										char: {start:1, end:36}, // char indexes
+									},
+									onStart:{
+										anchor: {start:5, end:7},
+										char: {start:39, end:68},
+									},
+									onMessage:{
+										anchor: {start:9, end:11},
+										char: {start:71, end:110},
+									},
 									cursor:{row:0, column:0}
 								},
 								socket:{
@@ -215,8 +239,6 @@
 				$location.url(path);
 				gotoTop()
 			}
-
-			this.toggleFullScreen = function(id){toggleFullScreen(document.getElementById(id))}
 
 			this.getSubPath = function(fi){if (fi == 0) return "/";
 				var subPath = "";

@@ -3,10 +3,6 @@
 		<div class="col-md-2" style="padding-right:40px">
 			<!--Sidebar content-->
 
-			<button class="btn btn-primary" ng-click="twc.goto('/agent-programs/new')">New Agent Program</button>
-
-			<hr>
-
 			Filter by name: <input class="form-control" ng-model="apc.query.name">
 
 			<div class="checkbox">
@@ -36,7 +32,7 @@
 			</select>
 		</div>
 		<div class="col-md-10">
-		<h2>Agent Programs</h2>
+		<h2>Stats</h2>
 		<!--Body content-->
 		<div class="list-group mouse-cursor" style="min-height: 300px">
 			<a class="list-group-item animate-filter transition-400" ng-repeat="ap in apc.agentPrograms | filter:apc.userFilter | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="twc.goto('/agent-programs/source-code/'+ap.date)" ng-class="{active:apc.isSelected(ap.date)}">

@@ -238,27 +238,3 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 	}
 
 }
-
-function toggleFullScreen(e) {
-	var d = document;
-	var _requestFullScreen =e.requestFullScreen			|| e.requestFullscreen		||
-							e.msRequestFullScreen		|| e.msRequestFullscreen	||
-							e.mozRequestFullScreen		|| e.mozRequestFullscreen	||
-							e.webkitRequestFullScreen	|| e.webkitRequestFullscreen;
-	var _cancelFullScreen =	d.cancelFullScreen			|| d.cancelFullscreen		|| d.exitFullScreen			|| d.exitFullscreen			||
-							d.msCancelFullScreen		|| d.msCancelFullscreen		|| d.msExitFullScreen		|| d.msExitFullscreen		||
-							d.mozCancelFullScreen		|| d.mozCancelFullscreen	|| d.mozExitFullScreen		|| d.mozExitFullscreen		||
-							d.webkitCancelFullScreen	|| d.webkitCancelFullscreen	|| d.webkitExitFullScreen	|| d.webkitExitFullscreen;
-
-	if ( d.fullscreenElement	|| d.webkitFullscreenElement ||
-		 d.mozFullScreenElement	|| d.msFullscreenElement) {
-		if (_cancelFullScreen){
-			$(e).removeClass("full-screen");
-			_cancelFullScreen.call(d);
-		}
-	}else
-		if (_requestFullScreen){
-			$(e).addClass("full-screen");
-			_requestFullScreen.call(e);
-		}
-}

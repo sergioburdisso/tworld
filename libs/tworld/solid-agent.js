@@ -39,33 +39,45 @@ get as many points as possible by filling in holes.
 	-print grid perception
 */
 
-var alert = function(msg){ returnAction(_ACTION.CONSOLE_LOG + msg); }
+var alert = function(msg){ $return(_ACTION.CONSOLE_LOG + msg); }
 //console guard
 console = {};
-console.error = function(msg){ returnAction(_ACTION.CONSOLE_ERROR + msg); }
-console.clear = function(msg){ returnAction(_ACTION.CONSOLE_CLEAR); }
+console.error = function(msg){ $return(_ACTION.CONSOLE_ERROR + msg); }
+console.clear = function(msg){ $return(_ACTION.CONSOLE_CLEAR); }
 console.log = alert;
 
 var _ACTION_SENT;
 var _PERCEPT = null;
 var _GRID;
 var _AGENT;
+
 var AgentProgram;
-var MsgReceived;
+var onMessageReceived;
+var onStart;
+
+var $m = {};
+var $memory = $m;
+var $persistent = $m;
 
 function _agentProgram(percept)/*returns accion*/{
 	percept = percept.data;
 
-	try{
 	switch(percept.header){
 		case _PERCEPT_HEADER.INTERNAL:
 			eval("AgentProgram = "+ percept.data.ai_src);
-			eval("MsgReceived = " + percept.data.tm_msg_src);//(opcional, usualmente viene undefined)
+			eval("onStart = " + percept.data.start_src);
+			eval("onMessageReceived = " + percept.data.msg_src);
 			break;
 
 		case _PERCEPT_HEADER.START:
-			//resetEverything();
-				returnAction(_ACTION.NONE);
+				try{
+					onStart(percept.data);
+				}catch(e){
+					var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
+					if (!matchs)	console.error(e.stack);
+					else			console.error(e.name + ": " + e.message + " at 'onStart' (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+				};
+				$return(_ACTION.NONE);
 			break;
 
 		case _PERCEPT_HEADER.END:
@@ -73,109 +85,72 @@ function _agentProgram(percept)/*returns accion*/{
 			break;
 
 		case _PERCEPT_HEADER.MESSAGE:
-			this.goal = JSON.parse(percept.data);//MsgReceived(percept.data)
-			perceive();
+			var msg;
+
+			try{msg = JSON.parse(percept.data)}
+			catch(e){msg = percept.data}//if not a JSON then pass the sting to "onMessageReceived"
+
+			try{
+				onMessageReceived(msg);
+			}catch(e){
+				var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
+				if (!matchs)	console.error(e.stack);
+				else			console.error(e.name + ": " + e.message + " at onMessageReceived (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+			};
+			$perceive();
 			break;
 
 		case _PERCEPT_HEADER.PAUSE:
 			if (percept.data == "off")
-				perceive();
+				$perceive();
 			break;
 
 		default:
 			//HIDDEN
 			percept = percept.data;
+
 			_PERCEPT = percept;
+
 			_GRID = percept.environment.grid;
 			_GRID.ROWS = _GRID.length;
 			_GRID.COLUMNS = _GRID[0].length;
+
 			_AGENT = percept.agent;
 			_ACTION_SENT = false;
 
-			AgentProgram(percept);
-/*
-			//CODE EXCECUTE ONLY ONCE WHEN AGENT PROGRAM IS CREATED
-			if (!this.FirstTimeFlag){
-				this.FirstTimeFlag = true;
-
-				var my_team;
-				for (var teams = percept.builtin_knowledge.teams, i= 0; i < teams.length; ++i)
-					if (teams[i].id == percept.agent.team_id)
-						my_team = teams[i];
-
-				//if I am the leader of my team
-				if (percept.agent.id == my_team.leader){
-					this.goal = {row:random(_GRID.ROWS - 2), column:random(_GRID.COLUMNS)};
-					//sendTeamMessage(this.goal);
-					for (var r=0, m= 0; m < my_team.members.length; ++m)
-						if (my_team.members[m] != percept.agent.id){
-							r+=2;
-							sendMessage(my_team.members[m], {row: this.goal.row + r, column: this.goal.column});
-						}
-				}
-			}
-
-			//CODE EXCECUTE EACH TIME ROB PERCEIVES
-			if (this.goal){
-				if (this.goal.row < percept.agent.location.row){
-					if (isValidMove(_ACTION.NORTH))
-						returnAction(_ACTION.NORTH);
-				}
-				else
-				if (this.goal.row > percept.agent.location.row){
-					if (isValidMove(_ACTION.SOUTH))
-						returnAction(_ACTION.SOUTH);
-				}
-				if (this.goal.column < percept.agent.location.column){
-					if (isValidMove(_ACTION.WEST))
-						returnAction(_ACTION.WEST);
-				}
-				else
-				if (this.goal.column > percept.agent.location.column){
-					if (isValidMove(_ACTION.EAST))
-						returnAction(_ACTION.EAST);
-				}
-			}
-*/
-			//printGrid();
-			//var action = chooseRandomValidAction(/*memory*/);
-			/*returnAction(action);
-
-			if (_AGENT.battery !== undefined && _AGENT.battery == 0)
-				returnAction(_ACTION.RESTORE);*/
+			try{
+				AgentProgram(percept);
+			}catch(e){
+				var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
+				if (!matchs)	console.error(e.stack);
+				else			console.error(e.name + ": " + e.message + " at AGENT_PROGRAM (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+			};
 
 			//ACTIONS GUARD
 			if (!_ACTION_SENT)
-				perceive();
+				$perceive();
 	}
-	}catch(e){
-		var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
-		if (!matchs)
-			console.error(e.stack);
-		else
-			console.error(e.name + ": " + e.message + " at AgentProgram (Line:"+matchs[2]+", Column:"+matchs[3]+")");
-	};
 }onmessage = _agentProgram; 
 
-function chooseRandomValidAction(percept /*n,s,w,e*/){
+function $chooseRandomValidAction(percept /*n,s,w,e*/){
 	var actions = new Array();
 
-	if (isValidMove(_ACTION.NORTH))
+	if ($isValidMove(_ACTION.NORTH))
 		actions.push(_ACTION.NORTH);
 
-	if (isValidMove(_ACTION.SOUTH))
+	if ($isValidMove(_ACTION.SOUTH))
 		actions.push(_ACTION.SOUTH);
 
-	if (isValidMove(_ACTION.EAST))
+	if ($isValidMove(_ACTION.EAST))
 		actions.push(_ACTION.EAST);
 
-	if (isValidMove(_ACTION.WEST))
+	if ($isValidMove(_ACTION.WEST))
 		actions.push(_ACTION.WEST);
 
 	return (actions.length == 0)? _ACTION.NONE : actions[parseInt(Math.random()*actions.length)];
 }
 
-function returnAction(action){
+function $return(action){
 	switch(action){
 		case _ACTION.NORTH:
 		case _ACTION.SOUTH:
@@ -187,20 +162,20 @@ function returnAction(action){
 	postMessage(action);
 }
 
-function sendTeamMessage(msg){
-	returnAction(_ACTION.TEAM_MESSAGE + JSON.stringify(msg));
+function $sendTeamMessage(msg){
+	$return(_ACTION.TEAM_MESSAGE + JSON.stringify(msg));
 }
 
-function sendMessage(robId, msg){
-	returnAction(_ACTION.PEER_MESSAGE + robId + ":" + JSON.stringify(msg));
+function $sendMessage(robId, msg){
+	$return(_ACTION.PEER_MESSAGE + robId + ":" + JSON.stringify(msg));
 }
 
-function perceive(){
+function $perceive(){
 	postMessage(_ACTION.NONE);
 	//return from execution
 }
 
-function isValidMove(move){
+function $isValidMove(move){
 	var arow = _AGENT.location.row;
 	var acol = _AGENT.location.column;
 	var r = 0, c = 0;
@@ -232,9 +207,12 @@ function isValidMove(move){
 			_GRID[arow+r][acol+c] == _GRID_CELL.BATTERY_CHARGER);
 }
 
-function printGrid(){
+function $printGrid(percept){
 	var strgLine = "   ";
 	var strgGrid = "";
+	var _GRID = percept.environment.grid;
+		_GRID.ROWS = _GRID.length;
+		_GRID.COLUMNS = _GRID[0].length;
 
 	for (var i=0; i < _GRID.COLUMNS; ++i)
 		strgLine+="-  ";

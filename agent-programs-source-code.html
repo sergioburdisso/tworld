@@ -1,15 +1,15 @@
 <div class="text-left">
 	<div class="row"></div>
 	<div class="row">
-		<div id="editor" class="panel panel-primary">
+		<div id="editor" class="panel panel-primary" ng-class="{'full-screen':apscc.fullScreen}">
 			<div class="panel-heading">{{apscc.agent_prog.name}}</div>
 			<div class="panel-body no-padding">
-				<button ng-click="twc.toggleFullScreen('editor')" class="btn btn-default glyphicon glyphicon glyphicon-resize-full pull-right margin-10" tooltip="toggle full screen"></button>
-				<button id="save" ng-click="apscc.save()" class="btn btn-success glyphicon pull-right margin-10" tooltip="Save"></button>
+				<button ng-click="apscc.toggleFullScreen()" ng-class="{'glyphicon-resize-small':apscc.fullScreen,'glyphicon-resize-full':!apscc.fullScreen}" class="btn btn-default glyphicon glyphicon pull-right margin-10" tooltip="Maximaze/Restore"></button>
+				<button id="save" class="btn btn-success glyphicon pull-right margin-10" ng-class="{'disabled glyphicon-floppy-saved':apscc.saved, 'glyphicon-floppy-save':!apscc.saved}" ng-click="apscc.save()" tooltip="Save"></button>
 				<button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play pull-right margin-10" tooltip="Run agent program"></button>
 				<span class="pull-right cursor-pointer margin-10" ng-click="apscc.openEnvironmentsModal()" tooltip="Select task environment">
 					<b>
-						<span ng-if="apscc.task_env.name"> {{apscc.task_env.name}}</span>
+						<span ng-if="apscc.task_env.name" class="text-blue"> {{apscc.task_env.name}}</span>
 						<span ng-if="!apscc.task_env.name" class="text-red"> (empty)</span>
 					</b>
 				</span>
@@ -19,49 +19,3 @@
 		</div>
 	</div>
 </div>
-
-<script>
-	ace.require("ace/ext/language_tools");
-
-	var editor = ace.edit("source-code");
-
-	editor.setOptions({
-		theme: "ace/theme/ambiance",
-		enableBasicAutocompletion: true,
-		enableLiveAutocompletion: false,
-		enableSnippets: true,
-		cursorStyle: "smooth",
-		autoScrollEditorIntoView: true,
-		animatedScroll: true,
-		showInvisibles: true,
-		displayIndentGuides: true,
-		showPrintMargin: true,
-		mode:"ace/mode/javascript",
-		useWorker: true,
-		useSoftTabs:true,
-		tabSize:2
-	});
-
-	editor.session.on("change", function(e){
-		if (e.data.action == "removeLines" || (e.data.action == "removeText" && e.data.range.end.row == editor.session.getLength()) ){
-			//editor.insert("\n}");
-			//CANCEL THE CHANGE!!!
-		}
-	});
-
-	editor.session.selection.on("changeCursor",
-		function(){
-			var selection = editor.session.selection;
-			var row = editor.session.getLength()-1;
-
-			editor.setReadOnly(
-				(selection.lead.row == 0 || !selection.isEmpty() && selection.anchor.row == 0) ||
-				(selection.lead.row == row || !selection.isEmpty() && selection.anchor.row == row)/* ||
-				((selection.lead.row == row-1 && selection.lead.column == editor.session.getLine(row-1).length) || !selection.isEmpty() && (selection.anchor.row == row-1 && selection.anchor.column == editor.session.getLine(row-1).length ))*/
-				);
-		}
-	);
-
-	editor.on('input', function() {$('#save').removeClass("disabled glyphicon-floppy-saved").addClass("glyphicon-floppy-save")});
-	$('#save').on("click", function() {$('#save').addClass("disabled glyphicon-floppy-saved").removeClass("glyphicon-floppy-save")});
-</script>

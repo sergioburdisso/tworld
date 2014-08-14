@@ -1125,7 +1125,7 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 							new WebSocket("ws://"+(_address = _AGENTS[rIndex].SOCKET_PROGRAM_AGENT.ADDR+":"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.PORT)):
 							new Worker(src);
 	var _index = rIndex;
-	var _myTeam = _GET_TEAM_OF(rIndex);
+	var _myTeamMembers = _GET_TEAM_OF(rIndex);
 	var _percept = {header: null, data:""};
 	var _self = this;
 
@@ -1209,13 +1209,13 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 		if ( _ACTION_REGEX.PEER_MESSAGE.test(action) )
 			{matchs = action.match(_ACTION_REGEX.PEER_MESSAGE);
 			var peerId = (matchs[3]||matchs[5]);
-			if (_myTeam.contains(peerId))
+			if (_myTeamMembers.contains(peerId))
 				_env.sendPeerMessage(peerId, (matchs[4]||matchs[6]))}
 		else
 		//case _ACTION.TEAM_MESSAGE
 		if ( _ACTION_REGEX.TEAM_MESSAGE.test(action) )
 			{matchs = action.match(_ACTION_REGEX.TEAM_MESSAGE);
-			_env.sendTeamMessage(_myTeam, matchs[3] || matchs[4])}
+			_env.sendTeamMessage(_myTeamMembers, matchs[3] || matchs[4])}
 		else
 		//case _ACTION.CONSOLE_CLEAR
 		if ( _ACTION_REGEX.CONSOLE_CLEAR.test(action) )
@@ -1278,7 +1278,11 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 
 	if (!isSocket){
 		_percept.header = _PERCEPT_HEADER.INTERNAL;
-		_percept.data = {ai_src: _AGENTS[rIndex].AI_SOURCE_CODE, tm_msg_src: _AGENTS[rIndex].TEAM_MSG_SOURCE_CODE}
+		_percept.data = {
+			ai_src: _AGENTS[rIndex].AI_SOURCE_CODE,
+			msg_src: _AGENTS[rIndex].TEAM_MSG_SOURCE_CODE,
+			start_src: _AGENTS[rIndex].START_SOURCE_CODE
+		}
 		_agentProgram.postMessage( _percept );
 	}
 
