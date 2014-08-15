@@ -1281,7 +1281,8 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 		_percept.data = {
 			ai_src: _AGENTS[rIndex].AI_SOURCE_CODE,
 			msg_src: _AGENTS[rIndex].TEAM_MSG_SOURCE_CODE,
-			start_src: _AGENTS[rIndex].START_SOURCE_CODE
+			start_src: _AGENTS[rIndex].START_SOURCE_CODE,
+			global_src:_AGENTS[rIndex].GLOBAL_SOURCE_CODE
 		}
 		_agentProgram.postMessage( _percept );
 	}

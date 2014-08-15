@@ -100,18 +100,11 @@ if (_KNOBS.trial.test){
 			
 			if (_KNOBS_Agents[i].program.javascript){
 				var _source = _KNOBS_Agents[i].program.source;
-				_AGENTS[i].AI_SOURCE_CODE = _source.code.substring(
-												_source.agentProgram.char.start,
-												_source.agentProgram.char.end+1
-											);
-				_AGENTS[i].TEAM_MSG_SOURCE_CODE = _source.code.substring(
-													_source.onMessage.char.start,
-													_source.onMessage.char.end+1
-												);
-				_AGENTS[i].START_SOURCE_CODE = _source.code.substring(
-													_source.onStart.char.start,
-													_source.onStart.char.end+1
-												);
+
+				_AGENTS[i].AI_SOURCE_CODE =			_source.agentProgram.code;
+				_AGENTS[i].TEAM_MSG_SOURCE_CODE =	_source.onMessage.code;
+				_AGENTS[i].START_SOURCE_CODE =		_source.onStart.code;
+				_AGENTS[i].GLOBAL_SOURCE_CODE =		_source.global.code;
 			}else{
 				_AGENTS[i].SOCKET_PROGRAM_AGENT =	{
 					ADDR: _KNOBS_Agents[i].program.socket.ip_address,

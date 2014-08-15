@@ -159,33 +159,37 @@
 								ai: true,
 								javascript:true,
 								source:{
-									code:
+									agentProgram:{
+										cursor:{row:0, column:0},
+										//anchor: {start:1, end:3}, // rows indexes
+										code:
 											"\n"+
 											"function AGENT_PROGRAM(percept){\n"+
 											"\t\n"+
-											"}\n"+
+											"}"
+									},
+									onStart:{
+										cursor:{row:0, column:0},
+										//anchor: {start:5, end:7},
+										code:
 											"\n"+
 											"function onStart(percept){\n"+
 											"\t\n"+
-											"}\n"+
+											"}"
+									},
+									onMessage:{
+										cursor:{row:0, column:0},
+										//anchor: {start:9, end:11},
+										code:
 											"\n"+
 											"function onMessageReceived(message){\n"+
 											"\t\n"+
 											"}"
-									,
-									agentProgram:{
-										anchor: {start:1, end:3}, // rows indexes
-										char: {start:1, end:36}, // char indexes
 									},
-									onStart:{
-										anchor: {start:5, end:7},
-										char: {start:39, end:68},
-									},
-									onMessage:{
-										anchor: {start:9, end:11},
-										char: {start:71, end:110},
-									},
-									cursor:{row:0, column:0}
+									global:{
+										cursor:{row:0, column:0},
+										code: ""
+									}
 								},
 								socket:{
 									ip_address: "localhost",

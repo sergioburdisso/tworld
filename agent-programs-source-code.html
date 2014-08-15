@@ -2,18 +2,49 @@
 	<div class="row"></div>
 	<div class="row">
 		<div id="editor" class="panel panel-primary" ng-class="{'full-screen':apscc.fullScreen}">
-			<div class="panel-heading">{{apscc.agent_prog.name}}</div>
+			<div class="panel-heading">
+				{{apscc.agent_prog.name}}
+
+				<div class="pull-right">
+					<span class="">( Task Environment:</span>
+					<span class="cursor-pointer margin-10" ng-click="apscc.openEnvironmentsModal()" tooltip="Select task environment">
+						<b>
+							<a ng-if="apscc.task_env.name" class="text-white"> {{apscc.task_env.name}}</a>
+							<a ng-if="!apscc.task_env.name" class="text-red"> (empty)</a>
+						</b> )
+					</span>
+					<button ng-click="apscc.toggleFullScreen()" ng-class="{'glyphicon-resize-small':apscc.fullScreen,'glyphicon-resize-full':!apscc.fullScreen}" class="btn btn-default glyphicon glyphicon" tooltip="Maximaze/Restore"></button>
+				</div>
+			</div>
+
 			<div class="panel-body no-padding">
-				<button ng-click="apscc.toggleFullScreen()" ng-class="{'glyphicon-resize-small':apscc.fullScreen,'glyphicon-resize-full':!apscc.fullScreen}" class="btn btn-default glyphicon glyphicon pull-right margin-10" tooltip="Maximaze/Restore"></button>
-				<button id="save" class="btn btn-success glyphicon pull-right margin-10" ng-class="{'disabled glyphicon-floppy-saved':apscc.saved, 'glyphicon-floppy-save':!apscc.saved}" ng-click="apscc.save()" tooltip="Save"></button>
-				<button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play pull-right margin-10" tooltip="Run agent program"></button>
-				<span class="pull-right cursor-pointer margin-10" ng-click="apscc.openEnvironmentsModal()" tooltip="Select task environment">
-					<b>
-						<span ng-if="apscc.task_env.name" class="text-blue"> {{apscc.task_env.name}}</span>
-						<span ng-if="!apscc.task_env.name" class="text-red"> (empty)</span>
-					</b>
-				</span>
-				<span class="pull-right margin-10">Task Environment:</span>
+
+				<button id="save" class="btn btn-success glyphicon margin-10 pull-right" ng-class="{'disabled glyphicon-floppy-saved':apscc.saved, 'glyphicon-floppy-save':!apscc.saved}" ng-click="apscc.save()" tooltip="Save"></button>
+				<button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play margin-10 pull-right" tooltip="Run agent program"></button>
+
+				<tabset>
+					<tab select="apscc.open(apscc.agent_prog.source.agentProgram)">
+						<tab-heading>
+							<i class="glyphicon glyphicon-pencil"></i> Agent Program
+						</tab-heading>
+					</tab>
+					<tab select="apscc.open(apscc.agent_prog.source.global)">
+						<tab-heading>
+							<i class="glyphicon glyphicon-pencil"></i> Global Scope
+						</tab-heading>
+					</tab>
+					<tab select="apscc.open(apscc.agent_prog.source.onStart)">
+						<tab-heading>
+							<i class="glyphicon glyphicon-fire"></i> Start Event
+						</tab-heading>
+					</tab>
+					<tab select="apscc.open(apscc.agent_prog.source.onMessage)">
+						<tab-heading>
+							<i class="glyphicon glyphicon-fire"></i> Message Received Event
+						</tab-heading>
+					</tab>
+				</tabset>
+
 				<div id="source-code"></div>
 			</div>
 		</div>

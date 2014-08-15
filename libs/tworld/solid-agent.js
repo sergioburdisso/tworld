@@ -39,7 +39,12 @@ get as many points as possible by filling in holes.
 	-print grid perception
 */
 
-var alert = function(msg){ $return(_ACTION.CONSOLE_LOG + msg); }
+var alert = function(msg){
+	if (msg instanceof Object)
+		msg = JSON.stringify(msg);
+
+	$return(_ACTION.CONSOLE_LOG + msg);
+}
 //console guard
 console = {};
 console.error = function(msg){ $return(_ACTION.CONSOLE_ERROR + msg); }
@@ -51,9 +56,9 @@ var _PERCEPT = null;
 var _GRID;
 var _AGENT;
 
-var AgentProgram;
-var onMessageReceived;
-var onStart;
+var __AgentProgram__;
+var __onMessageReceived__;
+var __onStart__;
 
 var $m = {};
 var $memory = $m;
@@ -64,14 +69,34 @@ function _agentProgram(percept)/*returns accion*/{
 
 	switch(percept.header){
 		case _PERCEPT_HEADER.INTERNAL:
-			eval("AgentProgram = "+ percept.data.ai_src);
-			eval("onStart = " + percept.data.start_src);
-			eval("onMessageReceived = " + percept.data.msg_src);
+			eval(
+				"(function(){"+
+					percept.data.global_src+
+
+					"(function(){"+
+						percept.data.ai_src
+						+"\
+						__AgentProgram__= AGENT_PROGRAM\
+					})();"+
+
+					"(function(){"+
+						percept.data.start_src
+						+"\
+						__onStart__= onStart\
+					})();"+
+
+					"(function(){"+
+						percept.data.msg_src
+						+"\
+						__onMessageReceived__= onMessageReceived\
+					})()\
+				})()"
+			);
 			break;
 
 		case _PERCEPT_HEADER.START:
 				try{
-					onStart(percept.data);
+					__onStart__(percept.data);
 				}catch(e){
 					var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
 					if (!matchs)	console.error(e.stack);
@@ -88,10 +113,10 @@ function _agentProgram(percept)/*returns accion*/{
 			var msg;
 
 			try{msg = JSON.parse(percept.data)}
-			catch(e){msg = percept.data}//if not a JSON then pass the sting to "onMessageReceived"
+			catch(e){msg = percept.data}//if not a JSON then pass the sting to "__onMessageReceived__"
 
 			try{
-				onMessageReceived(msg);
+				__onMessageReceived__(msg);
 			}catch(e){
 				var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
 				if (!matchs)	console.error(e.stack);
@@ -119,7 +144,7 @@ function _agentProgram(percept)/*returns accion*/{
 			_ACTION_SENT = false;
 
 			try{
-				AgentProgram(percept);
+				__AgentProgram__(percept);
 			}catch(e){
 				var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
 				if (!matchs)	console.error(e.stack);
@@ -157,6 +182,7 @@ function $return(action){
 		case _ACTION.WEST:
 		case _ACTION.EAST:
 		case _ACTION.NONE:
+		case _ACTION.RESTORE:
 			_ACTION_SENT = true;
 	}
 	postMessage(action);
