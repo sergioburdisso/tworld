@@ -164,7 +164,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 					_percept.data = "null";
 					_rob[rIndex].AgentProgram.send( _percept );
 				}else
-					_self.programAgentPerceive(rIndex);
+					_self.programAgentPerceive(rIndex, _PERCEPT_HEADER.READY_FOR_NEXT_ACTION);
 			}
 
 			//--------------------------------------------------------------------------------------> onLoadingCompleteCallback
@@ -681,7 +681,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 		//region Private
 			//Used to call Rob's Agent Program in order to get the next action to do
 			//-----------------------------------------------------------------------------------------> _self.programAgentPerceive
-			this.programAgentPerceive = function(rIndex){
+			this.programAgentPerceive = function(rIndex, specialHeader){
 				if (_Running && (TWorld.Percept || _percept.header == _PERCEPT_HEADER.START)){
 					_percept.header = null;
 
@@ -710,6 +710,8 @@ function Environment(rows, columns, graphicEngine, parent) {
 								location: {row: -1, column: -1}
 							};
 					}
+
+					this.environment.PerceptHeader = specialHeader;
 
 					//2) preparing the environment object before sending it to the perception function
 					this.environment.Time = _time;

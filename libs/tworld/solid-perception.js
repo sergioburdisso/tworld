@@ -224,7 +224,8 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 		if (!TWorld.Dynamic && !TWorld.Semidynamic)
 			delete this.Percept.data.environment.time;
 	}else{
-		this.Percept.header = _PERCEPT_HEADER.PERCEPT;
+		environment.PerceptHeader = environment.PerceptHeader || _PERCEPT_HEADER.PERCEPT;
+		this.Percept.header =  environment.PerceptHeader;
 		_grid = this.Percept.data.environment.grid;
 	}
 	//<-
