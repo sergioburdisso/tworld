@@ -179,17 +179,16 @@
 			}
 
 			this.openEnvironmentsModal = function(run){
-				var modalInstance = $modal.open({
-						size: 'lg',//size,
-						templateUrl: 'items-list-modal.html',
-						controller: itemsListController,
-						resolve:{
-							items:function(){return taskEnvironments},
-							agentProgramsFlag:function(){return false}
-						}
-					});
-
-				modalInstance.result.then(
+				$modal.open({
+					size: 'lg',//size,
+					templateUrl: 'items-list-modal.html',
+					controller: itemsListController,
+					resolve:{
+						items:function(){return taskEnvironments},
+						agentProgramsFlag:function(){return false}
+					}
+				})
+				.result.then(
 					function (id) {
 						if (!_self.task_env && run){
 							_self.task_env = getEnvironmentByDate(id);
@@ -226,8 +225,8 @@
 		}]
 	);
 
-	mod.controller('AgentProgNewController', ['$location', 'agentProg',
-		function($location, agentProg){
+	mod.controller('AgentProgNewController', ['$modal', '$location', 'agentProg',
+		function($modal, $location, agentProg){
 			var _self = this;
 
 			this.PERCEPT_FORMAT = _PERCEPT_FORMAT;
@@ -253,10 +252,44 @@
 				gotoTop();
 			}
 
+			this.readKey = function(key){
+				$modal.open({
+					size: 'sm',//size,
+					templateUrl: 'read-key.html',
+					controller: readKeyController
+				})
+				.result.then(
+					function (keyCode) {if (!keyCode) return;
+						switch(key){
+							case 'up':
+								agentProg.controls.Up = keyCode;
+								break;
+							case 'down':
+								agentProg.controls.Down = keyCode;
+								break;
+							case 'left':
+								agentProg.controls.Left = keyCode;
+								break;
+							case 'right':
+								agentProg.controls.Right = keyCode;
+								break;
+							case 'restore':
+								agentProg.controls.Restore = keyCode;
+								break;
+						}
+					},
+					function(){$(document).unbind('keydown')}
+				);
+			}
+
 			this.nameUpdate = function(){
 				if ($("#magic-string").hasClass("ng-pristine"))
 					this.agent_prog.socket.magic_string = this.agent_prog.name;
 			}
 	}]);
+
+	mod.filter('keyboard_key', function() {
+		return function(input) {return _KEYBOAR_MAP[input]}
+	});
 
 })();

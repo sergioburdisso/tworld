@@ -90,11 +90,28 @@
 					<div class="panel-body">
 						<label class="lead text-left">Controls</label>
 						<br>
-						<button class="btn btn-default">Up</button>
-						<button class="btn btn-default">Down</button>
-						<button class="btn btn-default">Left</button>
-						<button class="btn btn-default">Right</button>
-						<button class="btn btn-default">Battery restoration</button>
+						<span>
+							<button class="btn btn-default" ng-click="apnc.readKey('up')">
+								Up<br>
+								<small>({{apnc.agent_prog.controls.Up | keyboard_key}})</small>
+							</button>
+						</span>
+						<button class="btn btn-default" ng-click="apnc.readKey('down')">
+							Down<br>
+							<small>({{apnc.agent_prog.controls.Down | keyboard_key}})</small>
+						</button>
+						<button class="btn btn-default" ng-click="apnc.readKey('left')">
+							Left<br>
+							<small>({{apnc.agent_prog.controls.Left | keyboard_key}})</small>
+						</button>
+						<button class="btn btn-default" ng-click="apnc.readKey('right')">
+							Right<br>
+							<small>({{apnc.agent_prog.controls.Right | keyboard_key}})</small>
+						</button>
+						<button class="btn btn-default" ng-click="apnc.readKey('restore')">
+							Battery restoration<br>
+							<small>({{apnc.agent_prog.controls.Restore | keyboard_key}})</small>
+						</button>
 					</div>
 				</div>
 			</div>
@@ -113,3 +130,9 @@
 		<button ng-click="apnc.save()" class="btn btn-success col-xs-offset-1 col-md-2 col-xs-3 pull-right">Save</button>
 	</div>
 </div>
+
+<script type="text/ng-template" id="read-key.html">
+	<div class="modal-body text-center">
+		<h3>Press a key</h3>
+	</div>
+</script>

@@ -189,7 +189,7 @@
 			this.openEndConditionsModal = function(size){
 				var modalInstance = $modal.open({
 						size: size,
-						templateUrl: 'end_game_cond.html',
+						templateUrl: 'end-game-cond.html',
 						controller: function($scope, $modalInstance){
 										$scope.end_game_cond = end_game_conditions;
 										$scope.ok = function (index) {$modalInstance.close(index)};
@@ -213,7 +213,7 @@
 
 				var modalInstance = $modal.open({
 					size: 'lg',
-					templateUrl: 'prob_distrib.html',
+					templateUrl: 'prob-distrib.html',
 					resolve: {knob: function () {return knob}},
 					controller:
 						function($scope, $modalInstance, knob){
