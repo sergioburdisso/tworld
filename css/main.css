@@ -35,15 +35,25 @@ p {
 	margin-bottom: 25px;
 }
 
-table,th,td
+.center {
+	margin-left:auto; 
+	margin-right:auto;
+}
+
+.table-grid,
+.table-grid th,
+.table-grid td
 {
 	border:1px solid #ddd;
 	border-collapse:collapse;
 }
-td:hover{
+
+.table-grid td:hover{
 	background-color: #ebebeb;
 	cursor: copy;
 }
+
+td input{text-align: center}
 
 .highlight-readonly{
 	position: absolute;
@@ -127,7 +137,8 @@ td:hover{
 .text-center{text-align: center}
 .text-gray{color: #555}
 .text-red{color: #B82B28}
-.text-blue{color: #428bca}
+.text-orange{color: #D54D1D}
+.text-blue{color: #428BCA}
 .border-right{border-right: 0px}
 .border-top{border-top: 0px}
 .white{background-color: white}
@@ -217,6 +228,20 @@ td:hover{
 .mouse-cursor{cursor:default}
 .cursor-pointer{cursor:pointer;}
 
+.stoch-box{
+	width: 150px;
+	height: 150px;
+	background: url(../imgs/web-app/model-of-action.jpg) no-repeat 50% 0%;
+}
+
+.stoch-opp{
+	width: 54px;
+	height: 150px;
+}
+.stoch-ref{
+	width: 54px;
+	height: 98px;
+}
 /*Icons*/
 .solid-icon-16{
 	display: inline-block;
@@ -288,7 +313,8 @@ a:hover{
 	/*transform: translateY(2px);*/
 }
 
-a, .transition-600{
+.stoch-box, a,
+.transition-600{
 	-webkit-transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
 	   -moz-transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
 		 -o-transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);

@@ -564,7 +564,7 @@ function GraphicTWorld(graphicEngine, environment){
 			}
 		}
 
-		this.updateBattery = function(rIndex, value, restored) { if (!TWorld.Battery) return;
+		this.updateBattery = function(rIndex, value, recharge) { if (!TWorld.Battery) return;
 			rIndex = _GET_TEAM_LEADER(rIndex);
 			var $id = "#rob-"+rIndex;
 
@@ -576,13 +576,13 @@ function GraphicTWorld(graphicEngine, environment){
 				$($id).find("#battery-charge-frame").css("box-shadow", "0 0 10px red");
 				_sound_out_of_battery.setPercent(0).play();
 			}else
-				if (value >= 1000){
+				if (recharge){
 					value = 1000;
 					$($id).find("#battery-charge-frame").css("box-shadow", "0 0 10px rgba(87, 255, 168, 0.57)");
 
 					if (_Running){
 
-						var _voice = !restored?
+						var _voice = recharge == 2?/*if restoration*/
 										_sound_voice_full_energy[random(_sound_voice_full_energy.length)]:
 										_sound_voice_restore_energy[random(_sound_voice_restore_energy.length)];
 						CallWithDelay.Enqueue(_voice.play, null, 2, _voice);

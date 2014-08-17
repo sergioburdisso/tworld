@@ -72,8 +72,10 @@
 											hole:0.3
 										}
 									},
-									determinism:0.8,
-									stochastic_model: _STOCHASTIC_ACTIONS_MODEL.ANOTHER_ACTION
+									stochastic_model: {
+										type: _STOCHASTIC_ACTIONS_MODEL.ANOTHER_ACTION,
+										prob: [700, 0, 0, 0, 0]
+									}
 								},
 								environment:{
 									rows:6,

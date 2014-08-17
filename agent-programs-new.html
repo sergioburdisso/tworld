@@ -22,8 +22,8 @@
 		<div class="row text-left">
 			<div class="col-md-3"></div>
 			<div class="col-md-6">
-				<label class="lead"><b>2.</b> Agent will be controlled by...</label>
 				<div class="row ">
+				<label class="lead"><b>2.</b> Agent will be controlled by...</label>
 					<div class="btn-group btn-group-justified">
 						<label class="btn btn-default" ng-model="apnc.agent_prog.ai" btn-radio="true" tooltip-placement="left" tooltip="">Algorithm</label>
 						<label class="btn btn-default" ng-model="apnc.agent_prog.ai" btn-radio="false" tooltip-placement="right" tooltip="">Human</label>
@@ -91,26 +91,26 @@
 						<label class="lead text-left">Controls</label>
 						<br>
 						<span>
-							<button class="btn btn-default" ng-click="apnc.readKey('up')">
+							<button class="btn btn-default" ng-click="apnc.readKey('Up')">
 								Up<br>
-								<small>({{apnc.agent_prog.controls.Up | keyboard_key}})</small>
+								<small class="text-blue">({{apnc.agent_prog.controls.Up | keyboard_key}})</small>
 							</button>
 						</span>
-						<button class="btn btn-default" ng-click="apnc.readKey('down')">
+						<button class="btn btn-default" ng-click="apnc.readKey('Down')">
 							Down<br>
-							<small>({{apnc.agent_prog.controls.Down | keyboard_key}})</small>
+							<small class="text-blue">({{apnc.agent_prog.controls.Down | keyboard_key}})</small>
 						</button>
-						<button class="btn btn-default" ng-click="apnc.readKey('left')">
+						<button class="btn btn-default" ng-click="apnc.readKey('Left')">
 							Left<br>
-							<small>({{apnc.agent_prog.controls.Left | keyboard_key}})</small>
+							<small class="text-blue">({{apnc.agent_prog.controls.Left | keyboard_key}})</small>
 						</button>
-						<button class="btn btn-default" ng-click="apnc.readKey('right')">
+						<button class="btn btn-default" ng-click="apnc.readKey('Right')">
 							Right<br>
-							<small>({{apnc.agent_prog.controls.Right | keyboard_key}})</small>
+							<small class="text-blue">({{apnc.agent_prog.controls.Right | keyboard_key}})</small>
 						</button>
-						<button class="btn btn-default" ng-click="apnc.readKey('restore')">
+						<button class="btn btn-default" ng-click="apnc.readKey('Restore')">
 							Battery restoration<br>
-							<small>({{apnc.agent_prog.controls.Restore | keyboard_key}})</small>
+							<small class="text-blue">({{apnc.agent_prog.controls.Restore | keyboard_key}})</small>
 						</button>
 					</div>
 				</div>

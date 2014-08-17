@@ -168,7 +168,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 							if (!noStats)
 								_environment.updateStats(_index, 0/*Battery_Restore*/);
 
-							_environment.updateBattery(_index, 1000, true);
+							_environment.updateBattery(_index, 1000, 2/*restoration flag*/);
 							_environment.updateScore(_index);
 						}else
 							_gTWorld.restoreBattery(_GET_TEAM_LEADER(_index), true);
@@ -421,55 +421,68 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 		//
 		//region Private
 			//-----------------------------------------------------------------------------------------> _takeStochasticAction
-			function _takeStochasticAction(action){
+			function _takeStochasticAction(action){if (TWorld.Deterministic) return true;
 				var rndValue, newAction;
-				if (TWorld.DeterministicActions == 1 || (rndValue = Math.random()) < TWorld.DeterministicActions)
-					return true;
 
-				switch (TWorld.ModelOfStochasticMotion){
-					case _STOCHASTIC_ACTIONS_MODEL.NO_ACTION:
+				rndValue = uncertaintyMaker(0, TWorld.ModelOfStochasticMotion);
+
+				switch (rndValue){
+					case 0:
+						return true;
+					case 4:
 						if (_AGENTS[_index].CONTROLLED_BY_AI)
 							_environment.askForNextAction(_index);
 						Animation_cannotDoThat(true);
 						return false;
-					case _STOCHASTIC_ACTIONS_MODEL.ANOTHER_ACTION:
-						while ((newAction = random(0,4)|0) == action);
-						break;
-					case _STOCHASTIC_ACTIONS_MODEL.OPPOSITE_ACTION:
+					case 1:
 						switch (action){
 							case _ACTION.NORTH:
-								newAction = _ACTION.SOUTH;
+								_self.WalkWest(true);
 								break;
 							case _ACTION.SOUTH:
-								newAction = _ACTION.NORTH;
+								_self.WalkEast(true);
 								break;
 							case _ACTION.WEST:
-								newAction = _ACTION.EAST;
+								_self.WalkSouth(true);
 								break;
 							case _ACTION.EAST:
-								newAction = _ACTION.WEST;
+								_self.WalkNorth(true);
+								break;
 						}
-						break;
-					/*case _STOCHASTIC_ACTIONS_MODEL.USER_DEFINED:
-						//Monte Carlo technique using the value stored in 'rndValue'
-						break;*/
+						return false;
+					case 2:
+						switch (action){
+							case _ACTION.NORTH:
+								_self.WalkEast(true);
+								break;
+							case _ACTION.SOUTH:
+								_self.WalkWest(true);
+								break;
+							case _ACTION.WEST:
+								_self.WalkNorth(true);
+								break;
+							case _ACTION.EAST:
+								_self.WalkSouth(true);
+								break;
+						}
+						return false;
+					case 3:
+						switch (action){
+							case _ACTION.NORTH:
+								_self.WalkSouth(true);
+								break;
+							case _ACTION.SOUTH:
+								_self.WalkNorth(true);
+								break;
+							case _ACTION.WEST:
+								_self.WalkEast(true);
+								break;
+							case _ACTION.EAST:
+								_self.WalkWest(true);
+								break;
+						}
+						return false;
 				}
-				switch (newAction){
-					case _ACTION.NORTH:
-						_self.WalkNorth(true);
-						break;
-					case _ACTION.SOUTH:
-						_self.WalkSouth(true);
-						break;
-					case _ACTION.WEST:
-						_self.WalkWest(true);
-						break;
-					case _ACTION.EAST:
-						_self.WalkEast(true);
-						break;
-				}
-
-				return false;
 			}
 
 			//-----------------------------------------------------------------------------------------> nextMovementIfNecessary

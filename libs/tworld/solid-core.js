@@ -55,8 +55,8 @@ function TWorld(){}
 	TWorld.Battery = _KNOBS.battery;
 
 	//-> Deterministic Actions
-	TWorld.DeterministicActions = _KNOBS.prop.deterministic? 1 : _KNOBS.agents.determinism; // [0,1] unreliable(stochastic) or deterministic actions? 
-	TWorld.ModelOfStochasticMotion = _KNOBS.agents.stochastic_model|0;
+	TWorld.Deterministic = _KNOBS.prop.deterministic;
+	TWorld.ModelOfStochasticMotion = _KNOBS.agents.stochastic_model.prob;
 
 	//-> TilesNoisyPerception
 		TWorld.Percept = true;

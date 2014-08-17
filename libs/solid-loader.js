@@ -75,7 +75,7 @@ function loadAllSync(){
 	);
 	importScript("./libs/util/sprintf.min.js");
 	importScript(
-		"./libs/tworld/sound/buzz.min.js",
+		"./libs/sound/buzz.min.js",
 		/*provided that the following condition is satisfied*/
 		"_AUDIO_ENABLE"
 	);

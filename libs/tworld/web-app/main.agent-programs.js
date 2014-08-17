@@ -228,6 +228,7 @@
 	mod.controller('AgentProgNewController', ['$modal', '$location', 'agentProg',
 		function($modal, $location, agentProg){
 			var _self = this;
+			var _socket = agentProg.socket;
 
 			this.PERCEPT_FORMAT = _PERCEPT_FORMAT;
 
@@ -242,6 +243,8 @@
 					agentPrograms.push(this.agent_prog);
 				}else
 					agentPrograms[ getAgentProgramIndexByDate(agentProg.date) ] = agentProg;
+
+				_socket.magic_string_dirty = _socket.magic_string != this.agent_prog.name;
 
 				saveAgentPrograms();
 				if (this.agent_prog.javascript && this.agent_prog.ai && _newFlag)
@@ -259,32 +262,17 @@
 					controller: readKeyController
 				})
 				.result.then(
-					function (keyCode) {if (!keyCode) return;
-						switch(key){
-							case 'up':
-								agentProg.controls.Up = keyCode;
-								break;
-							case 'down':
-								agentProg.controls.Down = keyCode;
-								break;
-							case 'left':
-								agentProg.controls.Left = keyCode;
-								break;
-							case 'right':
-								agentProg.controls.Right = keyCode;
-								break;
-							case 'restore':
-								agentProg.controls.Restore = keyCode;
-								break;
-						}
+					function (keyCode) {
+						if (!keyCode) return;
+						agentProg.controls[key] = keyCode;
 					},
 					function(){$(document).unbind('keydown')}
 				);
 			}
 
 			this.nameUpdate = function(){
-				if ($("#magic-string").hasClass("ng-pristine"))
-					this.agent_prog.socket.magic_string = this.agent_prog.name;
+				if (!_socket.magic_string_dirty && $("#magic-string").hasClass("ng-pristine"))
+					_socket.magic_string = this.agent_prog.name;
 			}
 	}]);
 

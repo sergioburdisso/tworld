@@ -56,7 +56,7 @@ if (_KNOBS.trial.test){
 	var _NUMBER_OF_AGENTS	= 1;
 	var _AGENTS = [
 	{
-		NAME : "Agent",
+		NAME : "Rob, the agent",
 		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:16}/*Arrow keys + Ctrl*/
 		//CONTROLS : {Up:87, Down:83, Left:65, Right:68, Restore:69} /*WASDE*/
 		//CONTROLS : {Up:72, Down:78, Left:66, Right:77, Restore:74};/*HNBMJ*/

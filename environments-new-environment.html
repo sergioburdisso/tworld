@@ -34,7 +34,7 @@
 					</div>
 				</div>
 				<br>
-				<table class="no-selection">
+				<table class="no-selection table-grid center">
 					<tr ng-repeat="row in ismc.grid track by $index" style="height:23px;">
 						<td ng-repeat="cell in row track by $index" ng-mouseenter="ismc.setCell(row, $index)" ng-mousedown="ismc.mouseDown(row, $index)" ng-mouseup="ismc.mouseUp()" style="width:23px;">{{cell}}</td>
 					</tr>
@@ -50,7 +50,7 @@
 						<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="20" ng-model="enc.task_env.environment.holes_size.range"></div>
 					</div>
 					<div class="col-md-1 col-xs-10">
-						<button class="btn btn-default glyphicon glyphicon-stats" ng-show="enc.isRange(enc.task_env.environment.holes_size.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.holes_size)"></button>
+						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.holes_size.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.holes_size)"></button>
 					</div>
 				</div>
 				<br>
@@ -60,7 +60,7 @@
 						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.num_holes.range"></div>
 					</div>
 					<div class="col-md-1 col-xs-10">
-						<button class="btn btn-default glyphicon glyphicon-stats" ng-show="enc.isRange(enc.task_env.environment.num_holes.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.num_holes)"></button>
+						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.num_holes.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.num_holes)"></button>
 					</div>
 				</div>
 				<br>
@@ -70,7 +70,7 @@
 						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.num_obstacles.range"></div>
 					</div>
 					<div class="col-md-1 col-xs-10">
-						<button class="btn btn-default glyphicon glyphicon-stats" ng-show="enc.isRange(enc.task_env.environment.num_obstacles.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.num_obstacles)"></button>
+						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.num_obstacles.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.num_obstacles)"></button>
 					</div>
 				</div>
 				<br>
@@ -80,7 +80,7 @@
 						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.difficulty.range"></div>
 					</div>
 					<div class="col-md-1 col-xs-10">
-						<button class="btn btn-default glyphicon glyphicon-stats" ng-show="enc.isRange(enc.task_env.environment.difficulty.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.difficulty)"></button>
+						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.difficulty.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.difficulty)"></button>
 					</div>
 				</div>
 			</div>
@@ -95,7 +95,7 @@
 						<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" ng-model="enc.task_env.environment.dynamic.dynamism.range"></div>
 					</div>
 					<div class="col-md-1 col-xs-10">
-						<button class="btn btn-default glyphicon glyphicon-stats" ng-show="enc.isRange(enc.task_env.environment.dynamic.dynamism.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.dynamism)"></button>
+						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.dynamic.dynamism.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.dynamism)"></button>
 					</div>
 				</div>
 				<br>
@@ -105,7 +105,7 @@
 						<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" ng-model="enc.task_env.environment.dynamic.hostility.range"></div>
 					</div>
 					<div class="col-md-1 col-xs-10">
-						<button class="btn btn-default glyphicon glyphicon-stats" ng-show="enc.isRange(enc.task_env.environment.dynamic.hostility.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.hostility)"></button>
+						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.dynamic.hostility.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.hostility)"></button>
 					</div>
 				</div>
 				<br>
@@ -136,7 +136,7 @@
 					<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" step="1" ng-model="enc.task_env.environment.dynamic.dynamism.range"></div>
 				</div>
 				<div class="col-md-1">
-						<button class="btn btn-default glyphicon glyphicon-stats" ng-show="enc.isRange(enc.task_env.environment.dynamic.dynamism.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.dynamism)"></button>
+						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.dynamic.dynamism.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.dynamism)"></button>
 					</div>
 			</section>
 			<br><br><br>

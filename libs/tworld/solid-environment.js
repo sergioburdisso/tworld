@@ -506,7 +506,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 					if (bcIndex){
 						_rob[rIndex].Stats.battery_recharge++; 
 
-						_self.updateBattery(rIndex, 1000-_rob[_GET_TEAM_LEADER(rIndex)].Battery);
+						_self.updateBattery(rIndex, 1000-_rob[_GET_TEAM_LEADER(rIndex)].Battery, 1/*recharge flag*/);
 						_graphicTWorld.batteryChargeAnimation(rIndex, bcIndex-1, false);
 
 						_updateScoreBattery(rIndex, bcIndex-1, TWorld.valueOfHoleFilledCompletely(1));

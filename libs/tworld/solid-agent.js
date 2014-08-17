@@ -74,7 +74,7 @@ function _agentProgram(percept)/*returns accion*/{
 					percept.data.global_src+
 
 					"(function(){"+
-						percept.data.ai_src
+						percept.data.ai_src.replace(/(\$return\s*\(.*\))/g, "$1;return")
 						+"\
 						__AgentProgram__= AGENT_PROGRAM\
 					})();"+

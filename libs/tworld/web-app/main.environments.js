@@ -91,8 +91,8 @@
 
 	}]);
 
-	mod.controller('EnvNewController', ['$modal', '$location', 'taskEnv',
-		function($modal, $location, taskEnv){
+	mod.controller('EnvNewController', ['$scope', '$modal', '$location', 'taskEnv',
+		function($scope, $modal, $location, taskEnv){
 			var _next = false;
 			var _self = this;
 			var _default = {
@@ -123,6 +123,8 @@
 				/*{name:_ENDGAME.TIME.NAME, value:0, result:_GAME_RESULT.NEUTRAL} <-not here 'cause it's the default value*/ 
 			];
 			this.task_env = taskEnvironment = taskEnv;
+			this.stochastic_model = taskEnv.agents.stochastic_model;
+			this.stchastic_user_model = new Array(5);
 
 			this.nextStep = function(){
 				this.step++; _next= true;
@@ -173,7 +175,7 @@
 				_self.checkDistribution(taskEnvironment.environment.dynamic.hostility);
 			}
 
-			//Text
+			//PERCEPTION
 			this.getTextVisibilityRadius = function(){
 				var radius = this.task_env.agents.percept.radius;
 				if (!radius)
@@ -181,6 +183,56 @@
 				else
 					return "Radius of " + radius + " cell" + (radius > 1? "s" : "");
 			}
+
+			//AGENT ACTUATOR
+
+			this.isRefusesToMove = function()
+			{return (_self.stochastic_model.type|0) === _STOCHASTIC_ACTIONS_MODEL.NO_ACTION}
+
+			this.isOppositeMove = function()
+			{return (_self.stochastic_model.type|0) === _STOCHASTIC_ACTIONS_MODEL.OPPOSITE_ACTION}
+
+			this.isUsedDefined = function()
+			{return (_self.stochastic_model.type|0) === _STOCHASTIC_ACTIONS_MODEL.USER_DEFINED}
+
+			this.updateUserStochasticModel = function(index){
+				var value = Number(_self.stchastic_user_model[index].replace(",","."));
+				_self.stochastic_model.prob[index] = (value*10)|0;
+			}
+
+			this.updateStochasticModel = function(v){
+				switch(_self.stochastic_model.type|0){
+					case _STOCHASTIC_ACTIONS_MODEL.NO_ACTION:
+						_self.stochastic_model.prob[1] =
+						_self.stochastic_model.prob[2] =
+						_self.stochastic_model.prob[3] = 0;
+						_self.stochastic_model.prob[4] = 1000-v;
+						break;
+
+					case _STOCHASTIC_ACTIONS_MODEL.ANOTHER_ACTION:
+						var total = (1000-v);
+						var factor = total/3|0;
+						for (var p= 1; p < 4; ++p)
+							_self.stochastic_model.prob[p] = factor;
+						for (var remainder=total-factor*3, p= 1; remainder; ++p, --remainder)
+							_self.stochastic_model.prob[p]++;
+
+						_self.stochastic_model.prob[4]=0;
+						break;
+
+					case _STOCHASTIC_ACTIONS_MODEL.OPPOSITE_ACTION:
+						_self.stochastic_model.prob[1] =
+						_self.stochastic_model.prob[2] =
+						_self.stochastic_model.prob[4] = 0;
+						_self.stochastic_model.prob[3] = 1000-v;
+						break;
+					case _STOCHASTIC_ACTIONS_MODEL.USER_DEFINED:
+						for (var i=_self.stchastic_user_model.length;i--;)
+							_self.stchastic_user_model[i] = (_self.stochastic_model.prob[i]/10).toFixed(1);
+				}
+			}
+
+			$scope.$watch('enc.stochastic_model.prob[0]', this.updateStochasticModel);
 
 			//FINAL STATE
 			this.removeFinalStateCondition = function(index)
@@ -401,6 +453,10 @@
 		this.mouseUp = function(){_mouseDown = false}
 		this.setCell = function(row, index){if (_mouseDown) row[index] = this.selected}
 		this.nextHoleId = function(){this.selected = ++this.holeId}
+	});
+
+	mod.filter('tprobability', function() {
+		return function(input) {return (input/10).toFixed(1)+"%"}
 	});
 
 	mod.directive('properties', function(){ return {restrict:'E', templateUrl:'environments-new-props.html'} });
