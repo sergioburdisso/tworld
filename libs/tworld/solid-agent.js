@@ -17,26 +17,14 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-importScripts('solid-auxiliary.js', 'solid-global.js'); 
+importScripts('solid-auxiliary.js', 'solid-global.js', '../util/sprintf.min.js'); 
 
-function chooseRandomAction(){return random(4)}
 /*API
 -coordenate_relativesToAgent(){ - porque como lo voy a hacer multi agente no puedo hacer que las cosas sean relativas al agente, para eso uso esta funcion
 	object[0] = _agentPos.Row - object[0];
 	object[1] = object[1] - _agentPos.Column;
 
 -sucesor(estado) // sucesor debe descontar los segundos de vida de los objetos (segun el tiempo que demora en caminar)
-
-time:
--HowMuchTimeHasPassed? without  regard  to  the  amount  of  time  it  is  taking is  not  likely  to  make rational decisions
-
--holeValue() The  agent knows ahead 
-of time how valuable the hole is; its overall goal is to 
-get as many points as possible by filling in holes.
-
--debug:
-	-print whole perception (grid + extra)
-	-print grid perception
 */
 
 var alert = function(msg){
@@ -46,15 +34,26 @@ var alert = function(msg){
 	$return(_ACTION.CONSOLE_LOG + msg);
 }
 //console guard
-console = {};
-console.error = function(msg){ $return(_ACTION.CONSOLE_ERROR + msg); }
-console.clear = function(msg){ $return(_ACTION.CONSOLE_CLEAR); }
+var console = {};
+console.error = function(msg){ $return(_ACTION.CONSOLE_ERROR + msg)}
+console.clear = function(msg){ $return(_ACTION.CONSOLE_CLEAR)}
 console.log = alert;
+
+function printf(){console.log(sprintf.apply(this, arguments))};
+var perror = console.error;
+var writeln = alert;
 
 var _ACTION_SENT;
 var _PERCEPT = null;
 var _GRID;
 var _AGENT;
+
+var _WEST= _ACTION.WEST;
+var _EAST= _ACTION.EAST;
+var _NORTH= _ACTION.NORTH;
+var _SOUTH= _ACTION.SOUTH;
+var _NONE= _ACTION.NONE;
+var _RESTORE= _ACTION.RESTORE;
 
 var __AgentProgram__;
 var __onMessageReceived__;
@@ -64,7 +63,7 @@ var $m = {};
 var $memory = $m;
 var $persistent = $m;
 
-function _agentProgram(percept)/*returns accion*/{
+function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 	percept = percept.data;
 
 	switch(percept.header){
@@ -74,7 +73,8 @@ function _agentProgram(percept)/*returns accion*/{
 					percept.data.global_src+
 
 					"(function(){"+
-						percept.data.ai_src.replace(/(\$return\s*\(.*\))/g, "$1;return")
+						percept.data.ai_src
+							.replace(/(\$(return|perceive)\s*\(.*\))/g, "{$1;return}")
 						+"\
 						__AgentProgram__= AGENT_PROGRAM\
 					})();"+
@@ -155,7 +155,11 @@ function _agentProgram(percept)/*returns accion*/{
 			if (!_ACTION_SENT)
 				$perceive();
 	}
-}onmessage = _agentProgram; 
+}onmessage = __AgentProgram__Wrapper__; 
+
+function $nextAction(arrayOfActions){return arrayOfActions.shift()}
+
+function $chooseRandomAction(){return random(6)}
 
 function $chooseRandomValidAction(percept /*n,s,w,e*/){
 	var actions = new Array();
@@ -196,10 +200,7 @@ function $sendMessage(robId, msg){
 	$return(_ACTION.PEER_MESSAGE + robId + ":" + JSON.stringify(msg));
 }
 
-function $perceive(){
-	postMessage(_ACTION.NONE);
-	//return from execution
-}
+function $perceive(){postMessage(_ACTION.NONE)}
 
 function $isValidMove(move){
 	var arow = _AGENT.location.row;

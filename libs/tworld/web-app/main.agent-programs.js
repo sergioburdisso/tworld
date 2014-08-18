@@ -16,7 +16,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-
+var _editor;
 (function(){
 	var mod = angular.module('tworldAgentPrograms', []);
 
@@ -100,7 +100,7 @@
 		function($scope, $routeParams, $modal, $location){
 			var _self = this;
 			var _source;
-			var _editor;
+			//var _editor;
 
 			ace.require("ace/ext/language_tools");
 			_editor = ace.edit("source-code");

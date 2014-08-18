@@ -382,7 +382,7 @@
 
 			this.addTeam = function(nMembers){_addTeam(_self.task_env.teams, nMembers)}
 
-			this.removeTeam = function(index){teams.remove(index)}
+			this.removeTeam = function(index){_self.task_env.teams.remove(index)}
 
 			this.isCompetitive = function(){return taskEnvironment.prop.multiagent_type === 0}
 			this.isCooperative = function(){return taskEnvironment.prop.multiagent_type === 1}

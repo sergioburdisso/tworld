@@ -20,7 +20,12 @@
 if (!localStorage.version){
 	localStorage.clear();
 	localStorage.version = "0.8";
-}
+}else
+	if (localStorage.version == "0.8"){
+		localStorage.version = "0.81";
+		localStorage.removeItem("taskEnvironments")
+	}
+
 
 var taskEnvironments = getEnvironments();
 var agentPrograms = getAgentPrograms();
@@ -179,6 +184,7 @@ function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
 };
 
 function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs){
+	var nAgents = 0;
 	$scope.task_env = taskEnv;
 	$scope.agents = $scope.task_env.trial.agents;
 	$scope.teams = new Array(taskEnv.teams.length);
@@ -224,25 +230,27 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 			$scope.agents[a].program = getAgentProgramByDate($scope.agents[a].program.date)
 
 	//initializing list of agents and teams
-	for (var elen=taskEnv.teams.length, a=0, t=0; t < elen; ++t){
+	for (var elen=taskEnv.teams.length, t=0; t < elen; ++t){
 		$scope.teams[t] = new Array(taskEnv.teams[t].members)
-		for (var tlen=$scope.teams[t].length, m=0; m < tlen; ++m, ++a){
-			if ($scope.agents.length <= a)
+		for (var tlen=$scope.teams[t].length, m=0; m < tlen; ++m, ++nAgents){
+			if ($scope.agents.length <= nAgents)
 				$scope.agents.push(null);
 
-			if (!$scope.agents[a])
-				$scope.agents[a] = {
+			if (!$scope.agents[nAgents])
+				$scope.agents[nAgents] = {
 					team: t,
-					id: a,
-					program: agentProgs[a]
+					id: nAgents,
+					program: agentProgs[nAgents]
 				};
 			else
-				if (agentProgs[a])
-					$scope.agents[a].program = agentProgs[a];
+				if (agentProgs[nAgents])
+					$scope.agents[nAgents].program = agentProgs[nAgents];
 
-			$scope.teams[t][m] = $scope.agents[a];
+			$scope.teams[t][m] = $scope.agents[nAgents];
 		}
 	}
+	//updating number of agents (in case user has edited the task envitonment)
+	$scope.agents.length = nAgents;
 
 }
 

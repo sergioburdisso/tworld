@@ -1716,6 +1716,7 @@ function GraphicTWorld(graphicEngine, environment){
 			}else
 				_CLN_Rob[rob] = _CLN_Rob[0].createClone(_CLN_Rob[0].getParent());
 
+			_CLN_Rob[rob].setVisible(false);_CLN_Rob[rob].setVisible(true);
 			_self.Rob[rob] = new GraphicRob(_CLN_Rob[rob], _self, rob);
 
 			for (var iteam = _TEAMS.length; iteam--;)
