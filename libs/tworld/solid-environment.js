@@ -342,9 +342,11 @@ function Environment(rows, columns, graphicEngine, parent) {
 					console.log((_Ready? "All agent programs are ready =)\n" : msg_status) + msg_ap_list);
 				}
 
-				if (_Ready)
+				if (_Ready){
 					$("#playFrame").show();
-				else
+					if (_SAVE_STATS)
+						$("#playBtn").mouseup();
+				}else
 					$("#playFrame").hide();
 			}
 
@@ -796,21 +798,30 @@ function Environment(rows, columns, graphicEngine, parent) {
 			}
 
 			//--------------------------------------------------------------------------------------> _saveStats
-			function _saveStats(){if (_SAVE_STATS){
-				var trials,
-					trialsPath = _KNOBS.date+"/trials",
+			function _saveStats(result){if (_SAVE_STATS){
+				var trials = [], envsTrials = {},
+					agentProgsTrials = {}, tmp = [],
 					trial={
 						date: Date.now(),
-						//task_env_id: _KNOBS.date,
+						task_env_id: _KNOBS.date,
 						speed: _KNOBS.trial.speed,
 						pause: _KNOBS.trial.pause,
+						result: result,
 						stats:{
+							t_time: _time,
+							time: Date.now()-_START_TIME,
 							total_holes: Hole.Counter
 						},
 						agents: new Array(_NUMBER_OF_AGENTS)
 					}
 
-				for (var i=0; i < _NUMBER_OF_AGENTS; ++i)
+				if (localStorage.trials){
+					trials = JSON.parse(localStorage.trials);
+					envsTrials = JSON.parse(localStorage.taskEnvironmentTrials);
+					agentProgsTrials = JSON.parse(localStorage.agentProgramsTrials);
+				}
+
+				for (var i=0; i < _NUMBER_OF_AGENTS; ++i){
 					trial.agents[i] = {
 						program_id: _KNOBS_Agents[i].program.date,
 						team: _KNOBS_Agents[i].team,
@@ -818,11 +829,23 @@ function Environment(rows, columns, graphicEngine, parent) {
 						stats: _rob[i].Stats
 					};
 
-				trials = localStorage[trialsPath]? JSON.parse(localStorage[trialsPath]) : [];
+					if (!tmp.contains(trial.agents[i].program_id)){
+						if (!agentProgsTrials[trial.agents[i].program_id])
+							agentProgsTrials[trial.agents[i].program_id] = [];
+						agentProgsTrials[trial.agents[i].program_id].push(trial.date);
+					}
+					tmp.push(trial.agents[i].program_id);
+				}
 
 				trials.push(trial);
+				if (!envsTrials[trial.task_env_id])
+					envsTrials[trial.task_env_id] = [];
 
-				localStorage[trialsPath] = JSON.stringify(trials);
+				envsTrials[trial.task_env_id].push(trial.date);
+
+				localStorage.trials = JSON.stringify(trials);
+				localStorage.agentProgramsTrials = JSON.stringify(agentProgsTrials);
+				localStorage.taskEnvironmentTrials = JSON.stringify(envsTrials);
 			}}
 
 			//--------------------------------------------------------------------------------------> _checkIfGameOver
@@ -858,7 +881,20 @@ function Environment(rows, columns, graphicEngine, parent) {
 							_rob[r].AgentProgram.send( _percept );
 						}
 
-					_saveStats();
+					if (_SAVE_STATS){
+						if (_KNOBS.trial.runs > 0){
+							_KNOBS.trial.runs--;
+							localStorage.knobs = JSON.stringify(_KNOBS);
+							_saveStats(goal.RESULT);
+
+							if (_KNOBS.trial.runs > 0)
+								setTimeout(function(){location.reload()}, 2000);
+							else
+								setTimeout(function(){window.close()}, 2000);
+						}
+					}
+
+
 					_graphicTWorld.gameIsOver(_rob, goal, _time);
 				}
 			}

@@ -381,6 +381,13 @@ function GraphicTWorld(graphicEngine, environment){
 
 			switch(goal.RESULT){
 				case _GAME_RESULT.WON:
+					$("#resetBtn")
+						.addClass("center")
+						.css("width","128px")
+						.css("margin-top","-30px")
+						.css("margin-left","-64px")
+						.appendTo("#black-screen");
+
 					$("#title").
 						css("color","rgb(59, 255, 153)")
 						.html(_ENDGAME.MESSAGES.WON.TEXT);
@@ -1903,6 +1910,7 @@ function GraphicTWorld(graphicEngine, environment){
 				//console.clear();
 				_TWorld.start();
 				$("#playFrame").remove();
+				_START_TIME = Date.now();
 			}
 		});
 

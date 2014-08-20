@@ -65,6 +65,7 @@
 					<div class="pull-right animate-only-show" ng-show="apc.isSelected(ap.date)">
 						<button class="btn btn-success glyphicon glyphicon-list-alt" ng-click="apc.run(ap)" ng-if="apc.editor(ap)" tooltip="Run/View Source Code"></button>
 						<button class="btn btn-success glyphicon glyphicon-play" ng-click="apc.run()" ng-if="!apc.editor(ap)" tooltip="Run"></button>
+						<button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:all&agent-prog:'+ap.date)" tooltip="View stats"></button>
 						<button class="btn btn-info glyphicon glyphicon-list" ng-click="apc.open()" tooltip="View/Edit values"></button>
 						<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="apc.remove()" tooltip="Delete"></button>
 					</div>

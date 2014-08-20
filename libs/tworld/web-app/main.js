@@ -122,7 +122,7 @@
 						}
 					}
 				})
-				.when('/environments/view/:id', {
+				.when('/environments/view::id', {
 					templateUrl: 'environments-new.html',
 					controller: 'EnvNewController',
 					controllerAs: 'enc',
@@ -137,7 +137,7 @@
 					controller: 'AgentProgController',
 					controllerAs: 'apc'
 				})
-				.when('/agent-programs/view/:id', {
+				.when('/agent-programs/view::id', {
 					templateUrl: 'agent-programs-new.html',
 					controller: 'AgentProgNewController',
 					controllerAs: 'apnc',
@@ -209,12 +209,18 @@
 						}
 					}
 				})
-				.when('/agent-programs/source-code/:id', {
+				.when('/agent-programs/source-code::id', {
 					templateUrl: 'agent-programs-source-code.html',
 					controller: 'AgentProgSourceCodeController',
 					controllerAs: 'apscc'
 				})
 				.when('/stats', {
+					templateUrl: 'stats.html',
+					controller: 'StatsController',
+					controllerAs: 'sc'
+				})
+	
+				.when('/stats/task-env::task_env_id&agent-prog::agent_prog_id', {
 					templateUrl: 'stats.html',
 					controller: 'StatsController',
 					controllerAs: 'sc'
@@ -235,7 +241,9 @@
 		function($sce, $location){
 			this.$loc = $location;
 			this.LANGUAGES = _LANGUAGES;
-			this.language = (window.navigator.userLanguage == 'es' || window.navigator.language == 'es')? this.LANGUAGES.SPANISH : this.LANGUAGES.ENGLISH;
+			this.language = (window.navigator.userLanguage == 'es' || window.navigator.language == 'es')?
+							this.LANGUAGES.ENGLISH/*this.LANGUAGES.SPANISH*/ :
+							this.LANGUAGES.ENGLISH;
 			this.text = {menu:{}};
 			this.taskEnvironments = taskEnvironments;
 			this.agentPrograms = agentPrograms;
@@ -286,4 +294,8 @@
 			this.setLanguage();
 		}
 	]);
+
+	main.filter('stringLimit', function() {
+		return function(input, limit) {return (input.length > limit)? input.substr(0,limit-3)+"..." : input}
+	});
 })();

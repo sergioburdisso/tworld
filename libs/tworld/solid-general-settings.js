@@ -160,6 +160,8 @@ var _MINIMAL_UPDATE_DELAY = 0; //the less, the smoother animations are
 var _AUDIO_ENABLE = true;
 var 	_VOLUME_LEVEL = 100;
 
+var _START_TIME;
+
 // Global flags
 var _AI_NECESSARY = false;
 var _XML_NECESSARY = false;

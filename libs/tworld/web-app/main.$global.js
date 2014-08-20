@@ -29,6 +29,9 @@ if (!localStorage.version){
 
 var taskEnvironments = getEnvironments();
 var agentPrograms = getAgentPrograms();
+var trials;
+var agentProgramsTrials;
+var taskEnvironmentTrials;
 
 var _KEYBOAR_MAP = ["","","","CANCEL","","","HELP","","BACK_SPACE","TAB","","","CLEAR","ENTER","RETURN","","SHIFT","CONTROL","ALT","PAUSE","CAPS_LOCK","KANA","EISU","JUNJA","FINAL","HANJA","","ESCAPE","CONVERT","NONCONVERT","ACCEPT","MODECHANGE","SPACE","PAGE_UP","PAGE_DOWN","END","HOME","LEFT","UP","RIGHT","DOWN","SELECT","PRINT","EXECUTE","PRINTSCREEN","INSERT","DELETE","","0","1","2","3","4","5","6","7","8","9","COLON","SEMICOLON","LESS_THAN","EQUALS","GREATER_THAN","QUESTION_MARK","AT","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","WIN","","CONTEXT_MENU","","SLEEP","NUMPAD0","NUMPAD1","NUMPAD2","NUMPAD3","NUMPAD4","NUMPAD5","NUMPAD6","NUMPAD7","NUMPAD8","NUMPAD9","MULTIPLY","ADD","SEPARATOR","SUBTRACT","DECIMAL","DIVIDE","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12","F13","F14","F15","F16","F17","F18","F19","F20","F21","F22","F23","F24","","","","","","","","","NUM_LOCK","SCROLL_LOCK","WIN_OEM_FJ_JISHO","WIN_OEM_FJ_MASSHOU","WIN_OEM_FJ_TOUROKU","WIN_OEM_FJ_LOYA","WIN_OEM_FJ_ROYA","","","","","","","","","","CIRCUMFLEX","EXCLAMATION","DOUBLE_QUOTE","HASH","DOLLAR","PERCENT","AMPERSAND","UNDERSCORE","OPEN_PAREN","CLOSE_PAREN","ASTERISK","PLUS","PIPE","HYPHEN_MINUS","OPEN_CURLY_BRACKET","CLOSE_CURLY_BRACKET","TILDE","","","","","VOLUME_MUTE","VOLUME_DOWN","VOLUME_UP","","","","","COMMA","","PERIOD","SLASH","BACK_QUOTE","","","","","","","","","","","","","","","","","","","","","","","","","","","OPEN_BRACKET","BACK_SLASH","CLOSE_BRACKET","QUOTE","","META","ALTGR","","WIN_ICO_HELP","WIN_ICO_00","","WIN_ICO_CLEAR","","","WIN_OEM_RESET","WIN_OEM_JUMP","WIN_OEM_PA1","WIN_OEM_PA2","WIN_OEM_PA3","WIN_OEM_WSCTRL","WIN_OEM_CUSEL","WIN_OEM_ATTN","WIN_OEM_FINISH","WIN_OEM_COPY","WIN_OEM_AUTO","WIN_OEM_ENLW","WIN_OEM_BACKTAB","ATTN","CRSEL","EXSEL","EREOF","PLAY","ZOOM","","PA1","WIN_OEM_CLEAR",""];
 
@@ -51,15 +54,42 @@ Array.prototype.setTo = function(arr) {
 		this[i] = arr[i];
 }
 
+Array.prototype.contains = function(obj) {
+	var i = this.length;
+	while (i--) {
+		if (this[i] == obj) {
+			return true;
+		}
+	}
+	return false;
+}
+
 function clone(obj){return JSON.parse(JSON.stringify(obj))}
 
 function getEnvironments(){return localStorage.taskEnvironments? JSON.parse(localStorage.taskEnvironments) : []}
-function getAgentPrograms(){return localStorage.agentPrograms? JSON.parse(localStorage.agentPrograms) : []}
 function saveEnvironments(){localStorage.taskEnvironments = JSON.stringify(taskEnvironments)}
-function saveAgentPrograms(){localStorage.agentPrograms = JSON.stringify(agentPrograms)}
 function clearEnvironments(){localStorage.removeItem("taskEnvironments")}
+
+function getAgentPrograms(){return localStorage.agentPrograms? JSON.parse(localStorage.agentPrograms) : []}
+function saveAgentPrograms(){localStorage.agentPrograms = JSON.stringify(agentPrograms)}
 function clearAgentPrograms(){localStorage.removeItem("agentPrograms")}
 
+function getTrials(){return localStorage.trials? JSON.parse(localStorage.trials) : []}
+function saveTrials(trials, agentProgramsTrials, taskEnvironmentTrials){
+	localStorage.trials = JSON.stringify(trials);
+	localStorage.agentProgramsTrials = JSON.stringify(agentProgramsTrials);
+	localStorage.taskEnvironmentTrials = JSON.stringify(taskEnvironmentTrials)
+}
+function clearTrials(){
+	localStorage.removeItem("trials");
+	localStorage.removeItem("agentProgramsTrials");
+	localStorage.removeItem("taskEnvironmentTrials")
+}
+
+function getAgentProgramsTrials(){return localStorage.agentProgramsTrials? JSON.parse(localStorage.agentProgramsTrials) : []}
+function getTaskEnvironmentTrials(){return localStorage.taskEnvironmentTrials? JSON.parse(localStorage.taskEnvironmentTrials) : []}
+
+//TODO: bisection
 function getEnvironmentIndexByDate(date){date=parseInt(date);
 	var i = taskEnvironments.length;
 	while (i--)
@@ -67,11 +97,12 @@ function getEnvironmentIndexByDate(date){date=parseInt(date);
 			return i;
 	return -1;
 }
-function getEnvironmentByDate(date){
+function getEnvironmentByDate(date){date=parseInt(date);
 	var i = getEnvironmentIndexByDate(date);
 	return (i != -1)? taskEnvironments[i] : null;
 }
 
+//TODO: bisection
 function getAgentProgramIndexByDate(date){date=parseInt(date);
 	var i = agentPrograms.length;
 	while (i--)
@@ -195,7 +226,7 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 		$scope.task_env.trial.test= false;
 
 		saveKnobs($scope.task_env);
-		saveEnvironments();
+		saveEnvironments();//saveEnvironment(taskEnv)
 
 		startTWorld();
 		$modalInstance.close()
@@ -211,7 +242,7 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 				templateUrl: 'items-list-modal.html',
 				controller: itemsListController,
 				resolve:{
-					items:function(){return agentPrograms},
+					items:function(){return getAgentPrograms()},
 					agentProgramsFlag:function(){return true}
 				}
 			});

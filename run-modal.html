@@ -17,10 +17,11 @@
 				<div class="panel-body">
 					<div ng-repeat="agent in team track by $index">
 						<span ng-if="!singleAgent()">Agent (id {{agent.id}}): </span>
-						<span ng-if="singleAgent()">Agent: </span>
-						<label class="cursor-pointer" ng-click="selectAgentProgram(agent.id)" title="Click to select an agent program"> 
-							<span ng-if="agent.program" class="text-blue"> {{agent.program.name}}</span>
+						<span ng-if="singleAgent()">Agent Program: </span>
+						<label class="cursor-pointer" title="Click to select an agent program"> 
+							<span ng-if="agent.program" class="text-blue"> {{agent.program.name|stringLimit:30}}</span>
 							<span ng-if="!agent.program" class="text-red"> (empty)</span>
+							<button class="btn btn-default glyphicon glyphicon-pencil btn-sm" ng-click="selectAgentProgram(agent.id)"></button>
 						</label>
 					</div>
 				</div>
@@ -53,10 +54,9 @@
 				<div class="checkbox">
 					<label><input type="checkbox" ng-model="task_env.trial.saveStats"> Save stats</label>
 				</div>
-			</div>
-
-			<div class="col-md-2">
-				<label># of Runs</label><input type="number" min="0" class="form-control" ng-model="task_env.trial.runs">
+				<div class="animate-show-3d-top" ng-show="task_env.trial.saveStats">
+					<label>Number of Trials</label><input type="number" min="0" class="form-control" ng-model="task_env.trial.runs">
+				</div>
 			</div>
 
 			<div class="col-md-3">

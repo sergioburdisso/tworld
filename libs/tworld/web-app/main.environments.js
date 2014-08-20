@@ -27,7 +27,7 @@
 		var _self = this;
 		var _selected = -1;
 
-		this.taskEnvironments = taskEnvironments;
+		this.taskEnvironments = taskEnvironments = getEnvironments();
 		this.orderCond = "-date";
 		this.allProps = true;
 		this.query = {
@@ -52,7 +52,7 @@
 			startTWorld()
 		}
 
-		this.open = function(){$location.url('/environments/view/'+_selected)}
+		this.open = function(){$location.url('/environments/view:'+_selected)}
 
 		this.remove = function(){
 			for (var t=taskEnvironments.length; t--;)
@@ -147,6 +147,8 @@
 				this.validate();
 
 				taskEnvironment.trial.test = false;
+
+				taskEnvironments = getEnvironments();
 
 				if (!taskEnvironment.date){
 					taskEnvironment.date = Date.now();

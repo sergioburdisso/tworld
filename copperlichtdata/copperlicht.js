@@ -52,8 +52,11 @@ CL3D.DebugOutput.prototype.setLoadingText = function (a) {
 		CL3D.LoadingTimer = null;
 
 		//if everything is loaded and all [extern] agent programs are ready
-		if (_Ready)
+		if (_Ready){
 			$("#playFrame").show();
+			if (_SAVE_STATS)
+				$("#playBtn").mouseup();
+		}
 		$("#playFrame").animate({opacity : 1}, 1000);
 	}
 	else 

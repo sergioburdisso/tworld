@@ -9,9 +9,10 @@
 					<span class="">( Task Environment:</span>
 					<span class="cursor-pointer margin-10" ng-click="apscc.openEnvironmentsModal()" tooltip="Select task environment">
 						<b>
-							<a ng-if="apscc.task_env.name" class="text-white"> {{apscc.task_env.name}}</a>
-							<a ng-if="!apscc.task_env.name" class="text-red"> (empty)</a>
-						</b> )
+							<span ng-if="apscc.task_env.name" class="text-white"> {{apscc.task_env.name}}</span>
+							<span ng-if="!apscc.task_env.name" class="text-red"> (empty)</span>
+						</b>
+						<button class="btn btn-default glyphicon glyphicon-pencil btn-sm"></button> )
 					</span>
 					<button ng-click="apscc.toggleFullScreen()" ng-class="{'glyphicon-resize-small':apscc.fullScreen,'glyphicon-resize-full':!apscc.fullScreen}" class="btn btn-default glyphicon glyphicon" tooltip="Maximaze/Restore"></button>
 				</div>

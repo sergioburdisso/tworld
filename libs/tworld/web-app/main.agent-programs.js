@@ -26,7 +26,7 @@ var _editor;
 		var _self = this;
 		var _selected = -1;
 
-		this.agentPrograms = agentPrograms;
+		this.agentPrograms = agentPrograms = getAgentPrograms();
 		this.orderCond = "-date";
 		this.allProps = true;
 		this.query = {
@@ -46,11 +46,11 @@ var _editor;
 			saveAgentPrograms();
 		}
 
-		this.open = function(){$location.url('/agent-programs/view/'+_selected)}
+		this.open = function(){$location.url('/agent-programs/view:'+_selected)}
 
 		this.run = function(jsap){
 			if (jsap&&_self.editor(jsap)){
-				$location.url('/agent-programs/source-code/'+jsap.date);
+				$location.url('/agent-programs/source-code:'+jsap.date);
 				gotoTop();
 			}else{
 				modalInstance = $modal.open({
@@ -58,7 +58,7 @@ var _editor;
 					templateUrl: 'items-list-modal.html',
 					controller: itemsListController,
 					resolve:{
-						items:function(){return taskEnvironments},
+						items:function(){return getEnvironments()},
 						agentProgramsFlag:function(){return false}
 					}
 				}).result.then(
@@ -125,7 +125,7 @@ var _editor;
 			this.fullScreen = false;
 			this.saved = true;
 			this.agent_prog = getAgentProgramByDate($routeParams.id);
-			if (!this.agent_prog.ai || !this.agent_prog.javascript){$location.url('/404');return}
+			if (!this.agent_prog || !this.agent_prog.ai || !this.agent_prog.javascript){$location.url('/');return}
 
 			this.task_env = this.agent_prog.default_task_env?
 								getEnvironmentByDate(this.agent_prog.default_task_env)
@@ -184,7 +184,7 @@ var _editor;
 					templateUrl: 'items-list-modal.html',
 					controller: itemsListController,
 					resolve:{
-						items:function(){return taskEnvironments},
+						items:function(){return getEnvironments()},
 						agentProgramsFlag:function(){return false}
 					}
 				})
@@ -238,6 +238,8 @@ var _editor;
 			this.save = function(){
 				var _newFlag = !agentProg.date;
 
+				agentPrograms = getAgentPrograms();
+
 				if (_newFlag){
 					agentProg.date = Date.now();
 					agentPrograms.push(this.agent_prog);
@@ -248,7 +250,7 @@ var _editor;
 
 				saveAgentPrograms();
 				if (this.agent_prog.javascript && this.agent_prog.ai && _newFlag)
-					$location.url('/agent-programs/source-code/'+this.agent_prog.date)
+					$location.url('/agent-programs/source-code:'+this.agent_prog.date)
 				else
 					$location.url('/');
 

@@ -56,7 +56,9 @@ console.error	= function(msg){
 //<-
 
 //-> improving Array class! XD
-Array.prototype.clear = function() {this.length = 0;};
+Array.prototype.empty = function() {return this.length === 0};
+
+Array.prototype.clear = function() {this.length = 0};
 
 Array.prototype.remove = function(index) {
 	var output=this[index];

@@ -35,7 +35,7 @@
 						templateUrl: 'items-list-modal.html',
 						controller: itemsListController,
 						resolve:{
-							items:function(){return taskEnvironments},
+							items:function(){return getEnvironments()},
 							agentProgramsFlag:function(){return false}
 						}
 					});
