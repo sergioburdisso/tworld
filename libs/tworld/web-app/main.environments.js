@@ -30,6 +30,8 @@
 		this.taskEnvironments = taskEnvironments = getEnvironments();
 		this.orderCond = "-date";
 		this.allProps = true;
+		this.page = 1;
+		this.itemsPerPage = 10;
 		this.query = {
 			name:"",
 			battery: false,

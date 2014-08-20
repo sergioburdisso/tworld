@@ -41,6 +41,8 @@
 							undefined;
 
 		this.orderCond = '-date';
+		this.page = 1
+		this.itemsPerPage = 20;
 
 		this.trials = [];
 		for (var i=_trials.length, newTrial, apFlag=0, aps=[]; i--; apFlag=aps.length=0){

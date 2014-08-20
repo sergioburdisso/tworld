@@ -24,26 +24,29 @@
 			</label>
 		</div>
 		<div class="col-md-10">
-		<h2>Trials</h2>
-		<!--Body content-->
-		<div class="list-group mouse-cursor" style="min-height: 300px">
-			<a class="list-group-item animate-filter transition-400" ng-repeat="tr in sc.trials | orderBy:sc.orderCond track by $index" ng-click="sc.setSelected(tr.date)" ng-dblclick="" ng-class="{active:sc.isSelected(tr.date)}">
+			<h2>Trials<small class="pull-right" ng-if="totalPages-1">{{sc.page+'/'+totalPages}}</small></h2>
+			<!--Body content-->
+			<div class="list-group mouse-cursor" style="min-height: 300px">
+				<a class="list-group-item step animate-filter transition-400" ng-repeat="tr in sc.trials | orderBy:sc.orderCond track by $index" ng-click="sc.setSelected(tr.date)" ng-dblclick="" ng-class="{active:sc.isSelected(tr.date)}" ng-if="(sc.page-1)*sc.itemsPerPage <= $index&&$index < sc.page*sc.itemsPerPage">
 
-			<h4 class="list-group-item-heading">
-				<span class="badge active">{{tr.date | date:'dd/MM/yyyy - HH:mm:ss'}}</span>
-				<b>Task env.:</b> {{tr.task_env_name | stringLimit:22}}
-				<span ng-if="tr.agent_progs_num > 1"><b>Agent progs.:</b> {{tr.agent_progs | stringLimit:22}}</span>
-				<span ng-if="tr.agent_progs_num == 1"><b>Agent prog.:</b> {{tr.agent_progs | stringLimit:22}}</span>
-			</h4>
+				<h4 class="list-group-item-heading">
+					<span class="badge active">{{tr.date | date:'dd/MM/yyyy - HH:mm:ss'}}</span>
+					<b>Task env.:</b> {{tr.task_env_name | stringLimit:22}}
+					<span ng-if="tr.agent_progs_num > 1"><b>Agent progs.:</b> {{tr.agent_progs | stringLimit:22}}</span>
+					<span ng-if="tr.agent_progs_num == 1"><b>Agent prog.:</b> {{tr.agent_progs | stringLimit:22}}</span>
+				</h4>
 
-			<span ng-show="sc.isSelected(tr.date)" class="pull-right animate-only-show">
-				<button class="btn btn-info glyphicon glyphicon-list" style="top:-27px; margin-right:10px" ng-click="sc.open()" tooltip="View details"></button>
-				<button class="btn btn-danger glyphicon glyphicon-remove" style="top:-27px" ng-click="sc.remove()" tooltip="Delete"></button>
-			</span>
+				<span ng-show="sc.isSelected(tr.date)" class="pull-right animate-only-show">
+					<button class="btn btn-info glyphicon glyphicon-list" style="top:-27px; margin-right:10px" ng-click="sc.open()" tooltip="View details"></button>
+					<button class="btn btn-danger glyphicon glyphicon-remove" style="top:-27px" ng-click="sc.remove()" tooltip="Delete"></button>
+				</span>
 
-			</a>
-		</div>
-		<div class="separator"></div>
+				</a>
+			</div>
+			<div class="text-center animate-show" ng-show="sc.trials.length > sc.itemsPerPage">
+				<pagination total-items="sc.trials.length" ng-model="sc.page" max-size="5" class="pagination" boundary-links="true" items-per-page="sc.itemsPerPage"  num-pages="totalPages" ng-change="twc.gotoTop()"></pagination>
+			</div>
+			<div class="separator"></div>
 		</div>
 	</div>
 </div>

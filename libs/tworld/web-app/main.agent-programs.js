@@ -29,6 +29,8 @@ var _editor;
 		this.agentPrograms = agentPrograms = getAgentPrograms();
 		this.orderCond = "-date";
 		this.allProps = true;
+		this.page = 1;
+		this.itemsPerPage = 4;
 		this.query = {
 			name:"",
 			ai:true,

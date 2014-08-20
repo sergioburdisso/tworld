@@ -48,10 +48,10 @@
 			</select>
 		</div>
 		<div class="col-md-10">
-		<h2>Task Environments</h2>
+		<h2>Task Environments<small class="pull-right" ng-if="totalPages-1">{{ec.page+'/'+totalPages}}</small></h2>
 		<!--Body content-->
 		<div class="list-group mouse-cursor" style="min-height: 300px">
-			<a class="list-group-item animate-filter transition-400" ng-repeat="env in ec.taskEnvironments | filter:ec.userFilter | orderBy:ec.orderCond track by $index" ng-click="ec.setSelected(env.date)" ng-dblclick="ec.openRunModal()" ng-class="{active:ec.isSelected(env.date)}">
+			<a class="list-group-item animate-filter transition-400" ng-repeat="env in ec.taskEnvironments | filter:ec.userFilter | orderBy:ec.orderCond track by $index" ng-click="ec.setSelected(env.date)" ng-dblclick="ec.openRunModal()" ng-class="{active:ec.isSelected(env.date)}" ng-if="(ec.page-1)*ec.itemsPerPage <= $index&&$index < ec.page*ec.itemsPerPage">
 				<!-- PROPERTIES ICONS-->
 				<div class="pull-right text-gray">
 					<div class="glyphicon glyphicon-eye-open" ng-show="env.prop.fullyObservable" tooltip="Fully observable"></div>
@@ -88,6 +88,9 @@
 					</div>
 				</div>
 			</a>
+		</div>
+		<div class="text-center animate-show" ng-show="ec.taskEnvironments.length > ec.itemsPerPage">
+			<pagination total-items="ec.taskEnvironments.length" ng-model="ec.page" max-size="5" class="pagination" boundary-links="true" items-per-page="ec.itemsPerPage"  num-pages="totalPages" ng-change="twc.gotoTop()"></pagination>
 		</div>
 		<div class="separator"></div>
 		</div>

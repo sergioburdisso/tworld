@@ -150,6 +150,8 @@ function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
 	$scope.items = items;
 	$scope.orderCond = "-date";
 	$scope.environments = !agentProgramsFlag;
+	$scope.page = 1
+	$scope.itemsPerPage = 15;
 	$scope.query = agentProgramsFlag?
 				{
 					name:"",
