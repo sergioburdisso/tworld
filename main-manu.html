@@ -39,7 +39,7 @@
 				<span class="glyphicon glyphicon-wrench" style="font-size: 59px;" ng-class="{ 'animate-zoom-loop':mmc.isActive(3), 'animate-zoom-loop-end':!mmc.isActive(3)}"></span>
 				<h2 ng-bind-html="twc.text.menu.set"></h2>
 				<p ng-bind-html="twc.text.menu.set.desc"></p>
-				<button class="btn btn-default" ng-bind-html="twc.text.menu.set.btn_view" ng-click="twc.goto('/settings')"></button>
+				<button class="btn btn-default" ng-bind-html="twc.text.menu.set.btn_view" ng-click="mmc.viewSettings()"></button>
 				<div class="separator"></div>
 			</div>
 			<div class="col-md-5 panel-body" style="border-right: 2px solid #f5f5f5;" ng-mouseenter="mmc.setActive(4)" ng-mouseleave="mmc.leave()">
@@ -57,7 +57,7 @@
 		<div class="container-fluid">
 			<div class="col-md-4"></div>
 			<div class="col-md-4 panel-body">
-				<button id="startBtn" class="btn btn-success btn-lg btn-block" ng-bind-html="twc.text.menu.btn_start" ng-mouseenter="mmc.startEnter()" ng-mouseleave="mmc.startLeave()" ng-click="mmc.startTWorld()"></button>
+				<button id="startBtn" class="btn btn-primary btn-lg btn-block btn-shadow" ng-bind-html="twc.text.menu.btn_start" ng-mouseenter="mmc.startEnter()" ng-mouseleave="mmc.startLeave()" ng-click="mmc.startTWorld()"></button>
 			</div>
 			<div class="col-md-4"></div>
 		</div>

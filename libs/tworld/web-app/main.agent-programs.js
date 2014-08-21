@@ -30,7 +30,7 @@ var _editor;
 		this.orderCond = "-date";
 		this.allProps = true;
 		this.page = 1;
-		this.itemsPerPage = 4;
+		this.itemsPerPage = 10;
 		this.query = {
 			name:"",
 			ai:true,
@@ -42,10 +42,30 @@ var _editor;
 		this.isSelected = function(value){return _selected == value}
 
 		this.remove = function(){
-			for (var t=agentPrograms.length; t--;)
-				if (agentPrograms[t].date == _selected)
-					agentPrograms.remove(t);
-			saveAgentPrograms();
+			$modal.open({
+				size: 'sm',
+				templateUrl: 'yes-no-modal.html',
+				controller: yesNoModalController,
+				resolve:{
+					title: function(){return 'Confirmation'}, 
+					msg: function(){return 'Are you sure you want to delete this agent program?'}
+				}
+			})
+			.result.then(function(){
+				if (isAgentProgramTrialsEmpty(_selected))
+					_remove()
+				else{
+					$modal.open({
+						size: 'sm',
+						templateUrl: 'yes-no-modal.html',
+						controller: yesNoModalController,
+						resolve:{
+							title: function(){return 'Confirmation'}, 
+							msg: function(){return 'This agent programs seems to have stats associate with it. If you delete it all trials and stats will be deleted as well. Are you sure you want to proceed?'}
+						}
+					}).result.then(_remove)
+				}
+			});
 		}
 
 		this.open = function(){$location.url('/agent-programs/view:'+_selected)}
@@ -96,6 +116,12 @@ var _editor;
 			);
 		}
 
+		function _remove(){
+			for (var t=agentPrograms.length; t--;)
+				if (agentPrograms[t].date == _selected)
+					agentPrograms.remove(t);
+			saveAgentPrograms();
+		}
 	}]);
 
 	mod.controller('AgentProgSourceCodeController', ['$scope','$routeParams','$modal', '$location',

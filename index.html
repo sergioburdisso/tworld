@@ -105,6 +105,24 @@
 <script type="text/javascript" src="libs/tworld/web-app/main.agent-programs.js"></script>
 <script type="text/javascript" src="libs/tworld/web-app/main.stats.js"></script>
 
+<script type="text/ng-template" id="yes-no-modal.html">
+	<div class="modal-header"><h4><b><span class="glyphicon glyphicon-exclamation-sign"></span> {{title}}</b></h4></div>
+	<div class="modal-body text-center">{{msg}}</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" ng-click="close()">Cancel</button>
+		<button class="btn btn-danger" ng-click="ok()">Yes</button>
+	</div>
+</script>
+
+<script type="text/ng-template" id="settings-modal.html">
+	<div class="modal-header"><h4><b><span class="glyphicon glyphicon-wrench"></span> Settings</b></h4></div>
+	<div class="modal-body text-center"></div>
+	<div class="modal-footer">
+		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+		<button class="btn btn-success" ng-click="save()">Save</button>
+	</div>
+</script>
+
 <script type="text/javascript">
 	var bots = null;
 	var mouseBot = [new SolidBot({location:new Vector(0,0)})];
@@ -151,5 +169,6 @@
 		setTimeout(toggleHeaderImgs, 10000);
 	});
 </script>
+
 </body>
 </html>

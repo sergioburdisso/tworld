@@ -44,6 +44,7 @@ var perror = console.error;
 var writeln = alert;
 
 var _ACTION_SENT;
+var _LAST_ERROR_SENT = "";
 var _PERCEPT = null;
 var _GRID;
 var _AGENT;
@@ -105,6 +106,13 @@ function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 				$return(_ACTION.NONE);
 			break;
 
+		case _PERCEPT_HEADER.ERROR:
+			if (_LAST_ERROR_SENT != percept.data){
+				_LAST_ERROR_SENT = percept.data;
+				console.error(percept.data.match(/^'([^]*)'$/)[1]);
+			}
+			break;
+
 		case _PERCEPT_HEADER.END:
 			self.close();
 			break;
@@ -135,7 +143,6 @@ function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 			percept = percept.data;
 
 			_PERCEPT = percept;
-
 			_GRID = percept.environment.grid;
 			_GRID.ROWS = _GRID.length;
 			_GRID.COLUMNS = _GRID[0].length;
@@ -157,7 +164,9 @@ function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 	}
 }onmessage = __AgentProgram__Wrapper__; 
 
-function $nextAction(arrayOfActions){return arrayOfActions.shift()}
+function $nextAction(arrayOfActions){
+	return (!arrayOfActions || arrayOfActions.length == 0)? _ACTION.NONE : arrayOfActions.shift();
+}
 
 function $chooseRandomAction(){return random(6)}
 

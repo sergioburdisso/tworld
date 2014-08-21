@@ -57,10 +57,30 @@
 		this.open = function(){$location.url('/environments/view:'+_selected)}
 
 		this.remove = function(){
-			for (var t=taskEnvironments.length; t--;)
-				if (taskEnvironments[t].date == _selected)
-					taskEnvironments.remove(t);
-			saveEnvironments();
+			$modal.open({
+				size: 'sm',
+				templateUrl: 'yes-no-modal.html',
+				controller: yesNoModalController,
+				resolve:{
+					title: function(){return 'Confirmation'}, 
+					msg: function(){return 'Are you sure you want to delete this task environment?'}
+				}
+			})
+			.result.then(function(){
+				if (isTaskEnvironmentTrialsEmpty(_selected))
+					_remove()
+				else{
+					$modal.open({
+						size: 'sm',
+						templateUrl: 'yes-no-modal.html',
+						controller: yesNoModalController,
+						resolve:{
+							title: function(){return 'Confirmation'}, 
+							msg: function(){return 'This task environment seems to have stats associate with it. If you delete it all trials and stats will be deleted as well. Are you sure you want to proceed?'}
+						}
+					}).result.then(_remove)
+				}
+			});
 		}
 
 		this.openRunModal = function(){
@@ -89,6 +109,13 @@
 						p.known == task_env.prop.known
 					)
 			);
+		}
+
+		function _remove(){
+			for (var t=taskEnvironments.length; t--;)
+				if (taskEnvironments[t].date == _selected)
+					taskEnvironments.remove(t);
+			saveEnvironments();
 		}
 
 	}]);

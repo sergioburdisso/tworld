@@ -84,8 +84,6 @@
 		this.isSelected = function(value){return _selected == value}
 
 		this.remove = function(){
-			agentProgramsTrials = getAgentProgramsTrials();
-			taskEnvironmentTrials = getTaskEnvironmentTrials();
 			_trials = getTrials();
 
 			for (var t=_self.trials.length; t--;)
@@ -96,15 +94,7 @@
 				if (_trials[t].date == _selected)
 					_trials.remove(t);
 
-			for (var t=agentProgramsTrials.length; t--;)
-				if (agentProgramsTrials[t] == _selected)
-					agentProgramsTrials.remove(t);
-
-			for (var t=taskEnvironmentTrials.length; t--;)
-				if (taskEnvironmentTrials[t] == _selected)
-					taskEnvironmentTrials.remove(t);
-
-			saveTrials(_trials, agentProgramsTrials, taskEnvironmentTrials);
+			saveTrials(_trials);
 		}
 
 		this.selectTaskEnvironment = function(){

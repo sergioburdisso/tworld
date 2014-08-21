@@ -30,8 +30,6 @@ if (!localStorage.version){
 var taskEnvironments = getEnvironments();
 var agentPrograms = getAgentPrograms();
 var trials;
-var agentProgramsTrials;
-var taskEnvironmentTrials;
 
 var _KEYBOAR_MAP = ["","","","CANCEL","","","HELP","","BACK_SPACE","TAB","","","CLEAR","ENTER","RETURN","","SHIFT","CONTROL","ALT","PAUSE","CAPS_LOCK","KANA","EISU","JUNJA","FINAL","HANJA","","ESCAPE","CONVERT","NONCONVERT","ACCEPT","MODECHANGE","SPACE","PAGE_UP","PAGE_DOWN","END","HOME","LEFT","UP","RIGHT","DOWN","SELECT","PRINT","EXECUTE","PRINTSCREEN","INSERT","DELETE","","0","1","2","3","4","5","6","7","8","9","COLON","SEMICOLON","LESS_THAN","EQUALS","GREATER_THAN","QUESTION_MARK","AT","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","WIN","","CONTEXT_MENU","","SLEEP","NUMPAD0","NUMPAD1","NUMPAD2","NUMPAD3","NUMPAD4","NUMPAD5","NUMPAD6","NUMPAD7","NUMPAD8","NUMPAD9","MULTIPLY","ADD","SEPARATOR","SUBTRACT","DECIMAL","DIVIDE","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12","F13","F14","F15","F16","F17","F18","F19","F20","F21","F22","F23","F24","","","","","","","","","NUM_LOCK","SCROLL_LOCK","WIN_OEM_FJ_JISHO","WIN_OEM_FJ_MASSHOU","WIN_OEM_FJ_TOUROKU","WIN_OEM_FJ_LOYA","WIN_OEM_FJ_ROYA","","","","","","","","","","CIRCUMFLEX","EXCLAMATION","DOUBLE_QUOTE","HASH","DOLLAR","PERCENT","AMPERSAND","UNDERSCORE","OPEN_PAREN","CLOSE_PAREN","ASTERISK","PLUS","PIPE","HYPHEN_MINUS","OPEN_CURLY_BRACKET","CLOSE_CURLY_BRACKET","TILDE","","","","","VOLUME_MUTE","VOLUME_DOWN","VOLUME_UP","","","","","COMMA","","PERIOD","SLASH","BACK_QUOTE","","","","","","","","","","","","","","","","","","","","","","","","","","","OPEN_BRACKET","BACK_SLASH","CLOSE_BRACKET","QUOTE","","META","ALTGR","","WIN_ICO_HELP","WIN_ICO_00","","WIN_ICO_CLEAR","","","WIN_OEM_RESET","WIN_OEM_JUMP","WIN_OEM_PA1","WIN_OEM_PA2","WIN_OEM_PA3","WIN_OEM_WSCTRL","WIN_OEM_CUSEL","WIN_OEM_ATTN","WIN_OEM_FINISH","WIN_OEM_COPY","WIN_OEM_AUTO","WIN_OEM_ENLW","WIN_OEM_BACKTAB","ATTN","CRSEL","EXSEL","EREOF","PLAY","ZOOM","","PA1","WIN_OEM_CLEAR",""];
 
@@ -75,24 +73,27 @@ function saveAgentPrograms(){localStorage.agentPrograms = JSON.stringify(agentPr
 function clearAgentPrograms(){localStorage.removeItem("agentPrograms")}
 
 function getTrials(){return localStorage.trials? JSON.parse(localStorage.trials) : []}
-function saveTrials(trials, agentProgramsTrials, taskEnvironmentTrials){
-	localStorage.trials = JSON.stringify(trials);
-	localStorage.agentProgramsTrials = JSON.stringify(agentProgramsTrials);
-	localStorage.taskEnvironmentTrials = JSON.stringify(taskEnvironmentTrials)
-}
-function clearTrials(){
-	localStorage.removeItem("trials");
-	localStorage.removeItem("agentProgramsTrials");
-	localStorage.removeItem("taskEnvironmentTrials")
-}
+function saveTrials(trials){localStorage.trials = JSON.stringify(trials)}
+function clearTrials(){localStorage.removeItem("trials")}
 
-function getAgentProgramsTrials(){return localStorage.agentProgramsTrials? JSON.parse(localStorage.agentProgramsTrials) : []}
-function getTaskEnvironmentTrials(){return localStorage.taskEnvironmentTrials? JSON.parse(localStorage.taskEnvironmentTrials) : []}
-
+function isTaskEnvironmentTrialsEmpty(task_env_id){
+	var _trials = getTrials();
+	for (var i=_trials.length; i--;)
+		if (_trials[i].task_env_id == task_env_id)
+			return false;
+	return true;
+}
+function isAgentProgramTrialsEmpty(agent_program_id){
+	var _trials = getTrials();
+	for (var i=_trials.length; i--;)
+		for (var j=_trials[i].agents.length; j--;)
+			if (_trials[i].agents[j].program_id == agent_program_id)
+				return false;
+	return true;
+}
 //TODO: bisection
 function getEnvironmentIndexByDate(date){date=parseInt(date);
-	var i = taskEnvironments.length;
-	while (i--)
+	for (var i = taskEnvironments.length; i--;)
 		if (taskEnvironments[i].date === date)
 			return i;
 	return -1;
@@ -104,8 +105,7 @@ function getEnvironmentByDate(date){date=parseInt(date);
 
 //TODO: bisection
 function getAgentProgramIndexByDate(date){date=parseInt(date);
-	var i = agentPrograms.length;
-	while (i--)
+	for (var i = agentPrograms.length; i--;)
 		if (agentPrograms[i].date === date)
 			return i;
 	return -1;
@@ -123,6 +123,9 @@ function saveKnobs(env, test){
 }
 function clearKnobs(){localStorage.removeItem("knobs")}
 
+function getConfig(){return localStorage.config? JSON.parse(localStorage.config) : {}}
+function saveConfig(config){localStorage.config = JSON.stringify(config)}
+function clearConfig(){localStorage.removeItem("config")}
 
 
 
@@ -177,6 +180,12 @@ function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
 	$scope.text = {
 		title: agentProgramsFlag? "Select An Agent Program" : "Select A Task Environment",
 		filter: agentProgramsFlag? "Only Agent Programs that are:" : "Only Task environments that are:"
+	}
+
+	$scope.gotoTop = function(){
+		$('.modal').animate({
+			scrollTop: 0
+		}, 1000, "easeOutExpo")
 	}
 
 	$scope.ok = function () {$modalInstance.close(_selected)};
@@ -284,12 +293,16 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 	}
 	//updating number of agents (in case user has edited the task envitonment)
 	$scope.agents.length = nAgents;
+}
 
+function yesNoModalController($scope, $modal, $modalInstance, title, msg){
+	$scope.title = title;
+	$scope.msg = msg;
+	$scope.ok = function(){$modalInstance.close()};
+	$scope.close = function () {$modalInstance.dismiss()};
 }
 
 function readKeyController($scope, $modal, $modalInstance){
-	var _keyCode = undefined;
-
 	function _keyDownHandler(e){
 		if ($modalInstance)
 			$modalInstance.close(e.keyCode);
@@ -297,4 +310,11 @@ function readKeyController($scope, $modal, $modalInstance){
 	}
 
 	$(document).keydown(_keyDownHandler);
+}
+
+function settingsModalController($scope, $modal, $modalInstance){
+
+	$scope.save = function(){$modalInstance.close()};
+	$scope.cancel = function () {$modalInstance.dismiss()};
+
 }

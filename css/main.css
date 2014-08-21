@@ -153,6 +153,18 @@ td input{text-align: center}
 	     -o-box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
 	        box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
 }
+.btn-shadow:hover{
+	-webkit-box-shadow: gray 0px 0px 10px;
+	   -moz-box-shadow: gray 0px 0px 10px;
+		 -o-box-shadow: gray 0px 0px 10px;
+			box-shadow: gray 0px 0px 10px;
+}
+.btn-shadow{
+	-webkit-box-shadow: gray 0px 10px 10px;
+	   -moz-box-shadow: gray 0px 10px 10px;
+		 -o-box-shadow: gray 0px 10px 10px;
+			box-shadow: gray 0px 10px 10px;
+}
 
 .full-screen{
 	position: absolute;
@@ -243,10 +255,16 @@ td input{text-align: center}
 	height: 98px;
 }
 /*Icons*/
+.solid-icon-30,
+.solid-icon-16{display: inline-block}
+
 .solid-icon-16{
-	display: inline-block;
 	height: 16px;
 	width: 16px;
+}
+.solid-icon-30{
+	height: 30px;
+	width: auto;
 }
 .icon-single-agent{background: url(../imgs/web-app/icon-single-agent.png) center no-repeat}
 .icon-multiagent{background: url(../imgs/web-app/icon-multiagent.png) center no-repeat}

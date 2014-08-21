@@ -799,8 +799,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			//--------------------------------------------------------------------------------------> _saveStats
 			function _saveStats(result){if (_SAVE_STATS){
-				var trials = [], envsTrials = {},
-					agentProgsTrials = {}, tmp = [],
+				var trials = [], tmp = [],
 					trial={
 						date: Date.now(),
 						task_env_id: _KNOBS.date,
@@ -815,12 +814,6 @@ function Environment(rows, columns, graphicEngine, parent) {
 						agents: new Array(_NUMBER_OF_AGENTS)
 					}
 
-				if (localStorage.trials){
-					trials = JSON.parse(localStorage.trials);
-					envsTrials = JSON.parse(localStorage.taskEnvironmentTrials);
-					agentProgsTrials = JSON.parse(localStorage.agentProgramsTrials);
-				}
-
 				for (var i=0; i < _NUMBER_OF_AGENTS; ++i){
 					trial.agents[i] = {
 						program_id: _KNOBS_Agents[i].program.date,
@@ -828,24 +821,12 @@ function Environment(rows, columns, graphicEngine, parent) {
 						socre: _rob[i].Score,
 						stats: _rob[i].Stats
 					};
-
-					if (!tmp.contains(trial.agents[i].program_id)){
-						if (!agentProgsTrials[trial.agents[i].program_id])
-							agentProgsTrials[trial.agents[i].program_id] = [];
-						agentProgsTrials[trial.agents[i].program_id].push(trial.date);
-					}
-					tmp.push(trial.agents[i].program_id);
 				}
 
+				if (localStorage.trials)
+					trials = JSON.parse(localStorage.trials);
 				trials.push(trial);
-				if (!envsTrials[trial.task_env_id])
-					envsTrials[trial.task_env_id] = [];
-
-				envsTrials[trial.task_env_id].push(trial.date);
-
 				localStorage.trials = JSON.stringify(trials);
-				localStorage.agentProgramsTrials = JSON.stringify(agentProgsTrials);
-				localStorage.taskEnvironmentTrials = JSON.stringify(envsTrials);
 			}}
 
 			//--------------------------------------------------------------------------------------> _checkIfGameOver

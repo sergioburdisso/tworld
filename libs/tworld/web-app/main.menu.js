@@ -29,30 +29,37 @@
 		this.setActive = function(i){this.menu = i}
 		this.isActive = function(i){return this.menu === i}
 
+		this.viewSettings = function(){
+			$modal.open({
+				size: 'lg',
+				templateUrl: 'settings-modal.html',
+				controller: settingsModalController
+			})
+		}
+
 		this.startTWorld = function(){
-			var modalInstance = $modal.open({
-						size: 'lg',//size,
-						templateUrl: 'items-list-modal.html',
-						controller: itemsListController,
+			$modal.open({
+				size: 'lg',
+				templateUrl: 'items-list-modal.html',
+				controller: itemsListController,
+				resolve:{
+					items:function(){return getEnvironments()},
+					agentProgramsFlag:function(){return false}
+				}
+			})
+			.result.then(
+				function (id) {
+					$modal.open({
+						size: 'lg',
+						templateUrl: 'run-modal.html',
+						controller: runModalController,
 						resolve:{
-							items:function(){return getEnvironments()},
-							agentProgramsFlag:function(){return false}
+							taskEnv: function(){return getEnvironmentByDate(id)}, 
+							agentProgs: function(){return []}
 						}
 					});
-
-				modalInstance.result.then(
-					function (id) {
-						$modal.open({
-							size: 'lg',//size,
-							templateUrl: 'run-modal.html',
-							controller: runModalController,
-							resolve:{
-								taskEnv: function(){return getEnvironmentByDate(id)}, 
-								agentProgs: function(){return []}
-							}
-						});
-					}
-				);
+				}
+			);
 		}
 	}])
 
