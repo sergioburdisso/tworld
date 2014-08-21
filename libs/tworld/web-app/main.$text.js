@@ -34,5 +34,7 @@ $text.main.description[_LANGUAGES.ENGLISH] = "Web platform for Artificial Intell
 $text.main.description[_LANGUAGES.SPANISH] = "Plataforma web para la investigaci&oacute;n y el aprendizaje de Inteligencia Artificial &iexcl;Pon a prueba tus algoritmos!";
 
 $text.main.martha_marc = {};
-$text.main.martha_marc[_LANGUAGES.ENGLISH] = 'Inspired by the <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">Tileworld by Martha E. Pollack and Marc Ringuette</a>';
-$text.main.martha_marc[_LANGUAGES.SPANISH] = 'Inspirado en el <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">Tileworld de Martha E. Pollack and Marc Ringuette</a>';
+$text.main.martha_marc[_LANGUAGES.ENGLISH] =	'Based on the book <a href="http://aima.cs.berkeley.edu/" target="_blank">Artificial Intelligence: A Modern Approach</a> by Stuart Russell and Peter Norvig.<br>'+
+												'Inspired by <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">the Tileworld</a> by Martha E. Pollack and Marc Ringuette.';
+$text.main.martha_marc[_LANGUAGES.SPANISH] =	'Basado en el libro <a href="http://aima.cs.berkeley.edu/" target="_blank">Artificial Intelligence: A Modern Approach</a> de Stuart Russell y Peter Norvig.<br>'+
+												'Inspirado en el <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">Tileworld de Martha E. Pollack and Marc Ringuette</a>.';

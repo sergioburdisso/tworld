@@ -15,8 +15,8 @@
 			<div id="h-img-1" style="display:none; position:fixed; width:100%; height:493px; background: url(imgs/web-app/header1.png) center; z-index:-1"></div>
 			<div id="h-img-0" style="position:fixed; width:100%; height:493px; background: url(imgs/web-app/header0.png) center; z-index:-1"></div>
 		</div>
-		<div class="jumbotron container-fluid shadow-inset" style="background-color: transparent; padding-top: 200px; margin-bottom: 0;">
-			<span class="col-md-5 col-xs-8" style="color: white; background-color: rgba(85, 85, 85, 0.80); top:0; left:0">
+		<div class="jumbotron container-fluid shadow-inset" style="background-color: transparent; margin-bottom: 0; height: 492px;">
+			<span class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-100px; left:0">
 				<h1>T-World</h1>
 				<p ng-bind-html="twc.text.desc"></p>
 				<h5 class="pull-right header" style="color:white"><span ng-bind-html="twc.text.martha_marc"></span></h5>
@@ -106,7 +106,7 @@
 <script type="text/javascript" src="libs/tworld/web-app/main.stats.js"></script>
 
 <script type="text/ng-template" id="yes-no-modal.html">
-	<div class="modal-header"><h4><b><span class="glyphicon glyphicon-exclamation-sign"></span> {{title}}</b></h4></div>
+	<div class="modal-header"><h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-exclamation-sign"></span> {{title}}</h3></div>
 	<div class="modal-body text-center">{{msg}}</div>
 	<div class="modal-footer">
 		<button class="btn btn-default" ng-click="close()">Cancel</button>
@@ -115,7 +115,7 @@
 </script>
 
 <script type="text/ng-template" id="settings-modal.html">
-	<div class="modal-header"><h4><b><span class="glyphicon glyphicon-wrench"></span> Settings</b></h4></div>
+	<div class="modal-header"><h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-wrench"></span> Settings</h3></div>
 	<div class="modal-body text-center"></div>
 	<div class="modal-footer">
 		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
