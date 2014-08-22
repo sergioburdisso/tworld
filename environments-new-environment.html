@@ -175,11 +175,11 @@
 	<div class="modal-header">
 		<h3 class="modal-title">Click on a condition to add it</h3>
 	</div>
-	<div class="modal-body">
+	<div class="modal-body text-center">
 		<button class="btn label label-default" ng-repeat="cond in end_game_cond" ng-if="visible(cond)" ng-click="ok($index)">{{ cond.name }}</button>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
 	</div>
 </script>
 

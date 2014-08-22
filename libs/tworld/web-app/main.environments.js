@@ -144,15 +144,15 @@
 			this.teamColors = colors;
 			this.step = 0;
 			this.end_game_cond = end_game_conditions = [
-				{name:_ENDGAME.FILLED_HOLES.NAME		, value:0, result:_GAME_RESULT.WON		},
-				{name:_ENDGAME.FILLED_CELLS.NAME		, value:0, result:_GAME_RESULT.WON		},
-				{name:_ENDGAME.SCORE.NAME				, value:0, result:_GAME_RESULT.WON		},
-				{name:_ENDGAME.GOOD_MOVES.NAME			, value:0, result:_GAME_RESULT.NEUTRAL	},
-				{name:_ENDGAME.BAD_MOVES.NAME			, value:0, result:_GAME_RESULT.LOST		},
-				{name:_ENDGAME.BATTERY_USED.NAME		, value:0, result:_GAME_RESULT.LOST		},
-				{name:_ENDGAME.BATTERY_RECHARGE.NAME	, value:0, result:_GAME_RESULT.LOST		},
-				{name:_ENDGAME.BATTERY_RESTORE.NAME		, value:0, result:_GAME_RESULT.LOST		}
-				/*{name:_ENDGAME.TIME.NAME, value:0, result:_GAME_RESULT.NEUTRAL} <-not here 'cause it's the default value*/ 
+				{name:_ENDGAME.TIME.NAME				, value:5*60, result:_GAME_RESULT.NEUTRAL	},
+				{name:_ENDGAME.FILLED_HOLES.NAME		, value:0	, result:_GAME_RESULT.WON		},
+				{name:_ENDGAME.FILLED_CELLS.NAME		, value:0	, result:_GAME_RESULT.WON		},
+				{name:_ENDGAME.SCORE.NAME				, value:0	, result:_GAME_RESULT.WON		},
+				{name:_ENDGAME.GOOD_MOVES.NAME			, value:0	, result:_GAME_RESULT.NEUTRAL	},
+				{name:_ENDGAME.BAD_MOVES.NAME			, value:0	, result:_GAME_RESULT.LOST		},
+				{name:_ENDGAME.BATTERY_USED.NAME		, value:0	, result:_GAME_RESULT.LOST		},
+				{name:_ENDGAME.BATTERY_RECHARGE.NAME	, value:0	, result:_GAME_RESULT.LOST		},
+				{name:_ENDGAME.BATTERY_RESTORE.NAME		, value:0	, result:_GAME_RESULT.LOST		}
 			];
 			this.task_env = taskEnvironment = taskEnv;
 			this.stochastic_model = taskEnv.agents.stochastic_model;
@@ -472,6 +472,14 @@
 			}
 
 			this.updateTeams();
+
+			//computing end_game_conditions default values
+			for (var i = taskEnv.environment.final_state.length; i--;)
+				for (var j= end_game_conditions.length; j--;)
+					if (taskEnv.environment.final_state[i].name == end_game_conditions[j].name){
+						end_game_conditions.remove(j);
+						break;
+					}
 	}]);
 
 	mod.controller('InitialStateMakerController', function(){

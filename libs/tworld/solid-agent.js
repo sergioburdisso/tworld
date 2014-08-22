@@ -128,7 +128,7 @@ function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 			var msg;
 
 			try{msg = JSON.parse(percept.data)}
-			catch(e){msg = percept.data}//if not a JSON then pass the sting to "__onMessageReceived__"
+			catch(e){msg = percept.data}//if not a JSON then pass a sting to "__onMessageReceived__"
 
 			try{
 				__onMessageReceived__(msg);
