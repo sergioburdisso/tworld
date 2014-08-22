@@ -1,5 +1,5 @@
 <div class="container-fluid">
-	<h2>Final tweaks</h2>
+	<h2>Final tweaks</h2><br>
 	<div class="text-left">
 		<!--<div class="row" ng-show="enc.task_env.prop.battery">-->
 		<div class="panel panel-default" ng-show="enc.task_env.battery">
@@ -38,25 +38,28 @@
 		</div>
 		<br>
 
-		<div class="checkbox">
-			<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.multiplier.enabled"> Score Multiplier</label>
-		</div>
-		<div class="panel animate-show-3d-top" ng-show="enc.task_env.final_tweaks.multiplier.enabled">
-			<label>Multiplier will last for {{enc.task_env.final_tweaks.multiplier.timeout}} seconds</label>
-			<div class="row">
-				<div class="col-md-8 col-xs-8">
+		<div class="container">
+			<div class="checkbox">
+				<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.multiplier.enabled"> Score Multiplier</label>
+			</div>
+			<div class="list-group col-md-5 animate-show-3d-top" ng-show="enc.task_env.final_tweaks.multiplier.enabled">
+				<a class="list-group-item no-animation">
+					<label>Multiplier will last for {{enc.task_env.final_tweaks.multiplier.timeout}} seconds</label>
 					<div class="ui-slider-size" ui-slider min="1" max="60" step="1" ng-model="enc.task_env.final_tweaks.multiplier.timeout"></div>
-				</div>
+				</a>
 			</div>
 		</div>
 
-
-		<div class="checkbox">
-			<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.score.cell"> Enable partial reward (Points are rewarded not just per hole but also per cell)</label>
+		<div class="container">
+			<div class="checkbox">
+				<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.score.cell"> Enable partial reward (Points are rewarded not just per hole but also per cell)</label>
+			</div>
 		</div>
 
-		<div class="checkbox">
-			<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.shapes" disabled> Holes shapes</label>
+		<div class="container">
+			<div class="checkbox">
+				<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.shapes" disabled> Holes shapes</label>
+			</div>
 		</div>
 	</div>
 </div>

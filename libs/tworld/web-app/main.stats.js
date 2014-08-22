@@ -25,6 +25,9 @@
 		var _selected = -1;
 		var _trials = getTrials();
 
+		taskEnvironments = getEnvironments();
+		agentPrograms = getAgentPrograms();
+
 		if (!$routeParams.task_env_id)
 			$routeParams.task_env_id = "all";
 		if (!$routeParams.agent_prog_id)

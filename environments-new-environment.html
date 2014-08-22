@@ -185,18 +185,23 @@
 
 <script type="text/ng-template" id="prob-distrib.html">
 	<div class="modal-header">
-		<h3 class="modal-title">Probability distribution</h3>
+		<h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-signal"></span> Probability distribution <small>click on the figure to set it!</small></h3>
 	</div>
-	<div class="panel text-center">
-		<div class="panel-body">
-			<div class="prob-bar">
-				<div class="ui-slider-size vertical axis ui-slider ui-widget ui-widget-content ui-corner-all ui-slider-vertical"></div>
-				{{knob.range[0]}}
+	<div class="modal-body">
+		<div class="panel text-center">
+			<div class="panel-body">
+				<div class="prob-bar">
+					<div class="ui-slider-size vertical axis ui-slider ui-widget ui-widget-content ui-corner-all ui-slider-vertical"></div>
+					{{knob.range[0]}}
+				</div>
+				<div class="prob-bar" ng-repeat="prob in knob.prob track by $index">
+					<div class="ui-slider-size vertical" ui-slider="slider_options" min="0" max="1000" ng-model="knob.prob[$index]"></div>
+				</div>
+				{{knob.range[1]}}
 			</div>
-			<div class="prob-bar" ng-repeat="prob in knob.prob track by $index">
-				<div class="ui-slider-size vertical" ui-slider="slider_options" min="0" max="1000" ng-model="knob.prob[$index]"></div>
-			</div>
-			{{knob.range[1]}}
 		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" ng-click="ok()">Close</button>
 	</div>
 </script>

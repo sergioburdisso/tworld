@@ -19,7 +19,7 @@
 
 //common vocabulary for communication between TWorld and the Program Agent
 var _GRID_CELL	= {EMPTY:" ", TILE:"T", OBSTACLE:"#", HOLE_CELL:1, AGENT:"A", BATTERY_CHARGER:"C"};
-var _ACTION		= {WEST:0, EAST:1, NORTH:2, SOUTH:3, NONE:4, RESTORE:5, PEER_MESSAGE: "peer_message:", TEAM_MESSAGE: "team_message:", CONSOLE_CLEAR:6, CONSOLE_ERROR:"error:", CONSOLE_LOG:"log:"};
+var _ACTION		= {WEST:0, EAST:1, NORTH:2, SOUTH:3, NONE:4, RESTORE:5, PEER_MESSAGE: "peer_message:", TEAM_MESSAGE: "team_message:", CONSOLE_CLEAR:6, CONSOLE_ERROR:"error:", CONSOLE_LOG:"log:", _SAVE_MEMORY_:"_save_memory_:"};
 
 var _ACTION_REGEX = {
 					WEST:			/^\s*(action\s*\()?\s*(west|0)\s*\)?\s*$/i,
@@ -36,11 +36,14 @@ var _ACTION_REGEX = {
 					KEY_DOWN:		/(key_down|keydown|key_pressed)\s*(\(\s*([^)]*)\s*\)|:([^]*))/i,
 					KEY_UP:			/(key_up|keyup|key_released)\s*(\(\s*([^)]*)\s*\)|:([^]*))/i,
 
-					//internal action used only by the t-world proxy
-					//(user shouldn't be aware of this action)
+
+					//internal actions (user shouldn't be aware of this action)
+					_SAVE_MEMORY_:	/(_save_memory_|_memory_)\s*(\(\s*([^)]*)\s*\)|:([^]*))/i,
+
+					// used by the t-world proxy
 					_CONNECTED_:	/^_connected_$/i,
 					_DISCONNECTED_:	/^_disconnected_$/i
-					/*stop percept, start percept*/
+
 				};
 
 //if you change some values or add/remove new ones remember to change the tw_msg.xsd too

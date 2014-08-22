@@ -27,8 +27,8 @@ if (!localStorage.version){
 	}
 
 
-var taskEnvironments = getEnvironments();
-var agentPrograms = getAgentPrograms();
+var taskEnvironments;
+var agentPrograms;
 var trials;
 
 var _KEYBOAR_MAP = ["","","","CANCEL","","","HELP","","BACK_SPACE","TAB","","","CLEAR","ENTER","RETURN","","SHIFT","CONTROL","ALT","PAUSE","CAPS_LOCK","KANA","EISU","JUNJA","FINAL","HANJA","","ESCAPE","CONVERT","NONCONVERT","ACCEPT","MODECHANGE","SPACE","PAGE_UP","PAGE_DOWN","END","HOME","LEFT","UP","RIGHT","DOWN","SELECT","PRINT","EXECUTE","PRINTSCREEN","INSERT","DELETE","","0","1","2","3","4","5","6","7","8","9","COLON","SEMICOLON","LESS_THAN","EQUALS","GREATER_THAN","QUESTION_MARK","AT","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","WIN","","CONTEXT_MENU","","SLEEP","NUMPAD0","NUMPAD1","NUMPAD2","NUMPAD3","NUMPAD4","NUMPAD5","NUMPAD6","NUMPAD7","NUMPAD8","NUMPAD9","MULTIPLY","ADD","SEPARATOR","SUBTRACT","DECIMAL","DIVIDE","F1","F2","F3","F4","F5","F6","F7","F8","F9","F10","F11","F12","F13","F14","F15","F16","F17","F18","F19","F20","F21","F22","F23","F24","","","","","","","","","NUM_LOCK","SCROLL_LOCK","WIN_OEM_FJ_JISHO","WIN_OEM_FJ_MASSHOU","WIN_OEM_FJ_TOUROKU","WIN_OEM_FJ_LOYA","WIN_OEM_FJ_ROYA","","","","","","","","","","CIRCUMFLEX","EXCLAMATION","DOUBLE_QUOTE","HASH","DOLLAR","PERCENT","AMPERSAND","UNDERSCORE","OPEN_PAREN","CLOSE_PAREN","ASTERISK","PLUS","PIPE","HYPHEN_MINUS","OPEN_CURLY_BRACKET","CLOSE_CURLY_BRACKET","TILDE","","","","","VOLUME_MUTE","VOLUME_DOWN","VOLUME_UP","","","","","COMMA","","PERIOD","SLASH","BACK_QUOTE","","","","","","","","","","","","","","","","","","","","","","","","","","","OPEN_BRACKET","BACK_SLASH","CLOSE_BRACKET","QUOTE","","META","ALTGR","","WIN_ICO_HELP","WIN_ICO_00","","WIN_ICO_CLEAR","","","WIN_OEM_RESET","WIN_OEM_JUMP","WIN_OEM_PA1","WIN_OEM_PA2","WIN_OEM_PA3","WIN_OEM_WSCTRL","WIN_OEM_CUSEL","WIN_OEM_ATTN","WIN_OEM_FINISH","WIN_OEM_COPY","WIN_OEM_AUTO","WIN_OEM_ENLW","WIN_OEM_BACKTAB","ATTN","CRSEL","EXSEL","EREOF","PLAY","ZOOM","","PA1","WIN_OEM_CLEAR",""];
@@ -76,6 +76,25 @@ function getTrials(){return localStorage.trials? JSON.parse(localStorage.trials)
 function saveTrials(trials){localStorage.trials = JSON.stringify(trials)}
 function clearTrials(){localStorage.removeItem("trials")}
 
+function removeTaskEnvironmentTrials(task_env_id){
+	var _trials = getTrials();
+	for (var i=_trials.length; i--;)
+		if (_trials[i].task_env_id == task_env_id)
+			_trials.remove(i);
+	saveTrials(_trials);
+}
+
+function removeAgentProgramTrials(agent_program_id){
+	var _trials = getTrials();
+	for (var i=_trials.length; i--;)
+		for (var j=_trials[i].agents.length; j--;)
+			if (_trials[i].agents[j].program_id == agent_program_id){
+				_trials.remove(i);
+				break;
+			}
+	saveTrials(_trials);
+}
+
 function isTaskEnvironmentTrialsEmpty(task_env_id){
 	var _trials = getTrials();
 	for (var i=_trials.length; i--;)
@@ -103,6 +122,14 @@ function getEnvironmentByDate(date){date=parseInt(date);
 	return (i != -1)? taskEnvironments[i] : null;
 }
 
+function removeEnvironmentByDate(date){date=parseInt(date);
+	var i = getEnvironmentIndexByDate(date);
+	if (i != -1){
+		taskEnvironments.remove(i);
+		saveEnvironments();
+	}
+}
+
 //TODO: bisection
 function getAgentProgramIndexByDate(date){date=parseInt(date);
 	for (var i = agentPrograms.length; i--;)
@@ -115,7 +142,13 @@ function getAgentProgramByDate(date){date=parseInt(date);
 	var i = getAgentProgramIndexByDate(date);
 	return (i != -1)? agentPrograms[i] : null;
 }
-
+function removeAgentProgramByDate(date){date=parseInt(date);
+	var i = getAgentProgramIndexByDate(date);
+	if (i != -1){
+		agentPrograms.remove(i);
+		saveAgentPrograms();
+	}
+}
 function getKnobs(){return localStorage.knobs? JSON.parse(localStorage.knobs) : null}
 function saveKnobs(env, test){
 	if (test) env.trial.test= true; //default trial (test trial)
@@ -127,7 +160,30 @@ function getConfig(){return localStorage.config? JSON.parse(localStorage.config)
 function saveConfig(config){localStorage.config = JSON.stringify(config)}
 function clearConfig(){localStorage.removeItem("config")}
 
+function getMemoryByAgentProgramID(id){
+	if (localStorage.memory)
+		return JSON.parse(localStorage.memory)[id];
+	return undefined;
+}
 
+function removeMemoryByAgentProgramID(id){
+	if (localStorage.memory){
+		var mem = JSON.parse(localStorage.memory);
+		delete mem[id];
+		localStorage.memory = JSON.stringify(mem);
+	}
+}
+
+function saveMemoryByAgentProgramID(id, memory){
+	var mem = {};
+
+	if (localStorage.memory)
+		mem = JSON.parse(localStorage.memory);
+
+	mem[id] = JSON.parse(memory);
+
+	localStorage.memory = JSON.stringify(mem);
+}
 
 var _tworldWindow;
 function startTWorld(){
@@ -138,183 +194,8 @@ function startTWorld(){
 	_tworldWindow.focus();
 }
 
-
-
-
 function gotoTop(){
 	$('html, body').animate({
 		scrollTop: $("#top").offset().top
 	}, 1000, "easeOutExpo")
-}
-
-function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
-	var _selected = -1;
-
-	$scope.items = items;
-	$scope.orderCond = "-date";
-	$scope.environments = !agentProgramsFlag;
-	$scope.page = 1
-	$scope.itemsPerPage = 15;
-	$scope.query = agentProgramsFlag?
-				{
-					name:"",
-					ai:true,
-					javascript:true,
-					keyboard:true,
-					allProps: true,
-				}
-				:
-				{
-					name:"",
-					allProps: true,
-					battery: false,
-					prop: {
-						fullyObservable: true,
-						multiagent: false,
-						deterministic: true,
-						dynamic: 0, //0 static; 1 semidynamic; 2 dynamic
-						known: true
-					}
-				};
-
-	$scope.text = {
-		title: agentProgramsFlag? "Select An Agent Program" : "Select A Task Environment",
-		filter: agentProgramsFlag? "Only Agent Programs that are:" : "Only Task environments that are:"
-	}
-
-	$scope.gotoTop = function(){
-		$('.modal').animate({
-			scrollTop: 0
-		}, 1000, "easeOutExpo")
-	}
-
-	$scope.ok = function () {$modalInstance.close(_selected)};
-	$scope.close = function () {$modalInstance.dismiss()};
-
-	$scope.setSelected = function(value){_selected = value}
-	$scope.isSelected = function(value){return _selected == value}
-	$scope.userFilter = function(item){
-		var regEx = new RegExp($scope.query.name,"i");
-
-		if (agentProgramsFlag){
-			var q = $scope.query;
-			return regEx.test(item.name) && (
-					$scope.query.allProps ||
-					(
-						q.ai == item.ai && (
-							(q.ai && q.javascript == item.javascript)
-							||
-							(!q.ai && q.keyboard == item.keyboard)
-						)
-					)
-				);
-		}else{
-			var p = $scope.query.prop;
-			return regEx.test(item.name) && (
-					$scope.query.allProps ||
-					(
-						$scope.query.battery == item.battery &&
-						p.fullyObservable == item.prop.fullyObservable &&
-						p.multiagent == item.prop.multiagent &&
-						p.deterministic == item.prop.deterministic &&
-						p.dynamic == item.prop.dynamic &&
-						p.known == item.prop.known
-					)
-			);
-		}
-	}
-};
-
-function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs){
-	var nAgents = 0;
-	$scope.task_env = taskEnv;
-	$scope.agents = $scope.task_env.trial.agents;
-	$scope.teams = new Array(taskEnv.teams.length);
-	$scope.cameras = _CAMERA_TYPE;
-
-	$scope.run = function () {
-		$scope.task_env.trial.agents = $scope.agents;
-		$scope.task_env.trial.test= false;
-
-		saveKnobs($scope.task_env);
-		saveEnvironments();//saveEnvironment(taskEnv)
-
-		startTWorld();
-		$modalInstance.close()
-	};
-	$scope.close = function () {$modalInstance.dismiss()};
-
-	$scope.singleTeam = function(){return $scope.task_env.teams.length === 1}
-	$scope.singleAgent = function(){return !$scope.task_env.prop.multiagent}
-
-	$scope.selectAgentProgram = function(agent_id){
-		var modalInstance = $modal.open({
-				size: 'lg',//size,
-				templateUrl: 'items-list-modal.html',
-				controller: itemsListController,
-				resolve:{
-					items:function(){return getAgentPrograms()},
-					agentProgramsFlag:function(){return true}
-				}
-			});
-
-		modalInstance.result.then(
-			function (agent_program_id) {
-				if (!$scope.agents[agent_id].program || $scope.agents[agent_id].program.date != agent_program_id)
-					$scope.agents[agent_id].program = getAgentProgramByDate(agent_program_id); 
-			}
-		);
-	}
-
-	//updating previously saved list of agents and teams (from the last execution)
-	for (var a=$scope.agents.length; a--;)
-		if ($scope.agents[a].program)
-			$scope.agents[a].program = getAgentProgramByDate($scope.agents[a].program.date)
-
-	//initializing list of agents and teams
-	for (var elen=taskEnv.teams.length, t=0; t < elen; ++t){
-		$scope.teams[t] = new Array(taskEnv.teams[t].members)
-		for (var tlen=$scope.teams[t].length, m=0; m < tlen; ++m, ++nAgents){
-			if ($scope.agents.length <= nAgents)
-				$scope.agents.push(null);
-
-			if (!$scope.agents[nAgents])
-				$scope.agents[nAgents] = {
-					team: t,
-					id: nAgents,
-					program: agentProgs[nAgents]
-				};
-			else
-				if (agentProgs[nAgents])
-					$scope.agents[nAgents].program = agentProgs[nAgents];
-
-			$scope.teams[t][m] = $scope.agents[nAgents];
-		}
-	}
-	//updating number of agents (in case user has edited the task envitonment)
-	$scope.agents.length = nAgents;
-}
-
-function yesNoModalController($scope, $modal, $modalInstance, title, msg){
-	$scope.title = title;
-	$scope.msg = msg;
-	$scope.ok = function(){$modalInstance.close()};
-	$scope.close = function () {$modalInstance.dismiss()};
-}
-
-function readKeyController($scope, $modal, $modalInstance){
-	function _keyDownHandler(e){
-		if ($modalInstance)
-			$modalInstance.close(e.keyCode);
-		$(document).unbind('keydown', _keyDownHandler);
-	}
-
-	$(document).keydown(_keyDownHandler);
-}
-
-function settingsModalController($scope, $modal, $modalInstance){
-
-	$scope.save = function(){$modalInstance.close()};
-	$scope.cancel = function () {$modalInstance.dismiss()};
-
 }

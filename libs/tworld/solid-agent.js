@@ -34,7 +34,12 @@ var alert = function(msg){
 	$return(_ACTION.CONSOLE_LOG + msg);
 }
 //console guard
-var console = {};
+//console guard
+try{
+	console.clear();
+	var _console = console;
+	console = {};
+ }catch(e){ var console = {} };
 console.error = function(msg){ $return(_ACTION.CONSOLE_ERROR + msg)}
 console.clear = function(msg){ $return(_ACTION.CONSOLE_CLEAR)}
 console.log = alert;
@@ -60,22 +65,23 @@ var __AgentProgram__;
 var __onMessageReceived__;
 var __onStart__;
 
-var $m = {};
-var $memory = $m;
-var $persistent = $m;
+var $m;
+var $memory;
+var $persistent;
 
 function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 	percept = percept.data;
 
 	switch(percept.header){
 		case _PERCEPT_HEADER.INTERNAL:
+			$memory= $persistent= $m= percept.data.memory || {};
 			eval(
 				"(function(){"+
 					percept.data.global_src+
 
 					"(function(){"+
 						percept.data.ai_src
-							.replace(/(\$(return|perceive)\s*\(.*\))/g, "{$1;return}")
+							.replace(/(\$(return|perceive)\s*\([^;}]*\)[^}]?)/g, "{$1;return}")
 						+"\
 						__AgentProgram__= AGENT_PROGRAM\
 					})();"+
@@ -114,6 +120,7 @@ function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 			break;
 
 		case _PERCEPT_HEADER.END:
+			$return(_ACTION._SAVE_MEMORY_ + JSON.stringify($memory))
 			self.close();
 			break;
 

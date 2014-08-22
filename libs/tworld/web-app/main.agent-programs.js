@@ -16,7 +16,7 @@
 * You should have received a copy of the GNU Affero General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-var _editor;
+
 (function(){
 	var mod = angular.module('tworldAgentPrograms', []);
 
@@ -85,6 +85,8 @@ var _editor;
 					}
 				}).result.then(
 					function (id) {
+						taskEnvironments = getEnvironments();
+						agentPrograms = getAgentPrograms();
 						$modal.open({
 							size: 'lg',//size,
 							templateUrl: 'run-modal.html',
@@ -117,10 +119,16 @@ var _editor;
 		}
 
 		function _remove(){
-			for (var t=agentPrograms.length; t--;)
-				if (agentPrograms[t].date == _selected)
-					agentPrograms.remove(t);
-			saveAgentPrograms();
+			_self.agentPrograms = agentPrograms = getAgentPrograms();
+
+			//remove trials
+			removeAgentProgramTrials(_selected);
+
+			//remove memory
+			removeMemoryByAgentProgramID(_selected);
+
+			//remove from list
+			removeAgentProgramByDate(_selected);
 		}
 	}]);
 
@@ -128,7 +136,10 @@ var _editor;
 		function($scope, $routeParams, $modal, $location){
 			var _self = this;
 			var _source;
-			//var _editor;
+			var _editor;
+
+			taskEnvironments = getEnvironments();
+			agentPrograms = getAgentPrograms();
 
 			ace.require("ace/ext/language_tools");
 			_editor = ace.edit("source-code");
@@ -180,7 +191,7 @@ var _editor;
 
 				_self.saved = true;
 
-				saveAgentPrograms()
+				saveAgentPrograms() //saveAgentProgram(_self.agent_prog)
 			}
 
 			this.run = function(){
@@ -218,6 +229,7 @@ var _editor;
 				})
 				.result.then(
 					function (id) {
+						taskEnvironments = getEnvironments();
 						if (!_self.task_env && run){
 							_self.task_env = getEnvironmentByDate(id);
 							_self.openRunModal();

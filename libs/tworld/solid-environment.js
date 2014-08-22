@@ -799,7 +799,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			//--------------------------------------------------------------------------------------> _saveStats
 			function _saveStats(result){if (_SAVE_STATS){
-				var trials = [], tmp = [],
+				var trials,
 					trial={
 						date: Date.now(),
 						task_env_id: _KNOBS.date,
@@ -823,10 +823,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 					};
 				}
 
-				if (localStorage.trials)
-					trials = JSON.parse(localStorage.trials);
+				trials = getTrials();
 				trials.push(trial);
-				localStorage.trials = JSON.stringify(trials);
+				saveTrials(trials);
 			}}
 
 			//--------------------------------------------------------------------------------------> _checkIfGameOver
@@ -1245,7 +1244,7 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 			{matchs = action.match(_ACTION_REGEX.CONSOLE_ERROR);
 			console.error(
 				(_NUMBER_OF_AGENTS > 1? "agent "+_index : "") +
-				"(" + _AGENTS[rIndex].NAME + "): " +
+				"(" + _AGENTS[_index].NAME + "): " +
 				(matchs[3] || matchs[4])
 			)}
 		else
@@ -1254,7 +1253,7 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 			{matchs = action.match(_ACTION_REGEX.CONSOLE_LOG);
 			console.log(
 				(_NUMBER_OF_AGENTS > 1? "agent "+_index : "") +
-				"("+ _AGENTS[rIndex].NAME + "): " +
+				"("+ _AGENTS[_index].NAME + "): " +
 				(matchs[3] || matchs[4])
 			)}
 		else
@@ -1277,8 +1276,14 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 			_setReady(false);
 			if (_Running)
 				console.error((_NUMBER_OF_AGENTS > 1? "agent "+_index : "") +
-					"(" + _AGENTS[rIndex].NAME + "): Program Agent was closed by the other side"
+					"(" + _AGENTS[_index].NAME + "): Program Agent was closed by the other side"
 				)}
+		else
+		//case _ACTION._SAVE_MEMORY_
+		if ( _ACTION_REGEX._SAVE_MEMORY_.test(action) )
+			{matchs = action.match(_ACTION_REGEX._SAVE_MEMORY_);
+			if ((matchs[3]||matchs[4]) != "{}")
+				saveMemoryByAgentProgramID(_KNOBS_Agents[_index].program.date, (matchs[3]||matchs[4]))}
 		//case INVALID ACTION
 		else{
 			_percept.header = _PERCEPT_HEADER.ERROR;
@@ -1298,17 +1303,18 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 	if (!isSocket){
 		_percept.header = _PERCEPT_HEADER.INTERNAL;
 		_percept.data = {
-			ai_src: _AGENTS[rIndex].AI_SOURCE_CODE,
-			msg_src: _AGENTS[rIndex].TEAM_MSG_SOURCE_CODE,
-			start_src: _AGENTS[rIndex].START_SOURCE_CODE,
-			global_src:_AGENTS[rIndex].GLOBAL_SOURCE_CODE
+			ai_src: _AGENTS[_index].AI_SOURCE_CODE,
+			msg_src: _AGENTS[_index].TEAM_MSG_SOURCE_CODE,
+			start_src: _AGENTS[_index].START_SOURCE_CODE,
+			global_src:_AGENTS[_index].GLOBAL_SOURCE_CODE,
+			memory: _AGENTS[_index].MEMORY
 		}
 		_agentProgram.postMessage( _percept );
 	}
 
 	_agentProgram.onmessage = _agentProgramActionReceived;
 
-	_agentProgram.onopen = function(){_agentProgram.send("CONNECT:"+_AGENTS[rIndex].SOCKET_PROGRAM_AGENT.MAGIC_STRING)}
+	_agentProgram.onopen = function(){_agentProgram.send("CONNECT:"+_AGENTS[_index].SOCKET_PROGRAM_AGENT.MAGIC_STRING)}
 
 	_agentProgram.onerror = function(event){
 		if (isSocket)

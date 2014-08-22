@@ -112,10 +112,13 @@
 		}
 
 		function _remove(){
-			for (var t=taskEnvironments.length; t--;)
-				if (taskEnvironments[t].date == _selected)
-					taskEnvironments.remove(t);
-			saveEnvironments();
+			_self.taskEnvironments = taskEnvironments = getEnvironments();
+
+			//remove trials
+			removeTaskEnvironmentTrials(_selected);
+
+			//remove from list
+			removeEnvironmentByDate(_selected);
 		}
 
 	}]);
@@ -270,25 +273,23 @@
 			{end_game_conditions.push(taskEnvironment.environment.final_state.remove(index))}
 
 			this.openEndConditionsModal = function(size){
-				var modalInstance = $modal.open({
-						size: size,
-						templateUrl: 'end-game-cond.html',
-						controller: function($scope, $modalInstance){
-										$scope.end_game_cond = end_game_conditions;
-										$scope.ok = function (index) {$modalInstance.close(index)};
-										$scope.cancel = function () {$modalInstance.dismiss()};
-										$scope.visible = function(cond){
-											if (taskEnvironment.battery)
-												return true;
-											return cond.name.toLowerCase().indexOf("battery") < 0;
-										}
+				$modal.open({
+					size: size,
+					templateUrl: 'end-game-cond.html',
+					controller: function($scope, $modalInstance){
+									$scope.end_game_cond = end_game_conditions;
+									$scope.ok = function (index) {$modalInstance.close(index)};
+									$scope.cancel = function () {$modalInstance.dismiss()};
+									$scope.visible = function(cond){
+										if (taskEnvironment.battery)
+											return true;
+										return cond.name.toLowerCase().indexOf("battery") < 0;
 									}
-					});
-
-				modalInstance.result
-					.then(
-						function (index) {taskEnvironment.environment.final_state.push(end_game_conditions.remove(index))}
-					);
+								}
+				})
+				.result.then(
+					function (index) {taskEnvironment.environment.final_state.push(end_game_conditions.remove(index))}
+				);
 			}
 
 			//PROBABILITY DISTRIBUTION
@@ -309,7 +310,7 @@
 							  $scope.TEST = v;
 							});
 							*/
-							$scope.ok = function (index) {$modalInstance.close()};
+							$scope.ok = function () {$modalInstance.close()};
 							$scope.cancel = function () {$modalInstance.dismiss()};
 
 							$scope.slider_options = {

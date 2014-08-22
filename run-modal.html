@@ -10,7 +10,7 @@
 	<div class="row">
 		<div class="col-md-6" ng-repeat="team in teams track by $index">
 			<div class="panel panel-default">
-				<div class="panel-heading" ng-if="singleTeam() && !singleAgent()">Agents</div>
+				<div class="panel-heading" ng-if="singleTeam() && !singleAgent()">Agent Programs</div>
 				<div class="panel-heading" ng-if="!singleTeam()">
 					<img ng-src="copperlichtdata/color-{{task_env.teams[$index].color}}.png" height="32" style="margin-top:-16px">
 					{{task_env.teams[$index].name}}

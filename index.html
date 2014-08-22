@@ -2,6 +2,7 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="description" content="Web platform for Artificial Intelligence research and education. Put your algorithms through their paces! Content based on the book Artificial Intelligence: A Modern Approach by Stuart Russell and Peter Norvig. Inspired by the Tileworld by Martha E. Pollack and Marc Ringuette"> 
 	<title>T-World</title>
 	<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="libs/jquery/css/jquery-ui.min.css" />
@@ -19,6 +20,7 @@
 			<span class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-100px; left:0">
 				<h1>T-World</h1>
 				<p ng-bind-html="twc.text.desc"></p>
+				<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="mailto:sergio.burdisso@gmail.com" tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a>.</h5>
 				<h5 class="pull-right header" style="color:white"><span ng-bind-html="twc.text.martha_marc"></span></h5>
 			</span>
 		</div>
@@ -60,7 +62,7 @@
 				<img style="border-width:0" src="imgs/web-app/sa.png" width="32"/>
 			</a><br>
 			<span ng-bind-html="twc.text.cc"></span><br><br>
-			<span id="copyright" style="display:block; text-align: right;">&copy; <a href="mailto:sergio.burdisso@gmail.com">Burdisso Sergio</a></span>
+			<span id="copyright" style="display:block; text-align: right;">&copy; <a href="mailto:sergio.burdisso@gmail.com">Sergio Burdisso</a></span>
 		</p>
 		<p class="pull-right" style="width: 300px; margin-right: 50px;">
 			<a rel="license" href="http://www.gnu.org/licenses/agpl-3.0.html" alt="GNU AGPL">
@@ -97,6 +99,7 @@
 <script src="libs/ace/snippets/javascript.js" type="text/javascript" charset="utf-8"></script>
 
 <script type="text/javascript" src="libs/tworld/web-app/main.$global.js"></script>
+<script type="text/javascript" src="libs/tworld/web-app/main.$global.controllers.js"></script>
 <script type="text/javascript" src="libs/tworld/web-app/main.$text.js"></script>
 <script type="text/javascript" src="libs/tworld/web-app/main.js"></script>
 <script type="text/javascript" src="libs/tworld/web-app/main.menu.$text.js"></script>

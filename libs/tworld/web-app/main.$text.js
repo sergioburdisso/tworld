@@ -26,15 +26,19 @@ $text.main.ccLicense[_LANGUAGES.ENGLISH] = 'Except where otherwise noted, all mu
 $text.main.ccLicense[_LANGUAGES.SPANISH] = 'Excepto cuando se indique lo contrario, toda el material multimedia est&aacute; sujeta a una <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licencia Creative Commons Atribuci&oacute;n-NoComercial-CompartirIgual 4.0 Internacional.</a>';
 
 $text.main.agplLicense = {}
-$text.main.agplLicense[_LANGUAGES.ENGLISH] = '<a href="#">This work</a> is free software, you can redistribute it and/or modify it under the terms of the GNU AGPL License <a rel="license" target="_blank" href="http://www.gnu.org/licenses/agpl-3.0.html">(Affero General Public License)</a>';
-$text.main.agplLicense[_LANGUAGES.SPANISH] = '<a href="#">Este trabajo</a> es software libre, puedes redistribuirlo y/o modificarlo bajo los t&eacute;rminos de la <a rel="license" target="_blank" href="http://www.gnu.org/licenses/agpl-3.0.html">Licencia AGPL de GNU</a>';
+$text.main.agplLicense[_LANGUAGES.ENGLISH] = '<a href="https://code.google.com/p/t-world/" target="_blank">This work</a> is free software, you can redistribute it and/or modify it under the terms of the GNU AGPL License <a rel="license" target="_blank" href="http://www.gnu.org/licenses/agpl-3.0.html">(Affero General Public License)</a>';
+$text.main.agplLicense[_LANGUAGES.SPANISH] = '<a href="https://code.google.com/p/t-world/" target="_blank">Este trabajo</a> es software libre, puedes redistribuirlo y/o modificarlo bajo los t&eacute;rminos de la <a rel="license" target="_blank" href="http://www.gnu.org/licenses/agpl-3.0.html">Licencia AGPL de GNU</a>';
 
 $text.main.description = {};
 $text.main.description[_LANGUAGES.ENGLISH] = "Web platform for Artificial Intelligence research and education.<br>(Put your algorithms through their paces!)";
 $text.main.description[_LANGUAGES.SPANISH] = "Plataforma web para la investigaci&oacute;n y el aprendizaje de Inteligencia Artificial &iexcl;Pon a prueba tus algoritmos!";
 
+$text.main.author = {}
+$text.main.author[_LANGUAGES.ENGLISH] = 'A creation of ';
+$text.main.author[_LANGUAGES.SPANISH] = 'Una craci&oacute;n de';
+
 $text.main.martha_marc = {};
-$text.main.martha_marc[_LANGUAGES.ENGLISH] =	'Based on the book <a href="http://aima.cs.berkeley.edu/" target="_blank">Artificial Intelligence: A Modern Approach</a> by Stuart Russell and Peter Norvig.<br>'+
+$text.main.martha_marc[_LANGUAGES.ENGLISH] =	'Content based on the book <a href="http://aima.cs.berkeley.edu/" target="_blank">Artificial Intelligence: A Modern Approach</a> by Stuart Russell and Peter Norvig.<br>'+
 												'Inspired by <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">the Tileworld</a> by Martha E. Pollack and Marc Ringuette.';
-$text.main.martha_marc[_LANGUAGES.SPANISH] =	'Basado en el libro <a href="http://aima.cs.berkeley.edu/" target="_blank">Artificial Intelligence: A Modern Approach</a> de Stuart Russell y Peter Norvig.<br>'+
-												'Inspirado en el <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">Tileworld de Martha E. Pollack and Marc Ringuette</a>.';
+$text.main.martha_marc[_LANGUAGES.SPANISH] =	'Dise&ntilde;ado seg&uacute;n los conceptos del libro <a href="http://aima.cs.berkeley.edu/" target="_blank">Artificial Intelligence: A Modern Approach</a>.<br>'+
+												'Inspirado en <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">el Tileworld</a> de Martha E. Pollack and Marc Ringuette.<br>';

@@ -128,6 +128,7 @@
 					controllerAs: 'enc',
 					resolve:{
 						taskEnv : function($route){ 
+							taskEnvironments = getEnvironments();
 							return clone(getEnvironmentByDate($route.current.params.id))
 						}
 					}
@@ -143,6 +144,7 @@
 					controllerAs: 'apnc',
 					resolve:{
 						agentProg:function($route){
+						agentPrograms = getAgentPrograms();
 						return clone(getAgentProgramByDate($route.current.params.id))
 						}
 					}
@@ -245,8 +247,6 @@
 							this.LANGUAGES.ENGLISH/*this.LANGUAGES.SPANISH*/ :
 							this.LANGUAGES.ENGLISH;
 			this.text = {menu:{}};
-			this.taskEnvironments = taskEnvironments;
-			this.agentPrograms = agentPrograms;
 
 			this.gotoTop = gotoTop;
 			this.goto = function(path){
@@ -267,6 +267,7 @@
 
 			this.setLanguage = function(){
 				this.text.desc			= $sce.trustAsHtml($text.main.description[ this.language ]);
+				this.text.author		= $sce.trustAsHtml($text.main.author[ this.language ]);
 				this.text.martha_marc	= $sce.trustAsHtml($text.main.martha_marc[ this.language ]);
 				this.text.cc			= $sce.trustAsHtml($text.main.ccLicense[ this.language ]);
 				this.text.agpl			= $sce.trustAsHtml($text.main.agplLicense[ this.language ]);
