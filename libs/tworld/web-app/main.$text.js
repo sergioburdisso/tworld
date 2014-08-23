@@ -30,8 +30,8 @@ $text.main.agplLicense[_LANGUAGES.ENGLISH] = '<a href="https://code.google.com/p
 $text.main.agplLicense[_LANGUAGES.SPANISH] = '<a href="https://code.google.com/p/t-world/" target="_blank">Este trabajo</a> es software libre, puedes redistribuirlo y/o modificarlo bajo los t&eacute;rminos de la <a rel="license" target="_blank" href="http://www.gnu.org/licenses/agpl-3.0.html">Licencia AGPL de GNU</a>';
 
 $text.main.description = {};
-$text.main.description[_LANGUAGES.ENGLISH] = "Web platform for Artificial Intelligence research and education.<br>(Put your algorithms through their paces!)";
-$text.main.description[_LANGUAGES.SPANISH] = "Plataforma web para la investigaci&oacute;n y el aprendizaje de Inteligencia Artificial &iexcl;Pon a prueba tus algoritmos!";
+$text.main.description[_LANGUAGES.ENGLISH] = "Cross programming language Web platform for Artificial Intelligence research and education.<br>(Put your algorithms through their paces!)";
+$text.main.description[_LANGUAGES.SPANISH] = "Plataforma web multilenguaje para la investigaci&oacute;n y el aprendizaje de Inteligencia Artificial &iexcl;Pon a prueba tus algoritmos!";
 
 $text.main.author = {}
 $text.main.author[_LANGUAGES.ENGLISH] = 'A creation of ';

@@ -65,7 +65,8 @@ td input{text-align: center}
 	width: 100%;
 }
 
-.header a, .footer a{color: rgb(187, 221, 187)}
+.header a{color: rgb(183, 235, 255)}
+.footer a{color: rgb(187, 221, 187)}
 .header a:hover, .footer a:hover{color: white}
 
 .loading {
@@ -131,7 +132,7 @@ td input{text-align: center}
 }
 
 .sett-item:hover{color:initial}
-.sett-item.active{font-weight:bold; margin-right: 100px;}
+.sett-item.active{font-weight:bold; margin-right: 80px;}
 
 .margin-10{margin: 10px}
 .text-light-green{color: rgb(187, 221, 187)}

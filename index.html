@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<meta name="description" content="Web platform for Artificial Intelligence research and education. Put your algorithms through their paces! Content based on the book Artificial Intelligence: A Modern Approach by Stuart Russell and Peter Norvig. Inspired by the Tileworld by Martha E. Pollack and Marc Ringuette"> 
+	<meta name="description" content="Cross programming language Web platform for Artificial Intelligence research and education. Put your algorithms through their paces! Content based on the book Artificial Intelligence: A Modern Approach by Stuart Russell and Peter Norvig. Inspired by the Tileworld by Martha E. Pollack and Marc Ringuette"> 
 	<title>T-World</title>
 	<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="libs/jquery/css/jquery-ui.min.css" />
@@ -17,7 +17,7 @@
 			<div id="h-img-0" style="position:fixed; width:100%; height:493px; background: url(imgs/web-app/header0.png) center; z-index:-1"></div>
 		</div>
 		<div class="jumbotron container-fluid shadow-inset" style="background-color: transparent; margin-bottom: 0; height: 492px;">
-			<span class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-100px; left:0">
+			<span class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-70px; left:0">
 				<h1>T-World</h1>
 				<p ng-bind-html="twc.text.desc"></p>
 				<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="mailto:sergio.burdisso@gmail.com" tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a>.</h5>
@@ -71,175 +71,185 @@
 			<span ng-bind-html="twc.text.agpl"></span>.<br>
 		</p>
 		<a href="http://www.w3.org/html/logo/" target="_blank">
-			<img src="imgs/web-app/html5-badge-h-connectivity-css3-graphics-multimedia-performance-storage.png" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, Semantics, and Offline &amp; Storage"  data-toggle="tooltip" data-placement="right" title="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, Semantics, and Offline &amp; Storage">
+			<img src="imgs/web-app/html5-badge-h-connectivity-css3-graphics-multimedia-performance-storage.png" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, and Offline &amp; Storage"  tooltip="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, and Offline &amp; Storage">
 		</a>
 	</div>
 
-<script type="text/javascript" src="libs/jquery/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="libs/jquery/jquery-ui.min.js"></script>
-<script type="text/javascript" src="libs/angularjs/angular.min.js"></script>
-<script type="text/javascript" src="libs/angularjs/angular-route.min.js"></script>
-<script type="text/javascript" src="libs/angularjs/angular-animate.min.js"></script>
-<script type="text/javascript" src="libs/angularjs/ui-bootstrap-0.11.0.min.js"></script>
-<script type="text/javascript" src="libs/angularjs/ui-bootstrap-tpls-0.11.0.min.js"></script>
-<script type="text/javascript" src="libs/angularjs/ui-slider.js"></script>
+	<script type="text/javascript" src="libs/jquery/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="libs/jquery/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="libs/angularjs/angular.min.js"></script>
+	<script type="text/javascript" src="libs/angularjs/angular-route.min.js"></script>
+	<script type="text/javascript" src="libs/angularjs/angular-animate.min.js"></script>
+	<script type="text/javascript" src="libs/angularjs/ui-bootstrap-0.11.0.min.js"></script>
+	<script type="text/javascript" src="libs/angularjs/ui-bootstrap-tpls-0.11.0.min.js"></script>
+	<script type="text/javascript" src="libs/angularjs/ui-slider.js"></script>
 
-<script type="text/javascript" src="libs/solid/solid-vector.js"></script>
-<script type="text/javascript" src="libs/solid/solid-bot.js"></script>
-<script type="text/javascript" src="libs/solid/solid-bots.js"></script>
+	<script type="text/javascript" src="libs/solid/solid-vector.js"></script>
+	<script type="text/javascript" src="libs/solid/solid-bot.js"></script>
+	<script type="text/javascript" src="libs/solid/solid-bots.js"></script>
 
-<script type="text/javascript" src="libs/tworld/solid-global.js"></script>
+	<script type="text/javascript" src="libs/tworld/solid-global.js"></script>
 
-<script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/ace/theme-ambiance.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/ace/worker-javascript.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/ace/snippets/text.js" type="text/javascript" charset="utf-8"></script>
-<script src="libs/ace/snippets/javascript.js" type="text/javascript" charset="utf-8"></script>
+	<script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="libs/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+	<script src="libs/ace/theme-ambiance.js" type="text/javascript" charset="utf-8"></script>
+	<script src="libs/ace/worker-javascript.js" type="text/javascript" charset="utf-8"></script>
+	<script src="libs/ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+	<script src="libs/ace/snippets/text.js" type="text/javascript" charset="utf-8"></script>
+	<script src="libs/ace/snippets/javascript.js" type="text/javascript" charset="utf-8"></script>
 
-<script type="text/javascript" src="libs/tworld/web-app/main.$global.js"></script>
-<script type="text/javascript" src="libs/tworld/web-app/main.$global.controllers.js"></script>
-<script type="text/javascript" src="libs/tworld/web-app/main.$text.js"></script>
-<script type="text/javascript" src="libs/tworld/web-app/main.js"></script>
-<script type="text/javascript" src="libs/tworld/web-app/main.menu.$text.js"></script>
-<script type="text/javascript" src="libs/tworld/web-app/main.menu.js"></script>
-<script type="text/javascript" src="libs/tworld/web-app/main.environments.js"></script>
-<script type="text/javascript" src="libs/tworld/web-app/main.agent-programs.js"></script>
-<script type="text/javascript" src="libs/tworld/web-app/main.stats.js"></script>
+	<script type="text/javascript" src="libs/tworld/web-app/main.$global.js"></script>
+	<script type="text/javascript" src="libs/tworld/web-app/main.$global.controllers.js"></script>
+	<script type="text/javascript" src="libs/tworld/web-app/main.$text.js"></script>
+	<script type="text/javascript" src="libs/tworld/web-app/main.js"></script>
+	<script type="text/javascript" src="libs/tworld/web-app/main.menu.$text.js"></script>
+	<script type="text/javascript" src="libs/tworld/web-app/main.menu.js"></script>
+	<script type="text/javascript" src="libs/tworld/web-app/main.environments.js"></script>
+	<script type="text/javascript" src="libs/tworld/web-app/main.agent-programs.js"></script>
+	<script type="text/javascript" src="libs/tworld/web-app/main.stats.js"></script>
 
-<script type="text/ng-template" id="yes-no-modal.html">
-	<div class="modal-header">
-		<h3 class="modal-title top-shadow">
-			<span class="glyphicon glyphicon-exclamation-sign"></span> {{title}}
-		</h3>
-	</div>
-	<div class="modal-body text-center">{{msg}}</div>
-	<div class="modal-footer">
-		<button class="btn btn-default" ng-click="close()">Cancel</button>
-		<button class="btn btn-danger" ng-click="ok()">Yes</button>
-	</div>
-</script>
+	<script type="text/ng-template" id="yes-no-modal.html">
+		<div class="modal-header">
+			<h3 class="modal-title top-shadow">
+				<span class="glyphicon glyphicon-exclamation-sign"></span> {{title}}
+			</h3>
+		</div>
+		<div class="modal-body text-center">{{msg}}</div>
+		<div class="modal-footer">
+			<button class="btn btn-default" ng-click="close()">Cancel</button>
+			<button class="btn btn-danger" ng-click="ok()">Yes</button>
+		</div>
+	</script>
 
-<script type="text/ng-template" id="settings-modal.html">
-	<div class="modal-header"><h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-wrench"></span> Settings</h3></div>
-	<div class="modal-body">
-		<div class="row">
-			<div class="col-md-3 text-right">
-				<h4 class="sett-item cursor-pointer" ng-class="{active:isVideoTab()}" ng-click="setVideoTab()">Display</h4>
-				<h4 class="sett-item cursor-pointer" ng-class="{active:isAudioTab()}" ng-click="setAudioTab()">Audio</h4>
-				<h4 class="sett-item cursor-pointer" ng-class="{active:isGeneralTab()}" ng-click="setGeneralTab()" ng-if="false">General</h4>
-			</div>
+	<script type="text/ng-template" id="settings-modal.html">
+		<div class="modal-header"><h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-wrench"></span> Settings</h3></div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-3 text-right">
+					<h4 class="sett-item cursor-pointer" ng-class="{active:isVideoTab()}" ng-click="setVideoTab()">Display</h4>
+					<h4 class="sett-item cursor-pointer" ng-class="{active:isAudioTab()}" ng-click="setAudioTab()">Audio</h4>
+					<h4 class="sett-item cursor-pointer" ng-class="{active:isGeneralTab()}" ng-click="setGeneralTab()" ng-if="false">General</h4>
+				</div>
 
-			<div class="col-md-1"></div>
+				<div class="col-md-1"></div>
 
-			<div class="col-md-6 animate-only-show-3d-left" ng-show="isVideoTab()">
+				<div class="col-md-6 animate-only-show-3d-left" ng-show="isVideoTab()">
 
-				<div class="row"><h4>Quality</h4></div>
-				<div class="row"><div class="checkbox">
-					<label><input type="checkbox" ng-model="sett.display.lq_grid"> Low quality grid</label>
-				</div></div>
-				<div class="row"><div class="checkbox">
-					<label><input type="checkbox" ng-model="sett.display.lq_env"> Low quality environment</label>
-				</div></div>
+					<div class="row"><h4>Quality</h4></div>
+					<div class="row"><div class="checkbox">
+						<label><input type="checkbox" ng-model="sett.display.lq_grid"> Low quality grid</label>
+					</div></div>
+					<div class="row"><div class="checkbox">
+						<label><input type="checkbox" ng-model="sett.display.lq_env"> Low quality environment</label>
+					</div></div>
 
-				<br>
-				<div class="row"><h4>Resolution</h4></div>
-				<div class="row">
-					<div class="col-md-8 animate-show-3d-top" style="margin-left: -14px;">
-							<select class="form-control" ng-model="sett.display.resolution">
-								<option value="427x240">240p</option>
-								<option value="640x360">360p</option>
-								<option value="854x480">480p</option>
-								<option value="1280x720">720p (HD)</option>
-								<option value="1920x1080">1080p (Full HD)</option>
-								<option value="">Same as window</option>
-							</select>
+					<br>
+					<div class="row"><h4>Resolution</h4></div>
+					<div class="row">
+						<div class="col-md-8 animate-show-3d-top" style="margin-left: -14px;">
+								<select class="form-control" ng-model="sett.display.resolution">
+									<option value="427x240">240p</option>
+									<option value="640x360">360p</option>
+									<option value="854x480">480p</option>
+									<option value="1280x720">720p (HD)</option>
+									<option value="1920x1080">1080p (Full HD)</option>
+									<option value="">Same as window</option>
+								</select>
+						</div>
+					</div>
+					<div class="row"><div class="checkbox">
+						<label><input type="checkbox" ng-model="sett.display.cover_window"> Cover the whole window</label>
+					</div></div>
+
+					<br>
+					<div class="row"><h4>Misc</h4></div>
+					<div class="row"><div class="checkbox">
+						<label><input type="checkbox" ng-model="sett.display.show_fps"> Show fps</label>
+					</div></div>
+				</div>
+
+				<div class="col-md-6 animate-only-show-3d-left" ng-show="isAudioTab()">
+					<div class="row"><div class="checkbox">
+						<label><input type="checkbox" ng-model="sett.audio.enabled"> Enable audio</label>
+					</div></div>
+
+					<div class="animate-show-3d-top" ng-show="sett.audio.enabled">
+						<a class="list-group-item no-animation">
+							<label>volume {{sett.audio.volume}}%</label>
+							<div class="ui-slider-size" ui-slider min="0" max="100" ng-model="sett.audio.volume"></div>
+						</a>
 					</div>
 				</div>
-				<div class="row"><div class="checkbox">
-					<label><input type="checkbox" ng-model="sett.display.cover_window"> Always cover the whole window</label>
-				</div></div>
 
-				<br>
-				<div class="row"><h4>Misc</h4></div>
-				<div class="row"><div class="checkbox">
-					<label><input type="checkbox" ng-model="sett.display.show_fps"> Show fps</label>
-				</div></div>
-			</div>
-
-			<div class="col-md-6 animate-only-show-3d-left" ng-show="isAudioTab()">
-				<div class="row"><div class="checkbox">
-					<label><input type="checkbox" ng-model="sett.audio.enabled"> Enable audio</label>
-				</div></div>
-
-				<div class="animate-show-3d-top" ng-show="sett.audio.enabled">
-					<a class="list-group-item no-animation">
-						<label>volume {{sett.audio.volume}}%</label>
-						<div class="ui-slider-size" ui-slider min="0" max="100" ng-model="sett.audio.volume"></div>
-					</a>
+				<div class="col-md-6 animate-only-show-3d-left" ng-show="isGeneralTab()">
+					<span>Work in progress</span>
 				</div>
-			</div>
 
-			<div class="col-md-6 animate-only-show-3d-left" ng-show="isGeneralTab()">
-				<span>Work in progress</span>
 			</div>
 
 		</div>
+		<div class="modal-footer">
+			<button class="btn btn-default" ng-click="cancel()">Cancel</button>
+			<button class="btn btn-success" ng-click="save()">Save</button>
+		</div>
+	</script>
 
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
-		<button class="btn btn-success" ng-click="save()">Save</button>
-	</div>
-</script>
+	<script type="text/javascript">
+		var bots = null;
+		var mouseBot = [new SolidBot({location:new Vector(0,0)})];
+		window.requestAnimationFrame =	window.requestAnimationFrame ||
+																		window.mozRequestAnimationFrame ||
+																		window.webkitRequestAnimationFrame ||
+																		window.msRequestAnimationFrame;
 
-<script type="text/javascript">
-	var bots = null;
-	var mouseBot = [new SolidBot({location:new Vector(0,0)})];
-	window.requestAnimationFrame =	window.requestAnimationFrame ||
-																	window.mozRequestAnimationFrame ||
-																	window.webkitRequestAnimationFrame ||
-																	window.msRequestAnimationFrame;
+		$(document).ready(function(){
+			var img_i = 0;
+			var imgs_length = $("#header-images").children().length;
 
-	$(document).ready(function(){
-		var img_i = 0;
-		var imgs_length = $("#header-images").children().length;
-
-		function display(){
-			bots.flockAndFlee(mouseBot);
-			bots.display();
-			requestAnimationFrame(display);
-		}
-
-		$(document).mousemove(function(e){mouseBot[0].setLocation(e.pageX, e.pageY)})
-
-		$("#copyright").dblclick(function(){
-			if (!bots){
-				bots = new SolidBots({
-					$bots: $("#copyright"),
-					idDOMParent: document
-				});
+			function display(){
+				bots.flockAndFlee(mouseBot);
+				bots.display();
 				requestAnimationFrame(display);
 			}
-		});
 
-		function toggleHeaderImgs(){
-			if (img_i < imgs_length-1){
-				$("#h-img-"+(img_i+1)%imgs_length).show();
-				$("#h-img-"+img_i).animate({opacity: 0}, 1000, function(){$(this).hide()});
-			}else
-				for (var i=0; i < imgs_length-1; ++i){
-					$("#h-img-"+i).show().animate({opacity: 1}, 1000);
+			$(document).mousemove(function(e){mouseBot[0].setLocation(e.pageX, e.pageY)})
+
+			$("#copyright").dblclick(function(){
+				if (!bots){
+					bots = new SolidBots({
+						$bots: $("#copyright"),
+						idDOMParent: document
+					});
+					requestAnimationFrame(display);
 				}
+			});
 
-			img_i = (img_i+1)%imgs_length;
+			function toggleHeaderImgs(){
+				if (img_i < imgs_length-1){
+					$("#h-img-"+(img_i+1)%imgs_length).show();
+					$("#h-img-"+img_i).animate({opacity: 0}, 1000, function(){$(this).hide()});
+				}else
+					for (var i=0; i < imgs_length-1; ++i){
+						$("#h-img-"+i).show().animate({opacity: 1}, 1000);
+					}
 
+				img_i = (img_i+1)%imgs_length;
+
+				setTimeout(toggleHeaderImgs, 10000);
+			}
 			setTimeout(toggleHeaderImgs, 10000);
-		}
-		setTimeout(toggleHeaderImgs, 10000);
-	});
-</script>
+		});
+	</script>
+
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-54081225-1', 'auto');
+		ga('send', 'pageview');
+	</script>
 
 </body>
 </html>
