@@ -102,19 +102,19 @@ function TWorld(args) {
 		//region Public Methods
 			//--------------------------------------------------------------------------------------> createHoles
 			this.createHoles = function() {
-				var nHoles = uncertaintyMaker(TWorld.NumberOfHoles, TWorld.NumberOfHoles_UncertaintyThreshold);
+				var nHoles = UncertaintyMaker(TWorld.NumberOfHoles, TWorld.NumberOfHoles_UncertaintyThreshold);
 				for (var i = 0; i < nHoles; i++)
 					createHole(
-						uncertaintyMaker(TWorld.HoleSize, TWorld.HolesSize_UncertaintyThreshold),
-						uncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold)
+						UncertaintyMaker(TWorld.HoleSize, TWorld.HolesSize_UncertaintyThreshold),
+						UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold)
 					);
 			}
 
 			//--------------------------------------------------------------------------------------> createObstacles
 			this.createObstacles= function() {
-				var nObstacles = uncertaintyMaker(TWorld.NumberOfObstacles, TWorld.NumberOfObstacles_UncertaintyThreshold);
+				var nObstacles = UncertaintyMaker(TWorld.NumberOfObstacles, TWorld.NumberOfObstacles_UncertaintyThreshold);
 				for (var i = 0; i < nObstacles; i++)
-					createObstacle(uncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold)+1);
+					createObstacle(UncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold)+1);
 			}
 
 			//--------------------------------------------------------------------------------------> start
@@ -148,7 +148,7 @@ function TWorld(args) {
 						CallWithDelay.Enqueue(
 							createTile,
 							[
-							uncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
+							UncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
 							holeCells.getItemAt(i)[0],
 							holeCells.getItemAt(i)[1]
 							],
@@ -156,7 +156,7 @@ function TWorld(args) {
 						);
 					else
 						createTile(
-							uncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
+							UncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
 							holeCells.getItemAt(i)[0],
 							holeCells.getItemAt(i)[1]
 						);
@@ -195,11 +195,11 @@ function TWorld(args) {
 					node = stack.removeItemAt(stack.getLength()-1);
 
 					if (_environment.isAnEmptyCell(node[0], node[1]) && !_environment.isThereAHoleFilling(node[0], node[1])){
-						if (getManhattanDistance(node, rootCell) == tileDistance){
+						if (GetManhattanDistance(node, rootCell) == tileDistance){
 
 							return node;
 						}else
-							if (getManhattanDistance(node, rootCell) >= getManhattanDistance(altSolNode, rootCell)) {
+							if (GetManhattanDistance(node, rootCell) >= GetManhattanDistance(altSolNode, rootCell)) {
 								altSolNode = node;
 						}
 					}
@@ -212,7 +212,7 @@ function TWorld(args) {
 						for (var i= 0, suc; i < successors.length; i++){
 							suc = successors[i];
 
-							if (getManhattanDistance(suc, rootCell) <= tileDistance && !alreadyTested.contains(suc[0], suc[1]))
+							if (GetManhattanDistance(suc, rootCell) <= tileDistance && !alreadyTested.contains(suc[0], suc[1]))
 								stack.appendUnique(suc);
 						}
 					}

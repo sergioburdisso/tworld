@@ -144,8 +144,9 @@ Array.prototype.getObjectWith = function(objPattern) {
 //<-
 
 //-> improving Object class! XD
+
 //Object.nextProperty = function(prop){ <- JQuery crashes! dont know why
-function nextProperty(obj, prop){
+function NextProperty(obj, prop){
 	var prevProp = null;
 	for (p in obj)
 		if (!(obj[p] instanceof Function))
@@ -157,7 +158,43 @@ function nextProperty(obj, prop){
 }
 //<-
 
-function updateScreenResolution(width, height){
+function SortAndPartition(list, criteria){
+	var tiePartitions = [];
+	var oapList = [];// oap stands for "Ordered and Partitioned"
+
+	criteria = NextProperty(list[0].stats, criteria);
+
+	//recursion stopping condition
+	if (list.length <= 1 || !criteria)
+		return list;
+
+	//sorting the list according to criteria
+	if (criteria[0] == "M")
+		list.sort(function(a,b){return b.stats[criteria] - a.stats[criteria]});
+	else
+		list.sort(function(b,a){return b.stats[criteria] - a.stats[criteria]});
+
+	//creating partitions according to equal results (tied cases)
+	for (var prevValue = null, k=-1, i=0; i < list.length; i++)
+		if (list[i].stats[criteria] === prevValue)
+			tiePartitions[k].push(list[i]);
+		else{
+			//creating a new partition of "equal values"
+			tiePartitions.push([list[i]]);
+			prevValue = list[i].stats[criteria];
+			k++;
+		}
+
+	//for each partition
+	for (var p=0; p < tiePartitions.length; ++p)
+		oapList.push(
+			SortAndPartition(tiePartitions[p], criteria) //recursive call
+		);
+
+	return oapList;
+}
+
+function UpdateScreenResolution(width, height){
 	try{
 	$("#tw-root")
 		.css("top", "50%")
@@ -170,7 +207,7 @@ function updateScreenResolution(width, height){
 	}catch(e){}
 }
 var _FULL_SCREEN = false;
-function toogleFullWindowRender(e){
+function ToogleFullWindowRender(e){
 
 	if (!_FULL_SCREEN)
 		$(e)
@@ -181,11 +218,11 @@ function toogleFullWindowRender(e){
 			.css("margin-top", "0")
 			.css("margin-left", "0");
 	else
-		updateScreenResolution(_RENDER_WIDTH, _RENDER_HEIGHT);
+		UpdateScreenResolution(_RENDER_WIDTH, _RENDER_HEIGHT);
 
 	_FULL_SCREEN = !_FULL_SCREEN;
 }
-function toggleFullScreen(e) {
+function ToggleFullScreen(e) {
 	var d = document;
 	var _requestFullScreen =e.requestFullScreen			|| e.requestFullscreen		||
 							e.msRequestFullScreen		|| e.msRequestFullscreen	||
@@ -195,7 +232,7 @@ function toggleFullScreen(e) {
 							d.msCancelFullScreen		|| d.msCancelFullscreen		|| d.msExitFullScreen		|| d.msExitFullscreen		||
 							d.mozCancelFullScreen		|| d.mozCancelFullscreen	|| d.mozExitFullScreen		|| d.mozExitFullscreen		||
 							d.webkitCancelFullScreen	|| d.webkitCancelFullscreen	|| d.webkitExitFullScreen	|| d.webkitExitFullscreen;
-	toogleFullWindowRender(e);
+	ToogleFullWindowRender(e);
 
 	if ( d.fullscreenElement	|| d.webkitFullscreenElement ||
 		 d.mozFullScreenElement	|| d.msFullscreenElement) {
@@ -205,15 +242,15 @@ function toggleFullScreen(e) {
 	}
 }
 
-function isMobile(){
+function IsMobile(){
 	return navigator.userAgent.match(/iPad|iPhone|Android|BlackBerry|webOS/i);
 }
 
 var _VALID_KEYS = [13/*enter*/,27/*esc*/, 32/*space*/, 16/*shift*/, 67/*C*/, 70/*F*/, 107/*+*/, 109/*-*/];
-function isValidKey(keyCode){return _VALID_KEYS.contains(keyCode);}
+function IsValidKey(keyCode){return _VALID_KEYS.contains(keyCode);}
 
 //returns a number between the closed interval [<a>, <a>+<prob>.length-1] according to the given probability distribution <prob>
-function uncertaintyMaker(a, prob){ if (prob.length <= 1) return a;
+function UncertaintyMaker(a, prob){ if (prob.length <= 1) return a;
 	var rnd = Math.random()*1000|0;
 	var len=prob.length-1;
 	var pAccumulated = 0
@@ -226,7 +263,7 @@ function uncertaintyMaker(a, prob){ if (prob.length <= 1) return a;
 	return a+len;
 }
 
-function toMMSS(value){
+function ToMMSS(value){
 	var mins = (value/60|0);
 	var segs = value%60;
 
@@ -236,7 +273,7 @@ function toMMSS(value){
 	return mins +":"+ segs;
 }
 
-function getManhattanDistance(p1, p2) {
+function GetManhattanDistance(p1, p2) {
 	if (!p1 || !p2) return -1;
 
 	var distX = Math.abs(p1[0] - p2[0]);
@@ -249,7 +286,7 @@ function getManhattanDistance(p1, p2) {
 }
 
 // "Row-Major Order", rows are numbered by the first index and columns by the second index
-function newMatrix(_FloorRows, _FloorColumns){
+function NewMatrix(_FloorRows, _FloorColumns){
 	var tmp = new Array(_FloorRows);
 
 	for (var i = 0; i < _FloorRows; i++)
@@ -265,7 +302,7 @@ function random(a, b){
 		return ((a < b)? Math.random()*(b-a) + a : Math.random()*(a-b) + b);
 }
 
-function angleBetween(a, b){
+function AngleBetween(a, b){
 	var signA = (a < 0)? -1: 1;
 	var signB = (b < 0)? -1: 1;
 	if (signA == signB)
@@ -274,14 +311,14 @@ function angleBetween(a, b){
 		return Math.abs(a-(b+signA*360));
 }
 
-function relativeAngleBetween(a, b){return relative180Angle(b, -a)}
+function RelativeAngleBetween(a, b){return Relative180Angle(b, -a)}
 
-function relative180Angle(a, angle){return to180Degrees(to360Degrees(a) + angle)}
+function Relative180Angle(a, angle){return to180Degrees(To360Degrees(a) + angle)}
 
-function to360Degrees(value){return (value < 0)? value + 360: value;}
+function To360Degrees(value){return (value < 0)? value + 360: value;}
 function to180Degrees(value){return (value > 180)? value - 360: value;}
 
-function createVertex(x,y,z) {
+function CreateVertex(x,y,z) {
 	var vtx = new CL3D.Vertex3D(true);
 
 	vtx.Pos.X = x;

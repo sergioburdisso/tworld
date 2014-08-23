@@ -21,7 +21,7 @@
 function Environment(rows, columns, graphicEngine, parent) {
 	//region Attributes
 		//private:
-			var _grid				= newMatrix(rows, columns); // "Row-Major Order", rows are numbered by the first index and columns by the second index
+			var _grid				= NewMatrix(rows, columns); // "Row-Major Order", rows are numbered by the first index and columns by the second index
 			var _listOfHoles		= new ListOfHoles(rows*columns); // rows*columns is space-inefficient but it speed up some calculation (js engine don't use hashes)
 			var _listOfObstacles	= new List(/*rows*columns*/);
 			var _listOfEmptyCells	= new ListOfPairs(rows*columns);
@@ -125,7 +125,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 					for (id in _INITIAL_STATE.holes)
 						_self.newHole(
 							_INITIAL_STATE.holes[id],
-							uncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold),
+							UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold),
 							1-Math.random()*TWorld.VariabilityOfScores
 						);
 				}else{
@@ -211,18 +211,18 @@ function Environment(rows, columns, graphicEngine, parent) {
 					if (TWorld.Dynamic){
 						//if "it's the first time this function's called", then create the 'persistent' variables
 						if (!this.holesSeconds){
-							this.holesSeconds = uncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold) + _TILES_TELEPORT_DELAY;
-							this.obstaclesSecons = uncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold);
+							this.holesSeconds = UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold) + _TILES_TELEPORT_DELAY;
+							this.obstaclesSecons = UncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold);
 						}
 
 						if ((--this.holesSeconds) == 0){
 							this.AbstractLevel.createHoles();
-							this.holesSeconds = uncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold) + _TILES_TELEPORT_DELAY;
+							this.holesSeconds = UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold) + _TILES_TELEPORT_DELAY;
 						}
 
 						if ((--this.obstaclesSecons) == 0){
 							this.AbstractLevel.createObstacles();
-							this.obstaclesSecons = uncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold);
+							this.obstaclesSecons = UncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold);
 						}
 					}
 
@@ -1436,13 +1436,13 @@ function Hole(environment, holeCells, holeLifetime, actualVariabilityOfUtility) 
 				this.Value = TWorld.valueOfHoleFilledCompletely(this.Size)*_variabilityOfUtility | 0;
 
 				if (!noLifetime)
-					_lifeTime = uncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold);
+					_lifeTime = UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold);
 			}
 	}
 
 	this.shrinkScore = function(){
 		this.Value = this.Value/2|0;
-		_lifeTime = uncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold);
+		_lifeTime = UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold);
 	}
 }
 //<-- Internal Classes

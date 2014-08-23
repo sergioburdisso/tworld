@@ -202,7 +202,7 @@
 					this.openRunModal();
 			}
 
-			this.toggleFullScreen = function(){
+			this.toggleMaximaze = function(){
 				_self.fullScreen = !_self.fullScreen;
 				if (_self.fullScreen){
 					_editor.setOptions({autoScrollEditorIntoView: false});

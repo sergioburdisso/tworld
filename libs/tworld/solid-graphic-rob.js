@@ -424,7 +424,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			function _takeStochasticAction(action){if (TWorld.Deterministic) return true;
 				var rndValue, newAction;
 
-				rndValue = uncertaintyMaker(0, TWorld.ModelOfStochasticMotion);
+				rndValue = UncertaintyMaker(0, TWorld.ModelOfStochasticMotion);
 
 				switch (rndValue){
 					case 0:
@@ -571,7 +571,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 			function getWalkingCaseAccordingToCameraLocation(){
 				var activeCamera = _gTWorld.getActiveCamera();
 				var activeCameraTarget = activeCamera.getTarget();
-				var activeCameraAngle = to360Degrees(CL3D.radToDeg(Math.atan2(activeCamera.Pos.X- activeCameraTarget.X, activeCamera.Pos.Z - activeCameraTarget.Z)));
+				var activeCameraAngle = To360Degrees(CL3D.radToDeg(Math.atan2(activeCamera.Pos.X- activeCameraTarget.X, activeCamera.Pos.Z - activeCameraTarget.Z)));
 
 				if (45 <= activeCameraAngle && activeCameraAngle < 135 )
 					return CAMERA_LOCATION.West; //Camera is west of Rob
@@ -926,7 +926,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 				//--------------------------------------------------------------------------------------> turnAroundUntilDegrees
 				function turnAroundUntilDegrees(finalDegrees){
 					//where is Rob looking at?
-					_turnAroundOffsetAngle = to360Degrees(_node.Rot.Y);
+					_turnAroundOffsetAngle = To360Degrees(_node.Rot.Y);
 					//taking into account where Rob's looking at, how many degrees should Rob turn around?
 					_turnAroundFinalAngle = finalDegrees - _turnAroundOffsetAngle;
 
@@ -955,7 +955,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 		//region User Input Handler
 			//-> keyDown Event Handler
 			$(document).keydown(function(e){
-				if (isValidKey(e.keyCode)){
+				if (IsValidKey(e.keyCode)){
 					switch(e.keyCode){
 						case _AGENTS[_index].CONTROLS.Left:
 							_self.leftArrowKeyPressed(true);
@@ -977,7 +977,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 
 			//-> keyUp Event Handler
 			$(document).keyup(function(e){
-				if (isValidKey(e.keyCode)){
+				if (IsValidKey(e.keyCode)){
 					switch (e.keyCode){
 						case _AGENTS[_index].CONTROLS.Left:
 							_self.keyUp(0);

@@ -223,7 +223,7 @@ if (_RENDER_AUTO_SIZE){
 		_RENDER_HEIGHT = $("#tw-root").parent().height();
 	}catch(e){}
 }
-try{updateScreenResolution(_RENDER_WIDTH, _RENDER_HEIGHT);}catch(e){}
+try{UpdateScreenResolution(_RENDER_WIDTH, _RENDER_HEIGHT);}catch(e){}
 
 
 

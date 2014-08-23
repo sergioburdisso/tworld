@@ -28,9 +28,9 @@ function GraphicTWorld(graphicEngine, environment){
 		var _CL_Scene;
 		var _CL_Engine		= graphicEngine;
 		var _CL_Canvas		= _CL_Engine.getRenderer().getWebGL().canvas; //used for calculatin the x and y-scale when animating the score
-		var _CL_OnTheFloor	= newMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
-		var _CL_HoleHelpers	= newMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
-		var _CL_Floor		= newMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
+		var _CL_OnTheFloor	= NewMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
+		var _CL_HoleHelpers	= NewMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
+		var _CL_Floor		= NewMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
 		var _CL_LaserBeams	= new Array();
 		var _CLN_Rob 		= new Array(_NUMBER_OF_AGENTS);
 		var _CL_Rob_Texturs	= {};
@@ -244,7 +244,7 @@ function GraphicTWorld(graphicEngine, environment){
 					location.reload(); break;
 				case 7:
 				case "FULL_SCREEN":
-					toggleFullScreen(document.getElementById("tw-root")); break;
+					ToggleFullScreen(document.getElementById("tw-root")); break;
 			}
 		}
 
@@ -268,7 +268,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 			//TEAMS STATS:
 			for (var holes, moves, battery, i=0; i < _TEAMS.length; i++){
-				_TEAMS[i].STATS = {
+				_TEAMS[i].stats = {
 									MFinalScore: robs[_TEAMS[i].MEMBERS[0]].Score,
 									MTotalScore: 0,
 									MHoles: 0,
@@ -280,14 +280,14 @@ function GraphicTWorld(graphicEngine, environment){
 									mBattery_Recharge:0,
 								};
 				for (var m=_TEAMS[i].MEMBERS.length; m--;){
-					_TEAMS[i].STATS.MTotalScore += robs[_TEAMS[i].MEMBERS[m]].Stats.total_score;
-					_TEAMS[i].STATS.MHoles += robs[_TEAMS[i].MEMBERS[m]].Stats.filled_holes;
-					_TEAMS[i].STATS.MCells += robs[_TEAMS[i].MEMBERS[m]].Stats.filled_cells;
-					_TEAMS[i].STATS.mgood_moves += robs[_TEAMS[i].MEMBERS[m]].Stats.good_moves;
-					_TEAMS[i].STATS.mbad_moves += robs[_TEAMS[i].MEMBERS[m]].Stats.bad_moves;
-					_TEAMS[i].STATS.mBattery_Used += robs[_TEAMS[i].MEMBERS[m]].Stats.battery_used;
-					_TEAMS[i].STATS.mBattery_Restore += robs[_TEAMS[i].MEMBERS[m]].Stats.battery_restore;
-					_TEAMS[i].STATS.mBattery_Recharge += robs[_TEAMS[i].MEMBERS[m]].Stats.battery_recharge;
+					_TEAMS[i].stats.MTotalScore += robs[_TEAMS[i].MEMBERS[m]].Stats.total_score;
+					_TEAMS[i].stats.MHoles += robs[_TEAMS[i].MEMBERS[m]].Stats.filled_holes;
+					_TEAMS[i].stats.MCells += robs[_TEAMS[i].MEMBERS[m]].Stats.filled_cells;
+					_TEAMS[i].stats.mgood_moves += robs[_TEAMS[i].MEMBERS[m]].Stats.good_moves;
+					_TEAMS[i].stats.mbad_moves += robs[_TEAMS[i].MEMBERS[m]].Stats.bad_moves;
+					_TEAMS[i].stats.mBattery_Used += robs[_TEAMS[i].MEMBERS[m]].Stats.battery_used;
+					_TEAMS[i].stats.mBattery_Restore += robs[_TEAMS[i].MEMBERS[m]].Stats.battery_restore;
+					_TEAMS[i].stats.mBattery_Recharge += robs[_TEAMS[i].MEMBERS[m]].Stats.battery_recharge;
 				}
 			}
 
@@ -301,8 +301,7 @@ function GraphicTWorld(graphicEngine, environment){
 			// -Battery_Used
 			// -Battery_Restore
 			// -Battery_Recharge
-			finalPositions = _sortAndPartition(_TEAMS).flatteningAllButTied();
-
+			finalPositions = SortAndPartition(_TEAMS).flatteningAllButTied();
 
 			//1st, 2nd and 3rd positions
 			for (var pos = 0, r=0; r < 3; ++r, ++pos){
@@ -311,10 +310,10 @@ function GraphicTWorld(graphicEngine, environment){
 						for (var i= 0; i < finalPositions[pos].length && r < 3; ++i, ++r){
 							$('#'+(r+1)+'-pos').append('<img src="./imgs/'+(pos+1)+'-pos.png" />');
 							$('#'+(r+1)+'-player').html(finalPositions[pos][i].NAME);
-							$('#'+(r+1)+'-score').html(finalPositions[pos][i].STATS.MFinalScore + "/" + finalPositions[pos][i].STATS.MTotalScore);
-							$('#'+(r+1)+'-holes').html(finalPositions[pos][i].STATS.MHoles + "/" + finalPositions[pos][i].STATS.MCells);
-							$('#'+(r+1)+'-moves').html(finalPositions[pos][i].STATS.mgood_moves + "/" + finalPositions[pos][i].STATS.mbad_moves);
-							$('#'+(r+1)+'-battery').html((finalPositions[pos][i].STATS.mBattery_Used/10).toFixed(1) + "/" + finalPositions[pos][i].STATS.mBattery_Restore);
+							$('#'+(r+1)+'-score').html(finalPositions[pos][i].stats.MFinalScore + "/" + finalPositions[pos][i].stats.MTotalScore);
+							$('#'+(r+1)+'-holes').html(finalPositions[pos][i].stats.MHoles + "/" + finalPositions[pos][i].stats.MCells);
+							$('#'+(r+1)+'-moves').html(finalPositions[pos][i].stats.mgood_moves + "/" + finalPositions[pos][i].stats.mbad_moves);
+							$('#'+(r+1)+'-battery').html((finalPositions[pos][i].stats.mBattery_Used/10).toFixed(1) + "/" + finalPositions[pos][i].stats.mBattery_Restore);
 
 							if (pos === 0)
 								firstOne = finalPositions[pos][i];
@@ -323,10 +322,10 @@ function GraphicTWorld(graphicEngine, environment){
 					}else{
 						$('#'+(r+1)+'-pos').append('<img src="./imgs/'+(pos+1)+'-pos.png" />');
 						$('#'+(r+1)+'-player').html(finalPositions[pos].NAME);
-						$('#'+(r+1)+'-score').html(finalPositions[pos].STATS.MFinalScore + "/" + finalPositions[pos].STATS.MTotalScore);
-						$('#'+(r+1)+'-holes').html(finalPositions[pos].STATS.MHoles + "/" + finalPositions[pos].STATS.MCells);
-						$('#'+(r+1)+'-moves').html(finalPositions[pos].STATS.mgood_moves + "/" + finalPositions[pos].STATS.mbad_moves);
-						$('#'+(r+1)+'-battery').html((finalPositions[pos].STATS.mBattery_Used/10).toFixed(1) + "/" + finalPositions[pos].STATS.mBattery_Restore);
+						$('#'+(r+1)+'-score').html(finalPositions[pos].stats.MFinalScore + "/" + finalPositions[pos].stats.MTotalScore);
+						$('#'+(r+1)+'-holes').html(finalPositions[pos].stats.MHoles + "/" + finalPositions[pos].stats.MCells);
+						$('#'+(r+1)+'-moves').html(finalPositions[pos].stats.mgood_moves + "/" + finalPositions[pos].stats.mbad_moves);
+						$('#'+(r+1)+'-battery').html((finalPositions[pos].stats.mBattery_Used/10).toFixed(1) + "/" + finalPositions[pos].stats.mBattery_Restore);
 
 						if (pos === 0)
 							firstOne = finalPositions[pos];
@@ -338,45 +337,45 @@ function GraphicTWorld(graphicEngine, environment){
 
 			//PLAYERS STATS:
 			for (var i= 1, iMm; i < _NUMBER_OF_AGENTS; i++){
-				iMm = nextProperty(_i);
+				iMm = NextProperty(_i);
 
 				for (stat in robs[i].Stats){
 					if (maxRegEx.test(iMm)){
 						if (robs[i].Stats[stat] > robs[_i[iMm].v].Stats[stat])
 							_i[iMm].v = i;
-						iMm = nextProperty(_i, iMm);
+						iMm = NextProperty(_i, iMm);
 					}
 					if (minRegEx.test(iMm)){
 						if (robs[i].Stats[stat] < robs[_i[iMm].v].Stats[stat])
 							_i[iMm].v = i;
-						iMm = nextProperty(_i, iMm);
+						iMm = NextProperty(_i, iMm);
 					}
 				}
 			}
 
 			//in case of tie (hidden tie cases)
 			for (var i= 0, iMm=""; i < _NUMBER_OF_AGENTS; i++){
-				stat = nextProperty(robs[i].Stats);
+				stat = NextProperty(robs[i].Stats);
 				for (iMm in _i){
 					if (_i[iMm].$e && _i[iMm].v != i && robs[i].Stats[stat] == robs[_i[iMm].v].Stats[stat]){
 						_i[iMm].$e.parent().hide();
 						_i[iMm].$e = null;
 					}
 
-					if (minRegEx.test(iMm) || (maxRegEx.test(iMm) && !minRegEx.test(nextProperty(_i, iMm))))
-						stat = nextProperty(robs[i].Stats, stat);
+					if (minRegEx.test(iMm) || (maxRegEx.test(iMm) && !minRegEx.test(NextProperty(_i, iMm))))
+						stat = NextProperty(robs[i].Stats, stat);
 				}
 			}
 
 			//showing results
-			var stat = nextProperty(robs[0/*doesn't matter*/].Stats);
+			var stat = NextProperty(robs[0/*doesn't matter*/].Stats);
 			for (iMm in _i){
 				var value = robs[_i[iMm].v].Stats[stat];
 				if (_i[iMm].$e)
 					_i[iMm].$e.html((!/BatteryUse/i.test(iMm)? value : (value/10).toFixed(1)+"%") + ((_NUMBER_OF_AGENTS > 1)? "<br>(" + _AGENTS[_i[iMm].v].NAME +")" : ""));
 
-				if (minRegEx.test(iMm) || (maxRegEx.test(iMm) && !minRegEx.test(nextProperty(_i, iMm))) )
-					stat = nextProperty(robs[0].Stats, stat);
+				if (minRegEx.test(iMm) || (maxRegEx.test(iMm) && !minRegEx.test(NextProperty(_i, iMm))) )
+					stat = NextProperty(robs[0].Stats, stat);
 			}
 
 			switch(goal.RESULT){
@@ -429,7 +428,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 			$("#sub-title").html(
 				$("#sub-title").html() +
-				'<br><span style="font-size:13px; color: gray; text-shadow: none">(time: '+ toMMSS(time) + ')</span>'
+				'<br><span style="font-size:13px; color: gray; text-shadow: none">(time: '+ ToMMSS(time) + ')</span>'
 			);
 
 			$("#stats").show();
@@ -464,7 +463,7 @@ function GraphicTWorld(graphicEngine, environment){
 		}
 
 		this.updateTime = function(value, countdown) {
-			$("#time").html((value > 10 || !countdown)? toMMSS(value) : value);
+			$("#time").html((value > 10 || !countdown)? ToMMSS(value) : value);
 
 			if (countdown && value <= 10){
 				$("#time").css("color", "red").css("font-size","64px").css("text-shadow", "rgb(255, 0, 0) 0px 0px 10px");
@@ -903,11 +902,11 @@ function GraphicTWorld(graphicEngine, environment){
 						headRotX += tmp;
 
 					tmp = (_CL_CursorControl.MouseX - oldXMouse)/3;
-					if (relativeAngleBetween(_robRotY, headRotY+tmp) > 88)
-						headRotY = relative180Angle(_robRotY, 88);
+					if (RelativeAngleBetween(_robRotY, headRotY+tmp) > 88)
+						headRotY = Relative180Angle(_robRotY, 88);
 					else
-					if (relativeAngleBetween(_robRotY, headRotY+tmp) < -88)
-						headRotY = relative180Angle(_robRotY, -88);
+					if (RelativeAngleBetween(_robRotY, headRotY+tmp) < -88)
+						headRotY = Relative180Angle(_robRotY, -88);
 					else
 						headRotY += tmp;
 
@@ -1115,11 +1114,11 @@ function GraphicTWorld(graphicEngine, environment){
 				_self.Rob[i].setMinimalUpdateDelay(frames);
 		}
 
-		function _sortAndPartition(list, criteria){
+		function SortAndPartition(list, criteria){
 			var tiePartitions = [];
 			var oapList = [];// oap stands for "Ordered and Partitioned"
 
-			criteria = nextProperty(list[0].STATS, criteria);
+			criteria = NextProperty(list[0].STATS, criteria);
 
 			//recursion stopping condition
 			if (list.length <= 1 || !criteria)
@@ -1145,7 +1144,7 @@ function GraphicTWorld(graphicEngine, environment){
 			//for each partition
 			for (var p=0; p < tiePartitions.length; ++p)
 				oapList.push(
-					_sortAndPartition(tiePartitions[p], criteria) //recursive call
+					SortAndPartition(tiePartitions[p], criteria) //recursive call
 				);
 
 			return oapList;
@@ -1711,7 +1710,7 @@ function GraphicTWorld(graphicEngine, environment){
 			_CL_Scene.getSceneNodeFromName('battery-charger-icon').setVisible(false);
 
 		if (_FULL_WINDOW_RENDER)
-			toogleFullWindowRender(document.getElementById("tw-root"));
+			ToogleFullWindowRender(document.getElementById("tw-root"));
 
 		for (rob= 0; rob < _NUMBER_OF_AGENTS; ++rob){
 			if (rob == 0){
@@ -1791,7 +1790,7 @@ function GraphicTWorld(graphicEngine, environment){
 					desc = '<tr><td><img id="'+_ENDGAME[list[c]].$ID+'" src="imgs/'+img+'"/></td><td>';
 					switch(list[c]){
 						case "TIME":
-							value = toMMSS(_ENDGAME[list[c]].VALUE);
+							value = ToMMSS(_ENDGAME[list[c]].VALUE);
 							break;
 						case "AGENTS_LOCATION":
 							var robFinalPos = _AGENTS[_ENDGAME[list[c]].VALUE[0]].FINAL_LOCATION;
@@ -1964,7 +1963,7 @@ function GraphicTWorld(graphicEngine, environment){
 		//FullScreen Button
 		$("#fullScreenBtn").mouseenter(function(e){$(this).prop("src", "imgs/full_screen_enter.png")});
 		$("#fullScreenBtn").mouseleave(function(e){$(this).prop("src", "imgs/full_screen.png")});
-		$("#fullScreenBtn").mouseup(function(e){toggleFullScreen(document.getElementById("tw-root"))});
+		$("#fullScreenBtn").mouseup(function(e){ToggleFullScreen(document.getElementById("tw-root"))});
 
 		_GUI.ON_GAME_SCREEN.$ = $("#on-game-screen");
 		_GUI.ON_GAME_SCREEN.MARGIN_TOP = -(_GUI.ON_GAME_SCREEN.$.height()/2|0)+"px";
@@ -2019,7 +2018,7 @@ function GraphicTWorld(graphicEngine, environment){
 		$("#ctrl-right").mouseup(function(){ _self.keyUp(0, 1) });*/
 		$("#ctrl-restore").mousedown(function(){ _self.restoreBattery(0) });
 
-		if (!isMobile())
+		if (!IsMobile())
 			$("#controls").remove();
 
 		$(window).blur(function() {
@@ -2070,7 +2069,7 @@ function GraphicTWorld(graphicEngine, environment){
 		//-> keydown Event Handler
 		$(window).keydown(function(e){
 			//console.log(e.keyCode);
-			if (isValidKey(e.keyCode)){
+			if (IsValidKey(e.keyCode)){
 				switch(e.keyCode){
 					case 32://space bar
 						//_SHOW_HOLES_HELPERS = true;
@@ -2085,7 +2084,7 @@ function GraphicTWorld(graphicEngine, environment){
 						_self.toggleCamera();
 						break;
 					case 70://F
-						toggleFullScreen(document.getElementById("tw-root"));
+						ToggleFullScreen(document.getElementById("tw-root"));
 						break;
 					case 16://shift
 						_toggleOnScreenInfo(true);
@@ -2095,7 +2094,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 		//-> keyUp Event Handler
 		$(window).keyup(function(e){
-			if (isValidKey(e.keyCode)){
+			if (IsValidKey(e.keyCode)){
 				switch(e.keyCode){
 					case 107://+
 						buzz.all().increaseVolume(25);
@@ -2183,10 +2182,10 @@ CL3D.HoleCellHelper = function(x, y, z, size, engine, r, g, b, a)
 	// set indices and vertices
 	buf.Vertices = new Array(4);
 
-	buf.Vertices[0] = createVertex(x - hSize, y, z + hSize);
-	buf.Vertices[1] = createVertex(x + hSize, y, z + hSize);
-	buf.Vertices[2] = createVertex(x + hSize, y, z - hSize);
-	buf.Vertices[3] = createVertex(x - hSize, y, z - hSize);
+	buf.Vertices[0] = CreateVertex(x - hSize, y, z + hSize);
+	buf.Vertices[1] = CreateVertex(x + hSize, y, z + hSize);
+	buf.Vertices[2] = CreateVertex(x + hSize, y, z - hSize);
+	buf.Vertices[3] = CreateVertex(x - hSize, y, z - hSize);
 
 	buf.Indices = [0,1,2, 2,3,0];
 
@@ -2231,15 +2230,15 @@ CL3D.LaserBeam = function(srcP, destP, engine, lifeTime)
 	// set indices and vertices
 	buf.Vertices = new Array(8);
 
-	buf.Vertices[0] = createVertex(srcP.X + hSize, srcP.Y, srcP.Z, 1, 1);
-	buf.Vertices[1] = createVertex(srcP.X - hSize, srcP.Y, srcP.Z, 0, 0);
-	buf.Vertices[2] = createVertex(destP.X - hSize, destP.Y-20, destP.Z, 0, 1);
-	buf.Vertices[3] = createVertex(destP.X + hSize, destP.Y-20, destP.Z, 1, 0);
+	buf.Vertices[0] = CreateVertex(srcP.X + hSize, srcP.Y, srcP.Z, 1, 1);
+	buf.Vertices[1] = CreateVertex(srcP.X - hSize, srcP.Y, srcP.Z, 0, 0);
+	buf.Vertices[2] = CreateVertex(destP.X - hSize, destP.Y-20, destP.Z, 0, 1);
+	buf.Vertices[3] = CreateVertex(destP.X + hSize, destP.Y-20, destP.Z, 1, 0);
 
-	buf.Vertices[4] = createVertex(srcP.X, srcP.Y, srcP.Z + hSize, 1, 1);
-	buf.Vertices[5] = createVertex(srcP.X, srcP.Y, srcP.Z - hSize, 0, 0);
-	buf.Vertices[6] = createVertex(destP.X, destP.Y-20, destP.Z - hSize, 0, 1);
-	buf.Vertices[7] = createVertex(destP.X, destP.Y-20, destP.Z + hSize, 1, 0);
+	buf.Vertices[4] = CreateVertex(srcP.X, srcP.Y, srcP.Z + hSize, 1, 1);
+	buf.Vertices[5] = CreateVertex(srcP.X, srcP.Y, srcP.Z - hSize, 0, 0);
+	buf.Vertices[6] = CreateVertex(destP.X, destP.Y-20, destP.Z - hSize, 0, 1);
+	buf.Vertices[7] = CreateVertex(destP.X, destP.Y-20, destP.Z + hSize, 1, 0);
 
 	buf.Indices = [0,1,2, 2,3,0, 4,5,6, 6,7,4];
 
@@ -2288,7 +2287,7 @@ CL3D.LaserBeam.prototype.render = function(renderer)
 }
 
 // helper function for quickly creating a 3d vertex from 3d position and texture coodinates
-function createVertex(x, y, z, s, t)
+function CreateVertex(x, y, z, s, t)
 {
 	var vtx = new CL3D.Vertex3D(true);
 
