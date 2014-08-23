@@ -120,7 +120,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 						if (_NUMBER_OF_AGENTS > 1){
 							final_location = new Array(_ENDGAME[cond].VALUE.length);
 
-							if (_sockPA && _sockPA.OUTPUT_FORMAT == _PERCEPT_FORMAT.PROLOG){
+							if (_sockPA && _sockPA.OUTPUT_FORMAT == _PERCEPT_FORMAT.PROLOG_FACT){
 								for (var r= _ENDGAME[cond].VALUE.length-1; r>=0; --r)
 											final_location[r] = {
 												id: _ENDGAME[cond].VALUE[r],
@@ -481,9 +481,9 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 				break;
 
 			// PROLOG
-			case _PERCEPT_FORMAT.PROLOG:
+			case _PERCEPT_FORMAT.PROLOG_FACT:
 				_percept = sprintf(
-								_PERCEPT_FORMAT.PROLOG,
+								_PERCEPT_FORMAT.PROLOG_FACT,
 								_percept.header,
 								json2prolog_facts(
 									_percept.data,

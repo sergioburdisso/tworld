@@ -448,7 +448,7 @@ function GraphicTWorld(graphicEngine, environment){
 			$("#black-screen").show();
 			$("#black-screen").animate({opacity:1}, 3000, function(){$("#bs-mid").animate({opacity:1,"margin-top": (-$("#bs-mid").height()/2|0)+"px"}, 400)});
 
-			while ( _ACTIVE_CAMERA < _CAMERA_TYPE.FREE_GRID )
+			while ( _ACTIVE_CAMERA < _CAMERA_TYPE.AROUND_GRID )
 				_self.toggleCamera();
 			cameraCase = (Math.random() < 0.5 || _LOW_QUALITY_WORLD)? 0 : 1;
 			if (!firstOne) firstOne = _TEAMS[0];
@@ -993,7 +993,7 @@ function GraphicTWorld(graphicEngine, environment){
 					}
 				}
 
-				if (_ACTIVE_CAMERA == _CAMERA_TYPE.ALIEN)
+				if (_ACTIVE_CAMERA == _CAMERA_TYPE.UFO)
 					if (!_cameraAnimationFlag){
 						_cameraPos.setTo(_CLN_UFO.Pos);
 						_cameraPos.Y += 1;
@@ -1008,13 +1008,13 @@ function GraphicTWorld(graphicEngine, environment){
 						_cameraZPosOffset = (_robPosZ - _CL_ActiveCameraTarget.Z)/30;
 
 						if (Math.abs(_cameraXPosOffset) > 0.05){
-							if (_ACTIVE_CAMERA == _CAMERA_TYPE.FREE_ROB)
+							if (_ACTIVE_CAMERA == _CAMERA_TYPE.AROUND_ROB)
 								_cameraPos.X += _cameraXPosOffset;
 							_CL_ActiveCameraTarget.X += _cameraXPosOffset;
 						}
 
 						if (Math.abs(_cameraZPosOffset) > 0.05){
-							if (_ACTIVE_CAMERA == _CAMERA_TYPE.FREE_ROB)
+							if (_ACTIVE_CAMERA == _CAMERA_TYPE.AROUND_ROB)
 								_cameraPos.Z += _cameraZPosOffset;
 							_CL_ActiveCameraTarget.Z += _cameraZPosOffset;
 						}
@@ -1182,8 +1182,8 @@ function GraphicTWorld(graphicEngine, environment){
 				if (_Paused){
 					if (_AUDIO_ENABLE){
 						buzz.all().setVolume(0);
-						_sound_voice_pause.setPercent(0).setVolume(40).play();
-						_sound_pause_on.setPercent(0).setVolume(40).play();
+						_sound_voice_pause.setPercent(0).setVolume(_VOLUME_LEVEL).play();
+						_sound_pause_on.setPercent(0).setVolume(_VOLUME_LEVEL).play();
 					}
 
 					_targetSpeed = 0;
@@ -1218,7 +1218,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 					if (_AUDIO_ENABLE){
 						buzz.all().setVolume(_VOLUME_LEVEL);
-						_sound_pause_off.setPercent(0).setVolume(40).play();
+						_sound_pause_off.setPercent(0).setVolume(_VOLUME_LEVEL).play();
 					}
 				}
 			}
@@ -1234,7 +1234,7 @@ function GraphicTWorld(graphicEngine, environment){
 			_cameraFirtPerson = false;
 
 			switch(_ACTIVE_CAMERA){
-				case _CAMERA_TYPE.FREE_GRID:
+				case _CAMERA_TYPE.AROUND_GRID:
 					var offset = Math.max(_ROWS, _COLUMNS) > 6?
 												Math.max(_ROWS, _COLUMNS)*_FloorCellSize :
 												7*_FloorCellSize;
@@ -1247,7 +1247,7 @@ function GraphicTWorld(graphicEngine, environment){
 					_CL_ActiveCamera.Animators.push(_CL_CameraModelViewer);
 					break;
 
-				case _CAMERA_TYPE.FREE_ROB:
+				case _CAMERA_TYPE.AROUND_ROB:
 					_cameraTargetFinalPos.setTo(_CLN_Rob[0].Pos);
 					_cameraTargetFinalPos.Y = _CLN_Rob[0].getBoundingBox().getCenter().Y + 6;
 					_cameraFinalPos.setTo(_CL_ActiveCamera.Pos);
@@ -1299,7 +1299,7 @@ function GraphicTWorld(graphicEngine, environment){
 					_CL_ActiveCamera.Animators.clear();
 					break;
 
-				case _CAMERA_TYPE.ALIEN:
+				case _CAMERA_TYPE.UFO:
 					_cameraFinalPos.setTo(_CLN_UFO.Pos);
 					_FollowRob = true;
 					_CL_ActiveCamera.Animators.clear();
@@ -1711,7 +1711,7 @@ function GraphicTWorld(graphicEngine, environment){
 			_CL_Scene.getSceneNodeFromName('battery-charger-icon').setVisible(false);
 
 		if (_FULL_WINDOW_RENDER)
-			toogleFullWindowRender();
+			toogleFullWindowRender(document.getElementById("tw-root"));
 
 		for (rob= 0; rob < _NUMBER_OF_AGENTS; ++rob){
 			if (rob == 0){

@@ -3,6 +3,10 @@
 	src: url('../resrc/airstrike.ttf');
 }
 
+@font-face {
+	font-family: Raleway;
+	src: url('../resrc/raleway-regular.ttf');
+}
 @-moz-keyframes spinning {
 	from {
 		-moz-transform: rotateX(0deg) rotateY(0deg) rotateZ(360deg);
@@ -176,7 +180,7 @@
 body {
 	background-color:#000000;
 	color: white;
-	font-family:Arial, Helvetica, sans-serif;
+	font-family: "Raleway", Arial, Helvetica, sans-serif;
 	overflow: hidden;
 	margin: 0;
 	height: 100%;

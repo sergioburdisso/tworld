@@ -156,9 +156,27 @@ function saveKnobs(env, test){
 }
 function clearKnobs(){localStorage.removeItem("knobs")}
 
-function getConfig(){return localStorage.config? JSON.parse(localStorage.config) : {}}
-function saveConfig(config){localStorage.config = JSON.stringify(config)}
-function clearConfig(){localStorage.removeItem("config")}
+function getSettings(){
+	return localStorage.settings?
+			JSON.parse(localStorage.settings)
+			:
+			{
+				display:{
+					lq_grid:false,
+					lq_env:false,
+					cover_window: false,
+					resolution: "854x480",
+					show_fps: true
+				},
+				audio:{
+					enabled: true,
+					volume: 80
+				},
+				general:{}
+			};
+}
+function saveSettings(settings){localStorage.settings = JSON.stringify(settings)}
+function clearSettings(){localStorage.removeItem("settings")}
 
 function getMemoryByAgentProgramID(id){
 	if (localStorage.memory)

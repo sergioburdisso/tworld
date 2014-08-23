@@ -79,7 +79,7 @@
 									</div>
 									<div class="row">
 										<label>Format</label>
-										<select class="form-control" ng-model="apnc.agent_prog.socket.percept_format" ng-options="value as format for (format, value) in apnc.PERCEPT_FORMAT"></select>
+										<select class="form-control" ng-model="apnc.agent_prog.socket.percept_format" ng-options="value as format|nounderscore for (format, value) in apnc.PERCEPT_FORMAT"></select>
 									</div>
 								</div>
 							</div>

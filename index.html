@@ -109,7 +109,11 @@
 <script type="text/javascript" src="libs/tworld/web-app/main.stats.js"></script>
 
 <script type="text/ng-template" id="yes-no-modal.html">
-	<div class="modal-header"><h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-exclamation-sign"></span> {{title}}</h3></div>
+	<div class="modal-header">
+		<h3 class="modal-title top-shadow">
+			<span class="glyphicon glyphicon-exclamation-sign"></span> {{title}}
+		</h3>
+	</div>
 	<div class="modal-body text-center">{{msg}}</div>
 	<div class="modal-footer">
 		<button class="btn btn-default" ng-click="close()">Cancel</button>
@@ -119,7 +123,71 @@
 
 <script type="text/ng-template" id="settings-modal.html">
 	<div class="modal-header"><h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-wrench"></span> Settings</h3></div>
-	<div class="modal-body text-center"></div>
+	<div class="modal-body">
+		<div class="row">
+			<div class="col-md-3 text-right">
+				<h4 class="sett-item cursor-pointer" ng-class="{active:isVideoTab()}" ng-click="setVideoTab()">Display</h4>
+				<h4 class="sett-item cursor-pointer" ng-class="{active:isAudioTab()}" ng-click="setAudioTab()">Audio</h4>
+				<h4 class="sett-item cursor-pointer" ng-class="{active:isGeneralTab()}" ng-click="setGeneralTab()" ng-if="false">General</h4>
+			</div>
+
+			<div class="col-md-1"></div>
+
+			<div class="col-md-6 animate-only-show-3d-left" ng-show="isVideoTab()">
+
+				<div class="row"><h4>Quality</h4></div>
+				<div class="row"><div class="checkbox">
+					<label><input type="checkbox" ng-model="sett.display.lq_grid"> Low quality grid</label>
+				</div></div>
+				<div class="row"><div class="checkbox">
+					<label><input type="checkbox" ng-model="sett.display.lq_env"> Low quality environment</label>
+				</div></div>
+
+				<br>
+				<div class="row"><h4>Resolution</h4></div>
+				<div class="row">
+					<div class="col-md-8 animate-show-3d-top" style="margin-left: -14px;">
+							<select class="form-control" ng-model="sett.display.resolution">
+								<option value="427x240">240p</option>
+								<option value="640x360">360p</option>
+								<option value="854x480">480p</option>
+								<option value="1280x720">720p (HD)</option>
+								<option value="1920x1080">1080p (Full HD)</option>
+								<option value="">Same as window</option>
+							</select>
+					</div>
+				</div>
+				<div class="row"><div class="checkbox">
+					<label><input type="checkbox" ng-model="sett.display.cover_window"> Always cover the whole window</label>
+				</div></div>
+
+				<br>
+				<div class="row"><h4>Misc</h4></div>
+				<div class="row"><div class="checkbox">
+					<label><input type="checkbox" ng-model="sett.display.show_fps"> Show fps</label>
+				</div></div>
+			</div>
+
+			<div class="col-md-6 animate-only-show-3d-left" ng-show="isAudioTab()">
+				<div class="row"><div class="checkbox">
+					<label><input type="checkbox" ng-model="sett.audio.enabled"> Enable audio</label>
+				</div></div>
+
+				<div class="animate-show-3d-top" ng-show="sett.audio.enabled">
+					<a class="list-group-item no-animation">
+						<label>volume {{sett.audio.volume}}%</label>
+						<div class="ui-slider-size" ui-slider min="0" max="100" ng-model="sett.audio.volume"></div>
+					</a>
+				</div>
+			</div>
+
+			<div class="col-md-6 animate-only-show-3d-left" ng-show="isGeneralTab()">
+				<span>Work in progress</span>
+			</div>
+
+		</div>
+
+	</div>
 	<div class="modal-footer">
 		<button class="btn btn-default" ng-click="cancel()">Cancel</button>
 		<button class="btn btn-success" ng-click="save()">Save</button>

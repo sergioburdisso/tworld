@@ -62,7 +62,7 @@
 
 			<div class="col-md-3">
 				<label>Default Camera</label>
-				<select class="form-control" ng-model="task_env.trial.camera" ng-options="value as camera for (camera, value) in cameras"></select>
+				<select class="form-control" ng-model="task_env.trial.camera" ng-options="value as camera|nounderscore for (camera, value) in cameras"></select>
 			</div>
 
 		</div>
@@ -70,5 +70,9 @@
 </div>
 
 <div class="modal-footer">
-	<button class="btn btn-success margin-10 pull-right" ng-click="run()">Let's go!</button>
+	<button class="btn btn-default pull-left" ng-click="viewSettings()">
+		<span class="glyphicon glyphicon-wrench"></span>
+		Settings
+	</button>
+	<button class="btn btn-success pull-right" ng-click="run()">Let's go!</button>
 </div>

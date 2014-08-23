@@ -31,7 +31,6 @@
 
 		this.viewSettings = function(){
 			$modal.open({
-				size: 'lg',
 				templateUrl: 'settings-modal.html',
 				controller: settingsModalController
 			})

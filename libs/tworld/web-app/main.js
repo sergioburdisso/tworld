@@ -47,7 +47,7 @@
 									agents : [],
 									speed: 0, //[-9..9]
 									pause:  true,
-									camera: _CAMERA_TYPE.FREE_GRID
+									camera: _CAMERA_TYPE.AROUND_GRID
 								},
 								name:'',
 								desc:'',
@@ -299,4 +299,9 @@
 	main.filter('stringLimit', function() {
 		return function(input, limit) {return (input.length > limit)? input.substr(0,limit-3)+"..." : input}
 	});
+
+	main.filter('nounderscore', function() {
+		return function(input) {return input.replace(/_/g," ")}
+	});
+
 })();

@@ -1171,8 +1171,8 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 				case _PERCEPT_FORMAT.XML:
 					percept = sprintf( _PERCEPT_FORMAT.XML, _X2JS.json2xml_str({header:percept.header, desc:percept.data}) );
 					break;
-				case _PERCEPT_FORMAT.PROLOG:
-					percept = sprintf( _PERCEPT_FORMAT.PROLOG, percept.header, percept.data );
+				case _PERCEPT_FORMAT.PROLOG_FACT:
+					percept = sprintf( _PERCEPT_FORMAT.PROLOG_FACT, percept.header, percept.data );
 					break;
 			}
 

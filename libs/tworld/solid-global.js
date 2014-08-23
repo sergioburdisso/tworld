@@ -62,13 +62,13 @@ var _PERCEPT_FORMAT	= {
 		 'xsi:noNamespaceSchemaLocation="./resrc/tw_msg.xsd">'+
 		 '%s'+
 		 '</tw_msg>',
-	PROLOG: "tw_msg(header(%s), data(%s)).\n"
+	PROLOG_FACT: "tw_msg(header(%s), data(%s)).\n"
 }
 
 var _STOCHASTIC_ACTIONS_MODEL = {NO_ACTION: 0, ANOTHER_ACTION: 1, OPPOSITE_ACTION: 2, USER_DEFINED: 3}
 var _LANGUAGES = {ENGLISH:"English", SPANISH:"Spanish"}
 var _COLORS = {RED:"red", BLUE:"blue", GREEN:"green", YELLOW:"yellow", PURPLE:"purple", ORANGE:"orange", CYAN:"cyan", PINK:"pink", BLACK:"black", WHITE:"white"}
-var _CAMERA_TYPE	= {FREE_ROB: 0, FIRST_PERSON: 1, PERCEPT: 2, ALIEN: 3, FREE_GRID: 4};
+var _CAMERA_TYPE	= {AROUND_ROB: 0, FIRST_PERSON: 1, PERCEPT: 2, UFO: 3, AROUND_GRID: 4};
 var _GUI = {ON_GAME_SCREEN:{$:null, LEFT:0, MARGIN_TOP:0}}
 var _GAME_RESULT = {NEUTRAL:0, WON:1, LOST: 2}
 var _ENDGAME = {

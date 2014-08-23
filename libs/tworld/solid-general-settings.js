@@ -21,6 +21,7 @@ var _KNOBS= localStorage.knobs?
 		JSON.parse(localStorage.knobs)
 		:
 		{trial:{test:true,speed:0,pause:true},name:"DEFAULT",desc:"",date:0,battery:true,prop:{fullyObservable:true,multiagent:false,multiagent_type:0,deterministic:true,dynamic:2,known:true},agents:{percept:{sync:true,interval:500,partialGrid:true,radius:3,noise:false,noise_cfg:{tile:0.3,obstacle:0.3,hole:0.3}},determinism:0.8,stochastic_model:1},environment:{rows:8,columns:11,holes_size:{range:[1,3],prob:[334,333,333]},num_holes:{range:[2,3],prob:[500,500]},num_obstacles:{range:[1,2],prob:[500,500]},difficulty:{range:[0,0],prob:[]},scores_variability:0,dynamic:{dynamism:{range:[6,13],prob:[125,125,125,125,125,125,125,125]},hostility:{range:[1,13],prob:[77,77,77,77,77,77,77,77,77,77,77,77,76]},hard_bounds:true},random_initial_state:false,initial_state:[],final_state:[{name:"Time",value:300,result:0}]},teams:[{name:"Team0",color:"red",members:1},{name:"Team1",color:"blue",members:1}],final_tweaks:{battery:{level:1000,good_move:20,bad_move:5,sliding:10},multiplier:{enabled:true,timeout:6},score:{cell:true},shapes:false}};
+var _KNOBS_SETTINGS = getSettings();
 
 var _LANGUAGE = _LANGUAGES.SPANISH;
 
@@ -57,10 +58,7 @@ if (_KNOBS.trial.test){
 	var _AGENTS = [
 	{
 		NAME : "Rob, the agent",
-		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:16}/*Arrow keys + Ctrl*/
-		//CONTROLS : {Up:87, Down:83, Left:65, Right:68, Restore:69} /*WASDE*/
-		//CONTROLS : {Up:72, Down:78, Left:66, Right:77, Restore:74};/*HNBMJ*/
-		//CONTROLS : {Up:80, Down:192, Left:76, Right:222, Restore:187};/*PÑL[+*/
+		CONTROLS : {Up:38, Down:40, Left:37, Right:39, Restore:16}/*Arrow keys + shift*/
 	}
 	];
 }else{
@@ -139,16 +137,16 @@ var _SCORE_CELLS_MULTIPLIER = _KNOBS.final_tweaks.score.cell? 2 : 0;
 var _SCORE_HOLE_MULTIPLIER = 10;
 
 // Graphics
-var _LOW_QUALITY_GRID	= false;
-var _LOW_QUALITY_WORLD	= false;
-var _FULL_WINDOW_RENDER	= false;
-var _RENDER_AUTO_SIZE	= false;
-var 	_RENDER_WIDTH	= 712;
-var 	_RENDER_HEIGHT	= 400;
+var _LOW_QUALITY_GRID	= _KNOBS_SETTINGS.display.lq_grid;
+var _LOW_QUALITY_WORLD	= _KNOBS_SETTINGS.display.lq_env;
+var _FULL_WINDOW_RENDER	= _KNOBS_SETTINGS.display.cover_window;
+var _RENDER_AUTO_SIZE	= !_KNOBS_SETTINGS.display.resolution;
+var 	_RENDER_WIDTH	= !_RENDER_AUTO_SIZE? _KNOBS_SETTINGS.display.resolution.match(/^(\d+)x(\d+)$/)[1] : undefined;
+var 	_RENDER_HEIGHT	= !_RENDER_AUTO_SIZE? _KNOBS_SETTINGS.display.resolution.match(/^(\d+)x(\d+)$/)[2] : undefined;
 
 // Hide/show enable/disable things
 var _SHOW_HOLES_HELPERS = true;
-var _SHOW_FPS = true;
+var _SHOW_FPS = _KNOBS_SETTINGS.display.show_fps;
 
 // Camera
 var _DEFAULT_CAMERA	= _KNOBS.trial.camera;
@@ -158,8 +156,8 @@ var _CAMERA_SMOOTH	= true;
 var _MINIMAL_UPDATE_DELAY = 0; //the less, the smoother animations are
 
 // Audio
-var _AUDIO_ENABLE = true;
-var 	_VOLUME_LEVEL = 100;
+var _AUDIO_ENABLE = _KNOBS_SETTINGS.audio.enabled;
+var 	_VOLUME_LEVEL = _KNOBS_SETTINGS.audio.volume;
 
 var _START_TIME;
 
@@ -226,6 +224,7 @@ if (_RENDER_AUTO_SIZE){
 	}catch(e){}
 }
 try{updateScreenResolution(_RENDER_WIDTH, _RENDER_HEIGHT);}catch(e){}
+
 
 
 for (var k=0; k < _NUMBER_OF_AGENTS; ++k){

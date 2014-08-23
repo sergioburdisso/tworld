@@ -130,15 +130,19 @@ td input{text-align: center}
 	display: none;
 }
 
+.sett-item:hover{color:initial}
+.sett-item.active{font-weight:bold; margin-right: 100px;}
+
 .margin-10{margin: 10px}
 .text-light-green{color: rgb(187, 221, 187)}
 .text-white{color: white}
 .text-left{text-align: left}
 .text-center{text-align: center}
 .text-gray{color: #555}
+.text-light-gray,.sett-item{color: #CCC}
 .text-red{color: #B82B28}
 .text-orange{color: #D54D1D}
-.text-blue{color: #428BCA}
+.text-blue,.sett-item.active{color: #428BCA}
 .border-right{border-right: 0px}
 .border-top{border-top: 0px}
 .white{background-color: white}
@@ -333,6 +337,7 @@ a:hover{
 	/*transform: translateY(2px);*/
 }
 
+.sett-item,
 .stoch-box, a,
 .transition-600{
 	-webkit-transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);

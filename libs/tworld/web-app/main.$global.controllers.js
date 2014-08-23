@@ -137,6 +137,13 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 		);
 	}
 
+	$scope.viewSettings = function(){
+		$modal.open({
+			templateUrl: 'settings-modal.html',
+			controller: settingsModalController
+		})
+	}
+
 	//updating previously saved list of agents and teams (from the last execution)
 	for (var a=$scope.agents.length; a--;)
 		if ($scope.agents[a].program)
@@ -184,8 +191,21 @@ function readKeyController($scope, $modal, $modalInstance){
 }
 
 function settingsModalController($scope, $modal, $modalInstance){
+	var _selected = 0;
+	$scope.sett = getSettings();
 
-	$scope.save = function(){$modalInstance.close()};
+	$scope.isVideoTab = function(){return _selected === 0}
+	$scope.isAudioTab = function(){return _selected === 1}
+	$scope.isGeneralTab = function(){return _selected === 2}
+
+	$scope.setVideoTab = function(){_selected = 0}
+	$scope.setAudioTab = function(){_selected = 1}
+	$scope.setGeneralTab = function(){_selected = 2}
+
+	$scope.save = function(){
+		saveSettings($scope.sett);
+		$modalInstance.close()
+	};
 	$scope.cancel = function () {$modalInstance.dismiss()};
 
 }
