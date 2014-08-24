@@ -1907,9 +1907,9 @@ function GraphicTWorld(graphicEngine, environment){
 					}
 				);
 				//console.clear();
-				_TWorld.start();
 				$("#playFrame").remove();
 				_START_TIME = Date.now();
+				_TWorld.start();
 			}
 		});
 

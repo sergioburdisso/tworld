@@ -26,7 +26,7 @@
 		var _self = this;
 		var _selected = -1;
 
-		this.agentPrograms = agentPrograms = getAgentPrograms();
+		this.agentPrograms = updateAgentPrograms();
 		this.orderCond = "-date";
 		this.allProps = true;
 		this.page = 1;
@@ -85,8 +85,8 @@
 					}
 				}).result.then(
 					function (id) {
-						taskEnvironments = getEnvironments();
-						agentPrograms = getAgentPrograms();
+						updateEnvitonments();
+						updateAgentPrograms();
 						$modal.open({
 							size: 'lg',//size,
 							templateUrl: 'run-modal.html',
@@ -119,7 +119,7 @@
 		}
 
 		function _remove(){
-			_self.agentPrograms = agentPrograms = getAgentPrograms();
+			_self.agentPrograms = updateAgentPrograms();
 
 			//remove trials
 			removeAgentProgramTrials(_selected);
@@ -138,8 +138,8 @@
 			var _source;
 			var _editor;
 
-			taskEnvironments = getEnvironments();
-			agentPrograms = getAgentPrograms();
+			updateEnvitonments();
+			updateAgentPrograms();
 
 			ace.require("ace/ext/language_tools");
 			_editor = ace.edit("source-code");
@@ -229,7 +229,7 @@
 				})
 				.result.then(
 					function (id) {
-						taskEnvironments = getEnvironments();
+						updateEnvitonments();
 						if (!_self.task_env && run){
 							_self.task_env = getEnvironmentByDate(id);
 							_self.openRunModal();
@@ -278,7 +278,7 @@
 			this.save = function(){
 				var _newFlag = !agentProg.date;
 
-				agentPrograms = getAgentPrograms();
+				updateAgentPrograms();
 
 				if (_newFlag){
 					agentProg.date = Date.now();

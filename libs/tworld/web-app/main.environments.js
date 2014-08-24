@@ -27,7 +27,7 @@
 		var _self = this;
 		var _selected = -1;
 
-		this.taskEnvironments = taskEnvironments = getEnvironments();
+		this.taskEnvironments = updateEnvitonments();
 		this.orderCond = "-date";
 		this.allProps = true;
 		this.page = 1;
@@ -112,7 +112,7 @@
 		}
 
 		function _remove(){
-			_self.taskEnvironments = taskEnvironments = getEnvironments();
+			_self.taskEnvironments = updateEnvitonments();
 
 			//remove trials
 			removeTaskEnvironmentTrials(_selected);
@@ -180,7 +180,7 @@
 
 				taskEnvironment.trial.test = false;
 
-				taskEnvironments = getEnvironments();
+				updateEnvitonments();
 
 				if (!taskEnvironment.date){
 					taskEnvironment.date = Date.now();
@@ -435,6 +435,7 @@
 			}
 
 			function setCompetitive(){
+				_self.nTeam = _default.teams.comp.length;
 				taskEnvironment.teams = _default.teams.comp;
 				taskEnvironment.prop.multiagent_type = 0;
 			}
@@ -442,11 +443,13 @@
 			function setSingleAgent(){taskEnvironment.teams=_default.teams.single}
 
 			function setCooperative(){
+				_self.nTeam = _default.teams.coop.length;
 				taskEnvironment.teams = _default.teams.coop;
 				taskEnvironment.prop.multiagent_type = 1;
 			}
 
 			function setCompetitiveCooperative(){
+				_self.nTeam = _default.teams.coopComp.length;
 				taskEnvironment.teams = _default.teams.coopComp;
 				taskEnvironment.prop.multiagent_type = 2;
 			}
@@ -495,7 +498,7 @@
 		this.nextHoleId = function(){this.selected = ++this.holeId}
 	});
 
-	mod.filter('tprobability', function() {
+	mod.filter('tpercent', function() {
 		return function(input) {return (input/10).toFixed(1)+"%"}
 	});
 

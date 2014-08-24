@@ -90,21 +90,6 @@ Array.prototype.contains = function(obj) {
 	return false;
 }
 
-Array.prototype.flattening = function() {
-	var flatten = [];
-	var subFlatten;
-
-	for (var len= this.length, i=0; i < len; ++i)
-		if (this[i] instanceof Array){
-			subFlatten = this[i].flattening();
-			for (var slen= subFlatten.length, j=0; j < slen; ++j)
-				flatten.push(subFlatten[j]);
-		}else
-			flatten.push(this[i]);
-
-	return flatten;
-}
-
 Array.prototype.flatteningAllButTied = function() {
 	var flatten = [];
 	var subFlatten;

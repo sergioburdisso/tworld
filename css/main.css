@@ -40,6 +40,8 @@ p {
 	margin-right:auto;
 }
 
+.popover, .tooltip{z-index: 10000}/*for modal compatibility*/
+
 .table-grid,
 .table-grid th,
 .table-grid td
@@ -48,10 +50,16 @@ p {
 	border-collapse:collapse;
 }
 
+table.stats th{vertical-align: middle !important}
+table.stats th, table.stats td{text-align: center}
+
 .table-grid td:hover{
 	background-color: #ebebeb;
 	cursor: copy;
 }
+
+.color-gray{background-color: #CCC}
+.initial-color{background-color: initial !important}
 
 td input{text-align: center}
 
@@ -137,12 +145,13 @@ td input{text-align: center}
 .margin-10{margin: 10px}
 .text-light-green{color: rgb(187, 221, 187)}
 .text-white{color: white}
-.text-left{text-align: left}
+.text-left{text-align: left !important}
 .text-center{text-align: center}
 .text-gray{color: #555}
 .text-light-gray,.sett-item{color: #CCC}
 .text-red{color: #B82B28}
 .text-orange{color: #D54D1D}
+.text-green{color: #5CB85C}
 .text-blue,.sett-item.active{color: #428BCA}
 .border-right{border-right: 0px}
 .border-top{border-top: 0px}

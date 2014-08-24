@@ -29,7 +29,7 @@
 			<br>
 		</div>
 		<div class="row">
-			<button class="btn btn-success col-md-1" ng-click="enc.addTeam()" ng-hide="enc.isCooperative()">Add</button>
+			<button class="btn btn-success col-md-1" ng-click="enc.addTeam()" ng-hide="enc.isCooperative()||!isAgentProgramTrialsEmpty(enc.task_env.date)">Add</button>
 		</div>
 
 	</div>

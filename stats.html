@@ -27,17 +27,17 @@
 			<h2><span class="glyphicon glyphicon-stats"></span> Trials<small class="pull-right" ng-if="totalPages-1">{{sc.page+'/'+totalPages}}</small></h2>
 			<!--Body content-->
 			<div class="list-group mouse-cursor" style="min-height: 300px">
-				<a class="list-group-item step animate-filter transition-400" ng-repeat="tr in sc.trials | orderBy:sc.orderCond track by $index" ng-click="sc.setSelected(tr.date)" ng-dblclick="" ng-class="{active:sc.isSelected(tr.date)}" ng-if="(sc.page-1)*sc.itemsPerPage <= $index&&$index < sc.page*sc.itemsPerPage">
+				<a class="list-group-item step animate-filter transition-400" ng-repeat="tr in sc.trials | orderBy:sc.orderCond track by $index" ng-click="sc.setSelected(tr.date)" ng-dblclick="sc.viewStats()" ng-class="{active:sc.isSelected(tr.date)}" ng-if="(sc.page-1)*sc.itemsPerPage <= $index&&$index < sc.page*sc.itemsPerPage">
 
 				<h4 class="list-group-item-heading">
-					<span class="badge active">{{tr.date | date:'dd/MM/yyyy - HH:mm:ss'}}</span>
+					<span class="badge active">{{tr.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span>
 					<b>Task env.:</b> {{tr.task_env_name | stringLimit:22}}
 					<span ng-if="tr.agent_progs_num > 1"><b>Agent progs.:</b> {{tr.agent_progs | stringLimit:22}}</span>
 					<span ng-if="tr.agent_progs_num == 1"><b>Agent prog.:</b> {{tr.agent_progs | stringLimit:22}}</span>
 				</h4>
 
 				<span ng-show="sc.isSelected(tr.date)" class="pull-right animate-only-show">
-					<button class="btn btn-info glyphicon glyphicon-list" style="top:-27px; margin-right:10px" ng-click="sc.open()" tooltip="View details"></button>
+					<button class="btn btn-info glyphicon glyphicon-list" style="top:-27px; margin-right:10px" ng-click="sc.viewStats()" tooltip="View Stats"></button>
 					<button class="btn btn-danger glyphicon glyphicon-remove" style="top:-27px" ng-click="sc.remove()" tooltip="Delete"></button>
 				</span>
 
@@ -50,3 +50,100 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/ng-template" id="view-stats.html">
+	<div class="modal-header">
+		<h3 class="modal-title top-shadow">
+			<span class="glyphicon glyphicon-signal"></span> Trial Stats ({{trial.date | date:'dd-MMM-yyyy HH:mm:ss'}})
+		</h3>
+	</div>
+	<div class="modal-body">
+		<div class="row"><div class="col-md-6">
+			<b>Task Environment:</b> <span class="text-blue">{{task_env.name}}</span>
+		</div></div>
+
+		<br>
+		<tabset ng-if="showTeams()">
+			<tab select="setTableAgentPrograms()">
+				<tab-heading>
+					<i class="glyphicon glyphicon-stats"></i> Agent Programs
+				</tab-heading>
+			</tab>
+			<tab select="setTableTeams()">
+				<tab-heading>
+					<i class="glyphicon glyphicon-stats"></i> Teams
+				</tab-heading>
+			</tab>
+		</tabset>
+		<div class="table-responsive">
+			<table class="table stats table-striped table-bordered">
+				<tr>
+					<th rowspan="2" class="initial-color">Pos.</th>
+					<th rowspan="2" class="initial-color">
+						<span ng-if="!teamsTable">Agent Program</span>
+						<span ng-if="teamsTable">Teams</span>
+					</th>
+					<th colspan="2" class="initial-color">Score</th>
+					<th colspan="2" class="initial-color">Moves</th>
+					<th rowspan="2" class="initial-color">Filled cells</th>
+					<th rowspan="2" class="initial-color">Filled Holes</th>
+					<th colspan="3" class="initial-color">Battery</th>
+				</tr>
+				<tr>
+					<th>Final</th>
+					<th>Total</th>
+					<th>Good</th>
+					<th>Bad</th>
+					<th>Use</th>
+					<th>Recharges</th>
+					<th>Restorations</th>
+				</tr>
+				<tr ng-repeat="item in orderdItems track by $index">
+					<td class="text-orange"><b>{{item.pos}}</b></td>
+
+					<td class="text-blue" ng-if="!teamsTable&&showTeams()&&task_env.teams[item.team].color">
+						<img ng-src="copperlichtdata/color-{{task_env.teams[item.team].color}}.png" height="20" style="margin-top:-4px" class="pull-left" tooltip="{{teams[item.team].name}}">
+						{{item.name|stringLimit:28}}
+					</td>
+					<td class="text-blue" ng-if="teamsTable&&showTeams()&&item.color">
+						<img ng-src="copperlichtdata/color-{{item.color}}.png" height="20" style="margin-top:-4px" class="pull-left">
+						{{item.name|stringLimit:28}}
+					</td>
+					<td class="text-blue" ng-if="!teamsTable&&!showTeams()">
+						{{item.name|stringLimit:28}}
+					</td>
+
+					<td class="text-green">{{item.score}}</td>
+					<td>{{item.stats.MTotalScore}}</td>
+					<td>{{item.stats.mGoodMoves}}</td>
+					<td>{{item.stats.mBadMoves}}</td>
+					<td>{{item.stats.MCells}}</td>
+					<td>{{item.stats.MHoles}}</td>
+					<td>{{item.stats.mBatteryUsed|tpercent}}</td>
+					<td>{{item.stats.mBatteryRecharge}}</td>
+					<td>{{item.stats.mBatteryRestore}}</td>
+				</tr>
+			</table>
+		</div>
+
+		<br>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="col-md-2"><b>Speed</b><br>{{trial.speed | tspeed}}</div>
+				<div class="col-md-2"><b>Pause</b><br>{{trial.pause&&"enabled"||"disabled"}}</div>
+				<div class="col-md-2">
+					<b>Result</b><br><span ng-if="trial.result == 0"><b>neutral</b></span>
+					<span ng-if="trial.result == 1" class="text-green"><b>success</b></span>
+					<span ng-if="trial.result == 2" class="text-red"><b>failure</b></span>
+				</div>
+				<div class="col-md-2"><b>T-Time</b><br>{{trial.stats.t_time|ttime}}t-s</div>
+				<div class="col-md-2"><b>Time</b><br>{{(trial.stats.time/1000).toFixed(2)|ttime}}s</div>
+				<div class="col-md-2"><b>Total holes</b><br>{{trial.stats.total_holes}}</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" ng-click="close()">Close</button>
+	</div>
+</script>

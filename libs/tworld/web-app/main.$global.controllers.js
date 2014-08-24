@@ -102,7 +102,7 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 	$scope.teams = new Array(taskEnv.teams.length);
 	$scope.cameras = _CAMERA_TYPE;
 
-	agentPrograms = getAgentPrograms();
+	updateAgentPrograms();
 
 	$scope.run = function () {
 		$scope.task_env.trial.agents = $scope.agents;

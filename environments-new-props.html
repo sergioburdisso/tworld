@@ -23,7 +23,7 @@
 			<div class="row">
 				<div class="btn-group btn-group-justified">
 					<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent" ng-change="enc.updateTeams()" btn-radio="false" tooltip-placement="left" tooltip="A single robot will perform in the environment">Single agent</label>
-					<label class="btn btn-default active" ng-model="enc.task_env.prop.multiagent" ng-change="enc.updateTeams()" btn-radio="true" tooltip-placement="right" tooltip="The environment will have more than one robot">Multiagent</label>
+					<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent" ng-change="enc.updateTeams()" btn-radio="true" tooltip-placement="right" tooltip="The environment will have more than one robot">Multiagent</label>
 				</div>
 			</div>
 			<br>
@@ -31,7 +31,7 @@
 				<div class="row" style="margin-top: -15px; padding-bottom: 20px">
 					<div class="btn-group">
 						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="0" tooltip-placement="left" tooltip="one-vs-one match (single-robot teams)">Competitive</label>
-						<label class="btn btn-default active" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="1" tooltip-placement="bottom" tooltip="A single team with multiple robots">Cooperative</label>
+						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="1" tooltip-placement="bottom" tooltip="A single team with multiple robots">Cooperative</label>
 						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="2" tooltip-placement="right" tooltip="Teams are composed of more than one robot">Competitive &amp; Cooperative</label>
 					</div>
 				</div>
@@ -45,7 +45,7 @@
 			<br>
 			<div class="row">
 				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default active" ng-model="enc.task_env.prop.dynamic" btn-radio="0" tooltip-placement="left" tooltip="The environment itself does not change">Static</label>
+					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" btn-radio="0" tooltip-placement="left" tooltip="The environment itself does not change">Static</label>
 					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" btn-radio="1" tooltip-placement="bottom" tooltip="The environment itself does not change but scores associated with holes gradually decay in value">Semidynamic</label>
 					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" btn-radio="2" tooltip-placement="right" tooltip="The environment can change while the robot is deliberating">Dynamic</label>
 				</div>
@@ -53,7 +53,7 @@
 			<br>
 			<div class="row">
 				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default active" ng-model="enc.task_env.prop.known" btn-radio="true" tooltip-placement="left" tooltip="The outcomes (or outcome probabilities if the environment is stochastic) for all actions are given">Known</label>
+					<label class="btn btn-default" ng-model="enc.task_env.prop.known" btn-radio="true" tooltip-placement="left" tooltip="The outcomes (or outcome probabilities if the environment is stochastic) for all actions are given">Known</label>
 					<label class="btn btn-default" ng-model="enc.task_env.prop.known" btn-radio="false" tooltip-placement="right" tooltip="The outcomes of actions are not given">Unknown</label>
 				</div>
 			</div>

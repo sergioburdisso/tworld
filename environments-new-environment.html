@@ -111,8 +111,10 @@
 				</div>
 				<br>
 				<div class="row">
-					<div class="checkbox">
-						<label><input type="checkbox" ng-model="enc.task_env.environment.dynamic.hard_bounds"> Hard bounds.</label>
+					<div class="container">
+						<div class="checkbox">
+							<label><input type="checkbox" ng-model="enc.task_env.environment.dynamic.hard_bounds"> Hard bounds.</label>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -195,7 +197,7 @@
 					{{knob.range[0]}}
 				</div>
 				<div class="prob-bar" ng-repeat="prob in knob.prob track by $index">
-					<div class="ui-slider-size vertical" ui-slider="slider_options" min="0" max="1000" ng-model="knob.prob[$index]"></div>
+					<div class="ui-slider-size vertical" ui-slider="slider_options" min="0" max="1000" ng-model="knob.prob[$index]" tooltip="P({{knob.range[0]+$index}})={{(knob.prob[$index]/1000).toFixed(3)}}" tooltip-placement="bottom"></div>
 				</div>
 				{{knob.range[1]}}
 			</div>

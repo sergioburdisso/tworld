@@ -586,10 +586,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 						_self.updateScore(rIndex, _rob[rIndex].HoleBeingFilled.Value, _rob[rIndex].HoleBeingFilled.OriginalCells, true);
 						removeHoleHelpers(_rob[rIndex].HoleBeingFilled);
 						_rob[rIndex].Stats.filled_holes++;
+						_rob[rIndex].Stats.filled_cells++;
 						if (_ENDGAME.FILLED_HOLES.VALUE)
 							_checkIfGameOver(_ENDGAME.FILLED_HOLES, _rob[rIndex].Stats.filled_holes);
-
-						_rob[rIndex].Stats.filled_cells++;
 						if (_ENDGAME.FILLED_CELLS.VALUE)
 							_checkIfGameOver(_ENDGAME.FILLED_CELLS, _rob[rIndex].Stats.filled_cells);
 					}else{
@@ -809,7 +808,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 						stats:{
 							t_time: _time,
 							time: Date.now()-_START_TIME,
-							total_holes: Hole.Counter
+							total_holes: Hole.Counter || 0
 						},
 						agents: new Array(_NUMBER_OF_AGENTS)
 					}
@@ -818,7 +817,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 					trial.agents[i] = {
 						program_id: _KNOBS_Agents[i].program.date,
 						team: _KNOBS_Agents[i].team,
-						socre: _rob[i].Score,
+						score: _rob[i].Score,
 						stats: _rob[i].Stats
 					};
 				}

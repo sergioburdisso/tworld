@@ -19,7 +19,7 @@
 					<div ng-repeat="agent in team track by $index">
 						<span ng-if="!singleAgent()">Agent (id {{agent.id}}): </span>
 						<span ng-if="singleAgent()">Agent Program: </span>
-						<label class="cursor-pointer" title="Click to select an agent program"> 
+						<label class="cursor-pointer" tooltip="Click to select an agent program"> 
 							<span ng-if="agent.program" class="text-blue"> {{agent.program.name|stringLimit:30}}</span>
 							<span ng-if="!agent.program" class="text-red"> (empty)</span>
 							<button class="btn btn-default glyphicon glyphicon-pencil btn-sm" ng-click="selectAgentProgram(agent.id)"></button>
@@ -33,13 +33,9 @@
 	<div class="panel panel-default">
 		<div class="panel-body">
 
-			
 			<br>
 			<div class="col-md-4">
-				T-World speed is {{
-					(task_env.trial.speed < 0 && (-task_env.trial.speed+1) + " times slower.")||
-					(task_env.trial.speed == 0 && "normal.") ||
-					((task_env.trial.speed+1) + " times faster.")}}
+				T-World speed is {{ task_env.trial.speed | tspeed }}
 				<div class="ui-slider-size" ui-slider min="-9" max="9" step="1" ng-model="task_env.trial.speed"></div>
 				<label>({{
 					(task_env.trial.speed < 0 && (-task_env.trial.speed+1)+ " seconds = 1 t-second")||

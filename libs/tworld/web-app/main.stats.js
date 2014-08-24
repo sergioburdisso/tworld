@@ -25,8 +25,8 @@
 		var _selected = -1;
 		var _trials = getTrials();
 
-		taskEnvironments = getEnvironments();
-		agentPrograms = getAgentPrograms();
+		updateEnvitonments();
+		updateAgentPrograms();
 
 		if (!$routeParams.task_env_id)
 			$routeParams.task_env_id = "all";
@@ -102,7 +102,7 @@
 
 		this.selectTaskEnvironment = function(){
 			$modal.open({
-				size: 'lg',//size,
+				size: 'lg',
 				templateUrl: 'items-list-modal.html',
 				controller: itemsListController,
 				resolve:{
@@ -122,7 +122,7 @@
 
 		this.selectAgentProgram = function(){
 			$modal.open({
-				size: 'lg',//size,
+				size: 'lg',
 				templateUrl: 'items-list-modal.html',
 				controller: itemsListController,
 				resolve:{
@@ -132,12 +132,84 @@
 			})
 			.result.then(
 				function (agent_prog_id) {
-					$location.url(
-						'/stats/task-env:'+$routeParams.task_env_id+'&agent-prog:'+agent_prog_id
-					);
+					$location.url('/stats/task-env:'+$routeParams.task_env_id+'&agent-prog:'+agent_prog_id);
 					gotoTop()
 				}
 			);
+		}
+
+		this.viewStats = function(){
+			$modal.open({
+				size: 'lg',
+				templateUrl: 'view-stats.html',
+				controller: viewStatsController,
+				resolve:{trial:function(){return _selected}}
+			}).result.then(null,updateEnvitonments);
+		}
+
+		function viewStatsController($scope, $modal, $modalInstance, trial){
+			$scope.trial = getTrialByDate(trial);
+			$scope.task_env = getEnvironmentByDate($scope.trial.task_env_id);
+			$scope.teams = $scope.task_env.teams;
+			$scope.teamsTable = false;
+
+			for(var a = $scope.trial.agents.length, agent, team; a--;){
+				agent = $scope.trial.agents[a];
+				team = $scope.teams[agent.team];
+
+				agent.name = getAgentProgramByDate(agent.program_id).name;
+
+				agent.stats = {
+					MTotalScore: agent.stats.total_score,
+					MHoles: agent.stats.filled_holes,
+					MCells: agent.stats.filled_cells,
+					mGoodMoves: agent.stats.good_moves,
+					mBadMoves: agent.stats.bad_moves,
+					mBatteryUsed: agent.stats.battery_used,
+					mBatteryRestore: agent.stats.battery_restore,
+					mBatteryRecharge: agent.stats.battery_recharge
+				}
+
+				if (!team.stats)
+					team.stats = {}
+				team.score = (team.score|0) + agent.score;
+				team.stats.MTotalScore = (team.stats.MTotalScore|0) + agent.stats.MTotalScore;
+				team.stats.MHoles= (team.stats.MHoles|0) + agent.stats.MHoles;
+				team.stats.MCells= (team.stats.MCells|0) + agent.stats.MCells;
+				team.stats.mGoodMoves= (team.stats.mGoodMoves|0) + agent.stats.mGoodMoves;
+				team.stats.mBadMoves= (team.stats.mBadMoves|0) + agent.stats.mBadMoves;
+				team.stats.mBatteryUsed= (team.stats.mBatteryUsed|0) + agent.stats.mBatteryUsed;
+				team.stats.mBatteryRestore= (team.stats.mBatteryRestore|0) + agent.stats.mBatteryRestore;
+				team.stats.mBatteryRecharge= (team.stats.mBatteryRecharge|0) + agent.stats.mBatteryRecharge;
+			}
+
+			//in case of tied game the method to try to break the tie, in order, is:
+			// +FinalScore
+			// +TotalScore
+			// +Holes
+			// +Cells
+			// -GoodMoves
+			// -BadMoves
+			// -BatteryUsed
+			// -BatteryRestore
+			// -BatteryRecharge
+			$scope.trial.agents = SortAndPartition($scope.trial.agents).flattening();
+			$scope.teams = SortAndPartition($scope.teams).flattening();
+
+			$scope.close = function (){$modalInstance.dismiss()};
+			$scope.setTableTeams = function(){
+				$scope.orderdItems = $scope.teams;
+				$scope.teamsTable = true;
+			};
+			($scope.setTableAgentPrograms = function(){
+				$scope.orderdItems = $scope.trial.agents;
+				$scope.teamsTable = false;
+			})();
+
+			$scope.showTeams = function(){
+				return	$scope.task_env.prop.multiagent &&
+						$scope.task_env.prop.multiagent_type == 2;
+			}
 		}
 
 		this.open = function(){$location.url('/trials/view/'+_selected)}

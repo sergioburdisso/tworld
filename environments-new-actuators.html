@@ -28,7 +28,7 @@
 						<tr><td></td>
 							<td>
 								<b class="text-orange" ng-hide="enc.isUsedDefined()">
-									{{enc.stochastic_model.prob[0] | tprobability }}
+									{{enc.stochastic_model.prob[0] | tpercent }}
 								</b>
 								<b class="animate-show" ng-show="enc.isUsedDefined()">
 									<input type="text" class="form-control center text-orange" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[0]" ng-change="enc.updateUserStochasticModel(0)">
@@ -38,7 +38,7 @@
 						<tr>
 							<td>
 								<b ng-show="enc.stochastic_model.prob[1]&&!enc.isUsedDefined()">
-									{{enc.stochastic_model.prob[1] | tprobability }}
+									{{enc.stochastic_model.prob[1] | tpercent }}
 								</b>
 								<b class="animate-show" ng-show="enc.isUsedDefined()">
 									<input type="text" class="form-control center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[1]" ng-change="enc.updateUserStochasticModel(1)">
@@ -49,7 +49,7 @@
 							</td>
 							<td>
 								<b ng-show="enc.stochastic_model.prob[2]&&!enc.isUsedDefined()">
-									{{enc.stochastic_model.prob[2] | tprobability }}
+									{{enc.stochastic_model.prob[2] | tpercent }}
 								</b>
 								<b class="animate-show" ng-show="enc.isUsedDefined()">
 									<input type="text" class="form-control center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[2]" ng-change="enc.updateUserStochasticModel(2)">
@@ -58,7 +58,7 @@
 						</tr>
 						<tr><td></td>
 							<td>
-								<b ng-show="enc.stochastic_model.prob[3]&&!enc.isUsedDefined()">{{enc.stochastic_model.prob[3] | tprobability }}
+								<b ng-show="enc.stochastic_model.prob[3]&&!enc.isUsedDefined()">{{enc.stochastic_model.prob[3] | tpercent }}
 								</b>
 								<b class="animate-show" ng-show="enc.isUsedDefined()">
 									<input type="text" class="form-control center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[3]" ng-change="enc.updateUserStochasticModel(3)">
@@ -69,7 +69,7 @@
 					<br>
 					<div class="panel panel-default animate-show" ng-show="enc.stochastic_model.prob[4]||enc.isUsedDefined()">
 						Refuses to move<br>
-						<b ng-hide="enc.isUsedDefined()">{{enc.stochastic_model.prob[4] | tprobability }}</b>
+						<b ng-hide="enc.isUsedDefined()">{{enc.stochastic_model.prob[4] | tpercent }}</b>
 						<b class="animate-show" ng-show="enc.isUsedDefined()">
 							<input type="text" class="form-control center text-center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[4]" ng-change="enc.updateUserStochasticModel(4)">
 						</b>

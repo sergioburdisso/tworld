@@ -62,19 +62,123 @@ Array.prototype.contains = function(obj) {
 	return false;
 }
 
+Array.prototype.flattening = function(pos) {
+	var flatten = [];
+	var subFlatten;
+
+	for (var len= this.length, i=0; i < len; ++i){
+		if (this[i] instanceof Array){
+			subFlatten = this[i].flattening(!pos && (this.length > 1 || (this.length == 1 && !(this[0] instanceof Array)))? i+1 : pos);
+			for (var slen= subFlatten.length, j=0; j < slen; ++j)
+				flatten.push(subFlatten[j]);
+		}else{
+			this[i].pos = pos || i + 1;
+			flatten.push(this[i]);
+		}
+	}
+
+	return flatten;
+}
+
+
+//-> improving Object class! XD
+
+//Object.nextProperty = function(prop){ <- JQuery crashes! dont know why
+function NextProperty(obj, prop){
+	var prevProp = null;
+	for (p in obj)
+		if (!(obj[p] instanceof Function))
+			if (prevProp == prop)
+				return p;
+			else
+				prevProp = p;
+	return "";
+}
+//<-
+
+function SortAndPartition(list, criteria){
+	var tiePartitions = [];
+	var oapList = [];// oap stands for "Ordered and Partitioned"
+
+	criteria = NextProperty(list[0].stats, criteria);
+
+	//recursion stopping condition
+	if (list.length <= 1 || !criteria)
+		return list;
+
+	//sorting the list according to criteria
+	if (criteria[0] == "M")
+		list.sort(function(a,b){return b.stats[criteria] - a.stats[criteria]});
+	else
+		list.sort(function(b,a){return b.stats[criteria] - a.stats[criteria]});
+
+	//creating partitions according to equal results (tied cases)
+	for (var prevValue = null, k=-1, i=0; i < list.length; i++)
+		if (list[i].stats[criteria] === prevValue)
+			tiePartitions[k].push(list[i]);
+		else{
+			//creating a new partition of "equal values"
+			tiePartitions.push([list[i]]);
+			prevValue = list[i].stats[criteria];
+			k++;
+		}
+
+	//for each partition
+	for (var p=0; p < tiePartitions.length; ++p)
+		oapList.push(
+			SortAndPartition(tiePartitions[p], criteria) //recursive call
+		);
+
+	return oapList;
+}
+
 function clone(obj){return JSON.parse(JSON.stringify(obj))}
+
 
 function getEnvironments(){return localStorage.taskEnvironments? JSON.parse(localStorage.taskEnvironments) : []}
 function saveEnvironments(){localStorage.taskEnvironments = JSON.stringify(taskEnvironments)}
 function clearEnvironments(){localStorage.removeItem("taskEnvironments")}
+function updateEnvitonments(){return ( taskEnvironments= getEnvironments() )}
 
 function getAgentPrograms(){return localStorage.agentPrograms? JSON.parse(localStorage.agentPrograms) : []}
 function saveAgentPrograms(){localStorage.agentPrograms = JSON.stringify(agentPrograms)}
 function clearAgentPrograms(){localStorage.removeItem("agentPrograms")}
+function updateAgentPrograms(){return ( agentPrograms = getAgentPrograms() )}
 
 function getTrials(){return localStorage.trials? JSON.parse(localStorage.trials) : []}
 function saveTrials(trials){localStorage.trials = JSON.stringify(trials)}
 function clearTrials(){localStorage.removeItem("trials")}
+
+function getKnobs(){return localStorage.knobs? JSON.parse(localStorage.knobs) : null}
+function saveKnobs(env, test){
+	if (test) env.trial.test= true; //default trial (test trial)
+	localStorage.knobs = JSON.stringify(env);
+}
+function clearKnobs(){localStorage.removeItem("knobs")}
+
+function getSettings(){
+	return localStorage.settings?
+			JSON.parse(localStorage.settings)
+			:
+			{
+				display:{
+					lq_grid:false,
+					lq_env:false,
+					cover_window: false,
+					resolution: "854x480",
+					show_fps: true
+				},
+				audio:{
+					enabled: true,
+					volume: 80
+				},
+				general:{}
+			};
+}
+function saveSettings(settings){localStorage.settings = JSON.stringify(settings)}
+function clearSettings(){localStorage.removeItem("settings")}
+
+//TODO: all gets and remove should be implemented by a "bisection search" O(log(n))
 
 function removeTaskEnvironmentTrials(task_env_id){
 	var _trials = getTrials();
@@ -110,7 +214,7 @@ function isAgentProgramTrialsEmpty(agent_program_id){
 				return false;
 	return true;
 }
-//TODO: bisection
+
 function getEnvironmentIndexByDate(date){date=parseInt(date);
 	for (var i = taskEnvironments.length; i--;)
 		if (taskEnvironments[i].date === date)
@@ -130,7 +234,6 @@ function removeEnvironmentByDate(date){date=parseInt(date);
 	}
 }
 
-//TODO: bisection
 function getAgentProgramIndexByDate(date){date=parseInt(date);
 	for (var i = agentPrograms.length; i--;)
 		if (agentPrograms[i].date === date)
@@ -149,34 +252,13 @@ function removeAgentProgramByDate(date){date=parseInt(date);
 		saveAgentPrograms();
 	}
 }
-function getKnobs(){return localStorage.knobs? JSON.parse(localStorage.knobs) : null}
-function saveKnobs(env, test){
-	if (test) env.trial.test= true; //default trial (test trial)
-	localStorage.knobs = JSON.stringify(env);
+function getTrialByDate(date){date=parseInt(date);
+	var trials = getTrials();
+	for (var i = trials.length; i--;)
+		if (trials[i].date === date)
+			return trials[i];
+	return null;
 }
-function clearKnobs(){localStorage.removeItem("knobs")}
-
-function getSettings(){
-	return localStorage.settings?
-			JSON.parse(localStorage.settings)
-			:
-			{
-				display:{
-					lq_grid:false,
-					lq_env:false,
-					cover_window: false,
-					resolution: "854x480",
-					show_fps: true
-				},
-				audio:{
-					enabled: true,
-					volume: 80
-				},
-				general:{}
-			};
-}
-function saveSettings(settings){localStorage.settings = JSON.stringify(settings)}
-function clearSettings(){localStorage.removeItem("settings")}
 
 function getMemoryByAgentProgramID(id){
 	if (localStorage.memory)

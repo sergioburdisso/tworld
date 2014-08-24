@@ -48,7 +48,7 @@
 			})
 			.result.then(
 				function (id) {
-					taskEnvironments = getEnvironments();
+					updateEnvitonments();
 					$modal.open({
 						size: 'lg',
 						templateUrl: 'run-modal.html',

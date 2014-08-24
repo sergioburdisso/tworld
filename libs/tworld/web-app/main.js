@@ -128,7 +128,7 @@
 					controllerAs: 'enc',
 					resolve:{
 						taskEnv : function($route){ 
-							taskEnvironments = getEnvironments();
+							updateEnvitonments();
 							return clone(getEnvironmentByDate($route.current.params.id))
 						}
 					}
@@ -144,7 +144,7 @@
 					controllerAs: 'apnc',
 					resolve:{
 						agentProg:function($route){
-						agentPrograms = getAgentPrograms();
+						updateAgentPrograms();
 						return clone(getAgentProgramByDate($route.current.params.id))
 						}
 					}
@@ -302,6 +302,24 @@
 
 	main.filter('nounderscore', function() {
 		return function(input) {return input.replace(/_/g," ")}
+	});
+
+	main.filter('tspeed', function() {
+		return function(input) {
+			return (input < 0 && (-input+1) + " times slower.")|| (input == 0 && "normal.") || ((input+1) + " times faster.")
+		}
+	});
+
+	main.filter('ttime', function(){
+		return function(value){
+			var mins = (value/60|0);
+			var segs = value%60;
+
+			mins = (mins < 10)? (mins? "0"+mins+"m":"") : mins+"m";
+			segs = (segs < 10)? "0"+segs : segs;
+
+			return mins + segs;
+		}
 	});
 
 })();
