@@ -140,7 +140,7 @@
 					}
 				}
 
-			this.emptyTrials = isTaskEnvironmentTrialsEmpty;
+			this.noTrials = isTaskEnvironmentTrialsEmpty;
 			this.nTeam = 0;
 			this.teamColors = colors;
 			this.step = 0;
@@ -175,10 +175,23 @@
 			this.isLastStep = function(){return this.step===6}
 			this.correctStep = function(){if (_next) this.step++; else this.step--}
 
-			this.isDeterministic = function(){return taskEnvironment.prop.deterministic}
-			this.isDynamic = function(){return taskEnvironment.prop.dynamic === 2}
-			this.isSemidynamic = function(){return taskEnvironment.prop.dynamic === 1}
-			this.isRange = function(range){return range[0]!=range[1]}
+			this.loadConfig = function(){
+				$modal.open({
+					size: 'lg',
+					templateUrl: 'items-list-modal.html',
+					controller: itemsListController,
+					resolve:{
+						items:function(){return getEnvironments()},
+						agentProgramsFlag:function(){return false}
+					}
+				})
+				.result.then(function (id) {if(id != -1){
+					updateEnvitonments();
+					_self.task_env = taskEnvironment = clone(getEnvironmentByDate(id));
+					_self.task_env.name+= " (copy)";
+					_self.task_env.date = undefined;
+				}});
+			}
 
 			this.finish = function(){
 				this.validate();
@@ -213,6 +226,11 @@
 				_self.checkDistribution(taskEnvironment.environment.dynamic.dynamism);
 				_self.checkDistribution(taskEnvironment.environment.dynamic.hostility);
 			}
+
+			this.isDeterministic = function(){return taskEnvironment.prop.deterministic}
+			this.isDynamic = function(){return taskEnvironment.prop.dynamic === 2}
+			this.isSemidynamic = function(){return taskEnvironment.prop.dynamic === 1}
+			this.isRange = function(range){return range[0]!=range[1]}
 
 			//PERCEPTION
 			this.getTextVisibilityRadius = function(){
@@ -316,7 +334,7 @@
 						function($scope, $modalInstance, knob){
 							var _oldProbs=[];
 							var _oldValue=0;
-
+							$scope.readOnly = !_self.noTrials(_self.task_env.date);
 							$scope.knob = knob;
 							/*
 							$scope.$watch('knob.prob', function(v){

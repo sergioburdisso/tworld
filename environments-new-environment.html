@@ -2,7 +2,7 @@
 	<h2>Environment</h2>
 	<div class="text-left">
 		<label>Grid dimensions:</label>
-		<div class="row">
+		<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 			<div class="col-md-2 col-xs-2">
 				<input type="number" class="form-control" ng-model="enc.task_env.environment.rows" ng-change="enc.updateDimensions()" ng-class="{'has-error':(enc.task_env.environment.rows|num)<=2}" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Rows" required>
 			</div>
@@ -14,7 +14,7 @@
 		<br>
 
 		<!-- INITIAL RADIO BUTTONS -->
-		<div class="row " ng-hide="enc.isDynamic()">
+		<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-hide="enc.isDynamic()">
 			<div class="btn-group btn-group-justified">
 				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="false" tooltip="Draw the initial state on the grid below">User-defined initial state</label>
 				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="true" tooltip="Inital state is randomly generated every execution">Random initial state</label>
@@ -22,7 +22,7 @@
 		</div>
 
 		<!-- INITIAL STATE -->
-		<div class="panel panel-default animate-only-show" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state">
+		<div class="panel panel-default animate-only-show" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state">
 			<div class="panel-body text-center">
 				<div class="row">
 					<div class="btn-group btn-group">
@@ -46,41 +46,41 @@
 		<div class="panel panel-default animate-only-show" ng-show="enc.isDynamic()||enc.task_env.environment.random_initial_state">
 			<div class="panel-body">
 				<label>Hole size (closed interval: {{enc.task_env.environment.holes_size.range}})</label>
-				<div class="row">
+				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="20" ng-model="enc.task_env.environment.holes_size.range"></div>
 					</div>
-					<div class="col-md-1 col-xs-10">
+					<div class="col-md-1 col-xs-10 teditable">
 						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.holes_size.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.holes_size)"></button>
 					</div>
 				</div>
 				<br>
 				<label>Number of Holes (closed interval: {{enc.task_env.environment.num_holes.range}})</label>
-				<div class="row">
+				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.num_holes.range"></div>
 					</div>
-					<div class="col-md-1 col-xs-10">
+					<div class="col-md-1 col-xs-10 teditable">
 						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.num_holes.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.num_holes)"></button>
 					</div>
 				</div>
 				<br>
 				<label>Number of obstacles (closed interval: {{enc.task_env.environment.num_obstacles.range}})</label>
-				<div class="row">
+				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.num_obstacles.range"></div>
 					</div>
-					<div class="col-md-1 col-xs-10">
+					<div class="col-md-1 col-xs-10 teditable">
 						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.num_obstacles.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.num_obstacles)"></button>
 					</div>
 				</div>
 				<br>
 				<label>Distance of tile from hole cell (closed interval: {{enc.task_env.environment.difficulty.range}})</label>
-				<div class="row">
+				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.difficulty.range"></div>
 					</div>
-					<div class="col-md-1 col-xs-10">
+					<div class="col-md-1 col-xs-10 teditable">
 						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.difficulty.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.difficulty)"></button>
 					</div>
 				</div>
@@ -91,26 +91,26 @@
 			<div class="panel-heading">Dynamism knobs</div>
 			<div class="panel-body">
 				<label>Dynamism (closed interval: {{enc.task_env.environment.dynamic.dynamism.range}})</label>
-				<div class="row">
+				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" ng-model="enc.task_env.environment.dynamic.dynamism.range"></div>
 					</div>
-					<div class="col-md-1 col-xs-10">
+					<div class="col-md-1 col-xs-10 teditable">
 						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.dynamic.dynamism.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.dynamism)"></button>
 					</div>
 				</div>
 				<br>
 				<label>Hostility (closed interval: {{enc.task_env.environment.dynamic.hostility.range}})</label>
-				<div class="row">
+				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" ng-model="enc.task_env.environment.dynamic.hostility.range"></div>
 					</div>
-					<div class="col-md-1 col-xs-10">
+					<div class="col-md-1 col-xs-10 teditable">
 						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.dynamic.hostility.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.hostility)"></button>
 					</div>
 				</div>
 				<br>
-				<div class="row">
+				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 					<div class="container">
 						<div class="checkbox">
 							<label><input type="checkbox" ng-model="enc.task_env.environment.dynamic.hard_bounds"> Hard bounds.</label>
@@ -120,32 +120,32 @@
 			</div>
 		</div>
 
-		<div class="row">
+		<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 			<div class="col-md-6 col-xs-6">
 				<label>Variability of scores ({{(enc.task_env.environment.scores_variability*100).toFixed(1)}}%)</label><div class="ui-slider-size" ui-slider min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.environment.scores_variability"></div>
 			</div>
 		</div>
 		<br>
 		<div class="row" ng-show="enc.isSemidynamic()">
-			<section ng-if="enc.isDeterministic()">
+			<section ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-if="enc.isDeterministic()">
 				<label>Scores associated with holes decay in value every {{enc.task_env.environment.dynamic.dynamism.range[0]}} seconds</label>
 				<div class="col-md-6 col-xs-6">
 					<div class="ui-slider-size" ui-slider min="1" max="60" step="1" ng-model="enc.task_env.environment.dynamic.dynamism.range[0]" ng-change="enc.task_env.environment.dynamic.dynamism.range[1] = enc.task_env.environment.dynamic.dynamism.range[0]"></div>
 				</div>
 			</section>
-			<section ng-if="!enc.isDeterministic()">
+			<section ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-if="!enc.isDeterministic()">
 				<label>Scores associated with holes decay in value within {{enc.task_env.environment.dynamic.dynamism.range}} seconds</label>
 				<div class="col-md-6 col-xs-6">
 					<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" step="1" ng-model="enc.task_env.environment.dynamic.dynamism.range"></div>
 				</div>
-				<div class="col-md-1">
-						<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.dynamic.dynamism.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.dynamism)"></button>
+				<div class="col-md-1 teditable">
+						<button class="btn btn-primary glyphicon glyphicon-stats teditable" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.dynamic.dynamism.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.dynamism)"></button>
 					</div>
 			</section>
 			<br><br><br>
 		</div>
 
-		<div class="row">
+		<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 		<div class="panel panel-default">
 			<div class="panel-heading">Final State/T-World ends when...</div>
 			<div class="panel-body text-center">
@@ -192,12 +192,14 @@
 	<div class="modal-body">
 		<div class="panel text-center">
 			<div class="panel-body">
-				<div class="prob-bar">
+				<div class="tprob-bar">
 					<div class="ui-slider-size vertical axis ui-slider ui-widget ui-widget-content ui-corner-all ui-slider-vertical"></div>
 					{{knob.range[0]}}
 				</div>
-				<div class="prob-bar" ng-repeat="prob in knob.prob track by $index">
-					<div class="ui-slider-size vertical" ui-slider="slider_options" min="0" max="1000" ng-model="knob.prob[$index]" tooltip="P({{knob.range[0]+$index}})={{(knob.prob[$index]/1000).toFixed(3)}}" tooltip-placement="bottom"></div>
+				<div class="tprob-bar" ng-repeat="prob in knob.prob track by $index">
+					<span tooltip="P({{knob.range[0]+$index}})={{(knob.prob[$index]/1000).toFixed(3)}}" tooltip-placement="bottom">
+						<div class="ui-slider-size vertical" ng-class="{'treadonly':readOnly}" ui-slider="slider_options" min="0" max="1000" ng-model="knob.prob[$index]"></div>
+					<span>
 				</div>
 				{{knob.range[1]}}
 			</div>

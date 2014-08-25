@@ -91,9 +91,15 @@ td input{text-align: center}
 .footer a{color: rgb(187, 221, 187)}
 .header a:hover, .footer a:hover{color: white}
 
-.loading {
-	display: none;
-}
+.treadonly,
+.no-events{pointer-events: none}
+.treadonly>*{opacity: 0.6}
+
+.teditable{pointer-events: initial !important}
+.teditable,
+.teditable *{opacity: 1 !important}
+
+.loading {display: none}
 
 .loading.show {
 	display: block;
@@ -107,15 +113,15 @@ td input{text-align: center}
 .ttip-f{}
 .ui-slider-size{font-size: 13px}
 
-.prob-bar{
+.tprob-bar{
 	display: inline-block;
 	margin-bottom: 17px;
 }
-.prob-bar>.ui-slider-vertical .ui-slider-range {
+.tprob-bar .ui-slider-vertical .ui-slider-range {
 	left: 0;
 	width: 100%;/*40%;*/
 }
-.prob-bar>.ui-slider .ui-slider-range {
+.tprob-bar .ui-slider .ui-slider-range {
 	position: absolute;
 	z-index: 1;
 	display: block;
@@ -131,23 +137,23 @@ td input{text-align: center}
 	background: linear-gradient(to bottom, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=0 );
 }
-.prob-bar>.ui-slider-size{font-size: 8px}
-.prob-bar>.ui-slider-size.vertical{
+.tprob-bar .ui-slider-size{font-size: 8px}
+.tprob-bar .ui-slider-size.vertical{
 	height: 400px;
 	border: 0;
 	padding: 0 6px;
 	border-radius: 0;
 	border-bottom: 1px solid black;
 }
-.prob-bar>.ui-slider-size.vertical.axis{
+.tprob-bar .ui-slider-size.vertical.axis{
 	height: 400px;
 	border: 0 ;
 	border-radius: 0;
 	border-right: 1px solid black;
 }
-.prob-bar>.ui-state-default,
-.prob-bar>.ui-widget-content .ui-state-default,
-.prob-bar>.ui-widget-header .ui-state-default {
+.tprob-bar .ui-state-default,
+.tprob-bar .ui-widget-content .ui-state-default,
+.tprob-bar .ui-widget-header .ui-state-default {
 	background: #FF0000;
 	font-weight: normal;
 	display: none;

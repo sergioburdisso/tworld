@@ -5,11 +5,12 @@
 		<footer>Artificial Intelligence: A Modern Approach (Third edition) by Stuart Russell and Peter Norvig</footer>
 	</blockquote>
 </section>
+<button ng-click="enc.loadConfig()" ng-hide="enc.task_env.date&&!enc.noTrials(enc.task_env.date)" class="btn btn-primary pull-right" tooltip="Load and copy all configuration values from an existing task environment"><span class="glyphicon glyphicon-open"></span> Load configuration</button>
 <br>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-3"></div>
-		<div class="col-md-6">
+		<div class="col-md-6" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 			<div class="row text-left">
 				<p class="lead"><b>1.</b> Select the properties of your new task environment according to the dimension listed below.</p>
 			</div>
@@ -27,7 +28,7 @@
 				</div>
 			</div>
 			<br>
-			<div class="container-fluid animate-show-3d-top" ng-show="enc.task_env.prop.multiagent">
+			<div class="container-fluid animate-show-3d-top" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-show="enc.task_env.prop.multiagent">
 				<div class="row" style="margin-top: -15px; padding-bottom: 20px">
 					<div class="btn-group">
 						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="0" tooltip-placement="left" tooltip="one-vs-one match (single-robot teams)">Competitive</label>
@@ -66,13 +67,13 @@ enable the study of maintenance.</label>
 				</div>
 			</div>
 			<div class="separator"></div>
-			<div class="row text-left">
+			<div class="row text-left teditable">
 				<label class="lead"><b>3.</b> Give your task environment a name.</label>
 				<input type="text" class="form-control" ng-model="enc.task_env.name" placeholder="Name" ng-class="{'has-error':!enc.task_env.name.trim().length}"></input>
 			</div>
 			<div class="separator"></div>
-			<div class="row text-left">
-				<label class="lead "><b>4.</b> Optionally, write something about your task environment.</label>
+			<div class="row text-left teditable">
+				<label class="lead"><b>4.</b> Optionally, write something about your task environment.</label>
 				<textarea class="form-control" ng-model="enc.task_env.desc" rows="5" placeholder="Description"></textarea>
 			</div>
 			<div class="separator"></div>

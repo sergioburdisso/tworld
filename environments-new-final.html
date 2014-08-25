@@ -1,6 +1,6 @@
 <div class="container-fluid">
 	<h2>Final tweaks</h2><br>
-	<div class="text-left">
+	<div class="text-left" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 		<!--<div class="row" ng-show="enc.task_env.prop.battery">-->
 		<div class="panel panel-default" ng-show="enc.task_env.battery">
 			<div class="panel-heading">Battery</div>
