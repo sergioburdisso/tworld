@@ -105,7 +105,7 @@
 					</div>
 
 					<h4 class="list-group-item-heading">{{item.name}} <span class="badge active">{{item.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span></h4>
-					<p class="list-group-item-text">{{item.desc}}</p>
+					<p class="list-group-item-text">{{item.desc|stringLimit:400}}</p>
 				</a>
 			</div>
 			<div class="text-center animate-show" ng-show="_items.length > itemsPerPage">

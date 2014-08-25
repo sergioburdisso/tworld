@@ -57,7 +57,7 @@
 				</div>
 
 				<h4 class="list-group-item-heading">{{ap.name}} <span class="badge active">{{ap.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span></h4>
-				<p class="list-group-item-text">{{ap.desc}}</p>
+				<p class="list-group-item-text">{{ap.desc|stringLimit:400}}</p>
 
 
 				<div class="row panel-body">

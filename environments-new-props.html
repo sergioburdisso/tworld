@@ -11,6 +11,7 @@
 	<div class="row">
 		<div class="col-md-3"></div>
 		<div class="col-md-6" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+			<alert type="info" ng-hide="enc.noTrials(enc.task_env.date)"><span class="glyphicon glyphicon-info-sign" style="font-size:30px"></span><br>Since this task environment has stats associate with it, most configuration values won't be editable. In case you want to change some of these readonly values, create a new task environment and then load this task environment's configuration values.</alert>
 			<div class="row text-left">
 				<p class="lead"><b>1.</b> Select the properties of your new task environment according to the dimension listed below.</p>
 			</div>
@@ -74,7 +75,7 @@ enable the study of maintenance.</label>
 			<div class="separator"></div>
 			<div class="row text-left teditable">
 				<label class="lead"><b>4.</b> Optionally, write something about your task environment.</label>
-				<textarea class="form-control" ng-model="enc.task_env.desc" rows="5" placeholder="Description"></textarea>
+				<textarea class="form-control" ng-model="enc.task_env.desc" rows="8" placeholder="Description"></textarea>
 			</div>
 			<div class="separator"></div>
 		</div>

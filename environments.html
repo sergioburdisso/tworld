@@ -74,7 +74,7 @@
 				</div>
 
 				<h4 class="list-group-item-heading">{{env.name}} <span class="badge active">{{env.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span></h4>
-				<p class="list-group-item-text">{{env.desc}}</p>
+				<p class="list-group-item-text">{{env.desc|stringLimit:400}}</p>
 
 
 				<div class="row panel-body">
