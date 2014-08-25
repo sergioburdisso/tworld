@@ -14,7 +14,7 @@
 			<div class="col-md-6">
 				<div class="row">
 					<label class="lead "><b>1.</b> Give your Agent Program a name.</label>
-					<input type="text" class="form-control" ng-model="apnc.agent_prog.name" ng-change="apnc.nameUpdate()" placeholder="Name" maxlength="128">
+					<input type="text" class="form-control" ng-model="apnc.agent_prog.name" ng-change="apnc.nameUpdate()" placeholder="Name" maxlength="128" ng-class="{'has-error':!apnc.agent_prog.name.trim().length}">
 				</div>
 				<div class="separator"></div>
 			</div>
@@ -51,9 +51,9 @@
 					<div class="panel-body">
 						<label class="lead">T-World proxy <small>(<a href="resrc/twproxy.zip">download it</a>)<small></label>
 						<br>
-						<label for="ip-address">IP Address</label><input type="text" id="ip-address" class="form-control" ng-model="apnc.agent_prog.socket.ip_address" placeholder="IPv4 Address">
+						<label for="ip-address">IP Address</label><input type="text" id="ip-address" class="form-control" ng-model="apnc.agent_prog.socket.ip_address" placeholder="IPv4 Address" ng-class="{'has-error':!apnc.agent_prog.socket.ip_address.trim().length}">
 						<br>
-						<label for="port">Port</label><input type="number" id="port" min="1" max="65535" class="form-control" ng-model="apnc.agent_prog.socket.port" placeholder="Port number"></input>
+						<label for="port">Port</label><input type="number" id="port" min="1" max="65535" class="form-control" ng-model="apnc.agent_prog.socket.port" placeholder="Port number" ng-class="{'has-error':(apnc.agent_prog.socket.port|num)<=0}"></input>
 						<br>
 						<label for="magic-string">The magic string</label><input type="text" id="magic-string" class="form-control" ng-model="apnc.agent_prog.socket.magic_string" placeholder="Magic string" value="localhost" maxlength="128">
 						<br>

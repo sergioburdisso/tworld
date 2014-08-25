@@ -275,7 +275,7 @@
 			this.perceptFormats = formats;
 			this.agent_prog = agentProg;
 
-			this.save = function(){
+			this.save = function(){if (Validate()){
 				var _newFlag = !agentProg.date;
 
 				updateAgentPrograms();
@@ -295,7 +295,7 @@
 					$location.url('/');
 
 				gotoTop();
-			}
+			}}
 
 			this.readKey = function(key){
 				$modal.open({

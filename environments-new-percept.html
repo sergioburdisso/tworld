@@ -9,7 +9,7 @@
 
 				<div class="container">
 					<div class="checkbox">
-						<label><input type="checkbox" ng-model="enc.task_env.agents.percept.partialGrid"> Visibility bounds.</label>
+						<label><input type="checkbox" ng-model="enc.task_env.agents.percept.partialGrid" ng-class="{'has-error':!enc.task_env.agents.percept.partialGrid&&!enc.task_env.agents.percept.noise}"> Visibility bounds.</label>
 					</div>
 					<div class="list-group col-md-4 animate-show-3d-top" ng-show="enc.task_env.agents.percept.partialGrid">
 						<a class="list-group-item no-animation">

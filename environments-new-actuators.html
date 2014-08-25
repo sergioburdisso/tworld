@@ -31,7 +31,7 @@
 									{{enc.stochastic_model.prob[0] | tpercent }}
 								</b>
 								<b class="animate-show" ng-show="enc.isUsedDefined()">
-									<input type="text" class="form-control center text-orange" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[0]" ng-change="enc.updateUserStochasticModel(0)">
+									<input type="text" class="form-control center text-orange" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[0]" ng-change="enc.updateUserStochasticModel(0)" ng-class="{'has-error':!(enc.stchastic_user_model[0]|isnum)||!enc.checkStochasticModel()}">
 								</b>
 							</td>
 						<td></td></tr>
@@ -41,7 +41,7 @@
 									{{enc.stochastic_model.prob[1] | tpercent }}
 								</b>
 								<b class="animate-show" ng-show="enc.isUsedDefined()">
-									<input type="text" class="form-control center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[1]" ng-change="enc.updateUserStochasticModel(1)">
+									<input type="text" class="form-control center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[1]" ng-change="enc.updateUserStochasticModel(1)" ng-class="{'has-error':!(enc.stchastic_user_model[1]|isnum)||!enc.checkStochasticModel()}">
 								</b>
 							</td>
 							<td>
@@ -52,7 +52,7 @@
 									{{enc.stochastic_model.prob[2] | tpercent }}
 								</b>
 								<b class="animate-show" ng-show="enc.isUsedDefined()">
-									<input type="text" class="form-control center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[2]" ng-change="enc.updateUserStochasticModel(2)">
+									<input type="text" class="form-control center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[2]" ng-change="enc.updateUserStochasticModel(2)" ng-class="{'has-error':!(enc.stchastic_user_model[2]|isnum)||!enc.checkStochasticModel()}">
 								</b>
 							</td>
 						</tr>
@@ -61,7 +61,7 @@
 								<b ng-show="enc.stochastic_model.prob[3]&&!enc.isUsedDefined()">{{enc.stochastic_model.prob[3] | tpercent }}
 								</b>
 								<b class="animate-show" ng-show="enc.isUsedDefined()">
-									<input type="text" class="form-control center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[3]" ng-change="enc.updateUserStochasticModel(3)">
+									<input type="text" class="form-control center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[3]" ng-change="enc.updateUserStochasticModel(3)" ng-class="{'has-error':!(enc.stchastic_user_model[3]|isnum)||!enc.checkStochasticModel()}">
 								</b>
 							</td>
 						<td></td></tr>
@@ -71,7 +71,7 @@
 						Refuses to move<br>
 						<b ng-hide="enc.isUsedDefined()">{{enc.stochastic_model.prob[4] | tpercent }}</b>
 						<b class="animate-show" ng-show="enc.isUsedDefined()">
-							<input type="text" class="form-control center text-center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[4]" ng-change="enc.updateUserStochasticModel(4)">
+							<input type="text" class="form-control center text-center" style="width:60px" maxlength="4" ng-model="enc.stchastic_user_model[4]" ng-change="enc.updateUserStochasticModel(4)" ng-class="{'has-error':!(enc.stchastic_user_model[4]|isnum)||!enc.checkStochasticModel()}">
 						</b>
 					</div>
 

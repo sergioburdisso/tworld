@@ -80,6 +80,14 @@ Array.prototype.flattening = function(pos) {
 	return flatten;
 }
 
+function Validate(){
+	var errors = $('.has-error').not($('.ng-hide .has-error'));
+	if (errors.length){
+		errors.addClass("ng-dirty").focus();
+		return false;
+	}
+	return true;
+}
 
 //-> improving Object class! XD
 
@@ -294,8 +302,10 @@ function startTWorld(){
 	_tworldWindow.focus();
 }
 
-function gotoTop(){
+function gotoTop(time){
+	if (time === undefined)
+		time = 1000;
 	$('html, body').animate({
 		scrollTop: $("#top").offset().top
-	}, 1000, "easeOutExpo")
+	}, time, "easeOutExpo")
 }

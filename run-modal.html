@@ -22,7 +22,7 @@
 						<label class="cursor-pointer" tooltip="Click to select an agent program"> 
 							<span ng-if="agent.program" class="text-blue"> {{agent.program.name|stringLimit:30}}</span>
 							<span ng-if="!agent.program" class="text-red"> (empty)</span>
-							<button class="btn btn-default glyphicon glyphicon-pencil btn-sm" ng-click="selectAgentProgram(agent.id)"></button>
+							<button class="btn btn-default glyphicon glyphicon-pencil btn-sm" ng-click="selectAgentProgram(agent.id)" ng-class="{'has-error':!agent.program}"></button>
 						</label>
 					</div>
 				</div>

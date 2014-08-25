@@ -140,6 +140,7 @@
 					}
 				}
 
+			this.emptyTrials = isTaskEnvironmentTrialsEmpty;
 			this.nTeam = 0;
 			this.teamColors = colors;
 			this.step = 0;
@@ -159,12 +160,16 @@
 			this.stchastic_user_model = new Array(5);
 
 			this.nextStep = function(){
-				this.step++; _next= true;
-				$('html, body').animate({scrollTop: $("#top").offset().top}, 0);
-			}
+				if (Validate()){
+					this.step++; _next= true;
+					gotoTop(0)
+				}
+			}	
 			this.prevStep = function(){
-				this.step--; _next= false;
-				$('html, body').animate({scrollTop: $("#top").offset().top}, 0);
+				if (true){//Validate()){
+					this.step--; _next= false;
+					gotoTop(0)
+				}
 			}
 			this.isStep = function(i){return this.step===i}
 			this.isLastStep = function(){return this.step===6}
@@ -264,6 +269,14 @@
 						for (var i=_self.stchastic_user_model.length;i--;)
 							_self.stchastic_user_model[i] = (_self.stochastic_model.prob[i]/10).toFixed(1);
 				}
+			}
+
+			this.checkStochasticModel = function(){
+				var add = 0;
+				for (var i = 5; i--;)
+					add += _self.stochastic_model.prob[i];
+
+				return add === 1000;
 			}
 
 			$scope.$watch('enc.stochastic_model.prob[0]', this.updateStochasticModel);
@@ -496,10 +509,6 @@
 		this.mouseUp = function(){_mouseDown = false}
 		this.setCell = function(row, index){if (_mouseDown) row[index] = this.selected}
 		this.nextHoleId = function(){this.selected = ++this.holeId}
-	});
-
-	mod.filter('tpercent', function() {
-		return function(input) {return (input/10).toFixed(1)+"%"}
 	});
 
 	mod.directive('properties', function(){ return {restrict:'E', templateUrl:'environments-new-props.html'} });

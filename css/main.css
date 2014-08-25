@@ -42,6 +42,20 @@ p {
 
 .popover, .tooltip{z-index: 10000}/*for modal compatibility*/
 
+.has-error.ng-dirty{
+	border-color: #EA3838;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	   -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	     -o-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+			box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}
+.has-error.ng-dirty:focus{
+	border-color: #FF1D00;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00;
+	   -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00;
+	     -o-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00;
+			box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00
+}
 .table-grid,
 .table-grid th,
 .table-grid td

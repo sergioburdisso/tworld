@@ -304,6 +304,14 @@
 		return function(input) {return input.replace(/_/g," ")}
 	});
 
+	main.filter('num', function() {
+		return function(input) {return input|0}
+	});
+
+	main.filter('isnum', function() {
+		return function(input) {return !Number.isNaN(Number(input))}
+	});
+
 	main.filter('tspeed', function() {
 		return function(input) {
 			return (input < 0 && (-input+1) + " times slower.")|| (input == 0 && "normal.") || ((input+1) + " times faster.")
@@ -320,6 +328,10 @@
 
 			return mins + segs;
 		}
+	});
+
+	main.filter('tpercent', function() {
+		return function(input) {return (input/10).toFixed(1)+"%"}
 	});
 
 })();

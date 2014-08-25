@@ -67,8 +67,8 @@ enable the study of maintenance.</label>
 			</div>
 			<div class="separator"></div>
 			<div class="row text-left">
-				<label class="lead "><b>3.</b> Give your task environment a name.</label>
-				<input type="text" class="form-control" ng-model="enc.task_env.name" placeholder="Type a name e.g. 'single agent, moderately-paced dynamic environment'"></input>
+				<label class="lead"><b>3.</b> Give your task environment a name.</label>
+				<input type="text" class="form-control" ng-model="enc.task_env.name" placeholder="Name" ng-class="{'has-error':!enc.task_env.name.trim().length}"></input>
 			</div>
 			<div class="separator"></div>
 			<div class="row text-left">

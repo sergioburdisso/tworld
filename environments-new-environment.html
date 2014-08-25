@@ -3,12 +3,12 @@
 	<div class="text-left">
 		<label>Grid dimensions:</label>
 		<div class="row">
-			<div class="col-md-2">
-				<input type="number" class="form-control" ng-model="enc.task_env.environment.rows" ng-change="enc.updateDimensions()" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Rows" required>
+			<div class="col-md-2 col-xs-2">
+				<input type="number" class="form-control" ng-model="enc.task_env.environment.rows" ng-change="enc.updateDimensions()" ng-class="{'has-error':(enc.task_env.environment.rows|num)<=2}" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Rows" required>
 			</div>
-			<div class="col-md-1 text-center">x</div>
-			<div class="col-md-2">
-				<input type="number" class="form-control" ng-model="enc.task_env.environment.columns" ng-change="enc.updateDimensions()" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Columns" required>
+			<div class="col-md-1 col-xs-2 text-center">x</div>
+			<div class="col-md-2 col-xs-2">
+				<input type="number" class="form-control" ng-model="enc.task_env.environment.columns" ng-change="enc.updateDimensions()" ng-class="{'has-error':(enc.task_env.environment.columns|num)<=2}" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Columns" required>
 			</div>
 		</div>
 		<br>
@@ -152,7 +152,7 @@
 				<div class="animate-filter" ng-repeat="cond in enc.task_env.environment.final_state">
 					<div class="row">
 						<label class="col-md-2">{{cond.name}}</label>
-						<input type="number" class=" col-md-2" ng-model="cond.value" min="0" required ng-pattern="/^\d+$/">
+						<input type="number" class=" col-md-2" ng-model="cond.value" min="1"  ng-class="{'has-error':(cond.value|num)<=0}" required>
 						<label class="col-md-2 col-xs-2">Game Result</label>
 						<div class="col-md-5 col-xs-5">
 							<select class="form-control" ng-model="cond.result">

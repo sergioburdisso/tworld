@@ -104,7 +104,7 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 
 	updateAgentPrograms();
 
-	$scope.run = function () {
+	$scope.run = function () {if (Validate()){
 		$scope.task_env.trial.agents = $scope.agents;
 		$scope.task_env.trial.test= false;
 
@@ -113,7 +113,7 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 
 		startTWorld();
 		$modalInstance.close()
-	};
+	}};
 	$scope.close = function () {$modalInstance.dismiss()};
 
 	$scope.singleTeam = function(){return $scope.task_env.teams.length === 1}
