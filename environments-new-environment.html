@@ -22,16 +22,16 @@
 		</div>
 
 		<!-- INITIAL STATE -->
-		<div class="panel panel-default animate-only-show" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state">
+		<div class="panel panel-default animate-only-show" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state" ng-init="ismc.grid = enc.task_env.environment.initial_state">
 			<div class="panel-body text-center">
 				<div class="row">
 					<div class="btn-group btn-group">
-						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'A'" tooltip-placement="top" tooltip="Agent">A</label>
-						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'#'" tooltip-placement="top" tooltip="Obstacle">#</label>
-						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="' '" tooltip-placement="top" tooltip="Empty cell">_</label>
-						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'T'" tooltip-placement="top" tooltip="Tile">T</label>
-						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'C'" tooltip-placement="top" tooltip="Battery Charger" ng-show="enc.task_env.battery">C</label>
-						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="ismc.holeId" ng-dblclick="ismc.nextHoleId()" tooltip-placement="top" tooltip="Hole Cell (doble-click to change id)">{{ismc.holeId}}</label>
+						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'A'" tooltip="Agent">A</label>
+						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'#'" tooltip="Obstacle">#</label>
+						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="' '" tooltip="Empty cell">_</label>
+						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'T'" tooltip="Tile">T</label>
+						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'C'" tooltip="Battery Charger" ng-show="enc.task_env.battery">C</label>
+						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="ismc.holeId" ng-dblclick="ismc.nextHoleId()" tooltip="Hole Cell (doble-click to change id)">{{ismc.holeId}}</label>
 					</div>
 				</div>
 				<br>
@@ -152,7 +152,8 @@
 				<div class="animate-filter" ng-repeat="cond in enc.task_env.environment.final_state">
 					<div class="row">
 						<label class="col-md-2">{{cond.name}}</label>
-						<input type="number" class=" col-md-2" ng-model="cond.value" min="1"  ng-class="{'has-error':(cond.value|num)<=0}" required>
+						<input ng-if="cond.value.length == undefined" type="number" class="col-md-2" ng-model="cond.value" min="1"  ng-class="{'has-error':(cond.value|num)<=0}" required>
+						<button class="btn btn-default col-md-2" ng-click="enc.setFinalLocations(cond)" ng-if="cond.value.length != undefined" ng-class="{'has-error':!cond.value.length}">Select</button>
 						<label class="col-md-2 col-xs-2">Game Result</label>
 						<div class="col-md-5 col-xs-5">
 							<select class="form-control" ng-model="cond.result">
@@ -172,6 +173,33 @@
 
 	</div>
 </div>
+
+<script type="text/ng-template" id="final-locations.html">
+	<div class="modal-header">
+		<h3 class="modal-title">Locations</h3>
+	</div>
+	<div class="modal-body text-center" ng-class="{'treadonly':readOnly}" ng-controller="InitialStateMakerController as ismc" ng-init="ismc.grid = grid; ismc.selected='X'">
+
+				<div class="row">
+					<div class="btn-group btn-group">
+						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'X'" tooltip="Mark">X</label>
+						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="' '" tooltip="Clear cell">_</label>
+					</div>
+				</div>
+				<br>
+				<table class="no-selection table-grid center">
+					<tr ng-repeat="row in ismc.grid track by $index" style="height:23px;">
+						<td ng-repeat="cell in row track by $index" ng-mouseenter="ismc.setCell(row, $index)" ng-mousedown="ismc.mouseDown(row, $index)" ng-mouseup="ismc.mouseUp()" style="width:23px;">{{cell}}</td>
+					</tr>
+				</table>
+
+
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" ng-click="close()">Cancel</button>
+		<button class="btn btn-success" ng-click="ok()">OK</button>
+	</div>
+</script>
 
 <script type="text/ng-template" id="end-game-cond.html">
 	<div class="modal-header">

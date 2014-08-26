@@ -146,6 +146,7 @@
 			this.step = 0;
 			this.end_game_cond = end_game_conditions = [
 				{name:_ENDGAME.TIME.NAME				, value:5*60, result:_GAME_RESULT.NEUTRAL	},
+				{name:_ENDGAME.AGENTS_LOCATION.NAME		, value:[]	, result:_GAME_RESULT.WON		},
 				{name:_ENDGAME.FILLED_HOLES.NAME		, value:0	, result:_GAME_RESULT.WON		},
 				{name:_ENDGAME.FILLED_CELLS.NAME		, value:0	, result:_GAME_RESULT.WON		},
 				{name:_ENDGAME.SCORE.NAME				, value:0	, result:_GAME_RESULT.WON		},
@@ -322,10 +323,37 @@
 					function (index) {taskEnvironment.environment.final_state.push(end_game_conditions.remove(index))}
 				);
 			}
+			this.setFinalLocations = function(locCond){
+				$modal.open({
+					size: 'lg',
+					templateUrl: 'final-locations.html',
+					controller:
+						function($scope, $modalInstance){
+							$scope.readOnly = !_self.noTrials(_self.task_env.date);
+							$scope.grid = new Array(taskEnvironment.environment.rows);
+
+							for (var r = $scope.grid.length; r--;){
+								$scope.grid[r] = new Array(taskEnvironment.environment.columns);
+								for (var c = $scope.grid[r].length; c--;)
+									for (var l= locCond.value.length; l--;)
+										if (locCond.value[l].row == r && locCond.value[l].column == c)
+											$scope.grid[r][c] = "X";
+							}
+
+							$scope.ok = function(){$modalInstance.close($scope.grid)};
+							$scope.close = function(){$modalInstance.dismiss()};
+						}
+				}).result.then(function(grid){
+					locCond.value = []
+					for (var r = grid.length; r--;)
+						for (var c = grid[r].length; c--;)
+							if (grid[r][c] == "X")
+								locCond.value.push({row:r,column:c});
+				});
+			}
 
 			//PROBABILITY DISTRIBUTION
 			this.openProbDistModal = function(knob){
-
 				var modalInstance = $modal.open({
 					size: 'lg',
 					templateUrl: 'prob-distrib.html',
@@ -422,7 +450,7 @@
 			this.updateDimensions = function(){
 				taskEnvironment.environment.initial_state.length = taskEnvironment.environment.rows;
 
-				for (var r = taskEnvironment.environment.initial_state.length-1; r >= 0; --r){
+				for (var r = taskEnvironment.environment.initial_state.length; r--;){
 					if (taskEnvironment.environment.initial_state[r])
 						taskEnvironment.environment.initial_state[r].length = taskEnvironment.environment.columns;
 					else
@@ -519,7 +547,7 @@
 	mod.controller('InitialStateMakerController', function(){
 		var _mouseDown = false;
 
-		this.grid = taskEnvironment.environment.initial_state;
+		this.grid = [];
 		this.selected = "#";
 		this.holeId = 1;
 

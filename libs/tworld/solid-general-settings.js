@@ -41,7 +41,7 @@ var _INITIAL_STATE = (!(_KNOBS.prop.dynamic == 2) && !_KNOBS.environment.random_
 
 // Battery
 var _BATTERY_RANDOM_START	= true;
-var	_BATTERY_START_POSITION	= [/*{ROW : 0, COLUMN: 0}, {ROW : 1, COLUMN: 1} /*,...*/];
+var	_BATTERY_START_LOCATION	= [/*{ROW : 0, COLUMN: 0}, {ROW : 1, COLUMN: 1} /*,...*/];
 
 var _BATTERY_INITIAL_CHARGE		= _KNOBS.final_tweaks.battery.level;
 var _BATTERY_WALK_COST			= _KNOBS.final_tweaks.battery.good_move;
@@ -268,7 +268,8 @@ if (_INITIAL_STATE){
 		for (var c= 0; c < _COLUMNS; ++c)
 			switch(_INITIAL_STATE.grid[r][c]){
 				case _GRID_CELL.AGENT:
-					_AGENTS[irob++].START_POSITION = {ROW: r, COLUMN: c};
+					if (irob < _AGENTS.length)
+						_AGENTS[irob++].START_LOCATION = {ROW: r, COLUMN: c};
 					break;
 
 				case _GRID_CELL.OBSTACLE:
@@ -281,7 +282,7 @@ if (_INITIAL_STATE){
 
 				case _GRID_CELL.BATTERY_CHARGER:
 					_BATTERY_RANDOM_START = false;
-					_BATTERY_START_POSITION.push({ROW: r, COLUMN: c});
+					_BATTERY_START_LOCATION.push({ROW: r, COLUMN: c});
 					break;
 
 				default:

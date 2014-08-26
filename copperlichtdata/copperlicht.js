@@ -3662,8 +3662,8 @@ CL3D.SceneNode.prototype.Name = "";
 CL3D.SceneNode.prototype.Id = -1;
 CL3D.SceneNode.prototype.Selector = null;
 CL3D.SceneNode.prototype.Parent = null;
-CL3D.SceneNode.prototype.setVisible = function (value) {
-	if (this.Visible != value){
+CL3D.SceneNode.prototype.setVisible = function (value, forced) {
+	if (this.Visible != value || forced){
 		this.Visible = value;
 
 		if (this.scene)

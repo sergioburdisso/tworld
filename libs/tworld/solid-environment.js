@@ -173,9 +173,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 				var emptyCell;
 
 				for (var pos, i = _rob.length; i--;){
-					if (_AGENTS[i].START_POSITION){
-						this.initializeRobAt(i, _AGENTS[i].START_POSITION.ROW, _AGENTS[i].START_POSITION.COLUMN);
-						_listOfEmptyCells.remove(_AGENTS[i].START_POSITION.ROW, _AGENTS[i].START_POSITION.COLUMN);
+					if (_AGENTS[i].START_LOCATION){
+						this.initializeRobAt(i, _AGENTS[i].START_LOCATION.ROW, _AGENTS[i].START_LOCATION.COLUMN);
+						_listOfEmptyCells.remove(_AGENTS[i].START_LOCATION.ROW, _AGENTS[i].START_LOCATION.COLUMN);
 					}else{
 						pos = _listOfEmptyCells.removeItemAt( random(_listOfEmptyCells.getLength()) );
 
@@ -187,11 +187,11 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 				if (TWorld.Battery){
 					for (var cell, length= _bChargerLoc.length, bc=0; bc < length; ++bc){
-						if (!_BATTERY_START_POSITION[bc]){
+						if (!_BATTERY_START_LOCATION[bc]){
 							cell = _listOfEmptyCells.removeItemAt( random(_listOfEmptyCells.getLength()) );
 							_bChargerLoc[bc] = {row:cell[0], column:cell[1]};
 						}else{
-							_bChargerLoc[bc] = {row:_BATTERY_START_POSITION[bc].ROW, column:_BATTERY_START_POSITION[bc].COLUMN};
+							_bChargerLoc[bc] = {row:_BATTERY_START_LOCATION[bc].ROW, column:_BATTERY_START_LOCATION[bc].COLUMN};
 							_listOfEmptyCells.remove( _bChargerLoc[bc].row, _bChargerLoc[bc].column );
 						}
 
@@ -502,9 +502,14 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			//--------------------------------------------------------------------------------------> robGetLocation
 			this.robGetLocation = function(rIndex) {
-				var bcIndex;
+				var bcIndex,
+					endLocationsLen = _ENDGAME.AGENTS_LOCATION.VALUE.length;
+
 				if (TWorld.Battery){
-					bcIndex = _self.isABatteryCharger(_rob[rIndex].Location.Row, _rob[rIndex].Location.Column);
+					bcIndex = _self.isABatteryCharger(
+							_rob[rIndex].Location.Row,
+							_rob[rIndex].Location.Column
+						);
 					if (bcIndex){
 						_rob[rIndex].Stats.battery_recharge++; 
 
@@ -518,14 +523,20 @@ function Environment(rows, columns, graphicEngine, parent) {
 					}
 				}
 
-				if (_ENDGAME.AGENTS_LOCATION.VALUE){
-					var i = 0;
-					for (var robsids= _ENDGAME.AGENTS_LOCATION.VALUE; i < robsids.length; ++i)
-						if (_rob[robsids[i]].Location.Row != _AGENTS[robsids[i]].FINAL_LOCATION.ROW ||
-							_rob[robsids[i]].Location.Column != _AGENTS[robsids[i]].FINAL_LOCATION.COLUMN)
-							break;
 
-					if (i == robsids.length)
+				if (_ENDGAME.AGENTS_LOCATION.VALUE){
+					var goalLocCounter = 0;
+					for (var l= endLocationsLen, robLoc, goalLoc; l--;)
+						for (var a = _rob.length; a--;) {
+							goalLoc = _ENDGAME.AGENTS_LOCATION.VALUE[l];
+							robLoc = _rob[a].Location;
+							if (robLoc.Row == goalLoc.row && robLoc.Column == goalLoc.column){
+								goalLocCounter++;
+								break;
+							}
+						}
+
+					if (goalLocCounter == endLocationsLen)
 						_checkIfGameOver(_ENDGAME.AGENTS_LOCATION);
 					else
 					if (_ENDGAME.AGENTS_LOCATION.ACHIEVED){

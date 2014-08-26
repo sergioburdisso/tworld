@@ -115,39 +115,6 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 				var nCond;
 				var _sockPA = _AGENTS[environment.RobID].SOCKET_PROGRAM_AGENT;
 				switch(cond){
-					case "AGENTS_LOCATION":
-						var final_location;
-						if (_NUMBER_OF_AGENTS > 1){
-							final_location = new Array(_ENDGAME[cond].VALUE.length);
-
-							if (_sockPA && _sockPA.OUTPUT_FORMAT == _PERCEPT_FORMAT.PROLOG_FACT){
-								for (var r= _ENDGAME[cond].VALUE.length-1; r>=0; --r)
-											final_location[r] = {
-												id: _ENDGAME[cond].VALUE[r],
-												location:{
-													row: _AGENTS[_ENDGAME[cond].VALUE[r]].FINAL_LOCATION.ROW,
-													column: _AGENTS[_ENDGAME[cond].VALUE[r]].FINAL_LOCATION.COLUMN
-												}
-											}
-							}else{
-								for (var r= _ENDGAME[cond].VALUE.length-1; r>=0; --r)
-									final_location[r] = {
-										id: _ENDGAME[cond].VALUE[r],
-										row: _AGENTS[_ENDGAME[cond].VALUE[r]].FINAL_LOCATION.ROW,
-										column: _AGENTS[_ENDGAME[cond].VALUE[r]].FINAL_LOCATION.COLUMN
-									}
-
-								if (_sockPA && _sockPA.OUTPUT_FORMAT == _PERCEPT_FORMAT.XML)
-									final_location = {agent: final_location};
-							}
-						}else
-							final_location = {
-								row: _AGENTS[_ENDGAME[cond].VALUE[0]].FINAL_LOCATION.ROW,
-								column: _AGENTS[_ENDGAME[cond].VALUE[0]].FINAL_LOCATION.COLUMN
-							}
-						_ENDGAME[cond].VALUE = final_location;
-						nCond = cond.toLowerCase();
-						break;
 					case "SCORE":
 						if (_sockPA && _sockPA.OUTPUT_FORMAT == _PERCEPT_FORMAT.XML)
 							nCond = "_score_";

@@ -1722,7 +1722,7 @@ function GraphicTWorld(graphicEngine, environment){
 			}else
 				_CLN_Rob[rob] = _CLN_Rob[0].createClone(_CLN_Rob[0].getParent());
 
-			_CLN_Rob[rob].setVisible(false);_CLN_Rob[rob].setVisible(true);
+			_CLN_Rob[rob].setVisible(true, true);
 			_self.Rob[rob] = new GraphicRob(_CLN_Rob[rob], _self, rob);
 
 			for (var iteam = _TEAMS.length; iteam--;)
@@ -1761,6 +1761,29 @@ function GraphicTWorld(graphicEngine, environment){
 			_self.updateBattery(rob, _BATTERY_INITIAL_CHARGE);
 		}//for
 
+		//FINAL STATE CONDITIONS
+
+		if (_ENDGAME.AGENTS_LOCATION.VALUE){
+			var _LOCS = _ENDGAME.AGENTS_LOCATION.VALUE;
+			var _RESULT = _ENDGAME.AGENTS_LOCATION.RESULT;
+			var _CLN_Flag = _CL_Scene.getSceneNodeFromName('battery-charger-icon').createClone(_CLN_Rob[0].getParent());
+			_CLN_Flag.setVisible(true);
+			_CLN_Flag.getMaterial(0).Tex1 = _CL_Engine
+												.getTextureManager()
+												.getTexture(
+													"./copperlichtdata/flag-mark-"+(_RESULT == 2?"red":"green")+".png",
+													 true
+												);
+			_CLN_Flag.Pos.X = GraphicTWorld.RowIndexToXPosition(_LOCS[0].row);
+			_CLN_Flag.Pos.Z = GraphicTWorld.ColumnIndexToZPosition(_LOCS[0].column);
+			_CLN_Flag.Pos.Y = 5;
+			for (var l = _LOCS.length-1; l>=1;--l){
+				_CLN_Flag = _CLN_Flag.createClone(_CLN_Rob[l].getParent())
+				_CLN_Flag.Pos.X = GraphicTWorld.RowIndexToXPosition(_LOCS[l].row);
+				_CLN_Flag.Pos.Z = GraphicTWorld.ColumnIndexToZPosition(_LOCS[l].column);
+			}
+		}
+
 		var wonC=[], lostC=[], $goalsTable = $("#table-goals");
 		for (cond in _ENDGAME)
 			if (_ENDGAME[cond].VALUE && _ENDGAME[cond].RESULT == _GAME_RESULT.WON)
@@ -1793,18 +1816,20 @@ function GraphicTWorld(graphicEngine, environment){
 							value = ToMMSS(_ENDGAME[list[c]].VALUE);
 							break;
 						case "AGENTS_LOCATION":
-							var robFinalPos = _AGENTS[_ENDGAME[list[c]].VALUE[0]].FINAL_LOCATION;
-							if (_ENDGAME[list[c]].VALUE.length == 1)
-								value = sprintf("(%s,%s)", robFinalPos.ROW, robFinalPos.COLUMN);
-							else
-								value = sprintf("el 0 en (%s,%s)", robFinalPos.ROW, robFinalPos.COLUMN);
+							var robFinalLocs = _ENDGAME[list[c]].VALUE;
+							if (robFinalLocs.length)
+								value = sprintf("(%s,%s)", robFinalLocs[0].row, robFinalLocs[0].column);
 
-							for (var i=_ENDGAME[list[c]].VALUE.length-1; i >= 1 ; --i){
-								robFinalPos = _AGENTS[_ENDGAME[list[c]].VALUE[i]].FINAL_LOCATION;
-								value += sprintf(", el %s en (%s,%s)", i, robFinalPos.ROW, robFinalPos.COLUMN);
-							}
+							for (var i= 1; i < robFinalLocs.length ; ++i)
+								value += sprintf(", (%s,%s)", robFinalLocs[i].row, robFinalLocs[i].column);
 
-							desc+= sprintf((_ENDGAME[list[c]].VALUE.length == 1)?_ENDGAME[list[c]].$TEXT.SINGULAR:_ENDGAME[list[c]].$TEXT.PLURAL, value);
+							desc+= sprintf(
+								(robFinalLocs.length == 1)?
+									_ENDGAME[list[c]].$TEXT.SINGULAR
+									:
+									_ENDGAME[list[c]].$TEXT.PLURAL,
+									value
+							);
 							value= "AGENTS_LOCATION";
 							break;
 						case "BATTERY_USED":

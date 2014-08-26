@@ -85,8 +85,8 @@ var _ENDGAME = {
 		NAME:"Agent(s) location",
 		$ID:"go-robs-location",
 		$TEXT:{
-			PLURAL: "ubicar los robots: %s",
-			SINGULAR: "ubicar al robot en %s"
+			PLURAL: "ubicar agentes en las posiciones %s",
+			SINGULAR: "ubicar agente en la posici&oacute;n %s"
 		},
 		MESSAGE:""
 	},
