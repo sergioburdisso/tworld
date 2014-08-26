@@ -56,7 +56,7 @@
 			</div>
 		</div>
 
-		<div class="container">
+		<div class="container" ng-hide="enc.isSemidynamic()">
 			<div class="checkbox">
 				<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.score.cell"> Enable partial reward (Points are rewarded not just per hole but also per cell)</label>
 			</div>

@@ -134,7 +134,7 @@ var _MULTIPLIER_TIME = _KNOBS.final_tweaks.multiplier.enabled?
 						:
 						0;
 
-var _SCORE_CELLS_MULTIPLIER = _KNOBS.final_tweaks.score.cell? 2 : 0;
+var _SCORE_CELLS_MULTIPLIER = _KNOBS.final_tweaks.score.cell && (_KNOBS.prop.dynamic != 1)? 2 : 0;
 var _SCORE_HOLE_MULTIPLIER = 10;
 
 // Graphics

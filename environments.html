@@ -39,6 +39,9 @@
 				<div class="checkbox">
 					<label><input type="checkbox" ng-model="ec.query.battery"> Battery</label>
 				</div>
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="ec.query.easy_mode"> Easy-Mode</label>
+				</div>
 			</div>
 
 			Sort by:
@@ -71,6 +74,8 @@
 					<div class="glyphicon glyphicon-remove" ng-hide="env.prop.known" tooltip="Unknown"></div>
 
 					<div class="glyphicon glyphicon-flash" ng-show="env.battery" tooltip="Battery"></div>
+
+					<div class="glyphicon glyphicon-log-in" ng-show="env.final_tweaks.easy" tooltip="Easy-Mode"></div>
 				</div>
 
 				<h4 class="list-group-item-heading">{{env.name}} <span class="badge active">{{env.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span></h4>

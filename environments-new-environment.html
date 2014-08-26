@@ -145,15 +145,15 @@
 			<br><br><br>
 		</div>
 
-		<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+		<div class="row">
 		<div class="panel panel-default">
 			<div class="panel-heading">Final State/T-World ends when...</div>
 			<div class="panel-body text-center">
 				<div class="animate-filter" ng-repeat="cond in enc.task_env.environment.final_state">
-					<div class="row">
+					<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 						<label class="col-md-2">{{cond.name}}</label>
 						<input ng-if="cond.value.length == undefined" type="number" class="col-md-2" ng-model="cond.value" min="1"  ng-class="{'has-error':(cond.value|num)<=0}" required>
-						<button class="btn btn-default col-md-2" ng-click="enc.setFinalLocations(cond)" ng-if="cond.value.length != undefined" ng-class="{'has-error':!cond.value.length}">Select</button>
+						<button class="btn btn-primary col-md-2 teditable" ng-click="enc.setFinalLocations(cond)" ng-if="cond.value.length != undefined" ng-class="{'has-error':!cond.value.length}">Select</button>
 						<label class="col-md-2 col-xs-2">Game Result</label>
 						<div class="col-md-5 col-xs-5">
 							<select class="form-control" ng-model="cond.result">

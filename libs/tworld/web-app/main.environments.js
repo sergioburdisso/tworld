@@ -35,6 +35,7 @@
 		this.query = {
 			name:"",
 			battery: false,
+			easy_mode: false,
 			prop: {
 				fullyObservable: true,
 				multiagent: false,
@@ -101,6 +102,7 @@
 			return regEx.test(task_env.name) && (
 					_self.allProps ||
 					(
+						_self.query.easy_mode == task_env.final_tweaks.easy &&
 						_self.query.battery == task_env.battery &&
 						p.fullyObservable == task_env.prop.fullyObservable &&
 						p.multiagent == task_env.prop.multiagent &&
