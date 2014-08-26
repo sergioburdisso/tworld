@@ -103,6 +103,7 @@
 								},
 								teams:[],
 								final_tweaks:{
+									easy: false,
 									battery:{
 										level:1000,
 										good_move:20,

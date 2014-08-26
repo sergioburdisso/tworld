@@ -549,7 +549,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 
 			//-----------------------------------------------------------------------------------------> fillHoleIfSo
 			function fillHoleIfSo(direction){
-				if (_environment.isThereAHoleToFill(_index))
+				if (!_EASY_MODE && _environment.isThereAHoleToFill(_index))
 					_gTWorld.fillHole(_index, direction, _environment.getCellToFill(_index));
 			}
 

@@ -425,7 +425,11 @@ function Environment(rows, columns, graphicEngine, parent) {
 			//--------------------------------------------------------------------------------------> isAValidMovement
 			this.isAValidMovement = function(rIndex, row, column) {
 				return	validCoordinates(row,column) &&
-						(_grid[row][column] == _GRID_CELL.EMPTY || _grid[row][column] == _GRID_CELL.BATTERY_CHARGER) &&
+						(
+							_grid[row][column] == _GRID_CELL.EMPTY ||
+							_grid[row][column] == _GRID_CELL.BATTERY_CHARGER ||
+							(_EASY_MODE && this.isAHole(row, column))
+						) &&
 						!this.isThereAHoleFilling(row, column) && 
 						!this.isASlidingTile(rIndex, row, column);
 			}
@@ -610,35 +614,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 				farthestTile = [farthestTile[0]+xSlide, farthestTile[1]+ySlide];
 				_rob[rIndex].ListOfTilesToSlide.appendUnique(farthestTile);
 
-				if (this.isAHole(farthestTile[0], farthestTile[1])){
-
-					_grid[farthestTile[0]][farthestTile[1]] = _GRID_CELL.EMPTY;
-
-					_listOfEmptyCells.appendUnique([farthestTile[0], farthestTile[1]]);
-
-					_rob[rIndex].HoleBeingFilled = _listOfHoles.removeHoleCell([farthestTile[0], farthestTile[1]]);
-
-					if (_rob[rIndex].HoleBeingFilled.isFilled()){
-						_self.updateScore(rIndex, _rob[rIndex].HoleBeingFilled.Value, _rob[rIndex].HoleBeingFilled.OriginalCells, true);
-						removeHoleHelpers(_rob[rIndex].HoleBeingFilled);
-						_rob[rIndex].Stats.filled_holes++;
-						_rob[rIndex].Stats.filled_cells++;
-						if (_ENDGAME.FILLED_HOLES.VALUE)
-							_checkIfGameOver(_ENDGAME.FILLED_HOLES, _rob[rIndex].Stats.filled_holes);
-						if (_ENDGAME.FILLED_CELLS.VALUE)
-							_checkIfGameOver(_ENDGAME.FILLED_CELLS, _rob[rIndex].Stats.filled_cells);
-					}else{
-						_self.updateScore(rIndex, TWorld.valueOfCellHoleFilled(_rob[rIndex].HoleBeingFilled.getNumberOfCellsFilled()), _rob[rIndex].HoleBeingFilled.getCellsFilled(), false);
-						_rob[rIndex].Stats.filled_cells++;
-						if (_ENDGAME.FILLED_CELLS.VALUE)
-							_checkIfGameOver(_ENDGAME.FILLED_CELLS, _rob[rIndex].Stats.filled_cells);
-					}
-
-					_rob[rIndex].CellFilling[0]= farthestTile[0];
-					_rob[rIndex].CellFilling[1]= farthestTile[1];
-					_rob[rIndex].HoleToFill = true;
-
-				}else{
+				if (this.isAHole(farthestTile[0], farthestTile[1]))
+					_fillHoleCell(rIndex, farthestTile[0], farthestTile[1]);
+				else{
 
 					_grid[farthestTile[0]][farthestTile[1]] = _GRID_CELL.TILE;
 					_listOfEmptyCells.remove(farthestTile[0], farthestTile[1]);
@@ -956,6 +934,35 @@ function Environment(rows, columns, graphicEngine, parent) {
 				_bChargerTimers[bcIndex] = CallWithDelay.Enqueue(_updateScoreBattery, [rIndex, bcIndex, points, true], 10);
 			}
 
+			//--------------------------------------------------------------------------------------> _fillHoleCell
+			function _fillHoleCell(rIndex, row, column){
+				_grid[row][column] = _GRID_CELL.EMPTY;
+
+				_listOfEmptyCells.appendUnique([row, column]);
+
+				_rob[rIndex].HoleBeingFilled = _listOfHoles.removeHoleCell([row, column]);
+
+				if (_rob[rIndex].HoleBeingFilled.isFilled()){
+					_self.updateScore(rIndex, _rob[rIndex].HoleBeingFilled.Value, _rob[rIndex].HoleBeingFilled.OriginalCells, true);
+					removeHoleHelpers(_rob[rIndex].HoleBeingFilled);
+					_rob[rIndex].Stats.filled_holes++;
+					_rob[rIndex].Stats.filled_cells++;
+					if (_ENDGAME.FILLED_HOLES.VALUE)
+						_checkIfGameOver(_ENDGAME.FILLED_HOLES, _rob[rIndex].Stats.filled_holes);
+					if (_ENDGAME.FILLED_CELLS.VALUE)
+						_checkIfGameOver(_ENDGAME.FILLED_CELLS, _rob[rIndex].Stats.filled_cells);
+				}else{
+					_self.updateScore(rIndex, TWorld.valueOfCellHoleFilled(_rob[rIndex].HoleBeingFilled.getNumberOfCellsFilled()), _rob[rIndex].HoleBeingFilled.getCellsFilled(), false);
+					_rob[rIndex].Stats.filled_cells++;
+					if (_ENDGAME.FILLED_CELLS.VALUE)
+						_checkIfGameOver(_ENDGAME.FILLED_CELLS, _rob[rIndex].Stats.filled_cells);
+				}
+
+				_rob[rIndex].CellFilling[0]= row;
+				_rob[rIndex].CellFilling[1]= column;
+				_rob[rIndex].HoleToFill = true;
+			}
+
 			//--------------------------------------------------------------------------------------> _removeHole
 			function _removeHole(listOfHoleCellsIndex) {
 				var hole = _listOfHoles.getItemAt(listOfHoleCellsIndex);
@@ -1070,8 +1077,13 @@ function Environment(rows, columns, graphicEngine, parent) {
 				if (_ENDGAME.GOOD_MOVES.VALUE)
 					_checkIfGameOver(_ENDGAME.GOOD_MOVES, _rob[rIndex].Stats.good_moves);
 
-				_grid[_rob[rIndex].Location.Row ][_rob[rIndex].Location.Column] = _GRID_CELL.AGENT;
-				_listOfEmptyCells.remove(_rob[rIndex].Location.Row, _rob[rIndex].Location.Column);
+				if (_EASY_MODE && _self.isAHole(row, column)){
+					_fillHoleCell(rIndex, row, column);
+					_graphicTWorld.holeFilled(rIndex, row, column);
+				}
+
+				_grid[ row ][ column ] = _GRID_CELL.AGENT;
+				_listOfEmptyCells.remove(row, column);
 
 				_self.updateBattery(rIndex, -_BATTERY_WALK_COST);
 			}

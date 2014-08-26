@@ -141,25 +141,27 @@ function TWorld(args) {
 
 				_environment.newHole(holeCells, holeLifetime + _TILES_TELEPORT_DELAY, 1-Math.random()*TWorld.VariabilityOfScores);
 
-				//for each cell of the new hole...
-				for (var i= 0; i < holeCells.getLength(); i++){
-					//...there must be created a tile for Rob to fill it
-					if (_TILES_TELEPORT_DELAY > 0)
-						CallWithDelay.Enqueue(
-							createTile,
-							[
-							UncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
-							holeCells.getItemAt(i)[0],
-							holeCells.getItemAt(i)[1]
-							],
-							_TILES_TELEPORT_DELAY /*time in seconds*/
-						);
-					else
-						createTile(
-							UncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
-							holeCells.getItemAt(i)[0],
-							holeCells.getItemAt(i)[1]
-						);
+				if (!_EASY_MODE){
+					//for each cell of the new hole...
+					for (var i= 0; i < holeCells.getLength(); i++){
+						//...there must be created a tile for Rob to fill it
+						if (_TILES_TELEPORT_DELAY > 0)
+							CallWithDelay.Enqueue(
+								createTile,
+								[
+								UncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
+								holeCells.getItemAt(i)[0],
+								holeCells.getItemAt(i)[1]
+								],
+								_TILES_TELEPORT_DELAY /*time in seconds*/
+							);
+						else
+							createTile(
+								UncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
+								holeCells.getItemAt(i)[0],
+								holeCells.getItemAt(i)[1]
+							);
+					}
 				}
 			}
 

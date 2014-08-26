@@ -802,7 +802,7 @@ function GraphicTWorld(graphicEngine, environment){
 			this.showTeleport(_CLN_FloorCell, false);
 		}
 
-		//------------------------------------------------------------------------------------------------------------------------> 
+		//------------------------------------------------------------------------------------------------------------------------> fillHole
 		this.fillHole = function(rIndex, direction, holeCell){
 
 			var CL_Tile = _CL_OnTheFloor[holeCell[0]][holeCell[1]];
@@ -828,6 +828,33 @@ function GraphicTWorld(graphicEngine, environment){
 				CL_Tile.OriginalOnAnimate = CL_Tile.OnAnimate;
 				CL_Tile.OnAnimate = CL_Tile_OnAnimate;
 			}
+		}
+
+		//------------------------------------------------------------------------------------------------------------------------> holeFilled
+		// Used only when _EASY_MODE is enabled
+		this.holeFilled = function(rIndex, row, column){
+			floorCell = _CL_Floor[row][column];
+			floorCell[0].setVisible(
+				true &&
+				(
+					!_LOW_QUALITY_GRID ||
+					(
+						row == 0 || row == _ROWS-1 ||
+						column == 0 || column == _COLUMNS-1
+					)
+				)
+			);
+			floorCell[1].setVisible(true);
+
+			if ( !_self.Environment.isAObstacle(row, column) &&
+				!_self.Environment.getHoleBeingFilled(rIndex).wasRemoved())
+			{
+				floorCell[1].getMaterial(0).Tex1 = _CL_Engine.getTextureManager().getTexture("./copperlichtdata/tilecell_diffuse_map_tp.png", true);
+			}
+
+			createHoleFilledAnimationLight(rIndex);
+
+			_self.Environment.holeFilled(rIndex);
 		}
 	//end region Public
 	//

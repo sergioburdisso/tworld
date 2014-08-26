@@ -39,6 +39,8 @@ var _INITIAL_STATE = (!(_KNOBS.prop.dynamic == 2) && !_KNOBS.environment.random_
 					:
 					null;
 
+var _EASY_MODE = _KNOBS.final_tweaks.easy;
+
 // Battery
 var	_BATTERY_START_LOCATION	= [/*{ROW : 0, COLUMN: 0}, {ROW : 1, COLUMN: 1} /*,...*/];
 
