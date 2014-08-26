@@ -166,6 +166,7 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 				if (agentProgs[nAgents])
 					$scope.agents[nAgents].program = agentProgs[nAgents];
 
+			$scope.agents[nAgents].team = t;
 			$scope.teams[t][m] = $scope.agents[nAgents];
 		}
 	}

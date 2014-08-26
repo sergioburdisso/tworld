@@ -150,6 +150,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 				_CLN_BatteryIcon[bcIndex].Pos.X = GraphicTWorld.RowIndexToXPosition(row);
 				_CLN_BatteryIcon[bcIndex].Pos.Z = GraphicTWorld.ColumnIndexToZPosition(column);
+				_CLN_BatteryIcon[bcIndex].setVisible(true);
 
 				_CL_Floor[row][column][1].getMaterial(0).Tex1 = _CL_Engine.getTextureManager().getTexture("./copperlichtdata/tilecell_diffuse_map_battery.png", true);
 				_CL_Floor[row][column][0].getMaterial(0).Tex1 = _CL_Engine.getTextureManager().getTexture("./copperlichtdata/tilecell_diffuse_map_battery.png", true);;
@@ -695,7 +696,7 @@ function GraphicTWorld(graphicEngine, environment){
 			var b = Math.random();
 			var parent = _CL_Scene.getSceneNodeFromName('layer1');
 
-			for (var i = 0, laser, row, column; i < holeCells.getLength(); i++){
+			for (var i = holeCells.getLength(), laser, row, column; i--;){
 				row = holeCells.getItemAt(i)[0];
 				column = holeCells.getItemAt(i)[1];
 				_CL_Floor[row][column][0].Visible = false;
@@ -1057,11 +1058,10 @@ function GraphicTWorld(graphicEngine, environment){
 					_CLN_LaserGlow.setVisible(false);
 					_CLN_UFO.Stop = false;
 				}else
-					for (var i=0; i < _CL_LaserBeams.length; i++){
+					for (var i=_CL_LaserBeams.length; i--;){
 						if ((_CL_LaserBeams[i].LifeTime-=timeElapsed) <= 0){
 							_CL_LaserBeams[i].dispose();
 							_CL_LaserBeams.remove(i);
-							--i;
 						}
 					}
 			//end region laser beams
@@ -1165,8 +1165,8 @@ function GraphicTWorld(graphicEngine, environment){
 
 		function _toggleHolesHelpersVisible(visible){
 			//O(n^2)
-			for (var irow= 0; irow < _CL_HoleHelpers.length; irow++)
-				for (var icolumn= 0; icolumn < _CL_HoleHelpers[0].length; icolumn++)
+			for (var irow= CL_HoleHelpers.length; irow--;)
+				for (var icolumn= _CL_HoleHelpers[0].length; icolumn-- ;)
 					if (_CL_HoleHelpers[irow][icolumn])
 						_CL_HoleHelpers[irow][icolumn].setVisible(_SHOW_HOLES_HELPERS);
 		}
@@ -1473,7 +1473,7 @@ function GraphicTWorld(graphicEngine, environment){
 				else
 					_sound_score_light.setPercent(0).play();
 
-			for (var i=0, CLN_CellLight; i < _scoreAnimation[rIndex].HoleFilledCells.length; i++)
+			for (var i=_scoreAnimation[rIndex].HoleFilledCells.length; i--;)
 				_self.showHoleFilledLight(rIndex, _scoreAnimation[rIndex].HoleFilledCells[i]);
 		}
 
@@ -1706,8 +1706,7 @@ function GraphicTWorld(graphicEngine, environment){
 		_CLN_Planet.Pos.set(2200, 2400, -2100);
 		_CL_Scene.getSceneNodeFromName('layer1').addChild(_CLN_Planet);
 
-		if (!TWorld.Battery)
-			_CL_Scene.getSceneNodeFromName('battery-charger-icon').setVisible(false);
+		_CL_Scene.getSceneNodeFromName('battery-charger-icon').setVisible(false);
 
 		if (_FULL_WINDOW_RENDER)
 			ToogleFullWindowRender(document.getElementById("tw-root"));
@@ -1766,7 +1765,7 @@ function GraphicTWorld(graphicEngine, environment){
 		if (_ENDGAME.AGENTS_LOCATION.VALUE){
 			var _LOCS = _ENDGAME.AGENTS_LOCATION.VALUE;
 			var _RESULT = _ENDGAME.AGENTS_LOCATION.RESULT;
-			var _CLN_Flag = _CL_Scene.getSceneNodeFromName('battery-charger-icon').createClone(_CLN_Rob[0].getParent());
+			var _CLN_Flag = _CL_Scene.getSceneNodeFromName('battery-charger-icon').createClone(_CL_Scene.getRootSceneNode());
 			_CLN_Flag.setVisible(true);
 			_CLN_Flag.getMaterial(0).Tex1 = _CL_Engine
 												.getTextureManager()
@@ -1778,7 +1777,7 @@ function GraphicTWorld(graphicEngine, environment){
 			_CLN_Flag.Pos.Z = GraphicTWorld.ColumnIndexToZPosition(_LOCS[0].column);
 			_CLN_Flag.Pos.Y = 5;
 			for (var l = _LOCS.length-1; l>=1;--l){
-				_CLN_Flag = _CLN_Flag.createClone(_CLN_Rob[l].getParent())
+				_CLN_Flag = _CLN_Flag.createClone(_CL_Scene.getRootSceneNode())
 				_CLN_Flag.Pos.X = GraphicTWorld.RowIndexToXPosition(_LOCS[l].row);
 				_CLN_Flag.Pos.Z = GraphicTWorld.ColumnIndexToZPosition(_LOCS[l].column);
 			}

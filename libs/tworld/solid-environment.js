@@ -107,6 +107,8 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			//--------------------------------------------------------------------------------------> startRunning
 			this.startRunning = function(){
+				var elem;
+
 				_Running = true;
 
 				while ( _ACTIVE_CAMERA < _DEFAULT_CAMERA )
@@ -116,18 +118,32 @@ function Environment(rows, columns, graphicEngine, parent) {
 					_TILES_TELEPORT_DELAY= 0;
 
 				if (_INITIAL_STATE){
-					while (_INITIAL_STATE.tiles.length)
-						_self.newTile(_INITIAL_STATE.tiles.shift());
+					while (_INITIAL_STATE.tiles.length){
+						elem = _INITIAL_STATE.tiles.shift();
+						if (_self.isAnEmptyCell(elem[0], elem[1]))
+							_self.newTile(elem);
+					}
 
-					while (_INITIAL_STATE.obstacles.length)
-						_self.newObstacle(_INITIAL_STATE.obstacles.shift());
+					while (_INITIAL_STATE.obstacles.length){
+						elem = _INITIAL_STATE.obstacles.shift()
+						if (_self.isAnEmptyCell(elem[0], elem[1]))
+							_self.newObstacle(elem);
+					}
 
-					for (id in _INITIAL_STATE.holes)
+					for (id in _INITIAL_STATE.holes){
+
+						for(var i= _INITIAL_STATE.holes[id].getLength(),iCell; i--;){
+							iCell = _INITIAL_STATE.holes[id].getItemAt(i);
+							if (!_self.isAnEmptyCell(iCell[0], iCell[1]))
+								_INITIAL_STATE.holes[id].removeItemAt(i);
+						}
+
 						_self.newHole(
 							_INITIAL_STATE.holes[id],
 							UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold),
 							1-Math.random()*TWorld.VariabilityOfScores
 						);
+					}
 				}else{
 					_self.AbstractLevel.createHoles();
 					_self.AbstractLevel.createObstacles();
@@ -186,15 +202,24 @@ function Environment(rows, columns, graphicEngine, parent) {
 				}
 
 				if (TWorld.Battery){
-					for (var cell, length= _bChargerLoc.length, bc=0; bc < length; ++bc){
-						if (!_BATTERY_START_LOCATION[bc]){
+
+					//locate user-defined battery chargers (if necessary)
+					if (_INITIAL_STATE){
+						_bChargerLoc.length = _BATTERY_START_LOCATION.length;
+						var userLocs = _BATTERY_START_LOCATION; 
+						for (var c = 0, bc= 0; c < userLocs.length; ++c)
+							if (_self.isAnEmptyCell(userLocs[c].ROW, userLocs[c].COLUMN)){
+								_bChargerLoc[bc] = {row:userLocs[c].ROW, column:userLocs[c].COLUMN};
+								_listOfEmptyCells.remove( _bChargerLoc[bc].row, _bChargerLoc[bc++].column );
+							}else
+								_bChargerLoc.length--;
+					}else
+						for (var cell, length= _bChargerLoc.length, bc=0; bc < length; ++bc){
 							cell = _listOfEmptyCells.removeItemAt( random(_listOfEmptyCells.getLength()) );
 							_bChargerLoc[bc] = {row:cell[0], column:cell[1]};
-						}else{
-							_bChargerLoc[bc] = {row:_BATTERY_START_LOCATION[bc].ROW, column:_BATTERY_START_LOCATION[bc].COLUMN};
-							_listOfEmptyCells.remove( _bChargerLoc[bc].row, _bChargerLoc[bc].column );
-						}
+						};
 
+					for (var bc=_bChargerLoc.length; bc--;){
 						_grid[ _bChargerLoc[bc].row ][ _bChargerLoc[bc].column ] = _GRID_CELL.BATTERY_CHARGER;
 						_graphicTWorld.setBatteryChargerLocation(_bChargerLoc[bc].row, _bChargerLoc[bc].column);
 					}
@@ -389,7 +414,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 				}
 			}
 
-			//--------------------------------------------------------------------------------------> isAnEmptyCell
+			//--------------------------------------------------------------------------------------> isASlidingTile
 			this.isASlidingTile = function(rIndex, row, column) {
 				for (var rt = _rob.length; rt--;)
 					if (rt != rIndex && _rob[rt].ListOfTilesToSlide.contains(row, column))
@@ -397,7 +422,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 				return false;
 			}
 
-			//--------------------------------------------------------------------------------------> isAnEmptyCell
+			//--------------------------------------------------------------------------------------> isAValidMovement
 			this.isAValidMovement = function(rIndex, row, column) {
 				return	validCoordinates(row,column) &&
 						(_grid[row][column] == _GRID_CELL.EMPTY || _grid[row][column] == _GRID_CELL.BATTERY_CHARGER) &&
@@ -438,7 +463,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 			}
 
 			//--------------------------------------------------------------------------------------> newHole
-			this.newHole = function(holeCells, holeLifetime, actualVariabilityOfUtility) {
+			this.newHole = function(holeCells, holeLifetime, actualVariabilityOfUtility) {if(holeCells.getLength()){
 				var newHole = new Hole(this, holeCells, holeLifetime, actualVariabilityOfUtility);
 
 				_listOfHoles.shrinkHoles(holeCells);
@@ -451,7 +476,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 				}
 
 				_graphicTWorld.newHole(holeCells);
-			}
+			}}
 
 			//--------------------------------------------------------------------------------------> newObstacle
 			this.newObstacle = function(obstacleCell, lifeTime) {
@@ -1132,7 +1157,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 			if (_TEAMS[iteam].MEMBERS.length > maxTeamPlayers)
 				maxTeamPlayers = _TEAMS[iteam].MEMBERS.length;
 
-		_bChargerLoc = new Array(TWorld.Battery? maxTeamPlayers : 0);
+		_bChargerLoc = new Array(TWorld.Battery? (_TEAMS.length>1? maxTeamPlayers : 1) : 0);
 		_bChargerTimers = new Array(TWorld.Battery? maxTeamPlayers : 0);
 
 		//-> Grid Initialization

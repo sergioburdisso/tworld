@@ -40,7 +40,6 @@ var _INITIAL_STATE = (!(_KNOBS.prop.dynamic == 2) && !_KNOBS.environment.random_
 					null;
 
 // Battery
-var _BATTERY_RANDOM_START	= true;
 var	_BATTERY_START_LOCATION	= [/*{ROW : 0, COLUMN: 0}, {ROW : 1, COLUMN: 1} /*,...*/];
 
 var _BATTERY_INITIAL_CHARGE		= _KNOBS.final_tweaks.battery.level;
@@ -281,7 +280,6 @@ if (_INITIAL_STATE){
 					break;
 
 				case _GRID_CELL.BATTERY_CHARGER:
-					_BATTERY_RANDOM_START = false;
 					_BATTERY_START_LOCATION.push({ROW: r, COLUMN: c});
 					break;
 
