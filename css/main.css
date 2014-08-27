@@ -309,6 +309,13 @@ h2,
 .icon-js{background: url(../imgs/web-app/icon-js.png) center no-repeat}
 .icon-keyboard{background: url(../imgs/web-app/icon-keyboard.png) center no-repeat}
 
+.active .icon-single-agent {background: url(../imgs/web-app/icon-single-agent-white.png) center no-repeat}
+.active .icon-multiagent {background: url(../imgs/web-app/icon-multiagent-white.png) center no-repeat}
+.active .icon-semidynamic {background: url(../imgs/web-app/icon-semidynamic-white.png) center no-repeat}
+.active .icon-static {background: url(../imgs/web-app/icon-static-white.png) center no-repeat}
+.active .icon-js {background: url(../imgs/web-app/icon-js-white.png) center no-repeat}
+.active .icon-keyboard {background: url(../imgs/web-app/icon-keyboard-white.png) center no-repeat}
+
 .active .badge{
 	color: #428bca;
 	background-color: #fff;

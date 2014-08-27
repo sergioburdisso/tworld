@@ -196,12 +196,14 @@ function settingsModalController($scope, $modal, $modalInstance){
 	$scope.sett = getSettings();
 
 	$scope.isVideoTab = function(){return _selected === 0}
-	$scope.isAudioTab = function(){return _selected === 1}
-	$scope.isGeneralTab = function(){return _selected === 2}
+	$scope.isDisplayTab = function(){return _selected === 1}
+	$scope.isAudioTab = function(){return _selected === 2}
+	$scope.isGeneralTab = function(){return _selected === 3}
 
 	$scope.setVideoTab = function(){_selected = 0}
-	$scope.setAudioTab = function(){_selected = 1}
-	$scope.setGeneralTab = function(){_selected = 2}
+	$scope.setDisplayTab = function(){_selected = 1}
+	$scope.setAudioTab = function(){_selected = 2}
+	$scope.setGeneralTab = function(){_selected = 3}
 
 	$scope.save = function(){
 		saveSettings($scope.sett);

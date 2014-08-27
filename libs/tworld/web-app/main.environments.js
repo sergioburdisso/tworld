@@ -241,7 +241,7 @@
 				if (!radius)
 					return "Unobservable environment";
 				else
-					return "Radius of " + radius + " cell" + (radius > 1? "s" : "");
+					return (radius*2+1) + "x" + (radius*2+1) + " square";
 			}
 
 			//AGENT ACTUATOR

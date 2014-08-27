@@ -69,7 +69,7 @@
 			<div class="list-group mouse-cursor" style="min-height: 300px">
 				<a class="list-group-item step animate-filter transition-400" ng-repeat="item in _items = (items | filter:userFilter) | orderBy:orderCond track by $index" ng-click="setSelected(item.date)" ng-dblclick="ok()" ng-class="{active:isSelected(item.date)}" ng-if="(page-1)*itemsPerPage <= $index&&$index < page*itemsPerPage">
 					<!-- PROPERTIES ICONS-->
-					<div class="pull-right text-gray" ng-if="environments">
+					<div class="pull-right" ng-if="environments">
 						<div class="glyphicon glyphicon-eye-open" ng-show="item.prop.fullyObservable" tooltip="Fully observable"></div>
 						<div class="glyphicon glyphicon-eye-close" ng-hide="item.prop.fullyObservable" tooltip="Partially observable"></div>
 
@@ -115,6 +115,6 @@
 		</div>
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-success glyphicon glyphicon-ok pull-right" ng-click="ok()"></button>
+		<button class="btn btn-success pull-right" ng-click="ok()"><span class="glyphicon glyphicon-ok"></span> Select</button>
 	</div>
 </div>

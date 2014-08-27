@@ -169,12 +169,17 @@ function getSettings(){
 			JSON.parse(localStorage.settings)
 			:
 			{
-				display:{
+				video:{
 					lq_grid:false,
 					lq_env:false,
 					cover_window: false,
-					resolution: "854x480",
-					show_fps: true
+					resolution: "854x480"
+				},
+				display:{
+					show_fps: true,
+					show_holes_helpers: true,
+					show_visibility_bounds: true,
+					show_console: true
 				},
 				audio:{
 					enabled: true,

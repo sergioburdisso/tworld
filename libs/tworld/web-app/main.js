@@ -321,8 +321,8 @@
 
 	main.filter('ttime', function(){
 		return function(value){
-			var mins = (value/60|0);
-			var segs = value%60;
+			var mins = ((value/60)|0);
+			var segs = Math.round(value%60);
 
 			mins = (mins < 10)? (mins? "0"+mins+"m":"") : mins+"m";
 			segs = (segs < 10)? "0"+segs : segs;

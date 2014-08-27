@@ -138,15 +138,17 @@ var _SCORE_CELLS_MULTIPLIER = _KNOBS.final_tweaks.score.cell && (_KNOBS.prop.dyn
 var _SCORE_HOLE_MULTIPLIER = 10;
 
 // Graphics
-var _LOW_QUALITY_GRID	= _KNOBS_SETTINGS.display.lq_grid;
-var _LOW_QUALITY_WORLD	= _KNOBS_SETTINGS.display.lq_env;
-var _FULL_WINDOW_RENDER	= _KNOBS_SETTINGS.display.cover_window;
-var _RENDER_AUTO_SIZE	= !_KNOBS_SETTINGS.display.resolution;
-var 	_RENDER_WIDTH	= !_RENDER_AUTO_SIZE? _KNOBS_SETTINGS.display.resolution.match(/^(\d+)x(\d+)$/)[1] : undefined;
-var 	_RENDER_HEIGHT	= !_RENDER_AUTO_SIZE? _KNOBS_SETTINGS.display.resolution.match(/^(\d+)x(\d+)$/)[2] : undefined;
+var _LOW_QUALITY_GRID	= _KNOBS_SETTINGS.video.lq_grid;
+var _LOW_QUALITY_WORLD	= _KNOBS_SETTINGS.video.lq_env;
+var _FULL_WINDOW_RENDER	= _KNOBS_SETTINGS.video.cover_window;
+var _RENDER_AUTO_SIZE	= !_KNOBS_SETTINGS.video.resolution;
+var 	_RENDER_WIDTH	= !_RENDER_AUTO_SIZE? _KNOBS_SETTINGS.video.resolution.match(/^(\d+)x(\d+)$/)[1] : undefined;
+var 	_RENDER_HEIGHT	= !_RENDER_AUTO_SIZE? _KNOBS_SETTINGS.video.resolution.match(/^(\d+)x(\d+)$/)[2] : undefined;
 
 // Hide/show enable/disable things
-var _SHOW_HOLES_HELPERS = true;
+var _SHOW_HOLES_HELPERS = _KNOBS_SETTINGS.display.show_holes_helpers;
+var _SHOW_VISIBILITY_BOUNDS = _KNOBS_SETTINGS.display.show_visibility_bounds;
+var _SHOW_CONSOLE = _KNOBS_SETTINGS.display.show_console;
 var _SHOW_FPS = _KNOBS_SETTINGS.display.show_fps;
 
 // Camera

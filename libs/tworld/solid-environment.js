@@ -552,7 +552,6 @@ function Environment(rows, columns, graphicEngine, parent) {
 					}
 				}
 
-
 				if (_ENDGAME.AGENTS_LOCATION.VALUE){
 					var goalLocCounter = 0;
 					for (var l= endLocationsLen, robLoc, goalLoc; l--;)
@@ -1070,6 +1069,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 					_listOfEmptyCells.appendUnique([_rob[rIndex].Location.Row, _rob[rIndex].Location.Column]);
 				}
 
+				if (!TWorld.FullyObservableGrid)
+					_graphicTWorld.updateVisibilityBounds(rIndex, row, column);
+
 				_rob[rIndex].Location.Row = row;
 				_rob[rIndex].Location.Column = column;
 				_rob[rIndex].Stats.good_moves++;
@@ -1298,6 +1300,7 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 		//case _ACTION.CONSOLE_LOG
 		if ( _ACTION_REGEX.CONSOLE_LOG.test(action) )
 			{matchs = action.match(_ACTION_REGEX.CONSOLE_LOG);
+			if (_SHOW_CONSOLE)
 			console.log(
 				(_NUMBER_OF_AGENTS > 1? "agent "+_index : "") +
 				"("+ _AGENTS[_index].NAME + "): " +

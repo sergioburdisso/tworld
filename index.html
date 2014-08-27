@@ -20,7 +20,7 @@
 			<span class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-70px; left:0">
 				<h1>T-World</h1>
 				<p ng-bind-html="twc.text.desc"></p>
-				<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="mailto:sergio.burdisso@gmail.com" tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a>.</h5>
+				<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="mailto:sergio.burdisso@gmail.com"c tooltip-placement="right">Sergio Burdisso</a>.</h5>
 				<h5 class="pull-right header" style="color:white"><span ng-bind-html="twc.text.martha_marc"></span></h5>
 			</span>
 		</div>
@@ -62,7 +62,7 @@
 				<img style="border-width:0" src="imgs/web-app/sa.png" width="32"/>
 			</a><br>
 			<span ng-bind-html="twc.text.cc"></span><br><br>
-			<span id="copyright" style="display:block; text-align: right;">&copy; <a href="mailto:sergio.burdisso@gmail.com">Sergio Burdisso</a></span>
+			<span id="copyright" style="display:block; text-align: right;">&copy; <a href="mailto:sergio.burdisso@gmail.com" tooltip="sergio.burdisso@gmail.com">Sergio Burdisso</a></span>
 		</p>
 		<p class="pull-right" style="width: 300px; margin-right: 50px;">
 			<a rel="license" href="http://www.gnu.org/licenses/agpl-3.0.html" alt="GNU AGPL">
@@ -122,11 +122,12 @@
 	</script>
 
 	<script type="text/ng-template" id="settings-modal.html">
-		<div class="modal-header"><h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-wrench"></span> Settings</h3></div>
+		<div class="modal-header"><h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-wrench"></span> 3D T-World Settings</h3></div>
 		<div class="modal-body">
 			<div class="row">
 				<div class="col-md-3 text-right">
-					<h4 class="sett-item cursor-pointer" ng-class="{active:isVideoTab()}" ng-click="setVideoTab()">Display</h4>
+					<h4 class="sett-item cursor-pointer" ng-class="{active:isVideoTab()}" ng-click="setVideoTab()">Video</h4>
+					<h4 class="sett-item cursor-pointer" ng-class="{active:isDisplayTab()}" ng-click="setDisplayTab()">Display</h4>
 					<h4 class="sett-item cursor-pointer" ng-class="{active:isAudioTab()}" ng-click="setAudioTab()">Audio</h4>
 					<h4 class="sett-item cursor-pointer" ng-class="{active:isGeneralTab()}" ng-click="setGeneralTab()" ng-if="false">General</h4>
 				</div>
@@ -137,17 +138,17 @@
 
 					<div class="row"><h4>Quality</h4></div>
 					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.display.lq_grid"> Low quality grid</label>
+						<label><input type="checkbox" ng-model="sett.video.lq_grid"> Low quality grid</label>
 					</div></div>
 					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.display.lq_env"> Low quality environment</label>
+						<label><input type="checkbox" ng-model="sett.video.lq_env"> Low quality environment</label>
 					</div></div>
 
 					<br>
 					<div class="row"><h4>Resolution</h4></div>
 					<div class="row">
 						<div class="col-md-8 animate-show-3d-top" style="margin-left: -14px;">
-								<select class="form-control" ng-model="sett.display.resolution">
+								<select class="form-control" ng-model="sett.video.resolution">
 									<option value="427x240">240p</option>
 									<option value="640x360">360p</option>
 									<option value="854x480">480p</option>
@@ -158,14 +159,25 @@
 						</div>
 					</div>
 					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.display.cover_window"> Cover the whole window</label>
+						<label><input type="checkbox" ng-model="sett.video.cover_window"> Cover the whole window</label>
 					</div></div>
+				</div>
 
-					<br>
-					<div class="row"><h4>Misc</h4></div>
+				<div class="col-md-6 animate-only-show-3d-left" ng-show="isDisplayTab()">
+
+					<div class="row"><div class="checkbox">
+						<label><input type="checkbox" ng-model="sett.display.show_console"> Show console</label>
+					</div></div>
 					<div class="row"><div class="checkbox">
 						<label><input type="checkbox" ng-model="sett.display.show_fps"> Show fps</label>
 					</div></div>
+					<div class="row"><div class="checkbox">
+						<label><input type="checkbox" ng-model="sett.display.show_holes_helpers"> Show holes helpers</label>
+					</div></div>
+					<div class="row"><div class="checkbox">
+						<label><input type="checkbox" ng-model="sett.display.show_visibility_bounds"> Show visibility bounds (when task environment is partially observable)</label>
+					</div></div>
+
 				</div>
 
 				<div class="col-md-6 animate-only-show-3d-left" ng-show="isAudioTab()">

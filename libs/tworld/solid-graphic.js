@@ -40,6 +40,7 @@ function GraphicTWorld(graphicEngine, environment){
 		var _CLN_S3AR;
 		var _CLN_BatteryIcon = new Array();
 		var _CLN_BatteryElect = new Array();
+		var _CL_VisibilityBox = new Array(_NUMBER_OF_AGENTS);
 
 		var _self = this;
 		var _clOnAnimateCallBack; //for keeping a pointer to the original CopperLitch onAnimate function
@@ -135,8 +136,12 @@ function GraphicTWorld(graphicEngine, environment){
 			this.getCLEngine			= function() {return _CL_Engine;}
 
 			this.setRobLocation 	= function(rIndex, row, column) {
-				if (this.Rob[rIndex])
+				if (this.Rob[rIndex]){
 					this.Rob[rIndex].setXZ(row*_FloorCellSize + _floorLimits.X0, column*_FloorCellSize);
+
+					if (!TWorld.FullyObservableGrid)
+						_self.updateVisibilityBounds(rIndex, row, column);
+				}
 			}
 
 			this.setBatteryChargerLocation = function(row, column){
@@ -463,6 +468,11 @@ function GraphicTWorld(graphicEngine, environment){
 			_FollowRob = false;
 		}
 
+		this.updateVisibilityBounds = function(rIndex, row, column){
+			_CL_VisibilityBox[rIndex].Pos.X = GraphicTWorld.RowIndexToXPosition(row);
+			_CL_VisibilityBox[rIndex].Pos.Z = GraphicTWorld.ColumnIndexToZPosition(column);
+		}
+
 		this.updateTime = function(value, countdown) {
 			$("#time").html((value > 10 || !countdown)? ToMMSS(value) : value);
 
@@ -581,7 +591,8 @@ function GraphicTWorld(graphicEngine, environment){
 			if (value <= 0) {
 				value = 0;
 				$($id).find("#battery-charge-frame").css("box-shadow", "0 0 10px red");
-				_sound_out_of_battery.setPercent(0).play();
+				if (_AUDIO_ENABLE)
+					_sound_out_of_battery.setPercent(0).play();
 			}else
 				if (recharge){
 					value = 1000;
@@ -589,11 +600,13 @@ function GraphicTWorld(graphicEngine, environment){
 
 					if (_Running){
 
-						var _voice = recharge == 2?/*if restoration*/
-										_sound_voice_full_energy[random(_sound_voice_full_energy.length)]:
-										_sound_voice_restore_energy[random(_sound_voice_restore_energy.length)];
-						CallWithDelay.Enqueue(_voice.play, null, 2, _voice);
-						_sound_battery_charger.setPercent(0).play();
+						if (_AUDIO_ENABLE){
+							var _voice = recharge == 2?/*if restoration*/
+											_sound_voice_full_energy[random(_sound_voice_full_energy.length)]:
+											_sound_voice_restore_energy[random(_sound_voice_restore_energy.length)];
+							CallWithDelay.Enqueue(_voice.play, null, 2, _voice);
+							_sound_battery_charger.setPercent(0).play();
+						}
 
 						_self.showTeleport(_CLN_Rob[rIndex], true, false, true);
 
@@ -1190,13 +1203,18 @@ function GraphicTWorld(graphicEngine, environment){
 			}
 		}
 
-		function _toggleHolesHelpersVisible(visible){
+		function _toggleHolesHelpersVisible(value){
 			//O(n^2)
-			for (var irow= CL_HoleHelpers.length; irow--;)
+			for (var irow= _CL_HoleHelpers.length; irow--;)
 				for (var icolumn= _CL_HoleHelpers[0].length; icolumn-- ;)
 					if (_CL_HoleHelpers[irow][icolumn])
-						_CL_HoleHelpers[irow][icolumn].setVisible(_SHOW_HOLES_HELPERS);
+						_CL_HoleHelpers[irow][icolumn].setVisible(value);
 		}
+
+		function _toggleVisibilityBounds(value){if (!TWorld.FullyObservableGrid){
+			for (var i= _CL_VisibilityBox.length; i--;)
+				_CL_VisibilityBox[i].setVisible(value);
+		}}
 
 		function _togglePause(){
 
@@ -1625,6 +1643,7 @@ function GraphicTWorld(graphicEngine, environment){
 				_CL_Scene.getSceneNodeFromName('layer1').addChild(_CL_Floor[irow][icolumn][0]);
 				_CL_Scene.getSceneNodeFromName('layer1').addChild(_CL_Floor[irow][icolumn][1]);
 			}
+
 		_CLN_FloorCellBase.Visible = false;
 		_CLN_FloorCellTop.setVisible(false);
 
@@ -1751,6 +1770,14 @@ function GraphicTWorld(graphicEngine, environment){
 			_CLN_Rob[rob].setVisible(true, true);
 			_self.Rob[rob] = new GraphicRob(_CLN_Rob[rob], _self, rob);
 
+			//Visibility bounds
+			if (!TWorld.FullyObservableGrid){
+				_CL_VisibilityBox[rob] = new CL3D.HoleCellHelper(0,0,0,_FloorCellSize,_CL_Engine, 0, 0, 0, 0.4);
+				_CL_VisibilityBox[rob].Scale.set(TWorld.VisibilityRadius*2 + 1,0,TWorld.VisibilityRadius*2 + 1);
+				_CL_VisibilityBox[rob].Pos.Y = 0.02*(rob+1);
+				_CL_Scene.getRootSceneNode().addChild(_CL_VisibilityBox[rob]);
+			}
+
 			for (var iteam = _TEAMS.length; iteam--;)
 				if (_TEAMS[iteam].MEMBERS[0] == rob){
 
@@ -1788,7 +1815,6 @@ function GraphicTWorld(graphicEngine, environment){
 		}//for
 
 		//FINAL STATE CONDITIONS
-
 		if (_ENDGAME.AGENTS_LOCATION.VALUE){
 			var _LOCS = _ENDGAME.AGENTS_LOCATION.VALUE;
 			var _RESULT = _ENDGAME.AGENTS_LOCATION.RESULT;
@@ -1907,6 +1933,13 @@ function GraphicTWorld(graphicEngine, environment){
 				_CLN_Rob[rob].addChild(teamIcon);
 			}
 
+		//console messages
+		if (!TWorld.FullyObservableGrid)
+			console.log("Press <SPACE BAR> to show/hide agent's visibility bounds.");
+		if (_KNOBS.environment.final_state.length)
+			console.log("Press and hold <SHIFT> to see end-game conditions.");
+
+		_toggleVisibilityBounds(_SHOW_VISIBILITY_BOUNDS);
 		_clOnAnimateCallBack = _CL_Scene.getRootSceneNode().OnAnimate;
 		_CL_Scene.getRootSceneNode().OnAnimate = display;
 		_CLNs_setMinimalUpdateDelay(_MINIMAL_UPDATE_DELAY);
@@ -1957,7 +1990,7 @@ function GraphicTWorld(graphicEngine, environment){
 						$("#robs-hud").animate({opacity:1},1000);
 					}
 				);
-				//console.clear();
+
 				$("#playFrame").remove();
 				_START_TIME = Date.now();
 				_TWorld.start();
@@ -2063,10 +2096,6 @@ function GraphicTWorld(graphicEngine, environment){
 				_self.RobWalkEast(0, true);
 			_toggleUD[3] = !_toggleUD[3]
 		});
-		/*$("#ctrl-up").mouseup(function(){ _self.keyUp(0, 2) });
-		$("#ctrl-down").mouseup(function(){ _self.keyUp(0, 3) });
-		$("#ctrl-left").mouseup(function(){ _self.keyUp(0, 0) });
-		$("#ctrl-right").mouseup(function(){ _self.keyUp(0, 1) });*/
 		$("#ctrl-restore").mousedown(function(){ _self.restoreBattery(0) });
 
 		if (!IsMobile())
@@ -2123,9 +2152,10 @@ function GraphicTWorld(graphicEngine, environment){
 			if (IsValidKey(e.keyCode)){
 				switch(e.keyCode){
 					case 32://space bar
-						//_SHOW_HOLES_HELPERS = true;
-						_SHOW_HOLES_HELPERS = !_SHOW_HOLES_HELPERS;
-						_toggleHolesHelpersVisible();
+						/*_SHOW_HOLES_HELPERS = !_SHOW_HOLES_HELPERS;
+						_toggleHolesHelpersVisible(_SHOW_HOLES_HELPERS);*/
+						_SHOW_VISIBILITY_BOUNDS = !_SHOW_VISIBILITY_BOUNDS;
+						_toggleVisibilityBounds(_SHOW_VISIBILITY_BOUNDS);
 						break;
 					case 13:
 					case 27://Escape
@@ -2148,9 +2178,11 @@ function GraphicTWorld(graphicEngine, environment){
 			if (IsValidKey(e.keyCode)){
 				switch(e.keyCode){
 					case 107://+
+						if (_AUDIO_ENABLE)
 						buzz.all().increaseVolume(25);
 						break;
 					case 109://-
+						if (_AUDIO_ENABLE)
 						buzz.all().decreaseVolume(25);
 						break;
 					case 16://shift
@@ -2159,10 +2191,6 @@ function GraphicTWorld(graphicEngine, environment){
 					case 13://enter
 						if ($("#playBtn"))
 							$("#playBtn").mouseup();
-					/*case 32://space bar
-						_SHOW_HOLES_HELPERS = false;
-						_toggleHolesHelpersVisible();
-						break;*/
 				}
 			}
 		});

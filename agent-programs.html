@@ -41,7 +41,7 @@
 		<div class="list-group mouse-cursor" style="min-height: 300px">
 			<a class="list-group-item animate-filter transition-400" ng-repeat="ap in items = (apc.agentPrograms | filter:apc.userFilter) | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="apc.run(ap)" ng-class="{active:apc.isSelected(ap.date)}" ng-if="(apc.page-1)*apc.itemsPerPage <= $index&&$index < apc.page*apc.itemsPerPage">
 				<!-- PROPERTIES ICONS-->
-				<div class="pull-right text-gray">
+				<div class="pull-right">
 					<div class="solid-icon-16 icon-single-agent" ng-show="ap.ai" tooltip="Controlled by Algorithm"></div>
 					<div class="glyphicon glyphicon-user" ng-hide="ap.ai" tooltip="Controlled by Human"></div>
 
