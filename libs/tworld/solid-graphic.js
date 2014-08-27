@@ -1849,13 +1849,13 @@ function GraphicTWorld(graphicEngine, environment){
 				case 0:
 					list = wonC;
 					img = "goal.png";
-					title = "Objetivos:";
+					title = "Goals:";
 					color = "rgb(0, 255, 72)";
 					break;
 				case 1:
 					list = lostC;
 					img = "go-mark.png";
-					title = "Pierdes al:";
+					title = "Game over conditions:";
 					color = "rgb(255, 8, 37)";
 					break;
 			}
@@ -1991,8 +1991,9 @@ function GraphicTWorld(graphicEngine, environment){
 					}
 				);
 
-				$("#playFrame").remove();
 				_START_TIME = Date.now();
+				$("#playFrame").remove();
+				console.clear();
 				_TWorld.start();
 			}
 		});

@@ -76,8 +76,8 @@ var _ENDGAME = {
 		NAME:"Time",
 		$ID:"go-time",
 		$TEXT:{
-			PLURAL: "llegar a los %s de juego",
-			SINGULAR: "llegar a %s de juego"
+			PLURAL: "play for %s",
+			SINGULAR: "play for %s"
 		},
 		MESSAGE:"TIME'S UP!"
 	},
@@ -85,8 +85,8 @@ var _ENDGAME = {
 		NAME:"Agent(s) location",
 		$ID:"go-robs-location",
 		$TEXT:{
-			PLURAL: "ubicar agentes en las posiciones %s",
-			SINGULAR: "ubicar agente en la posici&oacute;n %s"
+			PLURAL: "locate agents at %s",
+			SINGULAR: "locate the agent at %s"
 		},
 		MESSAGE:""
 	},
@@ -94,8 +94,8 @@ var _ENDGAME = {
 		NAME:"Filled holes",
 		$ID:"go-holes",
 		$TEXT:{
-			PLURAL: "tapar %s huecos",
-			SINGULAR: "tapar %s hueco"
+			PLURAL: "fill %s holes",
+			SINGULAR: "fill a hole"
 		},
 		MESSAGE:""
 	},
@@ -103,8 +103,8 @@ var _ENDGAME = {
 		NAME:"Filled cells",
 		$ID:"go-cells",
 		$TEXT:{
-			PLURAL:"tapar %s celdas",
-			SINGULAR:"tapar %s celda"
+			PLURAL:"fill %s cells",
+			SINGULAR:"fill a cell"
 		},
 		MESSAGE:""
 	},
@@ -112,8 +112,8 @@ var _ENDGAME = {
 		NAME:"Score",
 		$ID:"go-score",
 		$TEXT:{
-			PLURAL:"llegar a una puntuaci&oacute;n de %s",
-			SINGULAR:"llegar a una puntuaci&oacute;n de %s"
+			PLURAL:"score %s points",
+			SINGULAR:"score %s point"
 		},
 		MESSAGE:""
 	},
@@ -121,8 +121,8 @@ var _ENDGAME = {
 		NAME:"Good moves",
 		$ID:"go-movesok",
 		$TEXT:{
-			PLURAL: "realizar %s movimientos correctos",
-			SINGULAR: "realizar %s movimiento correcto"
+			PLURAL: "make %s good moves",
+			SINGULAR: "make a good move"
 		},
 		MESSAGE:""
 	},
@@ -130,8 +130,8 @@ var _ENDGAME = {
 		NAME:"Bad moves",
 		$ID:"go-movesnotok",
 		$TEXT:{
-			PLURAL: "realizar %s movimientos incorrectos",
-			SINGULAR: "realizar %s movimiento incorrecto"
+			PLURAL: "make %s bad moves",
+			SINGULAR: "make a bad move"
 		},
 		MESSAGE:"too many bad moves!"
 	},
@@ -139,8 +139,8 @@ var _ENDGAME = {
 		NAME:"Battery use",
 		$ID:"go-battery-use",
 		$TEXT:{
-			PLURAL: "gastar %s de bater&iacute;a",
-			SINGULAR: "gastar %s de bater&iacute;a"
+			PLURAL: "use %s of energy",
+			SINGULAR: "use %s of energy"
 		},
 		MESSAGE:""
 	},
@@ -148,8 +148,8 @@ var _ENDGAME = {
 		NAME:"Battery recharge",
 		$ID:"go-battery-recharge",
 		$TEXT:{
-			PLURAL: "regargar %s veces la bater&iacute;a",
-			SINGULAR: "regargar %s vez la bater&iacute;a"
+			PLURAL: "recharge the battery %s times",
+			SINGULAR: "recharge the battery once"
 		},
 		MESSAGE:""
 	},
@@ -157,8 +157,8 @@ var _ENDGAME = {
 		NAME:"Battery restorations",
 		$ID:"go-battery-restore",
 		$TEXT:{
-			PLURAL: "restaurar el robot %s veces",
-			SINGULAR: "restaurar el robot %s vez"
+			PLURAL: "restore the battery %s times",
+			SINGULAR: "restore the battery once"
 		},
 		MESSAGE:""
 	},

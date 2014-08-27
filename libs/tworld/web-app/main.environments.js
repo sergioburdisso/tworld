@@ -333,6 +333,9 @@
 						function($scope, $modalInstance){
 							$scope.readOnly = !_self.noTrials(_self.task_env.date);
 							$scope.grid = new Array(taskEnvironment.environment.rows);
+							$scope.color = locCond.result == 2? "red":"green";
+							$scope.percept = false;
+
 
 							for (var r = $scope.grid.length; r--;){
 								$scope.grid[r] = new Array(taskEnvironment.environment.columns);
@@ -557,6 +560,7 @@
 		this.mouseUp = function(){_mouseDown = false}
 		this.setCell = function(row, index){if (_mouseDown) row[index] = this.selected}
 		this.nextHoleId = function(){this.selected = ++this.holeId}
+		this.prevHoleId = function(){this.selected = this.holeId>1?--this.holeId:1}
 	});
 
 	mod.directive('properties', function(){ return {restrict:'E', templateUrl:'environments-new-props.html'} });

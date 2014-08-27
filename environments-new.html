@@ -36,7 +36,7 @@
 
 		<div class="row">
 			<hr/>
-			<button ng-click="enc.prevStep()" ng-hide="enc.isStep(0)" class="btn btn-primary col-md-2 col-xs-3 pull-left">&laquo;Previous</button>
+			<button ng-click="enc.prevStep()" ng-hide="enc.isStep(0)" class="btn btn-primary col-md-2 col-xs-3 pull-left animate-none">&laquo;Previous</button>
 			<button ng-if="!enc.isLastStep()" ng-click="enc.nextStep()" class="btn btn-primary col-md-2 col-xs-3 pull-right animate-none">Next&raquo;</button>
 			<section ng-if="enc.isLastStep()">
 				<button ng-click="enc.finish()" class="btn btn-success col-xs-offset-1 col-md-2 col-xs-3 pull-right"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>

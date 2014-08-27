@@ -64,7 +64,7 @@
 								agents:{
 									percept:{
 										partialGrid: true,
-										radius: 3,
+										radius: 2,
 										noise: false,
 										noise_cfg:{
 											tile:0.3,
@@ -92,7 +92,7 @@
 									},
 									random_initial_state:false,
 									initial_state:[
-										["C"," "," "," "," ","#"],
+										[" "," "," "," "," ","#"],
 										["#"," "," ","2"," ","#"],
 										[" ","#"," ","T"," ","A"],
 										["1","T"," "," "," ","#"],
@@ -328,6 +328,32 @@
 			segs = (segs < 10)? "0"+segs : segs;
 
 			return mins + segs;
+		}
+	});
+
+	main.filter('tcellimg', function(){
+		return function(value, color){
+			switch(value){
+				case undefined:
+				case null:
+				case " ": return "empty";
+				case "#": return "obstacle";
+				case "A": return "agent";
+				case "C": return "charger";
+				case "T": return "tile";
+				case "X": return "mark-"+color;
+				default:  return "hole";
+			}
+		}
+	});
+
+	main.filter('tcellcolor', function() {
+		return function(input) {
+			return "rgba("+
+				pRandom(input,255)+","+
+				pRandom(pRandom(input, 1000),255)+","+
+				pRandom(pRandom(pRandom(input, 1000), 1000),255)+
+				",0.4)";
 		}
 	});
 

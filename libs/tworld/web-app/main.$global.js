@@ -104,6 +104,14 @@ function NextProperty(obj, prop){
 }
 //<-
 
+//Pseudo random generator
+function pRandom(value, MAX){
+	var golder_ratio = (1+Math.sqrt(5))/2;
+	var q = 1/golder_ratio;
+
+	return MAX*(value*q-((value*q)|0))|0;
+}
+
 function SortAndPartition(list, criteria){
 	var tiePartitions = [];
 	var oapList = [];// oap stands for "Ordered and Partitioned"
@@ -300,11 +308,10 @@ function saveMemoryByAgentProgramID(id, memory){
 
 var _tworldWindow;
 function startTWorld(){
-	if (!_tworldWindow || !_tworldWindow.window)
-		_tworldWindow = window.open('tworld.html');//,'T-World','width=712, height=450');//height=400
-	else
-		_tworldWindow.location = 'tworld.html';
-	_tworldWindow.focus();
+	if (_tworldWindow)
+		_tworldWindow.close()
+	_tworldWindow = window.open('tworld.html');//,'T-World','width=712, height=450');//height=400
+//	_tworldWindow.focus();
 }
 
 function gotoTop(time){

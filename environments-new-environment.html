@@ -3,11 +3,11 @@
 	<div class="text-left">
 		<label>Grid dimensions:</label>
 		<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
-			<div class="col-md-2 col-xs-2">
+			<div class="col-md-2 col-xs-3">
 				<input type="number" class="form-control" ng-model="enc.task_env.environment.rows" ng-change="enc.updateDimensions()" ng-class="{'has-error':(enc.task_env.environment.rows|num)<=2}" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Rows" required>
 			</div>
-			<div class="col-md-1 col-xs-2 text-center">x</div>
-			<div class="col-md-2 col-xs-2">
+			<div class="col-md-1 col-xs-1 text-center">x</div>
+			<div class="col-md-2 col-xs-3">
 				<input type="number" class="form-control" ng-model="enc.task_env.environment.columns" ng-change="enc.updateDimensions()" ng-class="{'has-error':(enc.task_env.environment.columns|num)<=2}" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Columns" required>
 			</div>
 		</div>
@@ -25,21 +25,61 @@
 		<div class="panel panel-default animate-only-show" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state" ng-init="ismc.grid = enc.task_env.environment.initial_state">
 			<div class="panel-body text-center">
 				<div class="row">
-					<div class="btn-group btn-group">
-						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'A'" tooltip="Agent">A</label>
-						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'#'" tooltip="Obstacle">#</label>
-						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="' '" tooltip="Empty cell">_</label>
-						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'T'" tooltip="Tile">T</label>
-						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'C'" tooltip="Battery Charger" ng-show="enc.task_env.battery">C</label>
-						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="ismc.holeId" ng-dblclick="ismc.nextHoleId()" tooltip="Hole Cell (doble-click to change id)">{{ismc.holeId}}</label>
-					</div>
+					<span class="pull-right margin-10">
+						View as 
+						<div class="btn-group btn-group">
+							<label class="btn btn-default" ng-model="ismc.percept" btn-radio="true" tooltip="Agent">Perception matrix</label>
+							<label class="btn btn-default" ng-model="ismc.percept" btn-radio="flase" tooltip="Agent">T-World grahics</label>
+						</div>
+					</span>
 				</div>
 				<br>
-				<table class="no-selection table-grid center">
-					<tr ng-repeat="row in ismc.grid track by $index" style="height:23px;">
-						<td ng-repeat="cell in row track by $index" ng-mouseenter="ismc.setCell(row, $index)" ng-mousedown="ismc.mouseDown(row, $index)" ng-mouseup="ismc.mouseUp()" style="width:23px;">{{cell}}</td>
-					</tr>
-				</table>
+				<div class="row">
+					<div class="btn-group btn-group">
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'A'" tooltip="Agent">
+							<img ng-if="!ismc.percept" ng-src="imgs/web-app/cell-{{'A'|tcellimg}}.png" class="no-events">
+							<span ng-if="ismc.percept">A</span>
+						</label>
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'#'" tooltip="Obstacle">
+								<img ng-if="!ismc.percept" ng-src="imgs/web-app/cell-{{'#'|tcellimg}}.png" class="no-events">
+								<span ng-if="ismc.percept">#</span>
+						</label>
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="' '" tooltip="Empty cell">
+							<img ng-if="!ismc.percept" ng-src="imgs/web-app/cell-{{' '|tcellimg}}.png" class="no-events">
+							<span ng-if="ismc.percept" class="text-white">_</span>
+						</label>
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'T'" tooltip="Tile">
+							<img ng-if="!ismc.percept" ng-src="imgs/web-app/cell-{{'T'|tcellimg}}.png" class="no-events">
+							<span ng-if="ismc.percept">T</span>
+						</label>
+						<label class="btn btn-default" ng-model="ismc.selected" btn-radio="'C'" tooltip="Battery Charger" ng-show="enc.task_env.battery">
+							<img ng-if="!ismc.percept" ng-src="imgs/web-app/cell-{{'C'|tcellimg}}.png" class="no-events">
+							<span ng-if="ismc.percept">C</span>
+						</label>
+						<label class="btn btn-default text-center" ng-model="ismc.selected" btn-radio="ismc.holeId" tooltip="Hole Cell (Hole id: {{ismc.holeId}})">
+							<div ng-if="!ismc.percept" class="center" style="width:32px; height:32px;" ng-style="{'background-color': (ismc.holeId|tcellcolor)}"></div>
+							<span ng-if="ismc.percept">{{ismc.holeId}}</span>
+							<span class="center animate-show-3d-top" ng-show="(ismc.selected|tcellimg) == 'hole'">
+								<button style="font-size:8px" class="btn btn-primary btn-sm glyphicon glyphicon-chevron-left" ng-click="ismc.prevHoleId()"></button>
+								<button style="font-size:8px" class="btn btn-primary btn-sm glyphicon glyphicon-chevron-right" ng-click="ismc.nextHoleId()"></button>
+							</span>
+						</label>
+					</div>
+					
+				</div>
+				<br>
+				<div class="table-responsive">
+					<table class="no-selection table-grid center" ng-class="{'percept':ismc.percept}">
+						<tr ng-repeat="row in ismc.grid track by $index" style="height:32px;">
+							<td ng-repeat="cell in row track by $index" ng-mouseenter="ismc.setCell(row, $index)" ng-mousedown="ismc.mouseDown(row, $index)" ng-mouseup="ismc.mouseUp()" style="width:32px;">
+								<img ng-if="!ismc.percept&&(cell|tcellimg) != 'hole'" ng-src="imgs/web-app/cell-{{cell|tcellimg}}.png" class="no-events">
+								<div ng-if="!ismc.percept&&(cell|tcellimg) == 'hole'" style="width:32px; height:32px;" ng-style="{'background-color': (cell|tcellcolor)}" tooltip="Hole id: {{cell}}"></div>
+								<span ng-if="ismc.percept">{{cell}}</span>
+							</td>
+						</tr>
+					</table>
+				</div>
+
 			</div>
 		</div>
 
@@ -157,7 +197,7 @@
 						<label class="col-md-2 col-xs-2">Game Result</label>
 						<div class="col-md-5 col-xs-5">
 							<select class="form-control" ng-model="cond.result">
-								<option value="0">neutral (show positions)</option>
+								<option value="0">neutral (just show table stats)</option>
 								<option value="1">success</option>
 								<option value="2">failure</option>
 							</select>
@@ -176,22 +216,30 @@
 
 <script type="text/ng-template" id="final-locations.html">
 	<div class="modal-header">
-		<h3 class="modal-title">Locations</h3>
+		<h3 class="modal-title">Locations agent(s) have to be located at</h3>
 	</div>
 	<div class="modal-body text-center" ng-class="{'treadonly':readOnly}" ng-controller="InitialStateMakerController as ismc" ng-init="ismc.grid = grid; ismc.selected='X'">
 
 				<div class="row">
 					<div class="btn-group btn-group">
-						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'X'" tooltip="Mark">X</label>
-						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="' '" tooltip="Clear cell">_</label>
+						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="'X'" tooltip="Mark">
+							<img ng-src="imgs/web-app/cell-{{'X'|tcellimg:color}}.png" class="no-events">
+						</label>
+						<label class="btn btn-primary" ng-model="ismc.selected" btn-radio="' '" tooltip="Clear cell">
+							<img ng-src="imgs/web-app/cell-{{' '|tcellimg}}.png" class="no-events">
+						</label>
 					</div>
 				</div>
 				<br>
-				<table class="no-selection table-grid center">
-					<tr ng-repeat="row in ismc.grid track by $index" style="height:23px;">
-						<td ng-repeat="cell in row track by $index" ng-mouseenter="ismc.setCell(row, $index)" ng-mousedown="ismc.mouseDown(row, $index)" ng-mouseup="ismc.mouseUp()" style="width:23px;">{{cell}}</td>
-					</tr>
-				</table>
+				<div class="table-responsive">
+					<table class="no-selection table-grid center">
+						<tr ng-repeat="row in ismc.grid track by $index" style="height:23px;">
+							<td ng-repeat="cell in row track by $index" ng-mouseenter="ismc.setCell(row, $index)" ng-mousedown="ismc.mouseDown(row, $index)" ng-mouseup="ismc.mouseUp()" style="width:23px;">
+									<img ng-src="imgs/web-app/cell-{{cell|tcellimg:color}}.png" class="no-events">
+							</td>
+						</tr>
+					</table>
+				</div>
 
 
 	</div>
@@ -217,9 +265,7 @@
 	<div class="modal-header">
 		<h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-signal"></span> Probability distribution <small>click on the figure to set it!</small></h3>
 	</div>
-	<div class="modal-body">
-		<div class="panel text-center">
-			<div class="panel-body">
+	<div class="modal-body text-center">
 				<div class="tprob-bar">
 					<div class="ui-slider-size vertical axis ui-slider ui-widget ui-widget-content ui-corner-all ui-slider-vertical"></div>
 					{{knob.range[0]}}
@@ -230,8 +276,6 @@
 					<span>
 				</div>
 				{{knob.range[1]}}
-			</div>
-		</div>
 	</div>
 	<div class="modal-footer">
 		<button class="btn btn-primary" ng-click="ok()">Close</button>

@@ -47,7 +47,7 @@
 				}
 			})
 			.result.then(
-				function (id) {
+				function (id) {if (id!=-1){
 					updateEnvitonments();
 					$modal.open({
 						size: 'lg',
@@ -58,7 +58,7 @@
 							agentProgs: function(){return []}
 						}
 					});
-				}
+				}}
 			);
 		}
 	}])
