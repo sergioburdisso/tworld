@@ -32,6 +32,7 @@ function GraphicTWorld(graphicEngine, environment){
 		var _CL_HoleHelpers	= NewMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
 		var _CL_Floor		= NewMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
 		var _CL_LaserBeams	= new Array();
+		var _CL_UserHelpers = null;
 		var _CLN_Rob 		= new Array(_NUMBER_OF_AGENTS);
 		var _CL_Rob_Texturs	= {};
 		var _CLN_FloorBase;
@@ -471,6 +472,34 @@ function GraphicTWorld(graphicEngine, environment){
 		this.updateVisibilityBounds = function(rIndex, row, column){
 			_CL_VisibilityBox[rIndex].Pos.X = GraphicTWorld.RowIndexToXPosition(row);
 			_CL_VisibilityBox[rIndex].Pos.Z = GraphicTWorld.ColumnIndexToZPosition(column);
+		}
+
+		this.paintCell = function(row, column){row = Number(row); column = Number(column);
+			//creating matrix on demand
+			if (!_CL_UserHelpers){
+				_CL_UserHelpers = NewMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
+				for (var r = _CL_UserHelpers.length; r--;)
+					for (var c = _CL_UserHelpers[0].length; c--;){
+						_console.log(r, c, _CL_UserHelpers[r][c]);
+						_CL_UserHelpers[r][c] = new CL3D.HoleCellHelper(0,0,0,_FloorCellSize,_CL_Engine, 0, 255, 0, 0.8);
+						_CL_UserHelpers[r][c].Pos.X = GraphicTWorld.RowIndexToXPosition(r);
+						_CL_UserHelpers[r][c].Pos.Z = GraphicTWorld.ColumnIndexToZPosition(c);
+						_CL_UserHelpers[r][c].Visible = false;
+						_CL_Scene.getRootSceneNode().addChild(_CL_UserHelpers[r][c]);
+					}
+			}
+
+			if (row < _CL_UserHelpers.length && column < _CL_UserHelpers[0].length){
+				if (!_CL_UserHelpers[row][column].Visible)
+					_CL_UserHelpers[row][column].setVisible(true);
+				_CL_UserHelpers[row][column].Pos.Y = Math.random()*4 + 13;
+			}
+		}
+
+		this.clearPaintedCells = function(){
+			for (var r = _CL_UserHelpers.length; r--;)
+					for (var c = _CL_UserHelpers[0].length; c--;)
+						_CL_UserHelpers[r][c].Visible = false;
 		}
 
 		this.updateTime = function(value, countdown) {

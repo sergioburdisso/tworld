@@ -1307,6 +1307,15 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 				(matchs[3] || matchs[4])
 			)}
 		else
+		//case _ACTION.PAINT_CELL
+		if ( _ACTION_REGEX.PAINT_CELL.test(action) )
+			{matchs = action.match(_ACTION_REGEX.PAINT_CELL);
+			_gtw.paintCell(matchs[3]||matchs[5] , matchs[4]||matchs[6]);}
+		else
+		//case _ACTION.CLEAR_CELLS
+		if ( _ACTION_REGEX.CLEAR_CELLS.test(action) )
+			_gtw.clearPaintedCells();
+		else
 		//case _ACTION.KEY_UP
 		if ( _ACTION_REGEX.KEY_UP.test(action) )
 			{matchs = action.match(_ACTION_REGEX.KEY_UP);

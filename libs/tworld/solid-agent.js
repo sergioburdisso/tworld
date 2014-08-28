@@ -171,6 +171,10 @@ function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 	}
 }onmessage = __AgentProgram__Wrapper__; 
 
+function $paintCell(row, column){$return(_ACTION.PAINT_CELL+row+":"+column)}
+
+function $clearPaintedCells(){$return(_ACTION.CLEAR_CELLS)}
+
 function $nextAction(arrayOfActions){
 	return (!arrayOfActions || arrayOfActions.length == 0)? _ACTION.NONE : arrayOfActions.shift();
 }

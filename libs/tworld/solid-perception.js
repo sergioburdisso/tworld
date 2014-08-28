@@ -48,7 +48,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 	var _totalHoles, _percept, _grid, _bik;
 	var _robLoc = environment.RobLocation;
 
-	//Constants initialization (this chunk runs only once)
+	//Constants initialization (this chunk runs once only)
 	if (environment.CFG_CONSTANTS){
 		var _CFG = environment.CFG_CONSTANTS;
 
@@ -187,9 +187,6 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 			this.Percept.data.builtin_knowledge.costs.battery.slide_tile = _BATTERY_SLIDE_COST;
 		}
 
-		//time
-		if (!TWorld.Dynamic && !TWorld.Semidynamic)
-			delete this.Percept.data.environment.time;
 	}else{
 		environment.PerceptHeader = environment.PerceptHeader || _PERCEPT_HEADER.PERCEPT;
 		this.Percept.header =  environment.PerceptHeader;
@@ -220,9 +217,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 	}
 	this.Percept.data.environment.grid = _grid;
 
-	//-> time
-	if (TWorld.Dynamic || TWorld.Semidynamic)
-		this.Percept.data.environment.time = environment.Time;
+	this.Percept.data.environment.time = environment.Time;
 
 	//-> score
 	this.Percept.data.agent.score = environment.Score;

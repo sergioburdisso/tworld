@@ -17,9 +17,9 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-//common vocabulary for communication between TWorld and the Program Agent
+//common vocabulary for communication between TWorld and the Agent Program
 var _GRID_CELL	= {EMPTY:" ", TILE:"T", OBSTACLE:"#", HOLE_CELL:1, AGENT:"A", BATTERY_CHARGER:"C"};
-var _ACTION		= {WEST:0, EAST:1, NORTH:2, SOUTH:3, NONE:4, RESTORE:5, PEER_MESSAGE: "peer_message:", TEAM_MESSAGE: "team_message:", CONSOLE_CLEAR:6, CONSOLE_ERROR:"error:", CONSOLE_LOG:"log:", _SAVE_MEMORY_:"_save_memory_:"};
+var _ACTION		= {WEST:0, EAST:1, NORTH:2, SOUTH:3, NONE:4, RESTORE:5, PEER_MESSAGE: "peer_message:", TEAM_MESSAGE: "team_message:", CONSOLE_CLEAR:6, CONSOLE_ERROR:"error:", CONSOLE_LOG:"log:", PAINT_CELL: "paint_cell:", CLEAR_CELLS: "clear_cells", _SAVE_MEMORY_:"_save_memory_:"};
 
 var _ACTION_REGEX = {
 					WEST:			/^\s*(action\s*\()?\s*(west|0)\s*\)?\s*$/i,
@@ -33,6 +33,10 @@ var _ACTION_REGEX = {
 					CONSOLE_CLEAR:	/^\s*(action\s*\()?\s*(clear|console_clear|console.clear|6)\s*\)?\s*$/i,
 					CONSOLE_ERROR:	/^\s*(error|console_error|console.error)\s*(\(\s*'([^]*)'\s*\)|:([^]*))\s*$/i,
 					CONSOLE_LOG:	/^\s*(log|console_log|console.log)\s*(\(\s*'([^]*)'\s*\)|:([^]*))\s*$/i,
+					PAINT_CELL:		/^\s*(paint|paint_cell)\s*(\(\s*(\d+)\s*,\s*(\d+)\s*\)|:\s*(\d+)\s*:\s*(\d+)\s*)\s*$/i,
+					CLEAR_CELLS:	/^\s*(clear_cells|clear_painted_cells)\s*$/i,
+
+					//Used for remote controling the agent
 					KEY_DOWN:		/(key_down|keydown|key_pressed)\s*(\(\s*([^)]*)\s*\)|:([^]*))/i,
 					KEY_UP:			/(key_up|keyup|key_released)\s*(\(\s*([^)]*)\s*\)|:([^]*))/i,
 
