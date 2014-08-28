@@ -4,11 +4,11 @@
 		<label>Grid dimensions:</label>
 		<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
 			<div class="col-md-2 col-xs-3">
-				<input type="number" class="form-control" ng-model="enc.task_env.environment.rows" ng-change="enc.updateDimensions()" ng-class="{'has-error':(enc.task_env.environment.rows|num)<=2}" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Rows" required>
+				<input type="number" class="form-control" ng-model="enc.task_env.environment.rows" ng-change="enc.updateDimensions()" ng-class="{'has-error':(enc.task_env.environment.rows|num)<=2}" min="3" max="20" placeholder="Rows" required>
 			</div>
 			<div class="col-md-1 col-xs-1 text-center">x</div>
 			<div class="col-md-2 col-xs-3">
-				<input type="number" class="form-control" ng-model="enc.task_env.environment.columns" ng-change="enc.updateDimensions()" ng-class="{'has-error':(enc.task_env.environment.columns|num)<=2}" min="3" max="20" ng-pattern="/^\d+$/" placeholder="Columns" required>
+				<input type="number" class="form-control" ng-model="enc.task_env.environment.columns" ng-change="enc.updateDimensions()" ng-class="{'has-error':(enc.task_env.environment.columns|num)<=2}" min="3" max="20" placeholder="Columns" required>
 			</div>
 		</div>
 		<br>
@@ -25,9 +25,9 @@
 		<div class="panel panel-default animate-only-show" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state" ng-init="ismc.grid = enc.task_env.environment.initial_state">
 			<div class="panel-body text-center">
 				<div class="row">
-					<span class="pull-right margin-10">
+					<span class="pull-right">
 						View as 
-						<div class="btn-group btn-group">
+						<div class="btn-group btn-group margin-10">
 							<label class="btn btn-default" ng-model="ismc.percept" btn-radio="true" tooltip="Agent">Perception matrix</label>
 							<label class="btn btn-default" ng-model="ismc.percept" btn-radio="flase" tooltip="Agent">T-World grahics</label>
 						</div>

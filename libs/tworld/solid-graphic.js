@@ -1828,7 +1828,26 @@ function GraphicTWorld(graphicEngine, environment){
 												);
 			_CLN_Flag.Pos.X = GraphicTWorld.RowIndexToXPosition(_LOCS[0].row);
 			_CLN_Flag.Pos.Z = GraphicTWorld.ColumnIndexToZPosition(_LOCS[0].column);
-			_CLN_Flag.Pos.Y = 5;
+			_CLN_Flag.Pos.Y = 8;
+
+			_CLN_Flag = _CL_Scene.getSceneNodeFromName('clouds').createClone(_CL_Scene.getRootSceneNode());
+			_CLN_Flag.getMaterial(1).Type = _CLN_Flag.getMaterial(0).Type = CL3D.Material.EMT_TRANSPARENT_ALPHA_CHANNEL;
+			_CLN_Flag.getMaterial(2).Tex1 = _CL_Engine.getTextureManager().getTexture("./copperlichtdata/black.png", true);
+			_CLN_Flag.getMaterial(2).Type = CL3D.Material.EMT_TRANSPARENT_ADD_COLOR;
+			_CLN_Flag.getMaterial(1).Tex1 =
+			_CLN_Flag.getMaterial(0).Tex1 = _CL_Engine
+													.getTextureManager()
+													.getTexture(
+														"./copperlichtdata/flag-mark-"+(_RESULT == 2?"red":"green")+"-glow.png",
+														 true
+													);
+			_CLN_Flag.Scale.set(0.02,0.0,0.02);
+			_CLN_Flag.Pos.X = GraphicTWorld.RowIndexToXPosition(_LOCS[0].row);
+			_CLN_Flag.Pos.Z = GraphicTWorld.ColumnIndexToZPosition(_LOCS[0].column);
+			_CLN_Flag.Pos.Y = 1.4;
+			_CLN_Flag.Rot.set(0, 90, 0);
+			_CLN_Flag.setVisible(true, true);
+
 			for (var l = _LOCS.length-1; l>=1;--l){
 				_CLN_Flag = _CLN_Flag.createClone(_CL_Scene.getRootSceneNode())
 				_CLN_Flag.Pos.X = GraphicTWorld.RowIndexToXPosition(_LOCS[l].row);
