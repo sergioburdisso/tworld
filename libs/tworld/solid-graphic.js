@@ -1903,7 +1903,7 @@ function GraphicTWorld(graphicEngine, environment){
 				case 1:
 					list = lostC;
 					img = "go-mark.png";
-					title = "Game over conditions:";
+					title = "Failure conditions:";
 					color = "rgb(255, 8, 37)";
 					break;
 			}
@@ -1984,8 +1984,8 @@ function GraphicTWorld(graphicEngine, environment){
 		//console messages
 		if (!TWorld.FullyObservableGrid)
 			console.log("Press <SPACE BAR> to show/hide agent's visibility bounds.");
-		if (_KNOBS.environment.final_state.length)
-			console.log("Press and hold <SHIFT> to see end-game conditions.");
+		if (wonC.length || lostC.length)
+			console.log("Press and hold <SHIFT> to see goals and failure conditions.");
 
 		_toggleVisibilityBounds(_SHOW_VISIBILITY_BOUNDS);
 		_clOnAnimateCallBack = _CL_Scene.getRootSceneNode().OnAnimate;

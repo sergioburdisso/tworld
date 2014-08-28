@@ -206,7 +206,7 @@
 				_self.fullScreen = !_self.fullScreen;
 				if (_self.fullScreen){
 					_editor.setOptions({autoScrollEditorIntoView: false});
-					$('body').scrollTop(0).css("overflow","hidden");
+					$(window).scrollTop(0).css("overflow","hidden");
 					$('#source-code').css("height", $(window).height()-100+"px")
 				}else{
 					_editor.setOptions({autoScrollEditorIntoView: true});

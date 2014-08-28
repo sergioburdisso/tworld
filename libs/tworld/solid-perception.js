@@ -103,7 +103,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 					teams: [/*{id:, leader:, members:[]}...*/], // optional
 					endgame : {/*neutral: {}, won: {}, lost: {}*/}, //end game conditions
 					costs: environment.Costs,
-					probability: {/*holes, movement, etc.*/}
+					probability: environment.Probability
 				}
 			}
 		}

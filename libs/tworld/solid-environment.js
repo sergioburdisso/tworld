@@ -713,7 +713,40 @@ function Environment(rows, columns, graphicEngine, parent) {
 							ListOfAgents : new Array(_NUMBER_OF_AGENTS),
 							ListOfHoles : [],
 							ListOfObstacles :[],
-							Costs : _self.Costs
+							Costs : _self.Costs,
+							Probability: {
+								holes_size:{
+									range: 	_KNOBS.environment.holes_size.range,
+									prob: 	_KNOBS.environment.holes_size.prob.multAll(1/1000)
+								},
+								num_holes:{
+									range: 	_KNOBS.environment.num_holes.range,
+									prob: 	_KNOBS.environment.num_holes.prob.multAll(1/1000)
+								},
+								num_obstacles:{
+									range: 	_KNOBS.environment.num_obstacles.range,
+									prob: 	_KNOBS.environment.num_obstacles.prob.multAll(1/1000)
+								},
+								difficulty:{
+									range: 	_KNOBS.environment.difficulty.range,
+									prob: 	_KNOBS.environment.difficulty.prob.multAll(1/1000)
+								},
+								dynamism:{
+									range: 	_KNOBS.environment.dynamic.dynamism.range,
+									prob: 	_KNOBS.environment.dynamic.dynamism.prob.multAll(1/1000)
+								},
+								hostility:{
+									range: 	_KNOBS.environment.dynamic.hostility.range,
+									prob: 	_KNOBS.environment.dynamic.hostility.prob.multAll(1/1000)
+								},
+								model_of_action: {
+									Intended:	TWorld.ModelOfStochasticMotion[0]/1000,
+									left:		TWorld.ModelOfStochasticMotion[1]/1000,
+									right:		TWorld.ModelOfStochasticMotion[2]/1000,
+									backward:	TWorld.ModelOfStochasticMotion[3]/1000,
+									refuses:	TWorld.ModelOfStochasticMotion[4]/1000
+								}
+							}
 						}
 
 						//-> List Of Agents

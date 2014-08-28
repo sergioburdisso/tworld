@@ -90,6 +90,13 @@ Array.prototype.contains = function(obj) {
 	return false;
 }
 
+Array.prototype.multAll = function(value) {
+	var newArray = new Array(this.length);
+	for (var i = this.length; i--;)
+		newArray[i] = (value*this[i]).toFixed(3);
+	return newArray;
+}
+
 Array.prototype.flatteningAllButTied = function() {
 	var flatten = [];
 	var subFlatten;
