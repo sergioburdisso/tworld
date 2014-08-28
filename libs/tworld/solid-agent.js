@@ -33,7 +33,7 @@ var alert = function(msg){
 
 	$return(_ACTION.CONSOLE_LOG + msg);
 }
-//console guard
+
 //console guard
 try{
 	console.clear();

@@ -53,7 +53,7 @@ CL3D.DebugOutput.prototype.setLoadingText = function (a) {
 
 		//if everything is loaded and all [extern] agent programs are ready
 		if (_Ready){
-			$("#playFrame").show();
+			$("#playFrame").show().removeClass("no-events");
 			if (_SAVE_STATS)
 				$("#playBtn").mouseup();
 		}

@@ -7,12 +7,12 @@
 
 				<div class="pull-right">
 					<span class="">( Task Environment:</span>
-					<span class="cursor-pointer margin-10" ng-click="apscc.openEnvironmentsModal()" tooltip="Select task environment">
+					<span class="cursor-pointer margin-10">
 						<b>
 							<span ng-if="apscc.task_env.name" class="text-white"> {{apscc.task_env.name}}</span>
 							<span ng-if="!apscc.task_env.name" class="text-red"> (empty)</span>
 						</b>
-						<button class="btn btn-default glyphicon glyphicon-pencil btn-sm"></button> )
+						)
 					</span>
 					<button ng-click="apscc.toggleMaximaze()" ng-class="{'glyphicon-resize-small':apscc.fullScreen,'glyphicon-resize-full':!apscc.fullScreen}" class="btn btn-default glyphicon glyphicon" tooltip="Maximaze/Restore"></button>
 				</div>
@@ -20,7 +20,20 @@
 
 			<div class="panel-body no-padding">
 
-				<button id="save" class="btn btn-success glyphicon margin-10 pull-right" ng-class="{'disabled glyphicon-floppy-saved':apscc.saved, 'glyphicon-floppy-save':!apscc.saved}" ng-click="apscc.save()" tooltip="Save"></button>
+				<div class="btn-group  margin-10 pull-right" dropdown is-open="apscc.dropdownopen">
+					<button type="button" class="btn btn-default dropdown-toggle glyphicon glyphicon-align-justify"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu" ng-click="apscc.dropdownopen = false">
+						<li><a href="" ng-click="apscc.save()">Save all <span class="pull-right"><small>Crtl+S</small></span></a></li>
+						<li class="divider"></li>
+						<li><a href="" ng-click="apscc.run()">Run <span class="pull-right"><small>Crtl+R</small></a></li>
+						<li><a href="" ng-click="apscc.openEnvironmentsModal()">Select Task Environment</a></li>
+						<li class="divider"></li>
+						<li><a href="" ng-click="apscc.openMemoryModal()">Persistent memory</a></li>
+					</ul>
+				</div>
+
+				<button id="save" class="btn btn-success glyphicon margin-10 pull-right" ng-class="{'disabled glyphicon-floppy-saved':apscc.saved, 'glyphicon-floppy-save':!apscc.saved}" ng-click="apscc.save()" tooltip="Save all"></button>
 				<button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play margin-10 pull-right" tooltip="Run agent program"></button>
 
 				<tabset>
@@ -51,3 +64,18 @@
 		</div>
 	</div>
 </div>
+
+<script type="text/ng-template" id="memory-modal.html">
+	<div class="modal-header">
+		<h3 class="modal-title"><span class="glyphicon glyphicon-hdd"></span> Agent Program Persistent Memory ($memory) </h3>
+	</div>
+	<div class="modal-body text-blue">
+		$memory =
+		<textarea id="memory" class="form-control text-blue" ng-model="memory.text" rows="8" placeholder="Persistent Memory"></textarea><br>
+		<alert class="animate-show" type="danger" close="hideAlert()" ng-show="alert"><span class="glyphicon glyphicon-warning-sign"></span> The code above is not a well-formed JSON string</alert>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-default" ng-click="close()">Cancel</button>
+		<button class="btn btn-success" ng-click="save()">Save</button>
+	</div>
+</script>

@@ -295,6 +295,7 @@ function removeMemoryByAgentProgramID(id){
 	}
 }
 
+//memory type: json string
 function saveMemoryByAgentProgramID(id, memory){
 	var mem = {};
 

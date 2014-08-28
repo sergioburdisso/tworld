@@ -368,11 +368,11 @@ function Environment(rows, columns, graphicEngine, parent) {
 				}
 
 				if (_Ready){
-					$("#playFrame").show();
+					$("#playFrame").show().removeClass("no-events");
 					if (_SAVE_STATS)
 						$("#playBtn").mouseup();
 				}else
-					$("#playFrame").hide();
+					$("#playFrame").hide().addClass("no-events");
 			}
 
 			//--------------------------------------------------------------------------------------> isBatteryChargeSufficient

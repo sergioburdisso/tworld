@@ -163,6 +163,7 @@
 
 			this.fullScreen = false;
 			this.saved = true;
+			this.dropdownopen = false;
 			this.agent_prog = getAgentProgramByDate($routeParams.id);
 			if (!this.agent_prog || !this.agent_prog.ai || !this.agent_prog.javascript){$location.url('/');return}
 
@@ -186,15 +187,19 @@
 			}
 
 			this.save = function(){
+				this.dropdownopen = false;
 				_source.cursor = _editor.getCursorPosition();
 				_source.code = _editor.getValue();
 
+				saveAgentPrograms() //saveAgentProgram(_self.agent_prog)
+
 				_self.saved = true;
 
-				saveAgentPrograms() //saveAgentProgram(_self.agent_prog)
+				$scope.$apply(); //<- when save is colled from keyhandler
 			}
 
 			this.run = function(){
+				this.dropdownopen = false;
 				this.save();
 				if (!this.task_env)
 					this.openEnvironmentsModal(true);
@@ -241,6 +246,45 @@
 				);
 			}
 
+			this.openMemoryModal = function(){
+				$modal.open({
+					size: 'lg',//size,
+					templateUrl: 'memory-modal.html',
+					controller: function($scope, $modalInstance){
+						$scope.memory = {text: JSON.stringify(getMemoryByAgentProgramID($routeParams.id))};
+						$scope.alert = false;
+						$scope.hideAlert = function(){$scope.alert = false}
+						$scope.save = function(){
+							try{
+								JSON.parse($scope.memory.text); //is it a well-formed JSON string?
+								saveMemoryByAgentProgramID($routeParams.id, $scope.memory.text);
+								$modalInstance.close();
+							}catch(e){$scope.alert = true}
+						}
+						$scope.close = function(){$modalInstance.dismiss()}
+
+						$(document).delegate('#memory', 'keydown', function(e) {
+							var keyCode = e.keyCode || e.which;
+
+							if (keyCode == 9) {
+								e.preventDefault();
+								var start = $(this).get(0).selectionStart;
+								var end = $(this).get(0).selectionEnd;
+
+								// set textarea value to: text before caret + tab + text after caret
+								$(this).val($(this).val().substring(0, start)
+								            + "\t"
+								            + $(this).val().substring(end));
+
+								// put caret at right position again
+								$(this).get(0).selectionStart =
+								$(this).get(0).selectionEnd = start + 1;
+							}
+						});
+					}
+				})
+			}
+
 			this.openRunModal = function(){
 				$modal.open({
 						size: 'lg',//size,
@@ -259,6 +303,27 @@
 				if (_self.saved){
 					_self.saved = false;
 					$scope.$apply()//update the binding values
+				}
+			});
+
+			$(window).unbind('keydown').bind('keydown', function(event) {
+				if (event.ctrlKey || event.metaKey) {
+					switch (String.fromCharCode(event.which).toLowerCase()) {
+					case 's':
+						event.preventDefault();
+						_self.save();
+						break;
+					case 'f':
+						//event.preventDefault();
+						break;
+					case 'g':
+						//event.preventDefault();
+						break;
+					case 'r':
+						event.preventDefault();
+						_self.run();
+						break;
+					}
 				}
 			});
 
