@@ -26,7 +26,7 @@
 		var _self = this;
 		var _selected = -1;
 
-		this.agentPrograms = updateAgentPrograms();
+		this.agentPrograms = getAgentPrograms();
 		this.orderCond = "-date";
 		this.allProps = true;
 		this.page = 1;
@@ -80,19 +80,17 @@
 					templateUrl: 'items-list-modal.html',
 					controller: itemsListController,
 					resolve:{
-						items:function(){return getEnvironments()},
+						items: itemsListEnvsResolver,
 						agentProgramsFlag:function(){return false}
 					}
 				}).result.then(
-					function (id) {
-						updateEnvitonments();
-						updateAgentPrograms();
+					function (taskEnv) {
 						$modal.open({
 							size: 'lg',//size,
 							templateUrl: 'run-modal.html',
 							controller: runModalController,
 							resolve:{
-								taskEnv: function(){return getEnvironmentByDate(id)}, 
+								taskEnv: function (){ return taskEnv },
 								agentProgs: function(){return [getAgentProgramByDate(_selected)]}
 							}
 						});
@@ -119,7 +117,7 @@
 		}
 
 		function _remove(){
-			_self.agentPrograms = updateAgentPrograms();
+			_self.agentPrograms = getAgentPrograms();
 
 			//remove trials
 			removeAgentProgramTrials(_selected);
@@ -132,14 +130,11 @@
 		}
 	}]);
 
-	mod.controller('AgentProgSourceCodeController', ['$scope','$routeParams','$modal', '$location',
-		function($scope, $routeParams, $modal, $location){
+	mod.controller('AgentProgSourceCodeController', ['$rootScope','$scope','$routeParams','$modal', '$location',
+		function($rootScope, $scope, $routeParams, $modal, $location){
 			var _self = this;
 			var _source;
 			var _editor;
-
-			updateEnvitonments();
-			updateAgentPrograms();
 
 			ace.require("ace/ext/language_tools");
 			_editor = ace.edit("source-code");
@@ -167,10 +162,10 @@
 			this.agent_prog = getAgentProgramByDate($routeParams.id);
 			if (!this.agent_prog || !this.agent_prog.ai || !this.agent_prog.javascript){$location.url('/');return}
 
-			this.task_env = this.agent_prog.default_task_env?
-								getEnvironmentByDate(this.agent_prog.default_task_env)
-								:
-								null;
+			if (!this.agent_prog.default_task_env)
+				this.task_env =  undefined;
+			else
+				this.task_env =  loadTaskEnvAsync(_self.agent_prog.default_task_env);
 
 			this.open = function(source){
 				if (_source){
@@ -191,11 +186,9 @@
 				_source.cursor = _editor.getCursorPosition();
 				_source.code = _editor.getValue();
 
-				saveAgentPrograms() //saveAgentProgram(_self.agent_prog)
+				updateAgentProgram(_self.agent_prog);
 
 				_self.saved = true;
-
-				$scope.$apply(); //<- when save is colled from keyhandler
 			}
 
 			this.run = function(){
@@ -227,21 +220,20 @@
 					size: 'lg',//size,
 					templateUrl: 'items-list-modal.html',
 					controller: itemsListController,
-					resolve:{
-						items:function(){return getEnvironments()},
-						agentProgramsFlag:function(){return false}
+					resolve: {
+						items: itemsListEnvsResolver,
+						agentProgramsFlag: function(){return false}
 					}
 				})
 				.result.then(
-					function (id) {
-						updateEnvitonments();
+					function (taskEnv) {
 						if (!_self.task_env && run){
-							_self.task_env = getEnvironmentByDate(id);
+							_self.task_env = taskEnv;
 							_self.openRunModal();
 						}else
-							_self.task_env = getEnvironmentByDate(id);
+							_self.task_env = taskEnv;
 
-						_self.agent_prog.default_task_env = id;
+						_self.agent_prog.default_task_env = taskEnv.date;
 					}
 				);
 			}
@@ -291,12 +283,36 @@
 						templateUrl: 'run-modal.html',
 						controller: runModalController,
 						resolve:{
-							taskEnv: function(){return _self.task_env}, 
+							taskEnv: _self.task_env?
+										function(){return _self.task_env}
+										:
+										function ($rootScope, $q){
+											return runTaskEnvResolver(
+												_self.agent_prog.default_task_env,
+												$rootScope,
+												$q
+											)
+										},
 							agentProgs: function(){return [_self.agent_prog]}
 						}
 					});
 			}
 
+			function loadTaskEnvAsync(date){
+				if (!isLoggedIn())
+					_self.task_env = getEnvironmentByDate(date);
+				else{
+					getEnvironmentByDate(
+						date,
+						function(response){
+							_self.task_env = response;
+							$scope.$apply();
+						},
+						$rootScope
+					);
+					_self.task_env = {date: date, name: "Loading..."};
+				}
+			}
 			//constructor logic
 
 			_editor.on('input', function() {
@@ -312,6 +328,7 @@
 					case 's':
 						event.preventDefault();
 						_self.save();
+						$scope.$apply();
 						break;
 					case 'f':
 						//event.preventDefault();
@@ -343,17 +360,13 @@
 			this.save = function(){if (Validate()){
 				var _newFlag = !agentProg.date;
 
-				updateAgentPrograms();
-
-				if (_newFlag){
-					agentProg.date = Date.now();
-					agentPrograms.push(this.agent_prog);
-				}else
-					agentPrograms[ getAgentProgramIndexByDate(agentProg.date) ] = agentProg;
+				if (_newFlag)
+					newAgentProgram(this.agent_prog);
+				else
+					updateAgentProgram(agentProg);
 
 				_socket.magic_string_dirty = _socket.magic_string != this.agent_prog.name;
 
-				saveAgentPrograms();
 				if (this.agent_prog.javascript && this.agent_prog.ai && _newFlag)
 					$location.url('/agent-programs/source-code:'+this.agent_prog.date)
 				else

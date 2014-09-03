@@ -6,13 +6,13 @@
 	</blockquote>
 </section>
 <div class="row">
-	<button ng-click="enc.loadConfig()" ng-hide="enc.task_env.date&&!enc.noTrials(enc.task_env.date)" class="btn btn-primary pull-right margin-10" tooltip="Load and copy all configuration values from an existing task environment"><span class="glyphicon glyphicon-open"></span> Load configuration</button>
+	<button ng-click="enc.loadConfig()" ng-hide="enc.task_env.date" ng-disabled="enc.readOnly" class="btn btn-primary pull-right margin-10" tooltip="Load and copy all configuration values from an existing task environment"><span class="glyphicon glyphicon-open"></span> Load configuration</button>
 </div>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-3"></div>
-		<div class="col-md-6" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
-			<alert type="info" ng-hide="enc.noTrials(enc.task_env.date)"><span class="glyphicon glyphicon-info-sign" style="font-size:30px"></span><br>Since this task environment has stats associate with it, most configuration values won't be editable. In case you want to change some of these readonly values, create a new task environment and then load this task environment's configuration values.</alert>
+		<div class="col-md-6" ng-class="{'treadonly':enc.readOnly}">
+			<alert type="info" ng-hide="!enc.readOnly"><span class="glyphicon glyphicon-info-sign" style="font-size:30px"></span><br>Since there are stats associate with this task environment, most configuration values won't be editable. In case you want to change some of these readonly values, create a new task environment and then load these configuration values using the "Load configuration" button above.</alert>
 			<div class="row text-left">
 				<p class="lead"><b>1.</b> Select the properties of your new task environment according to the dimension listed below.</p>
 			</div>
@@ -30,7 +30,7 @@
 				</div>
 			</div>
 			<br>
-			<div class="container-fluid animate-show-3d-top" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-show="enc.task_env.prop.multiagent">
+			<div class="container-fluid animate-show-3d-top" ng-class="{'treadonly':enc.readOnly}" ng-show="enc.task_env.prop.multiagent">
 				<div class="row" style="margin-top: -15px; padding-bottom: 20px">
 					<div class="btn-group">
 						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="0" tooltip-placement="left" tooltip="one-vs-one match (single-robot teams)">Competitive</label>
@@ -64,8 +64,7 @@
 			<div class="row text-left">
 				<label class="lead "><b>2.</b> Do you want Robots to have a battery?</label>
 				<div class="checkbox">
-					<label><input type="checkbox" ng-model="enc.task_env.battery"> Yes, I do &mdash;this
-enable the study of maintenance.</label>
+					<label><input type="checkbox" ng-model="enc.task_env.battery"> Yes, I do &mdash;this enable the study of maintenance.</label>
 				</div>
 			</div>
 			<div class="separator"></div>

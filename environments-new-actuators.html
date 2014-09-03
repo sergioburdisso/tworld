@@ -1,6 +1,6 @@
 <div class="container-fluid" ng-hide="enc.task_env.prop.deterministic">
 	<h2>Agent Actuators</h2>
-	<div class="text-left" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+	<div class="text-left" ng-class="{'treadonly':enc.readOnly}">
 		<div class="row">
 			<div class="col-md-6 col-xs-6">
 				<label>Model of stochastic motion</label>
@@ -13,7 +13,7 @@
 			</div>
 		</div>
 		<br>
-		<div class="row animate-show" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-hide="enc.isUsedDefined()">
+		<div class="row animate-show" ng-class="{'treadonly':enc.readOnly}" ng-hide="enc.isUsedDefined()">
 			<div class="col-md-6 col-xs-6">
 				<label><span class="text-orange">Intended outcome</span> probability</label><div class="ui-slider-size" ui-slider min="0" max="1000" use-decimals ng-model="enc.stochastic_model.prob[0]"></div>
 			</div>

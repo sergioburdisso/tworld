@@ -118,7 +118,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 					_TILES_TELEPORT_DELAY= 0;
 
 				if (_INITIAL_STATE){
-					while (_INITIAL_STATE.tiles.length){
+					while (!_EASY_MODE && _INITIAL_STATE.tiles.length){
 						elem = _INITIAL_STATE.tiles.shift();
 						if (_self.isAnEmptyCell(elem[0], elem[1]))
 							_self.newTile(elem);

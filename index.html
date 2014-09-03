@@ -7,48 +7,85 @@
 	<title>T-World</title>
 	<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css" />
 	<link rel="stylesheet" type="text/css" href="libs/jquery/css/jquery-ui.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/atebits.css" type="text/css">
 	<link rel="stylesheet" type="text/css" href="css/main.css" />
 </head>
-<body ng-app="tworld" ng-controller="TWorldController as twc">
+<body ng-app="tworld" class="tbody" ng-controller="TWorldController as twc">
 	<!-- HEADER -->
-	<div class="header">
+	<div class="header" ng-click="twc.clickOutside()">
 		<div id="header-images">
 			<div id="h-img-2" style="display:none; position:fixed; width:100%; height:493px; background: url(imgs/web-app/header2.png) center; z-index:-1"></div>
 			<div id="h-img-1" style="display:none; position:fixed; width:100%; height:493px; background: url(imgs/web-app/header1.png) center; z-index:-1"></div>
 			<div id="h-img-0" style="position:fixed; width:100%; height:493px; background: url(imgs/web-app/header0.png) center; z-index:-1"></div>
 		</div>
 		<div class="jumbotron container-fluid shadow-inset" style="background-color: transparent; margin-bottom: 0; height: 492px;">
-			<span class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-70px; left:0">
+			<form role="form" class="form-inline">
+				<div class="form-group col-md-3 pull-right text-white">
+						<select class="form-control input-sm pull-right" id="language" ng-model="twc.language" ng-options="value for (lang, value) in twc.LANGUAGES" ng-change="twc.setLanguage()"></select>
+					<span class="pull-right" style="margin-right:10px" for="language">Language</span>
+				</div>
+			</form>
+			<span class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-50px; left:0">
 				<h1>T-World</h1>
 				<p ng-bind-html="twc.text.desc"></p>
-				<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="mailto:sergio.burdisso@gmail.com"c tooltip-placement="right">Sergio Burdisso</a>.</h5>
-				<h5 class="pull-right header" style="color:white"><span ng-bind-html="twc.text.martha_marc"></span></h5>
+				<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="mailto:sergio.burdisso@gmail.com"  tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a>.</h5>
+				<h5 style="color:white" class="header text-right">
+					<span ng-bind-html="twc.text.aima"></span><br>
+					<span ng-bind-html="twc.text.martha_marc"></span>
+				</h5>
 			</span>
 		</div>
 	</div>
 
-	<ol id="top" class="breadcrumb pull-left">
+	<ol id="top" class="breadcrumb pull-left" ng-cloak>
 		<li ng-repeat="n in twc.$loc.url().split('/') track by $index">
 			<a href="" ng-click="twc.goto(twc.getSubPath($index))" ng-if="!$last">{{n||"home"}}</a>
 			<span ng-if="$last">{{n}}</span>
 		</li>
 	</ol>
 
-	<!-- LANGUAGE SELECT -->
-	<div style="padding: 10px; background-color: #f5f5f5">
-		<form role="form" class="form-inline">
-			<div class="form-group col-md-3 pull-right">
-					<select class="form-control input-sm pull-right" id="language" ng-model="twc.language" ng-options="value for (lang, value) in twc.LANGUAGES" ng-change="twc.setLanguage()"></select>
-				<span class="pull-right" style="margin-right:10px" for="language">Language</span>
+	<!-- LOGIN -->
+	<div style="padding: 10px; background-color: #f5f5f5" ng-class="{'treadonly':twc.login.state == 2 || twc.login.state == 4}" ng-cloak>
+		<span class="animate-only-show" ng-hide="twc.user.info">
+			<button class="btn btn-primary btn-sm pull-right margin-right-10" popover-placement="left" popover-trigger="click" popover-html-unsafe="{{twc.createAccountHtml}}" ng-click="twc.login.state=0;twc.gotoTop(1000,0)"><span class="glyphicon glyphicon-cloud-upload"></span> Create T-Account</button>
+			<button id="login-submit" type="submit" form="frm-login" class="btn btn-sm pull-right margin-right-10" ng-click="twc.login.apply()" ng-class="{'btn-default':(twc.login.state!=1), 'btn-success':(twc.login.state==1)}"><span class="glyphicon glyphicon-user"></span> Login</button>
+
+			<form id="frm-login" role="form" class="form-inline pull-right margin-right-10 animate-show-3d-right" tooltip-html-unsafe="{{twc.loginErrorHtml}}" tooltip-placement="bottom" tooltip-trigger="errorEvent" ng-show="twc.login.state==1">
+				<div class="form-group">
+					<label class="sr-only" for="exampleInputPassword2">Your Email</label>
+					<input id="login-email" type="email" name="email" class="form-control width-120 tfocus" placeholder="Your Email" ng-model="twc.login.email" ng-class="{'has-error':!twc.login.email.trim().length}">
+				</div>
+				<div class="form-group">
+					<label class="sr-only" for="exampleInputPassword2">Password</label>
+					<input id="login-pwd" type="password" name="password" class="form-control width-120 tfocus" placeholder="Password" ng-model="twc.login.pwd" ng-class="{'has-error':!twc.login.pwd.trim().length}">
+				</div>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" ng-model="twc.login.rember"> Remember me
+					</label>
+				</div>
+			</form>
+		</span>
+		<span class="animate-only-show" ng-show="twc.user.info">
+			<button class="btn btn-default btn-sm pull-right margin-right-10 btn-logout" ng-click="twc.logout()">
+				<span class="glyphicon glyphicon-off"></span> Log Out
+			</button>
+			<label class="pull-right margin-right-10 text-blue" style="margin-top: 5px;">{{twc.user.info.email}}</label>
+		</span>
+		<div id="load-login" class="transition-400 text-center pull-right animate-only-show" ng-show="twc.login.state == 2||twc.login.state == 4||$loading||$loadingView">
+			<div class="spinner">
+				<div class="bounce1"></div>
+				<div class="bounce2"></div>
+				<div class="bounce3"></div>
 			</div>
-		</form>
-		<div class="container"><hr/></div>
+		</div>
+		<br>
+		<div class="container" ng-click="twc.clickOutside()"><hr/></div>
 	</div>
 
 	<!-- CONTENT -->
-	<div id="content" class="loading"></div>
-	<div class="container-fluid main-content min-height">
-		<div ng-view class="container border-sides animate-view"></div>
+	<div class="container-fluid main-content min-height" ng-click="twc.clickOutside()">
+		<div ng-view class="container border-sides animate-view content"></div>
 	</div>
 	<div class="container-fluid main-content">
 		<div class="glyphicon glyphicon-hand-up pull-right to-top" ng-click="twc.gotoTop()" tooltip="to the top" tooltip-placement="left"></div>
@@ -119,6 +156,19 @@
 		<div class="modal-footer">
 			<button class="btn btn-default" ng-click="close()">Cancel</button>
 			<button class="btn btn-danger" ng-click="ok()">Yes</button>
+		</div>
+	</script>
+
+	<script type="text/ng-template" id="popover-html-unsafe-popup.html">
+		<div class="popover {{placement}}" ng-class="{ in: isOpen(), fade: animation() }">
+			<div class="arrow"></div>
+
+			<div class="popover-inner">
+				<h3 class="popover-title" ng-bind="title" ng-show="title"></h3>
+				<div class="popover-content" bind-html-unsafe="content">
+
+				</div>
+			</div>
 		</div>
 	</script>
 

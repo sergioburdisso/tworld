@@ -19,29 +19,14 @@
 (function(){
 	var mod = angular.module('tworldStats', []);
 
-	mod.controller('StatsController', ['$location', '$routeParams', '$modal',
-	function($location, $routeParams, $modal){
+	mod.controller('StatsController', ['$scope', '$location', '$routeParams', '$modal', 'taskEnv', 'agentProg',
+	function($scope, $location, $routeParams, $modal, taskEnv, agentProg){
 		var _self = this;
 		var _selected = -1;
 		var _trials = getTrials();
 
-		updateEnvitonments();
-		updateAgentPrograms();
-
-		if (!$routeParams.task_env_id)
-			$routeParams.task_env_id = "all";
-		if (!$routeParams.agent_prog_id)
-			$routeParams.agent_prog_id = "all";
-
-		this.task_env = $routeParams.task_env_id != "all"?
-							getEnvironmentByDate($routeParams.task_env_id)
-						:
-							undefined;
-
-		this.agent_prog = $routeParams.agent_prog_id != "all"?
-							getAgentProgramByDate($routeParams.agent_prog_id)
-						:
-							undefined;
+		this.task_env = taskEnv;
+		this.agent_prog = agentProg;
 
 		this.orderCond = '-date';
 		this.page = 1
@@ -63,13 +48,15 @@
 
 					newTrial = {
 						date: _trials[i].date,
-						task_env_name: !this.task_env?
-											getEnvironmentByDate(_trials[i].task_env_id).name
-											:
-											this.task_env.name,
+						task_env_id: _trials[i].task_env_id,
 						agent_progs: '',
 						agent_progs_num: 0
 					}
+
+					if (this.task_env)
+						newTrial.task_env_name = this.task_env.name;
+					else
+						newTrial.task_env_name = loadNameAsync(newTrial);
 
 					newTrial.agent_progs+= getAgentProgramByDate(aps[0]).name;
 					for (var j=1; j < aps.length;++j)
@@ -106,14 +93,14 @@
 				templateUrl: 'items-list-modal.html',
 				controller: itemsListController,
 				resolve:{
-					items:function(){return getEnvironments()},
+					items: itemsListEnvsResolver,
 					agentProgramsFlag:function(){return false}
 				}
 			})
 			.result.then(
-				function (task_env_id) {
+				function (taskEnv) {
 					$location.url(
-						'/stats/task-env:'+task_env_id+'&agent-prog:'+$routeParams.agent_prog_id
+						'/stats/task-env:'+taskEnv.date+'&agent-prog:'+($routeParams.agent_prog_id||'all')
 					);
 					gotoTop()
 				}
@@ -131,25 +118,45 @@
 				}
 			})
 			.result.then(
-				function (agent_prog_id) {
-					$location.url('/stats/task-env:'+$routeParams.task_env_id+'&agent-prog:'+agent_prog_id);
+				function (agentProg) {
+					$location.url('/stats/task-env:'+($routeParams.task_env_id||'all')+'&agent-prog:'+agentProg.date);
 					gotoTop()
 				}
 			);
 		}
 
-		this.viewStats = function(){
+		this.viewStats = function(taskEnvDate){
 			$modal.open({
 				size: 'lg',
 				templateUrl: 'view-stats.html',
 				controller: viewStatsController,
-				resolve:{trial:function(){return _selected}}
-			}).result.then(null,updateEnvitonments);
+				resolve:{
+					trial: function(){return _selected},
+					taskEnv: function ($rootScope, $q){
+						return runTaskEnvResolver(taskEnvDate, $rootScope, $q)
+					}
+				}
+			});
 		}
 
-		function viewStatsController($scope, $modal, $modalInstance, trial){
+		function loadNameAsync(trial){
+			if (!isLoggedIn())
+				return getEnvironmentByDate(_trials[i].task_env_id).name;
+			else{
+				getEnvironmentByDate(
+					_trials[i].task_env_id,
+					function(response){
+						trial.task_env_name = response.name;
+						$scope.$apply();
+					}
+				);
+				return "loading...";
+			}
+		}
+
+		function viewStatsController($scope, $modal, $modalInstance, trial, taskEnv){
 			$scope.trial = getTrialByDate(trial);
-			$scope.task_env = getEnvironmentByDate($scope.trial.task_env_id);
+			$scope.task_env = taskEnv;
 			$scope.teams = $scope.task_env.teams;
 			$scope.teamsTable = false;
 

@@ -23,11 +23,12 @@
 	var colors = []; for (color in _COLORS) colors.push(_COLORS[color]);
 	var taskEnvironment;
 
-	mod.controller("EnvController", ["$modal", '$location', function($modal, $location){
+	mod.controller("EnvController", ["$rootScope", "$modal", '$location', 'task_envs',
+		function($rootScope, $modal, $location, task_envs){
 		var _self = this;
 		var _selected = -1;
 
-		this.taskEnvironments = updateEnvitonments();
+		this.taskEnvironments = task_envs;
 		this.orderCond = "-date";
 		this.allProps = true;
 		this.page = 1;
@@ -49,10 +50,12 @@
 		this.isSelected = function(value){return _selected == value}
 
 		this.testIt = function(){
-			var env = getEnvironmentByDate(_selected);
-			saveKnobs(env, true);
-
-			startTWorld()
+			if (!isLoggedIn())
+				runTest(getEnvironmentByDate(_selected));
+			else{
+				startTWorld();
+				getEnvironmentByDate( _selected, function(result){ runTest(result) }, $rootScope);
+			}
 		}
 
 		this.open = function(){$location.url('/environments/view:'+_selected)}
@@ -68,19 +71,10 @@
 				}
 			})
 			.result.then(function(){
-				if (isTaskEnvironmentTrialsEmpty(_selected))
-					_remove()
-				else{
-					$modal.open({
-						size: 'sm',
-						templateUrl: 'yes-no-modal.html',
-						controller: yesNoModalController,
-						resolve:{
-							title: function(){return 'Confirmation'}, 
-							msg: function(){return 'This task environment seems to have stats associate with it. If you delete it all trials and stats will be deleted as well. Are you sure you want to proceed?'}
-						}
-					}).result.then(_remove)
-				}
+				if (!isLoggedIn())
+					removeRetry(emptyTrialsEnvironment(_selected))
+				else
+					emptyTrialsEnvironment(_selected, removeRetry, $rootScope);
 			});
 		}
 
@@ -90,7 +84,7 @@
 					templateUrl: 'run-modal.html',
 					controller: runModalController,
 					resolve:{
-						taskEnv: function(){return getEnvironmentByDate(_selected)}, 
+						taskEnv: function ($rootScope, $q){ return runTaskEnvResolver(_selected, $rootScope, $q) }, 
 						agentProgs: function(){return []}
 					}
 				});
@@ -113,8 +107,30 @@
 			);
 		}
 
-		function _remove(){
-			_self.taskEnvironments = updateEnvitonments();
+		function runTest(env){
+			saveKnobs(env, true);
+			startTWorld()
+		}
+
+		function removeRetry(emptyTrials){
+			if (emptyTrials)
+				remove()
+			else{
+				$modal.open({
+					size: 'sm',
+					templateUrl: 'yes-no-modal.html',
+					controller: yesNoModalController,
+					resolve:{
+						title: function(){return 'Confirmation'}, 
+						msg: function(){return 'It seems like there are stats associate with this task environment. If you delete this, all its trials and stats will be deleted as well. Are you sure you want to proceed?'}
+					}
+				}).result.then(remove)
+			}
+		}
+
+		function remove(){
+			//TODO: server remove task_env que haga estas 3 cosas ycomo resultado me devuelva los environments
+			_self.taskEnvironments = getEnvironments();
 
 			//remove trials
 			removeTaskEnvironmentTrials(_selected);
@@ -125,8 +141,8 @@
 
 	}]);
 
-	mod.controller('EnvNewController', ['$scope', '$modal', '$location', 'taskEnv',
-		function($scope, $modal, $location, taskEnv){
+	mod.controller('EnvNewController', ['$scope', '$modal', '$location', '$rootScope', 'taskEnv', 'readOnly',
+		function($scope, $modal, $location, $rootScope, taskEnv, readOnly){
 			var _next = false;
 			var _self = this;
 			var _default = {
@@ -142,7 +158,7 @@
 					}
 				}
 
-			this.noTrials = isTaskEnvironmentTrialsEmpty;
+			this.readOnly = readOnly; 
 			this.nTeam = 0;
 			this.teamColors = colors;
 			this.step = 0;
@@ -184,14 +200,21 @@
 					templateUrl: 'items-list-modal.html',
 					controller: itemsListController,
 					resolve:{
-						items:function(){return getEnvironments()},
+						items: itemsListEnvsResolver,
 						agentProgramsFlag:function(){return false}
 					}
 				})
-				.result.then(function (id) {if(id != -1){
-					updateEnvitonments();
-					_self.task_env = taskEnvironment = clone(getEnvironmentByDate(id));
-					_self.task_env.name+= " (copy)";
+				.result.then(function (taskEnv) {if(taskEnv){
+					var name = _self.task_env.name;
+
+					_self.task_env = taskEnvironment = !isLoggedIn()?
+														clone(taskEnv):
+														taskEnv;
+					if (name.trim() == "")
+						_self.task_env.name+= " (copy)";
+					else
+						_self.task_env.name = name;
+
 					_self.task_env.date = undefined;
 				}});
 			}
@@ -201,17 +224,10 @@
 
 				taskEnvironment.trial.test = false;
 
-				updateEnvitonments();
-
-				if (!taskEnvironment.date){
-					taskEnvironment.date = Date.now();
-					taskEnvironments.push(taskEnvironment);
-				}else
-					taskEnvironments[ getEnvironmentIndexByDate(taskEnvironment.date) ] = taskEnvironment;
-
-				saveEnvironments();
-				$location.url('/');
-				gotoTop()
+				if (!taskEnvironment.date)
+					newEnvironment(taskEnvironment, _finished, $rootScope);
+				else
+					updateEnvironment( taskEnvironment, _finished, $rootScope);
 			}
 
 			this.testEnvironment = function(){
@@ -331,7 +347,7 @@
 					templateUrl: 'final-locations.html',
 					controller:
 						function($scope, $modalInstance){
-							$scope.readOnly = !_self.noTrials(_self.task_env.date);
+							$scope.readOnly = _self.readOnly;
 							$scope.grid = new Array(taskEnvironment.environment.rows);
 							$scope.color = locCond.result == 2? "red":"green";
 							$scope.percept = false;
@@ -367,7 +383,7 @@
 						function($scope, $modalInstance, knob){
 							var _oldProbs=[];
 							var _oldValue=0;
-							$scope.readOnly = !_self.noTrials(_self.task_env.date);
+							$scope.readOnly = _self.readOnly;
 							$scope.knob = knob;
 							/*
 							$scope.$watch('knob.prob', function(v){
@@ -464,25 +480,11 @@
 			}
 
 			//MULTIAGENT
-			function _addTeam(teams, nMembers){
-				nMembers = nMembers || 1;
-
-				teams.push({
-					name:"Team"+_self.nTeam,
-					color: colors[_self.nTeam%colors.length],
-					members:nMembers //number of members
-				});
-
-				_self.nTeam++;
-			}
-
-			this.addTeam = function(nMembers){_addTeam(_self.task_env.teams, nMembers)}
-
-			this.removeTeam = function(index){_self.task_env.teams.remove(index)}
-
 			this.isCompetitive = function(){return taskEnvironment.prop.multiagent_type === 0}
 			this.isCooperative = function(){return taskEnvironment.prop.multiagent_type === 1}
 			this.isCompetitiveCooperative = function(){return taskEnvironment.prop.multiagent_type === 2}
+			this.addTeam = function(nMembers){_addTeam(_self.task_env.teams, nMembers)}
+			this.removeTeam = function(index){_self.task_env.teams.remove(index)}
 
 			this.updateTeams = function(){
 				if (!this.task_env.prop.multiagent)
@@ -496,6 +498,19 @@
 				else
 				if (this.isCompetitiveCooperative())
 					setCompetitiveCooperative();
+			}
+
+			//Private functions
+			function _addTeam(teams, nMembers){
+				nMembers = nMembers || 1;
+
+				teams.push({
+					name:"Team"+_self.nTeam,
+					color: colors[_self.nTeam%colors.length],
+					members:nMembers //number of members
+				});
+
+				_self.nTeam++;
 			}
 
 			function setCompetitive(){
@@ -516,6 +531,11 @@
 				_self.nTeam = _default.teams.coopComp.length;
 				taskEnvironment.teams = _default.teams.coopComp;
 				taskEnvironment.prop.multiagent_type = 2;
+			}
+
+			function _finished(){
+				$location.url('/');
+				gotoTop()
 			}
 
 			//default teams values

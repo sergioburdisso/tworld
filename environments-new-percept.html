@@ -3,7 +3,7 @@
 <div class="panel panel-default solid">
 	<div class="panel-body">
 
-		<div ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-hide="enc.task_env.prop.fullyObservable">
+		<div ng-class="{'treadonly':enc.readOnly}" ng-hide="enc.task_env.prop.fullyObservable">
 
 				<p class="lead">Partially observable because of...</p>
 

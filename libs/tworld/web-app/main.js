@@ -21,6 +21,17 @@
 
 	main.config(['$routeProvider', '$locationProvider', '$tooltipProvider',
 		function($routeProvider, $locationProvider, $tooltipProvider) {
+			$tooltipProvider.setTriggers({
+				'click' : 'clickOutsideEvent',
+				'errorEvent' : 'dismissError'
+			});
+
+			$tooltipProvider.options({
+				appendToBody: true,
+				//placement: 'left',
+				popupDelay: 200
+			});
+
 			$routeProvider
 				.when('/', {
 					templateUrl: 'main-manu.html',
@@ -30,13 +41,24 @@
 				.when('/environments', {
 					templateUrl: 'environments.html',
 					controller: 'EnvController',
-					controllerAs: 'ec'
+					controllerAs: 'ec',
+					resolve:{
+						task_envs: function($q) {
+							if (!isLoggedIn()) return getEnvironments();
+							else{
+								var deferred = $q.defer();
+								getEnvironments( function(response){ deferred.resolve(response) } );
+								return deferred.promise;
+							}
+						}
+					}
 				})
 				.when('/environments/new', {
 					templateUrl: 'environments-new.html',
 					controller: 'EnvNewController',
 					controllerAs: 'enc',
 					resolve:{
+						readOnly: function(){return false;},
 						taskEnv : function(){ 
 						return {
 								trial: {//Each trial is a self-contained simulation
@@ -128,9 +150,29 @@
 					controller: 'EnvNewController',
 					controllerAs: 'enc',
 					resolve:{
-						taskEnv : function($route){ 
-							updateEnvitonments();
-							return clone(getEnvironmentByDate($route.current.params.id))
+						readOnly: function($route, $rootScope, $q){
+							if (!isLoggedIn()) return !emptyTrialsEnvironment($route.current.params.id)
+							else{
+								var deferred = $q.defer();
+								emptyTrialsEnvironment(
+									$route.current.params.id,
+									function(response){ deferred.resolve(!response);},
+									$rootScope
+								);
+								return deferred.promise;
+							}
+						},
+						taskEnv : function ($route, $rootScope, $q) {
+							if (!isLoggedIn()) return clone(getEnvironmentByDate($route.current.params.id));
+							else{
+								var deferred = $q.defer();
+								getEnvironmentByDate(
+									$route.current.params.id,
+									function(response){ deferred.resolve(response); },
+									$rootScope
+								);
+								return deferred.promise;
+							}
 						}
 					}
 				})
@@ -145,8 +187,7 @@
 					controllerAs: 'apnc',
 					resolve:{
 						agentProg:function($route){
-						updateAgentPrograms();
-						return clone(getAgentProgramByDate($route.current.params.id))
+							return clone(getAgentProgramByDate($route.current.params.id))
 						}
 					}
 				})
@@ -220,34 +261,141 @@
 				.when('/stats', {
 					templateUrl: 'stats.html',
 					controller: 'StatsController',
-					controllerAs: 'sc'
+					controllerAs: 'sc',
+					resolve:{
+						taskEnv: function(){return undefined;},
+						agentProg: function(){return undefined;}
+					}
 				})
 	
 				.when('/stats/task-env::task_env_id&agent-prog::agent_prog_id', {
 					templateUrl: 'stats.html',
 					controller: 'StatsController',
-					controllerAs: 'sc'
+					controllerAs: 'sc',
+					resolve:{
+						taskEnv: function($route, $q){
+							var $params = $route.current.params;
+							var taskEnv;
+
+							if (!$params.task_env_id)
+								$params.task_env_id = "all";
+
+							if ($params.task_env_id == "all")
+								taskEnv = undefined;
+							else
+								if (!isLoggedIn())
+									taskEnv = getEnvironmentByDate($params.task_env_id);
+								else{
+									var deferred = $q.defer();
+									getEnvironmentByDate(
+										$params.task_env_id,
+										function(response){ deferred.resolve(response); }
+									);
+									taskEnv = deferred.promise;
+								}
+
+							return taskEnv;
+						},
+						agentProg: function($route, $q){
+								var $params = $route.current.params;
+								var agentProg;
+
+								if (!$params.agent_prog_id)
+									$params.agent_prog_id = "all";
+
+								if ($params.agent_prog_id == "all")
+									agentProg = undefined;
+								else
+									if (!isLoggedIn())
+										agentProg = getAgentProgramByDate($params.agent_prog_id);
+									else
+										agentProg = getAgentProgramByDate($params.agent_prog_id); // TODO: !!!
+
+								return agentProg;
+							}
+
+						}
 				})
 				.otherwise({
 					templateUrl: '404.html'
 				});
-
-			$tooltipProvider.options({
-				appendToBody: true,
-				//placement: 'left',
-				popupDelay: 200
-			});
 		}]
 	);
 
-	main.controller("TWorldController", ["$sce", "$location",
-		function($sce, $location){
+	main.controller("TWorldController", ["$sce", "$location", "$http", "$scope",
+		function($sce, $location, $http, $scope){
+			var _self = this;
 			this.$loc = $location;
 			this.LANGUAGES = _LANGUAGES;
 			this.language = (window.navigator.userLanguage == 'es' || window.navigator.language == 'es')?
 							this.LANGUAGES.ENGLISH/*this.LANGUAGES.SPANISH*/ :
 							this.LANGUAGES.ENGLISH;
+
+			this.user = getSessionInfo();
+			this.login = {
+				state	: this.user.info? _LOGIN_STATE.LOGGED : _LOGIN_STATE.HIDDEN,
+				email	: "",
+				pwd		: "",
+				rember	: true,
+				apply	: function(){
+
+					switch(_self.login.state){
+						case _LOGIN_STATE.HIDDEN:
+							_self.login.state = _LOGIN_STATE.SHOWN;
+							setTimeout(function() {$("#login-email").focus();}, 500);
+							break;
+						case _LOGIN_STATE.SHOWN:
+							if (Validate()){
+								$http({
+									method	: 'POST',
+									url		: 'http://tworld-ai.com/rest/login.php',
+									headers	: {'Content-Type': 'application/x-www-form-urlencoded'},
+									data	: 'e='+btoa(_self.login.email)+'&p='+btoa(antiNoobsCoder(_self.login.pwd))
+								}).
+								success(function(data, status, headers, config) {
+									$("#frm-login").removeClass("animate-none");
+									switch(data.code|0){
+										case 200:
+											LoggedIn(data.body,_self.login.rember);
+											_self.login.state = _LOGIN_STATE.LOGGED;
+											_self.login.pwd = "";
+											$location.url('/');
+											gotoTop();
+											break;
+										case 400:
+											_self.login.state = _LOGIN_STATE.SHOWN;
+											_self.loginErrorHtml = '<div class="text-red">Invalid e-mail and/or password.</div><div>Please try again</div>';
+											setTimeout(function() {$("#login-pwd").focus().select(); triggerError();}, 500);
+									}
+								}).
+								error(function(data, status, headers, config) {
+									_self.login.state = _LOGIN_STATE.SHOWN;
+									_self.loginErrorHtml = '<div class="text-red">Couldn\'t connect to the server.</div><div>Please try again</div>';
+									setTimeout(function() {$("#login-submit").focus(); triggerError();}, 500);
+								});
+
+								$("#frm-login").addClass("animate-none");
+								triggerDismissError();
+								_self.login.state = _LOGIN_STATE.LOADING;
+							}
+							break;
+					}
+				}
+			}
+			this.logout = function(){
+				_self.login.state = _LOGIN_STATE.LOGOUT;
+				LogOut(function(){
+					_self.login.state = _LOGIN_STATE.HIDDEN;
+					_self.user.info = null;
+					gotoTop();
+					$location.url('/');
+					$scope.$apply();
+				});
+			}
+
 			this.text = {menu:{}};
+			this.createAccountHtml	=	'<iframe style="width:100%; height:100%; opacity: 0" src="http://tworld-ai.com/rest/create-account-form.php" onload="$(this).css(\'opacity\',\'1\');$(\'#load-create-account\').css(\'opacity\',\'0\')"></iframe>'+
+										'<div id="load-create-account" class="transition-600 text-center" style="position:absolute;left:50%;top:50%;margin-left:-25px;margin-top:-20px"><div class="atebits"><div></div><div></div></div><div class="margin-10">loading</div></div>';
 
 			this.gotoTop = gotoTop;
 			this.goto = function(path){
@@ -266,10 +414,17 @@
 						return subPath;
 			}
 
+			this.clickOutside = function (){
+				triggerClickOutside();
+				triggerDismissError();
+				_self.login.state=_LOGIN_STATE.HIDDEN;
+			}
+
 			this.setLanguage = function(){
 				this.text.desc			= $sce.trustAsHtml($text.main.description[ this.language ]);
 				this.text.author		= $sce.trustAsHtml($text.main.author[ this.language ]);
 				this.text.martha_marc	= $sce.trustAsHtml($text.main.martha_marc[ this.language ]);
+				this.text.aima			= $sce.trustAsHtml($text.main.aima[ this.language ]);
 				this.text.cc			= $sce.trustAsHtml($text.main.ccLicense[ this.language ]);
 				this.text.agpl			= $sce.trustAsHtml($text.main.agplLicense[ this.language ]);
 
@@ -296,6 +451,29 @@
 			this.setLanguage();
 		}
 	]);
+
+	main.run( function($rootScope, $location) {
+		$rootScope.$on( "$routeChangeStart", function() {
+			$rootScope.$loadingView = true;
+		});
+
+		$rootScope.$on('$routeChangeSuccess', function() {
+			$rootScope.$loadingView = false;
+		});
+	})
+
+	main.directive("popoverHtmlUnsafePopup", function () {
+		return {
+			restrict: "EA",
+			replace: true,
+			scope: { title: "@", content: "@", placement: "@", animation: "&", isOpen: "&" },
+			templateUrl: "popover-html-unsafe-popup.html"
+		};
+	})
+
+	main.directive("popoverHtmlUnsafe", [ "$tooltip", function ($tooltip) {
+		return $tooltip("popoverHtmlUnsafe", "popover", "click");
+	}]);
 
 	main.filter('stringLimit', function() {
 		return function(input, limit) {return (input.length > limit)? input.substr(0,limit-3)+"..." : input}

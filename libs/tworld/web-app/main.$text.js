@@ -38,7 +38,9 @@ $text.main.author[_LANGUAGES.ENGLISH] = 'A creation of ';
 $text.main.author[_LANGUAGES.SPANISH] = 'Una craci&oacute;n de';
 
 $text.main.martha_marc = {};
-$text.main.martha_marc[_LANGUAGES.ENGLISH] =	'Content based on the book <a href="http://aima.cs.berkeley.edu/" target="_blank">Artificial Intelligence: A Modern Approach</a> by Stuart Russell and Peter Norvig.<br>'+
-												'Inspired by <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">the Tileworld</a> by Martha E. Pollack and Marc Ringuette.';
-$text.main.martha_marc[_LANGUAGES.SPANISH] =	'Dise&ntilde;ado seg&uacute;n los conceptos del libro <a href="http://aima.cs.berkeley.edu/" target="_blank">Artificial Intelligence: A Modern Approach</a>.<br>'+
-												'Inspirado en <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">el Tileworld</a> de Martha E. Pollack and Marc Ringuette.<br>';
+$text.main.martha_marc[_LANGUAGES.ENGLISH] = 'Inspired by <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">the Tileworld</a> by Martha E. Pollack and Marc Ringuette.';
+$text.main.martha_marc[_LANGUAGES.SPANISH] = 'Inspirado en <a href="resrc/introducing_the_tileworld.pdf" target="_blank" title="Introducing the Tileworld: Experimentally Evaluating Agent Architectures">el Tileworld</a> de Martha E. Pollack and Marc Ringuette.<br>';
+
+$text.main.aima = {};
+$text.main.aima[_LANGUAGES.ENGLISH] = 'Content based on the book <a href="http://aima.cs.berkeley.edu/" target="_blank">Artificial Intelligence: A Modern Approach</a> by Stuart Russell and Peter Norvig.';
+$text.main.aima[_LANGUAGES.SPANISH] = 'Dise&ntilde;ado seg&uacute;n los conceptos del libro <a href="http://aima.cs.berkeley.edu/" target="_blank">Artificial Intelligence: A Modern Approach</a>.';

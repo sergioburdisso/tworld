@@ -42,19 +42,18 @@
 				templateUrl: 'items-list-modal.html',
 				controller: itemsListController,
 				resolve:{
-					items:function(){return getEnvironments()},
+					items: itemsListEnvsResolver,
 					agentProgramsFlag:function(){return false}
 				}
 			})
 			.result.then(
-				function (id) {if (id!=-1){
-					updateEnvitonments();
+				function (taskEnv) {if (taskEnv){
 					$modal.open({
 						size: 'lg',
 						templateUrl: 'run-modal.html',
 						controller: runModalController,
 						resolve:{
-							taskEnv: function(){return getEnvironmentByDate(id)}, 
+							taskEnv:  function (){ return taskEnv }, 
 							agentProgs: function(){return []}
 						}
 					});

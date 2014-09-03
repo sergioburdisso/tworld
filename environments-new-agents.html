@@ -11,7 +11,7 @@
 					<span ng-hide="enc.isCompetitive()">"{{team.name}}"</span>
 					<span ng-show="enc.isCompetitive()">{{$index + 1}}</span>
 				</div>
-				<div class="panel-body" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+				<div class="panel-body" ng-class="{'treadonly':enc.readOnly}">
 					<button ng-if="$index > 1" class="btn btn-danger pull-right glyphicon glyphicon-remove" ng-click="enc.removeTeam($index)" tooltip="remove"></button>
 					<section class="teditable" ng-show="enc.isCompetitiveCooperative()">
 						<label>Name: </label><input type="text" size="8" ng-model="team.name" ng-class="{'has-error':!team.name.trim().length}">
@@ -29,7 +29,7 @@
 			<br>
 		</div>
 		<div class="container col-md-6 text-center">
-			<button class="btn btn-success" ng-click="enc.addTeam()" ng-hide="enc.isCooperative()||!enc.noTrials(enc.task_env.date)"><span class="glyphicon glyphicon-plus"></span> Add Team</button>
+			<button class="btn btn-success" ng-click="enc.addTeam()" ng-hide="enc.isCooperative()||enc.readOnly"><span class="glyphicon glyphicon-plus"></span> Add Team</button>
 		</div>
 
 	</div>

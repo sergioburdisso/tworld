@@ -2,7 +2,7 @@
 	<h2>Environment</h2>
 	<div class="text-left">
 		<label>Grid dimensions:</label>
-		<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+		<div class="row" ng-class="{'treadonly':enc.readOnly}">
 			<div class="col-md-2 col-xs-3">
 				<input type="number" class="form-control" ng-model="enc.task_env.environment.rows" ng-change="enc.updateDimensions()" ng-class="{'has-error':(enc.task_env.environment.rows|num)<=2}" min="3" max="20" placeholder="Rows" required>
 			</div>
@@ -14,7 +14,7 @@
 		<br>
 
 		<!-- INITIAL RADIO BUTTONS -->
-		<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-hide="enc.isDynamic()">
+		<div class="row" ng-class="{'treadonly':enc.readOnly}" ng-hide="enc.isDynamic()">
 			<div class="btn-group btn-group-justified">
 				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="false" tooltip="Draw the initial state on the grid below">User-defined initial state</label>
 				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="true" tooltip="Inital state is randomly generated every execution">Random initial state</label>
@@ -22,7 +22,7 @@
 		</div>
 
 		<!-- INITIAL STATE -->
-		<div class="panel panel-default animate-only-show" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state" ng-init="ismc.grid = enc.task_env.environment.initial_state">
+		<div class="panel panel-default animate-only-show" ng-class="{'treadonly':enc.readOnly}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state" ng-init="ismc.grid = enc.task_env.environment.initial_state">
 			<div class="panel-body text-center">
 				<div class="row">
 					<span class="pull-right">
@@ -86,7 +86,7 @@
 		<div class="panel panel-default animate-only-show" ng-show="enc.isDynamic()||enc.task_env.environment.random_initial_state">
 			<div class="panel-body">
 				<label>Hole size (closed interval: {{enc.task_env.environment.holes_size.range}})</label>
-				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+				<div class="row" ng-class="{'treadonly':enc.readOnly}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="20" ng-model="enc.task_env.environment.holes_size.range"></div>
 					</div>
@@ -96,7 +96,7 @@
 				</div>
 				<br>
 				<label>Number of Holes (closed interval: {{enc.task_env.environment.num_holes.range}})</label>
-				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+				<div class="row" ng-class="{'treadonly':enc.readOnly}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.num_holes.range"></div>
 					</div>
@@ -106,7 +106,7 @@
 				</div>
 				<br>
 				<label>Number of obstacles (closed interval: {{enc.task_env.environment.num_obstacles.range}})</label>
-				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+				<div class="row" ng-class="{'treadonly':enc.readOnly}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.num_obstacles.range"></div>
 					</div>
@@ -116,7 +116,7 @@
 				</div>
 				<br>
 				<label>Distance of tile from hole cell (closed interval: {{enc.task_env.environment.difficulty.range}})</label>
-				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+				<div class="row" ng-class="{'treadonly':enc.readOnly}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="0" max="20" ng-model="enc.task_env.environment.difficulty.range"></div>
 					</div>
@@ -131,7 +131,7 @@
 			<div class="panel-heading">Dynamism knobs</div>
 			<div class="panel-body">
 				<label>Dynamism (closed interval: {{enc.task_env.environment.dynamic.dynamism.range}})</label>
-				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+				<div class="row" ng-class="{'treadonly':enc.readOnly}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" ng-model="enc.task_env.environment.dynamic.dynamism.range"></div>
 					</div>
@@ -141,7 +141,7 @@
 				</div>
 				<br>
 				<label>Hostility (closed interval: {{enc.task_env.environment.dynamic.hostility.range}})</label>
-				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+				<div class="row" ng-class="{'treadonly':enc.readOnly}">
 					<div class="col-md-10 col-xs-10">
 						<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" ng-model="enc.task_env.environment.dynamic.hostility.range"></div>
 					</div>
@@ -150,7 +150,7 @@
 					</div>
 				</div>
 				<br>
-				<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+				<div class="row" ng-class="{'treadonly':enc.readOnly}">
 					<div class="container">
 						<div class="checkbox">
 							<label><input type="checkbox" ng-model="enc.task_env.environment.dynamic.hard_bounds"> Hard bounds.</label>
@@ -160,20 +160,20 @@
 			</div>
 		</div>
 
-		<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+		<div class="row" ng-class="{'treadonly':enc.readOnly}">
 			<div class="col-md-6 col-xs-6">
 				<label>Variability of scores ({{(enc.task_env.environment.scores_variability*100).toFixed(1)}}%)</label><div class="ui-slider-size" ui-slider min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.environment.scores_variability"></div>
 			</div>
 		</div>
 		<br>
 		<div class="row" ng-show="enc.isSemidynamic()">
-			<section ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-if="enc.isDeterministic()">
+			<section ng-class="{'treadonly':enc.readOnly}" ng-if="enc.isDeterministic()">
 				<label>Scores associated with holes decay in value every {{enc.task_env.environment.dynamic.dynamism.range[0]}} seconds</label>
 				<div class="col-md-6 col-xs-6">
 					<div class="ui-slider-size" ui-slider min="1" max="60" step="1" ng-model="enc.task_env.environment.dynamic.dynamism.range[0]" ng-change="enc.task_env.environment.dynamic.dynamism.range[1] = enc.task_env.environment.dynamic.dynamism.range[0]"></div>
 				</div>
 			</section>
-			<section ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}" ng-if="!enc.isDeterministic()">
+			<section ng-class="{'treadonly':enc.readOnly}" ng-if="!enc.isDeterministic()">
 				<label>Scores associated with holes decay in value within {{enc.task_env.environment.dynamic.dynamism.range}} seconds</label>
 				<div class="col-md-6 col-xs-6">
 					<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" step="1" ng-model="enc.task_env.environment.dynamic.dynamism.range"></div>
@@ -190,7 +190,7 @@
 			<div class="panel-heading">Final State/T-World ends when...</div>
 			<div class="panel-body text-center">
 				<div class="animate-filter" ng-repeat="cond in enc.task_env.environment.final_state">
-					<div class="row" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+					<div class="row" ng-class="{'treadonly':enc.readOnly}">
 						<label class="col-md-2">{{cond.name}}</label>
 						<input ng-if="cond.value.length == undefined" type="number" class="col-md-2" ng-model="cond.value" min="1"  ng-class="{'has-error':(cond.value|num)<=0}" required>
 						<button class="btn btn-primary col-md-2 teditable" ng-click="enc.setFinalLocations(cond)" ng-if="cond.value.length != undefined" ng-class="{'has-error':!cond.value.length}"><span class="glyphicon glyphicon-map-marker"></span> Select</button>
@@ -206,7 +206,7 @@
 					</div>
 					<hr/>
 				</div>
-				<button ng-click="enc.openEndConditionsModal('sm')" ng-disabled="!enc.end_game_cond.length" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Add Condition</button>
+				<button ng-click="enc.openEndConditionsModal('sm')" ng-disabled="!enc.end_game_cond.length||enc.readOnly" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Add Condition</button>
 			</div>
 		</div>
 		</div>
@@ -263,7 +263,7 @@
 
 <script type="text/ng-template" id="prob-distrib.html">
 	<div class="modal-header">
-		<h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-signal"></span> Probability distribution <small>click on the figure to set it!</small></h3>
+		<h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-signal"></span> Probability distribution <small>click on the figure to set it manually!</small></h3>
 	</div>
 	<div class="modal-body text-center">
 				<div class="tprob-bar">
@@ -278,6 +278,6 @@
 				{{knob.range[1]}}
 	</div>
 	<div class="modal-footer">
-		<button class="btn btn-primary" ng-click="ok()">Close</button>
+		<button class="btn btn-success" ng-click="ok()">Save</button>
 	</div>
 </script>

@@ -17,7 +17,16 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 
-function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
+function itemsListEnvsResolver($rootScope, $q) {
+	if (!isLoggedIn()) return getEnvironments();
+	else{
+		var deferred = $q.defer();
+		getEnvironments( function(response){ deferred.resolve(response); }, $rootScope );
+		return deferred.promise;
+	}
+}
+
+function itemsListController($rootScope, $scope, $modalInstance, items, agentProgramsFlag){
 	var _selected = -1;
 
 	$scope.items = items;
@@ -58,7 +67,27 @@ function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
 		}, 1000, "easeOutExpo")
 	}
 
-	$scope.ok = function () {$modalInstance.close(_selected)};
+	$scope.ok = function () {
+		if (_selected == -1){
+			$modalInstance.close(undefined);
+			return;
+		}
+
+		if (!isLoggedIn())
+			$modalInstance.close(
+				agentProgramsFlag?
+						getAgentProgramByDate(_selected):
+						getEnvironmentByDate(_selected)
+			);
+		else
+			if (!agentProgramsFlag)
+				getEnvironmentByDate(
+					_selected,
+					function(response){ $modalInstance.close(response) }, $rootScope
+				);
+			else
+				$modalInstance.close(getAgentProgramByDate(_selected));
+	};
 	$scope.close = function () {$modalInstance.dismiss()};
 
 	$scope.setSelected = function(value){_selected = value}
@@ -95,21 +124,28 @@ function itemsListController($scope, $modalInstance, items, agentProgramsFlag){
 	}
 };
 
-function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs){
+function runTaskEnvResolver(id, $rootScope, $q) {
+	if (!isLoggedIn()) return getEnvironmentByDate(id);
+	else{
+		var deferred = $q.defer();
+		getEnvironmentByDate( id, function(response){ deferred.resolve(response); }, $rootScope );
+		return deferred.promise;
+	}
+}
+
+function runModalController($rootScope, $scope, $modal, $modalInstance, taskEnv, agentProgs){
 	var nAgents = 0;
 	$scope.task_env = taskEnv;
-	$scope.agents = $scope.task_env.trial.agents;
+	$scope.agents = taskEnv.trial.agents;
 	$scope.teams = new Array(taskEnv.teams.length);
 	$scope.cameras = _CAMERA_TYPE;
-
-	updateAgentPrograms();
 
 	$scope.run = function () {if (Validate()){
 		$scope.task_env.trial.agents = $scope.agents;
 		$scope.task_env.trial.test= false;
 
 		saveKnobs($scope.task_env);
-		saveEnvironments();//saveEnvironment(taskEnv)
+		saveEnvironmentRunDefaults($scope.task_env, $rootScope)
 
 		startTWorld();
 		$modalInstance.close()
@@ -130,10 +166,7 @@ function runModalController($scope, $modal, $modalInstance, taskEnv, agentProgs)
 			}
 		})
 		.result.then(
-			function (agent_program_id) {
-				if (!$scope.agents[agent_id].program || $scope.agents[agent_id].program.date != agent_program_id)
-					$scope.agents[agent_id].program = getAgentProgramByDate(agent_program_id); 
-			}
+			function (agentProg) { $scope.agents[agent_id].program = agentProg; }
 		);
 	}
 

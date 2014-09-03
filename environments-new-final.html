@@ -1,6 +1,6 @@
 <div class="container-fluid">
 	<h2>Final tweaks</h2><br>
-	<div class="text-left" ng-class="{'treadonly':!enc.noTrials(enc.task_env.date)}">
+	<div class="text-left" ng-class="{'treadonly':enc.readOnly}">
 		<!--<div class="row" ng-show="enc.task_env.prop.battery">-->
 		<div class="panel panel-default" ng-show="enc.task_env.battery">
 			<div class="panel-heading">Battery</div>
@@ -58,7 +58,7 @@
 
 		<div class="container" ng-hide="enc.isSemidynamic()">
 			<div class="checkbox">
-				<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.score.cell"> Enable partial reward (Points are rewarded not just per hole but also per cell)</label>
+				<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.score.cell"> Enable partial reward (Points are rewarded not just by filling holes but also by filling hole cells)</label>
 			</div>
 		</div>
 

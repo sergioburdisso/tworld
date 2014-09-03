@@ -442,7 +442,7 @@ function GraphicTWorld(graphicEngine, environment){
 
 			$("#table-goals").hide();
 			$('#tworld').addClass("blur");
-			$("#playPauseBtn").hide();
+			$("#playPauseBtn").hide().addClass("no-events");
 			$("#time").hide();
 			$("#robs-hud").hide();
 			$("#pie").hide();
@@ -1264,7 +1264,7 @@ function GraphicTWorld(graphicEngine, environment){
 					$('#header').stop(true).animate({opacity: 0}, 500, function(){$(this).hide()});
 					$('#robs-hud').stop(true).animate({opacity: 0}, 500);
 					$('#time').stop(true).animate({opacity: 0}, 500, function(){$(this).hide()});
-					$('#playPauseBtn').show();
+					$('#playPauseBtn').show().removeClass("no-events");
 					$('#playPauseBtn').stop(true).animate({opacity:1}, 1000);
 					$("#frameColor")
 						.css({opacity: 0 , 'background-color' : 'green'})
@@ -2084,9 +2084,9 @@ function GraphicTWorld(graphicEngine, environment){
 			$("#pauseBtn").mouseup(function(e){_togglePause()});
 		}else
 			$("#pauseBtn").hide();
-		$("#playPauseBtn").mousedown(function(e){_togglePause()});
-		$("#playPauseBtn").mouseenter(function(e){$(this).prop("src", "imgs/play_enter_inv.png")});
-		$("#playPauseBtn").mouseleave(function(e){$(this).prop("src", "imgs/play_inv.png")});
+		$("#playPauseBtn").mouseup(function(e){_togglePause()});
+		$("#playPauseBtn").mouseenter(function(e){$(this).find("img").prop("src", "imgs/play_enter_inv.png")});
+		$("#playPauseBtn").mouseleave(function(e){$(this).find("img").prop("src", "imgs/play_inv.png")});
 
 		//Camera Button
 		$("#cameraBtn").mouseenter(function(e){$(this).prop("src", "imgs/camera_enter.png")});
