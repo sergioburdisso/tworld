@@ -22,11 +22,12 @@
 
 	var formats = []; for (p in _PERCEPT_FORMAT) formats.push(p);
 
-	mod.controller("AgentProgController", ["$location", "$modal", function($location, $modal){
+	mod.controller("AgentProgController", ['$scope', '$rootScope', '$location', '$modal', 'agentProgs',
+		function($scope, $rootScope, $location, $modal, agentProgs){
 		var _self = this;
 		var _selected = -1;
 
-		this.agentPrograms = getAgentPrograms();
+		this.agentPrograms = agentProgs;
 		this.orderCond = "-date";
 		this.allProps = true;
 		this.page = 1;
@@ -52,19 +53,10 @@
 				}
 			})
 			.result.then(function(){
-				if (isAgentProgramTrialsEmpty(_selected))
-					_remove()
-				else{
-					$modal.open({
-						size: 'sm',
-						templateUrl: 'yes-no-modal.html',
-						controller: yesNoModalController,
-						resolve:{
-							title: function(){return 'Confirmation'}, 
-							msg: function(){return 'This agent programs seems to have stats associate with it. If you delete it all trials and stats will be deleted as well. Are you sure you want to proceed?'}
-						}
-					}).result.then(_remove)
-				}
+				if (!isLoggedIn())
+					removeRetry(emptyTrialsAgentProgram(_selected))
+				else
+					emptyTrialsAgentProgram(_selected, removeRetry, $rootScope);
 			});
 		}
 
@@ -90,8 +82,19 @@
 							templateUrl: 'run-modal.html',
 							controller: runModalController,
 							resolve:{
-								taskEnv: function (){ return taskEnv },
-								agentProgs: function(){return [getAgentProgramByDate(_selected)]}
+								taskEnv		: function (){ return taskEnv },
+								agentProgs	: function($q) {
+									if (!isLoggedIn()) return [getAgentProgramByDate(_selected)];
+									else{
+										var deferred = $q.defer();
+										getAgentProgramByDate(
+											_selected,
+											function(response){ deferred.resolve([response]) },
+											$rootScope
+										);
+										return deferred.promise;
+									}
+								}
 							}
 						});
 					}
@@ -116,22 +119,32 @@
 			);
 		}
 
-		function _remove(){
-			_self.agentPrograms = getAgentPrograms();
+		function removeRetry(emptyTrials){
+			if (emptyTrials)
+				remove()
+			else{
+				$modal.open({
+					size: 'sm',
+					templateUrl: 'yes-no-modal.html',
+					controller: yesNoModalController,
+					resolve:{
+						title: function(){return 'Confirmation'}, 
+						msg: function(){return 'It seems like there are trials/states associate with this agent programs. If you delete it, all its trials and stats will be deleted as well. Are you sure you want to proceed?'}
+					}
+				}).result.then(remove)
+			}
+		}
 
-			//remove trials
-			removeAgentProgramTrials(_selected);
-
-			//remove memory
-			removeMemoryByAgentProgramID(_selected);
-
-			//remove from list
-			removeAgentProgramByDate(_selected);
+		function remove(){
+			if (!isLoggedIn())
+				_self.agentPrograms = removeAgentProgramByDate(_selected);
+			else
+				removeAgentProgramByDate(_selected, function(agentProgs){ _self.agentPrograms = agentProgs; $scope.$apply();console.log("updated")}, $rootScope);
 		}
 	}]);
 
-	mod.controller('AgentProgSourceCodeController', ['$rootScope','$scope','$routeParams','$modal', '$location',
-		function($rootScope, $scope, $routeParams, $modal, $location){
+	mod.controller('AgentProgSourceCodeController', ['$rootScope','$scope','$routeParams','$modal', '$location', 'agentProg',
+		function($rootScope, $scope, $routeParams, $modal, $location, agentProg){
 			var _self = this;
 			var _source;
 			var _editor;
@@ -159,13 +172,13 @@
 			this.fullScreen = false;
 			this.saved = true;
 			this.dropdownopen = false;
-			this.agent_prog = getAgentProgramByDate($routeParams.id);
+			this.agent_prog = agentProg;
 			if (!this.agent_prog || !this.agent_prog.ai || !this.agent_prog.javascript){$location.url('/');return}
 
 			if (!this.agent_prog.default_task_env)
 				this.task_env =  undefined;
 			else
-				this.task_env =  loadTaskEnvAsync(_self.agent_prog.default_task_env);
+				this.task_env =  loadEnvAsync(_self.agent_prog.default_task_env);
 
 			this.open = function(source){
 				if (_source){
@@ -186,7 +199,7 @@
 				_source.cursor = _editor.getCursorPosition();
 				_source.code = _editor.getValue();
 
-				updateAgentProgram(_self.agent_prog);
+				updateAgentProgram(_self.agent_prog, function(){$scope.$apply();}, $rootScope);
 
 				_self.saved = true;
 			}
@@ -255,6 +268,7 @@
 						}
 						$scope.close = function(){$modalInstance.dismiss()}
 
+						//to handle TABs properly
 						$(document).delegate('#memory', 'keydown', function(e) {
 							var keyCode = e.keyCode || e.which;
 
@@ -265,8 +279,8 @@
 
 								// set textarea value to: text before caret + tab + text after caret
 								$(this).val($(this).val().substring(0, start)
-								            + "\t"
-								            + $(this).val().substring(end));
+										+ "\t"
+										+ $(this).val().substring(end));
 
 								// put caret at right position again
 								$(this).get(0).selectionStart =
@@ -298,18 +312,11 @@
 					});
 			}
 
-			function loadTaskEnvAsync(date){
+			function loadEnvAsync(date){
 				if (!isLoggedIn())
 					_self.task_env = getEnvironmentByDate(date);
 				else{
-					getEnvironmentByDate(
-						date,
-						function(response){
-							_self.task_env = response;
-							$scope.$apply();
-						},
-						$rootScope
-					);
+					getEnvironmentByDate(date,function(response){_self.task_env = response;$scope.$apply();},$rootScope);
 					_self.task_env = {date: date, name: "Loading..."};
 				}
 			}
@@ -347,8 +354,8 @@
 		}]
 	);
 
-	mod.controller('AgentProgNewController', ['$modal', '$location', 'agentProg',
-		function($modal, $location, agentProg){
+	mod.controller('AgentProgNewController', ['$rootScope', '$modal', '$location', 'agentProg',
+		function($rootScope, $modal, $location, agentProg){
 			var _self = this;
 			var _socket = agentProg.socket;
 
@@ -358,21 +365,10 @@
 			this.agent_prog = agentProg;
 
 			this.save = function(){if (Validate()){
-				var _newFlag = !agentProg.date;
-
-				if (_newFlag)
-					newAgentProgram(this.agent_prog);
+				if (!agentProg.date)
+					newAgentProgram(this.agent_prog, _finished, $rootScope);
 				else
-					updateAgentProgram(agentProg);
-
-				_socket.magic_string_dirty = _socket.magic_string != this.agent_prog.name;
-
-				if (this.agent_prog.javascript && this.agent_prog.ai && _newFlag)
-					$location.url('/agent-programs/source-code:'+this.agent_prog.date)
-				else
-					$location.url('/');
-
-				gotoTop();
+					updateAgentProgram(agentProg, _finished, $rootScope);
 			}}
 
 			this.readKey = function(key){
@@ -393,6 +389,17 @@
 			this.nameUpdate = function(){
 				if (!_socket.magic_string_dirty && $("#magic-string").hasClass("ng-pristine"))
 					_socket.magic_string = this.agent_prog.name;
+			}
+
+			function _finished(){
+				_socket.magic_string_dirty = (_socket.magic_string != _self.agent_prog.name);
+
+				if (_self.agent_prog.javascript && _self.agent_prog.ai)
+					$location.url('/agent-programs/source-code:'+_self.agent_prog.date)
+				else
+					$location.url('/');
+
+				gotoTop();
 			}
 	}]);
 

@@ -36,46 +36,46 @@
 			</select>
 		</div>
 		<div class="col-md-10">
-		<h2><img src="imgs/web-app/rob_face.png" class="solid-icon-30"> Agent Programs<small class="pull-right" ng-if="totalPages-1">{{apc.page+'/'+totalPages}}</small></h2>
-		<!--Body content-->
-		<div class="list-group mouse-cursor" style="min-height: 300px">
-			<a class="list-group-item animate-filter transition-400" ng-repeat="ap in items = (apc.agentPrograms | filter:apc.userFilter) | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="apc.run(ap)" ng-class="{active:apc.isSelected(ap.date)}" ng-if="(apc.page-1)*apc.itemsPerPage <= $index&&$index < apc.page*apc.itemsPerPage">
-				<!-- PROPERTIES ICONS-->
-				<div class="pull-right">
-					<div class="solid-icon-16 icon-single-agent" ng-show="ap.ai" tooltip="Controlled by Algorithm"></div>
-					<div class="glyphicon glyphicon-user" ng-hide="ap.ai" tooltip="Controlled by Human"></div>
+			<h2><img src="imgs/web-app/rob_face.png" class="solid-icon-30"> Agent Programs<small class="pull-right" ng-if="totalPages-1">{{apc.page+'/'+totalPages}}</small></h2>
+			<!--Body content-->
+			<div class="list-group mouse-cursor" style="min-height: 300px">
+				<a class="list-group-item animate-filter transition-400" ng-repeat="ap in items = (apc.agentPrograms | filter:apc.userFilter) | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="apc.run(ap)" ng-class="{active:apc.isSelected(ap.date)}" ng-if="(apc.page-1)*apc.itemsPerPage <= $index&&$index < apc.page*apc.itemsPerPage">
+					<!-- PROPERTIES ICONS-->
+					<div class="pull-right">
+						<div class="solid-icon-16 icon-single-agent" ng-show="ap.ai" tooltip="Controlled by Algorithm"></div>
+						<div class="glyphicon glyphicon-user" ng-hide="ap.ai" tooltip="Controlled by Human"></div>
 
-					<span ng-if="ap.ai">
-						<div class="solid-icon-16 icon-js" ng-show="ap.javascript" tooltip="JavaScript"></div>
-						<div class="glyphicon glyphicon-link" ng-hide="ap.javascript" tooltip="Extern language"></div>
-					</span>
+						<span ng-if="ap.ai">
+							<div class="solid-icon-16 icon-js" ng-show="ap.javascript" tooltip="JavaScript"></div>
+							<div class="glyphicon glyphicon-link" ng-hide="ap.javascript" tooltip="Extern language"></div>
+						</span>
 
-					<span ng-if="!ap.ai">
-						<div class="solid-icon-16 icon-keyboard" ng-show="ap.keyboard" tooltip="Keyboard"></div>
-						<div class="glyphicon glyphicon-phone" ng-hide="ap.keyboard" tooltip="Remote Control"></div>
-					</span>
-				</div>
-
-				<h4 class="list-group-item-heading">{{ap.name}} <span class="badge active">{{ap.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span></h4>
-				<p class="list-group-item-text">{{ap.desc|stringLimit:400}}</p>
-
-
-				<div class="row panel-body">
-					<br>
-					<div class="pull-right animate-only-show" ng-show="apc.isSelected(ap.date)">
-						<button class="btn btn-success glyphicon glyphicon-list-alt" ng-click="apc.run(ap)" ng-if="apc.editor(ap)" tooltip="Run/View Source Code"></button>
-						<button class="btn btn-success glyphicon glyphicon-play" ng-click="apc.run()" ng-if="!apc.editor(ap)" tooltip="Run"></button>
-						<button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:all&agent-prog:'+ap.date)" tooltip="View stats"></button>
-						<button class="btn btn-info glyphicon glyphicon-list" ng-click="apc.open()" tooltip="View/Edit values"></button>
-						<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="apc.remove()" tooltip="Delete"></button>
+						<span ng-if="!ap.ai">
+							<div class="solid-icon-16 icon-keyboard" ng-show="ap.keyboard" tooltip="Keyboard"></div>
+							<div class="glyphicon glyphicon-phone" ng-hide="ap.keyboard" tooltip="Remote Control"></div>
+						</span>
 					</div>
-				</div>
-			</a>
-		</div>
-		<div class="text-center animate-show" ng-show="items.length > apc.itemsPerPage">
-			<pagination total-items="items.length" ng-model="apc.page" max-size="5" class="pagination" boundary-links="true" items-per-page="apc.itemsPerPage"  num-pages="totalPages" ng-change="twc.gotoTop()"></pagination>
-		</div>
-		<div class="separator"></div>
+
+					<h4 class="list-group-item-heading">{{ap.name}} <span class="badge active">{{ap.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span></h4>
+					<p class="list-group-item-text">{{ap.desc|stringLimit:400}}</p>
+
+
+					<div class="row panel-body">
+						<br>
+						<div class="pull-right animate-only-show" ng-show="apc.isSelected(ap.date)">
+							<button class="btn btn-success glyphicon glyphicon-list-alt" ng-click="apc.run(ap)" ng-if="apc.editor(ap)" tooltip="Run/View Source Code"></button>
+							<button class="btn btn-success glyphicon glyphicon-play" ng-click="apc.run()" ng-if="!apc.editor(ap)" tooltip="Run"></button>
+							<button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:all&agent-prog:'+ap.date)" tooltip="View stats"></button>
+							<button class="btn btn-info glyphicon glyphicon-list" ng-click="apc.open()" tooltip="View/Edit values"></button>
+							<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="apc.remove()" tooltip="Delete"></button>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="text-center animate-show" ng-show="items.length > apc.itemsPerPage">
+				<pagination total-items="items.length" ng-model="apc.page" max-size="5" class="pagination" boundary-links="true" items-per-page="apc.itemsPerPage"  num-pages="totalPages" ng-change="twc.gotoTop()"></pagination>
+			</div>
+			<div class="separator"></div>
 		</div>
 	</div>
 </div>

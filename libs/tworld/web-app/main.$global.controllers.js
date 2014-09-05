@@ -26,6 +26,15 @@ function itemsListEnvsResolver($rootScope, $q) {
 	}
 }
 
+function itemsListAgentsResolver($rootScope, $q) {
+	if (!isLoggedIn()) return getAgentPrograms();
+	else{
+		var deferred = $q.defer();
+		getAgentPrograms( function(response){ deferred.resolve(response); }, $rootScope );
+		return deferred.promise;
+	}
+}
+
 function itemsListController($rootScope, $scope, $modalInstance, items, agentProgramsFlag){
 	var _selected = -1;
 
@@ -86,7 +95,10 @@ function itemsListController($rootScope, $scope, $modalInstance, items, agentPro
 					function(response){ $modalInstance.close(response) }, $rootScope
 				);
 			else
-				$modalInstance.close(getAgentProgramByDate(_selected));
+				getAgentProgramByDate(
+					_selected,
+					function(response){ $modalInstance.close(response) }, $rootScope
+				);
 	};
 	$scope.close = function () {$modalInstance.dismiss()};
 
@@ -161,7 +173,7 @@ function runModalController($rootScope, $scope, $modal, $modalInstance, taskEnv,
 			templateUrl: 'items-list-modal.html',
 			controller: itemsListController,
 			resolve:{
-				items:function(){return getAgentPrograms()},
+				items: itemsListAgentsResolver,
 				agentProgramsFlag:function(){return true}
 			}
 		})
@@ -177,10 +189,26 @@ function runModalController($rootScope, $scope, $modal, $modalInstance, taskEnv,
 		})
 	}
 
+	function loadAgentProgAsync(agent, date){
+		if (!isLoggedIn())
+			agent.program = getAgentProgramByDate(date);
+		else{
+			getAgentProgramByDate(
+				date,
+				function(response){
+					agent.program = response;
+					$scope.$apply();
+				},
+				$rootScope
+			);
+			agent.program = {date: date, name: "Loading..."};
+		}
+	}
+
 	//updating previously saved list of agents and teams (from the last execution)
-	for (var a=$scope.agents.length; a--;)
+	for (var len=$scope.agents.length, a=agentProgs.length; a < len;++a)
 		if ($scope.agents[a].program)
-			$scope.agents[a].program = getAgentProgramByDate($scope.agents[a].program.date)
+			loadAgentProgAsync($scope.agents[a], $scope.agents[a].program.date)
 
 	//initializing list of agents and teams
 	for (var elen=taskEnv.teams.length, t=0; t < elen; ++t){
@@ -239,8 +267,9 @@ function settingsModalController($scope, $modal, $modalInstance){
 	$scope.setGeneralTab = function(){_selected = 3}
 
 	$scope.save = function(){
-		saveSettings($scope.sett);
-		$modalInstance.close()
+		saveSettings($scope.sett, $modalInstance.close);
+		if (!isLoggedIn())
+			$modalInstance.close();
 	};
 	$scope.cancel = function () {$modalInstance.dismiss()};
 

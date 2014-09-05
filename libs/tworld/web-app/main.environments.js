@@ -23,12 +23,12 @@
 	var colors = []; for (color in _COLORS) colors.push(_COLORS[color]);
 	var taskEnvironment;
 
-	mod.controller("EnvController", ["$rootScope", "$modal", '$location', 'task_envs',
-		function($rootScope, $modal, $location, task_envs){
+	mod.controller("EnvController", ["$scope", "$rootScope", "$modal", '$location', 'taskEnvs',
+		function($scope, $rootScope, $modal, $location, taskEnvs){
 		var _self = this;
 		var _selected = -1;
 
-		this.taskEnvironments = task_envs;
+		this.taskEnvironments = taskEnvs;
 		this.orderCond = "-date";
 		this.allProps = true;
 		this.page = 1;
@@ -122,21 +122,17 @@
 					controller: yesNoModalController,
 					resolve:{
 						title: function(){return 'Confirmation'}, 
-						msg: function(){return 'It seems like there are stats associate with this task environment. If you delete this, all its trials and stats will be deleted as well. Are you sure you want to proceed?'}
+						msg: function(){return 'It seems like there are trials/states associate with this task environment. If you delete this, all its trials and stats will be deleted as well. Are you sure you want to proceed?'}
 					}
 				}).result.then(remove)
 			}
 		}
 
 		function remove(){
-			//TODO: server remove task_env que haga estas 3 cosas ycomo resultado me devuelva los environments
-			_self.taskEnvironments = getEnvironments();
-
-			//remove trials
-			removeTaskEnvironmentTrials(_selected);
-
-			//remove from list
-			removeEnvironmentByDate(_selected);
+			if (!isLoggedIn())
+				_self.taskEnvironments = removeEnvironmentByDate(_selected);
+			else
+				removeEnvironmentByDate(_selected, function(taskEnvs){ _self.taskEnvironments = taskEnvs; $scope.$apply();}, $rootScope);
 		}
 
 	}]);

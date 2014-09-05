@@ -51,53 +51,53 @@
 			</select>
 		</div>
 		<div class="col-md-10">
-		<h2><span class="glyphicon glyphicon-th"></span> Task Environments<small class="pull-right" ng-if="totalPages-1">{{ec.page+'/'+totalPages}}</small></h2>
-		<!--Body content-->
-		<div class="list-group mouse-cursor" style="min-height: 300px">
-			<a class="list-group-item animate-filter transition-400" ng-repeat="env in items = (ec.taskEnvironments | filter:ec.userFilter) | orderBy:ec.orderCond track by $index" ng-click="ec.setSelected(env.date)" ng-dblclick="ec.openRunModal()" ng-class="{active:ec.isSelected(env.date)}" ng-if="(ec.page-1)*ec.itemsPerPage <= $index&&$index < ec.page*ec.itemsPerPage">
-				<!-- PROPERTIES ICONS-->
-				<div class="pull-right">
-					<div class="glyphicon glyphicon-eye-open" ng-show="env.prop.fullyObservable" tooltip="Fully observable"></div>
-					<div class="glyphicon glyphicon-eye-close" ng-hide="env.prop.fullyObservable" tooltip="Partially observable"></div>
+			<h2><span class="glyphicon glyphicon-th"></span> Task Environments<small class="pull-right" ng-if="totalPages-1">{{ec.page+'/'+totalPages}}</small></h2>
+			<!--Body content-->
+			<div class="list-group mouse-cursor" style="min-height: 300px">
+				<a class="list-group-item animate-filter transition-400" ng-repeat="env in items = (ec.taskEnvironments | filter:ec.userFilter) | orderBy:ec.orderCond track by $index" ng-click="ec.setSelected(env.date)" ng-dblclick="ec.openRunModal()" ng-class="{active:ec.isSelected(env.date)}" ng-if="(ec.page-1)*ec.itemsPerPage <= $index&&$index < ec.page*ec.itemsPerPage">
+					<!-- PROPERTIES ICONS-->
+					<div class="pull-right">
+						<div class="glyphicon glyphicon-eye-open" ng-show="env.prop.fullyObservable" tooltip="Fully observable"></div>
+						<div class="glyphicon glyphicon-eye-close" ng-hide="env.prop.fullyObservable" tooltip="Partially observable"></div>
 
-					<div class="solid-icon-16 icon-single-agent" ng-hide="env.prop.multiagent" tooltip="Single agent"></div>
-					<div class="solid-icon-16 icon-multiagent" ng-show="env.prop.multiagent" tooltip="Multiagent"></div>
+						<div class="solid-icon-16 icon-single-agent" ng-hide="env.prop.multiagent" tooltip="Single agent"></div>
+						<div class="solid-icon-16 icon-multiagent" ng-show="env.prop.multiagent" tooltip="Multiagent"></div>
 
-					<div class="glyphicon glyphicon-arrow-right" ng-show="env.prop.deterministic" tooltip="Deterministic"></div>
-					<div class="glyphicon glyphicon-random" ng-hide="env.prop.deterministic" tooltip="Stochastic"></div>
+						<div class="glyphicon glyphicon-arrow-right" ng-show="env.prop.deterministic" tooltip="Deterministic"></div>
+						<div class="glyphicon glyphicon-random" ng-hide="env.prop.deterministic" tooltip="Stochastic"></div>
 
-					<div class="glyphicon glyphicon-record" ng-show="env.prop.dynamic == 0" tooltip="Static"></div>
-					<div class="solid-icon-16 icon-semidynamic" ng-show="env.prop.dynamic == 1" tooltip="Semidynamic"></div>
-					<div class="glyphicon glyphicon-time" ng-show="env.prop.dynamic == 2" tooltip="Dynamic"></div>
+						<div class="glyphicon glyphicon-record" ng-show="env.prop.dynamic == 0" tooltip="Static"></div>
+						<div class="solid-icon-16 icon-semidynamic" ng-show="env.prop.dynamic == 1" tooltip="Semidynamic"></div>
+						<div class="glyphicon glyphicon-time" ng-show="env.prop.dynamic == 2" tooltip="Dynamic"></div>
 
-					<div class="glyphicon glyphicon-ok" ng-show="env.prop.known" tooltip="Known"></div>
-					<div class="glyphicon glyphicon-remove" ng-hide="env.prop.known" tooltip="Unknown"></div>
+						<div class="glyphicon glyphicon-ok" ng-show="env.prop.known" tooltip="Known"></div>
+						<div class="glyphicon glyphicon-remove" ng-hide="env.prop.known" tooltip="Unknown"></div>
 
-					<div class="glyphicon glyphicon-flash" ng-show="env.battery" tooltip="Battery"></div>
+						<div class="glyphicon glyphicon-flash" ng-show="env.battery" tooltip="Battery"></div>
 
-					<div class="glyphicon glyphicon-log-in" ng-show="env.final_tweaks.easy" tooltip="Easy-Mode"></div>
-				</div>
-
-				<h4 class="list-group-item-heading">{{env.name}} <span class="badge active">{{env.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span></h4>
-				<p class="list-group-item-text">{{env.desc|stringLimit:400}}</p>
-
-
-				<div class="row panel-body">
-					<br>
-					<div class="pull-right animate-only-show" ng-show="ec.isSelected(env.date)">
-						<button class="btn btn-success glyphicon glyphicon-play" ng-click="ec.openRunModal()" tooltip="Run"></button>
-						<button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:'+env.date+'&agent-prog:all')" tooltip="View stats"></button>
-						<button class="btn btn-info glyphicon glyphicon-user" ng-click="ec.testIt()" tooltip="Test as human"></button>
-						<button class="btn btn-info glyphicon glyphicon-list" ng-click="ec.open()" tooltip="View/Edit values"></button>
-						<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="ec.remove()" tooltip="Delete"></button>
+						<div class="glyphicon glyphicon-log-in" ng-show="env.final_tweaks.easy" tooltip="Easy-Mode"></div>
 					</div>
-				</div>
-			</a>
-		</div>
-		<div class="text-center animate-show" ng-show="items.length > ec.itemsPerPage">
-			<pagination total-items="items.length" ng-model="ec.page" max-size="5" class="pagination" boundary-links="true" items-per-page="ec.itemsPerPage"  num-pages="totalPages" ng-change="twc.gotoTop()"></pagination>
-		</div>
-		<div class="separator"></div>
+
+					<h4 class="list-group-item-heading">{{env.name}} <span class="badge active">{{env.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span></h4>
+					<p class="list-group-item-text">{{env.desc|stringLimit:400}}</p>
+
+
+					<div class="row panel-body">
+						<br>
+						<div class="pull-right animate-only-show" ng-show="ec.isSelected(env.date)">
+							<button class="btn btn-success glyphicon glyphicon-play" ng-click="ec.openRunModal()" tooltip="Run"></button>
+							<button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:'+env.date+'&agent-prog:all')" tooltip="View stats"></button>
+							<button class="btn btn-info glyphicon glyphicon-user" ng-click="ec.testIt()" tooltip="Test as human"></button>
+							<button class="btn btn-info glyphicon glyphicon-list" ng-click="ec.open()" tooltip="View/Edit values"></button>
+							<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="ec.remove()" tooltip="Delete"></button>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="text-center animate-show" ng-show="items.length > ec.itemsPerPage">
+				<pagination total-items="items.length" ng-model="ec.page" max-size="5" class="pagination" boundary-links="true" items-per-page="ec.itemsPerPage"  num-pages="totalPages" ng-change="twc.gotoTop()"></pagination>
+			</div>
+			<div class="separator"></div>
 		</div>
 	</div>
 </div>

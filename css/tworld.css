@@ -78,9 +78,9 @@
 .backgroundCube{
 	background-image: url(../imgs/cube_face.png); 
 	/*background-size: 78px;
-	background-size: 130px;
-	background-size: cover;*/
-	background-size: 28px;
+	background-size: 130px;*/
+	background-size: cover;
+	/*background-size: 28px;*/
 }
 
 .robsHudBackground{

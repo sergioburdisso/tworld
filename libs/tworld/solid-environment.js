@@ -843,7 +843,8 @@ function Environment(rows, columns, graphicEngine, parent) {
 			}
 
 			//--------------------------------------------------------------------------------------> _saveStats
-			function _saveStats(result){if (_SAVE_STATS){
+			function _saveStats(result){if (_KNOBS.trial.runs > 0){
+				var agentProgs = [];
 				var trials,
 					trial={
 						date: Date.now(),
@@ -860,18 +861,41 @@ function Environment(rows, columns, graphicEngine, parent) {
 					}
 
 				for (var i=0; i < _NUMBER_OF_AGENTS; ++i){
+
 					trial.agents[i] = {
 						program_id: _KNOBS_Agents[i].program.date,
 						team: _KNOBS_Agents[i].team,
 						score: _rob[i].Score,
 						stats: _rob[i].Stats
 					};
+
+					if (!agentProgs.contains(trial.agents[i].program_id))
+						agentProgs.push(trial.agents[i].program_id);
+
 				}
 
-				trials = getTrials();
-				trials.push(trial);
-				saveTrials(trials);
+				if (!isLoggedIn()){
+					newTrial(trial);
+					_nextTrial();
+				}else
+					newTrial(
+						trial,
+						trial.task_env_id,
+						agentProgs,
+						function(){ _nextTrial(); }
+					);
 			}}
+
+			//--------------------------------------------------------------------------------------> _nextTrial
+			function _nextTrial(){
+				_KNOBS.trial.runs--;
+				localStorage.knobs = JSON.stringify(_KNOBS);
+
+				if (_KNOBS.trial.runs > 0)
+					setTimeout(function(){location.reload()}, 2000);
+				else
+					setTimeout(function(){window.close()}, 2000);
+			}
 
 			//--------------------------------------------------------------------------------------> _checkIfGameOver
 			function _checkIfGameOver(goal, value){
@@ -906,19 +930,8 @@ function Environment(rows, columns, graphicEngine, parent) {
 							_rob[r].AgentProgram.send( _percept );
 						}
 
-					if (_SAVE_STATS){
-						if (_KNOBS.trial.runs > 0){
-							_KNOBS.trial.runs--;
-							localStorage.knobs = JSON.stringify(_KNOBS);
-							_saveStats(goal.RESULT);
-
-							if (_KNOBS.trial.runs > 0)
-								setTimeout(function(){location.reload()}, 2000);
-							else
-								setTimeout(function(){window.close()}, 2000);
-						}
-					}
-
+					if (_SAVE_STATS)
+						_saveStats(goal.RESULT);
 
 					_graphicTWorld.gameIsOver(_rob, goal, _time);
 				}

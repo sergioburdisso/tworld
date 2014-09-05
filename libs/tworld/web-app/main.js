@@ -28,7 +28,6 @@
 
 			$tooltipProvider.options({
 				appendToBody: true,
-				//placement: 'left',
 				popupDelay: 200
 			});
 
@@ -43,7 +42,7 @@
 					controller: 'EnvController',
 					controllerAs: 'ec',
 					resolve:{
-						task_envs: function($q) {
+						taskEnvs: function($q) {
 							if (!isLoggedIn()) return getEnvironments();
 							else{
 								var deferred = $q.defer();
@@ -179,15 +178,34 @@
 				.when('/agent-programs', {
 					templateUrl: 'agent-programs.html',
 					controller: 'AgentProgController',
-					controllerAs: 'apc'
+					controllerAs: 'apc',
+					resolve:{
+						agentProgs : function($q) {
+							if (!isLoggedIn()) return getAgentPrograms();
+							else{
+								var deferred = $q.defer();
+								getAgentPrograms( function(response){ deferred.resolve(response) } );
+								return deferred.promise;
+							}
+						}
+					}
 				})
 				.when('/agent-programs/view::id', {
 					templateUrl: 'agent-programs-new.html',
 					controller: 'AgentProgNewController',
 					controllerAs: 'apnc',
 					resolve:{
-						agentProg:function($route){
-							return clone(getAgentProgramByDate($route.current.params.id))
+						agentProg : function ($route, $rootScope, $q) {
+							if (!isLoggedIn()) return clone(getAgentProgramByDate($route.current.params.id));
+							else{
+								var deferred = $q.defer();
+								getAgentProgramByDate(
+									$route.current.params.id,
+									function(response){ deferred.resolve(response); },
+									$rootScope
+								);
+								return deferred.promise;
+							}
 						}
 					}
 				})
@@ -256,7 +274,21 @@
 				.when('/agent-programs/source-code::id', {
 					templateUrl: 'agent-programs-source-code.html',
 					controller: 'AgentProgSourceCodeController',
-					controllerAs: 'apscc'
+					controllerAs: 'apscc',
+					resolve:{
+						agentProg:  function ($route, $rootScope, $q) {
+							if (!isLoggedIn()) return getAgentProgramByDate($route.current.params.id);
+							else{
+								var deferred = $q.defer();
+								getAgentProgramByDate(
+									$route.current.params.id,
+									function(response){ deferred.resolve(response); },
+									$rootScope
+								);
+								return deferred.promise;
+							}
+						}
+					}
 				})
 				.when('/stats', {
 					templateUrl: 'stats.html',
@@ -264,10 +296,19 @@
 					controllerAs: 'sc',
 					resolve:{
 						taskEnv: function(){return undefined;},
-						agentProg: function(){return undefined;}
+						agentProg: function(){return undefined;},
+						trials: function($route, $q){
+							if (!isLoggedIn())
+								return getTrials();
+							else{
+								var deferred = $q.defer();
+								getTrials(function(response){ deferred.resolve(response); });
+								return deferred.promise;
+							}
+						}
 					}
 				})
-	
+
 				.when('/stats/task-env::task_env_id&agent-prog::agent_prog_id', {
 					templateUrl: 'stats.html',
 					controller: 'StatsController',
@@ -297,24 +338,38 @@
 							return taskEnv;
 						},
 						agentProg: function($route, $q){
-								var $params = $route.current.params;
-								var agentProg;
+							var $params = $route.current.params;
+							var agentProg;
 
-								if (!$params.agent_prog_id)
-									$params.agent_prog_id = "all";
+							if (!$params.agent_prog_id)
+								$params.agent_prog_id = "all";
 
-								if ($params.agent_prog_id == "all")
-									agentProg = undefined;
-								else
-									if (!isLoggedIn())
-										agentProg = getAgentProgramByDate($params.agent_prog_id);
-									else
-										agentProg = getAgentProgramByDate($params.agent_prog_id); // TODO: !!!
+							if ($params.agent_prog_id == "all")
+								agentProg = undefined;
+							else
+								if (!isLoggedIn())
+									agentProg = getAgentProgramByDate($params.agent_prog_id);
+								else{
+									var deferred = $q.defer();
+									getAgentProgramByDate(
+										$params.agent_prog_id,
+										function(response){ deferred.resolve(response); }
+									);
+									agentProg = deferred.promise;
+								}
 
-								return agentProg;
+							return agentProg;
+						},
+						trials: function($route, $q){
+							if (!isLoggedIn())
+								return getTrials();
+							else{
+								var deferred = $q.defer();
+								getTrials(function(response){ deferred.resolve(response); });
+								return deferred.promise;
 							}
-
 						}
+					}
 				})
 				.otherwise({
 					templateUrl: '404.html'
@@ -322,8 +377,8 @@
 		}]
 	);
 
-	main.controller("TWorldController", ["$sce", "$location", "$http", "$scope",
-		function($sce, $location, $http, $scope){
+	main.controller('TWorldController', ['$sce', '$route', '$location', '$http', '$scope',
+		function($sce, $route, $location, $http, $scope){
 			var _self = this;
 			this.$loc = $location;
 			this.LANGUAGES = _LANGUAGES;
@@ -331,7 +386,7 @@
 							this.LANGUAGES.ENGLISH/*this.LANGUAGES.SPANISH*/ :
 							this.LANGUAGES.ENGLISH;
 
-			this.user = getSessionInfo();
+			this.user = getSessionData();
 			this.login = {
 				state	: this.user.info? _LOGIN_STATE.LOGGED : _LOGIN_STATE.HIDDEN,
 				email	: "",
@@ -359,7 +414,8 @@
 											LoggedIn(data.body,_self.login.rember);
 											_self.login.state = _LOGIN_STATE.LOGGED;
 											_self.login.pwd = "";
-											$location.url('/');
+											//$location.url('/');
+											$route.reload();
 											gotoTop();
 											break;
 										case 400:
@@ -388,7 +444,8 @@
 					_self.login.state = _LOGIN_STATE.HIDDEN;
 					_self.user.info = null;
 					gotoTop();
-					$location.url('/');
+					//$location.url('/');
+					$route.reload();
 					$scope.$apply();
 				});
 			}
@@ -417,7 +474,7 @@
 			this.clickOutside = function (){
 				triggerClickOutside();
 				triggerDismissError();
-				_self.login.state=_LOGIN_STATE.HIDDEN;
+				_self.login.state= _LOGIN_STATE.HIDDEN;
 			}
 
 			this.setLanguage = function(){

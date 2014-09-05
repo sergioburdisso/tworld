@@ -1991,7 +1991,6 @@ function GraphicTWorld(graphicEngine, environment){
 		_clOnAnimateCallBack = _CL_Scene.getRootSceneNode().OnAnimate;
 		_CL_Scene.getRootSceneNode().OnAnimate = display;
 		_CLNs_setMinimalUpdateDelay(_MINIMAL_UPDATE_DELAY);
-		
 
 		//region User Input Handler
 

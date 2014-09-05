@@ -19,11 +19,11 @@
 (function(){
 	var mod = angular.module('tworldStats', []);
 
-	mod.controller('StatsController', ['$scope', '$location', '$routeParams', '$modal', 'taskEnv', 'agentProg',
-	function($scope, $location, $routeParams, $modal, taskEnv, agentProg){
+	mod.controller('StatsController', ['$rootScope', '$scope', '$location', '$routeParams', '$modal', 'taskEnv', 'agentProg','trials',
+	function($rootScope, $scope, $location, $routeParams, $modal, taskEnv, agentProg, trials){
 		var _self = this;
 		var _selected = -1;
-		var _trials = getTrials();
+		var _trials = trials;
 
 		this.task_env = taskEnv;
 		this.agent_prog = agentProg;
@@ -56,16 +56,15 @@
 					if (this.task_env)
 						newTrial.task_env_name = this.task_env.name;
 					else
-						newTrial.task_env_name = loadNameAsync(newTrial);
+						newTrial.task_env_name = loadEnvNameAsync(newTrial, _trials[i].task_env_id);
 
-					newTrial.agent_progs+= getAgentProgramByDate(aps[0]).name;
-					for (var j=1; j < aps.length;++j)
-						newTrial.agent_progs+= ', ' + getAgentProgramByDate(aps[j]).name;
+					newTrial.agent_progs = "Loading...";
+					for (var j=0; j < aps.length;++j)
+						loadAgentNamesAsync(newTrial, aps[j]);
 
 					newTrial.agent_progs_num = aps.length;
 
 					this.trials.push(newTrial);
-
 				}
 			}
 		}
@@ -74,17 +73,11 @@
 		this.isSelected = function(value){return _selected == value}
 
 		this.remove = function(){
-			_trials = getTrials();
-
-			for (var t=_self.trials.length; t--;)
-				if (_self.trials[t].date == _selected)
-					_self.trials.remove(t);
-
-			for (var t=_trials.length; t--;)
-				if (_trials[t].date == _selected)
-					_trials.remove(t);
-
-			saveTrials(_trials);
+			if (!isLoggedIn()){
+				removeTrial(_selected);
+				updateList();
+			}else
+				removeTrial(_selected, updateList, $rootScope);
 		}
 
 		this.selectTaskEnvironment = function(){
@@ -113,7 +106,7 @@
 				templateUrl: 'items-list-modal.html',
 				controller: itemsListController,
 				resolve:{
-					items:function(){return getAgentPrograms()},
+					items: itemsListAgentsResolver,
 					agentProgramsFlag:function(){return true}
 				}
 			})
@@ -131,20 +124,108 @@
 				templateUrl: 'view-stats.html',
 				controller: viewStatsController,
 				resolve:{
-					trial: function(){return _selected},
-					taskEnv: function ($rootScope, $q){
-						return runTaskEnvResolver(taskEnvDate, $rootScope, $q)
-					}
+					args:function($q) {
+							var deferred = $q.defer();
+							var _READY = {trial : true, agents: false, agentsCounter: 0};
+							var args = {
+								trial : undefined,
+								task_env : undefined,
+								teams : undefined
+							}
+
+							loadTrialAsync(_selected);
+
+							function loadTrialAsync(date){
+								if (!isLoggedIn()){
+									args.trial = getTrialByDate(_selected);
+									loadTaskEnvAsync(taskEnvDate);
+								}else
+									getTrialByDate(
+										_selected,
+										function(trial){
+											args.trial = trial;
+											loadTaskEnvAsync(taskEnvDate);
+										},
+										$rootScope
+									);
+							}
+
+							function loadTaskEnvAsync(date){
+								if (!isLoggedIn()){
+									args.task_env = getEnvironmentByDate(date);
+									args.teams = args.task_env.teams;
+									taskEnvLoaded();
+								}else
+									getEnvironmentByDate(date,
+										function(response){
+											args.task_env = response;
+											args.teams = response.teams;
+											taskEnvLoaded();
+										},
+										$rootScope
+									);
+							}
+
+							function taskEnvLoaded(){
+								for(var len = args.trial.agents.length, a= 0, agent, team; a < len;++a){
+									agent = args.trial.agents[a];
+									team = args.teams[agent.team];
+
+									loadAgentNameAsync(agent, agent.program_id, len);
+
+									agent.stats = {
+										MTotalScore: agent.stats.total_score,
+										MHoles: agent.stats.filled_holes,
+										MCells: agent.stats.filled_cells,
+										mGoodMoves: agent.stats.good_moves,
+										mBadMoves: agent.stats.bad_moves,
+										mBatteryUsed: agent.stats.battery_used,
+										mBatteryRestore: agent.stats.battery_restore,
+										mBatteryRecharge: agent.stats.battery_recharge
+									}
+
+									if (!team.stats)
+										team.stats = {}
+									team.score = (team.score|0) + agent.score;
+									team.stats.MTotalScore = (team.stats.MTotalScore|0) + agent.stats.MTotalScore;
+									team.stats.MHoles= (team.stats.MHoles|0) + agent.stats.MHoles;
+									team.stats.MCells= (team.stats.MCells|0) + agent.stats.MCells;
+									team.stats.mGoodMoves= (team.stats.mGoodMoves|0) + agent.stats.mGoodMoves;
+									team.stats.mBadMoves= (team.stats.mBadMoves|0) + agent.stats.mBadMoves;
+									team.stats.mBatteryUsed= (team.stats.mBatteryUsed|0) + agent.stats.mBatteryUsed;
+									team.stats.mBatteryRestore= (team.stats.mBatteryRestore|0) + agent.stats.mBatteryRestore;
+									team.stats.mBatteryRecharge= (team.stats.mBatteryRecharge|0) + agent.stats.mBatteryRecharge;
+								}
+							}
+
+							function loadAgentNameAsync(agent, date, numAgents){
+								if (!isLoggedIn())
+									agent.name = getAgentProgramByDate(date).name;
+								else{
+									getAgentProgramByDate(date,
+										function(response){
+											agent.name = response.name;
+											if (++_READY.agentsCounter >= numAgents)
+												deferred.resolve(args)
+										},$rootScope
+									);
+								}
+							}
+
+							if (!isLoggedIn()) return args;
+							else
+								return deferred.promise;
+						}
 				}
 			});
 		}
 
-		function loadNameAsync(trial){
+		function loadEnvNameAsync(trial, date){
 			if (!isLoggedIn())
-				return getEnvironmentByDate(_trials[i].task_env_id).name;
+				return getEnvironmentByDate(date).name;
 			else{
 				getEnvironmentByDate(
-					_trials[i].task_env_id,
+					date,
 					function(response){
 						trial.task_env_name = response.name;
 						$scope.$apply();
@@ -154,41 +235,31 @@
 			}
 		}
 
-		function viewStatsController($scope, $modal, $modalInstance, trial, taskEnv){
-			$scope.trial = getTrialByDate(trial);
-			$scope.task_env = taskEnv;
-			$scope.teams = $scope.task_env.teams;
-			$scope.teamsTable = false;
-
-			for(var a = $scope.trial.agents.length, agent, team; a--;){
-				agent = $scope.trial.agents[a];
-				team = $scope.teams[agent.team];
-
-				agent.name = getAgentProgramByDate(agent.program_id).name;
-
-				agent.stats = {
-					MTotalScore: agent.stats.total_score,
-					MHoles: agent.stats.filled_holes,
-					MCells: agent.stats.filled_cells,
-					mGoodMoves: agent.stats.good_moves,
-					mBadMoves: agent.stats.bad_moves,
-					mBatteryUsed: agent.stats.battery_used,
-					mBatteryRestore: agent.stats.battery_restore,
-					mBatteryRecharge: agent.stats.battery_recharge
-				}
-
-				if (!team.stats)
-					team.stats = {}
-				team.score = (team.score|0) + agent.score;
-				team.stats.MTotalScore = (team.stats.MTotalScore|0) + agent.stats.MTotalScore;
-				team.stats.MHoles= (team.stats.MHoles|0) + agent.stats.MHoles;
-				team.stats.MCells= (team.stats.MCells|0) + agent.stats.MCells;
-				team.stats.mGoodMoves= (team.stats.mGoodMoves|0) + agent.stats.mGoodMoves;
-				team.stats.mBadMoves= (team.stats.mBadMoves|0) + agent.stats.mBadMoves;
-				team.stats.mBatteryUsed= (team.stats.mBatteryUsed|0) + agent.stats.mBatteryUsed;
-				team.stats.mBatteryRestore= (team.stats.mBatteryRestore|0) + agent.stats.mBatteryRestore;
-				team.stats.mBatteryRecharge= (team.stats.mBatteryRecharge|0) + agent.stats.mBatteryRecharge;
+		function loadAgentNamesAsync(trial, date){
+			if (!isLoggedIn()){
+				if (trial.agent_progs == "Loading...")
+					trial.agent_progs = getAgentProgramByDate(date).name;
+				else
+					trial.agent_progs += ", "+getAgentProgramByDate(date).name;
+			}else{
+				getAgentProgramByDate(
+					date,
+					function(response){
+						if (trial.agent_progs == "Loading...")
+							trial.agent_progs = response.name;
+						else
+							trial.agent_progs += ", "+response.name;
+						$scope.$apply();
+					}
+				);
 			}
+		}
+
+		function viewStatsController($scope, $modal, $modalInstance, args){
+			$scope.trial = args.trial;
+			$scope.task_env = args.task_env;
+			$scope.teams = args.teams;
+			$scope.teamsTable = false;
 
 			//in case of tied game the method to try to break the tie, in order, is:
 			// +FinalScore
@@ -217,6 +288,12 @@
 				return	$scope.task_env.prop.multiagent &&
 						$scope.task_env.prop.multiagent_type == 2;
 			}
+		}
+
+		function updateList(){
+			for (var t=_self.trials.length; t--;)
+				if (_self.trials[t].date == _selected)
+					_self.trials.remove(t);
 		}
 
 		this.open = function(){$location.url('/trials/view/'+_selected)}

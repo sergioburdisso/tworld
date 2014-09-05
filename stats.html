@@ -37,7 +37,7 @@
 				</h4>
 
 				<span ng-show="sc.isSelected(tr.date)" class="pull-right animate-only-show">
-					<button class="btn btn-info glyphicon glyphicon-list" style="top:-27px; margin-right:10px" ng-click="sc.viewStats()" tooltip="View Stats"></button>
+					<button class="btn btn-info glyphicon glyphicon-list" style="top:-27px; margin-right:10px" ng-click="sc.viewStats(tr.task_env_id)" tooltip="View Stats"></button>
 					<button class="btn btn-danger glyphicon glyphicon-remove" style="top:-27px" ng-click="sc.remove()" tooltip="Delete"></button>
 				</span>
 
@@ -81,7 +81,7 @@
 					<th rowspan="2" class="initial-color">Pos.</th>
 					<th rowspan="2" class="initial-color">
 						<span ng-if="!teamsTable">Agent Program</span>
-						<span ng-if="teamsTable">Teams</span>
+						<span ng-if="teamsTable">Team</span>
 					</th>
 					<th colspan="2" class="initial-color">Score</th>
 					<th colspan="2" class="initial-color">Moves</th>
