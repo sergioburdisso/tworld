@@ -66,7 +66,7 @@ function loadAllSync(){
 	importScript("./libs/tworld/solid-auxiliary.js");
 
 	importScript("./libs/tworld/solid-global.js");
-	importScript("./libs/tworld/web-app/main.$global.js");
+	importScript("./libs/tworld/web-app/main.$global.storage.js");
 	importScript("./libs/tworld/solid-general-settings.js");
 
 	importScript(

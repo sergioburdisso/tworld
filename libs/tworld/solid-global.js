@@ -176,6 +176,8 @@ var _ENDGAME = {
 var _Running	= false;//did the user push the play button?
 var _Paused		= false;
 var _Ready		= false;//are all the agent programs ready?
+var _Result;
+
 
 var _FPS		= 60; // maximum fps
 

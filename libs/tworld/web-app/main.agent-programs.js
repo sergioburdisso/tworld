@@ -139,7 +139,7 @@
 			if (!isLoggedIn())
 				_self.agentPrograms = removeAgentProgramByDate(_selected);
 			else
-				removeAgentProgramByDate(_selected, function(agentProgs){ _self.agentPrograms = agentProgs; $scope.$apply();console.log("updated")}, $rootScope);
+				removeAgentProgramByDate(_selected, function(agentProgs){ _self.agentPrograms = agentProgs; $scope.$apply();}, $rootScope);
 		}
 	}]);
 
@@ -178,7 +178,7 @@
 			if (!this.agent_prog.default_task_env)
 				this.task_env =  undefined;
 			else
-				this.task_env =  loadEnvAsync(_self.agent_prog.default_task_env);
+				loadEnvAsync(this.agent_prog.default_task_env);
 
 			this.open = function(source){
 				if (_source){
@@ -199,14 +199,16 @@
 				_source.cursor = _editor.getCursorPosition();
 				_source.code = _editor.getValue();
 
-				updateAgentProgram(_self.agent_prog, function(){$scope.$apply();}, $rootScope);
+				if (!isLoggedIn())
+					updateAgentProgram(_self.agent_prog);
+				else
+					updateAgentProgram(_self.agent_prog, function(){$scope.$apply();}, $rootScope);
 
 				_self.saved = true;
 			}
 
 			this.run = function(){
 				this.dropdownopen = false;
-				this.save();
 				if (!this.task_env)
 					this.openEnvironmentsModal(true);
 				else
@@ -240,13 +242,12 @@
 				})
 				.result.then(
 					function (taskEnv) {
+						_self.agent_prog.default_task_env = taskEnv.date;
 						if (!_self.task_env && run){
 							_self.task_env = taskEnv;
 							_self.openRunModal();
 						}else
 							_self.task_env = taskEnv;
-
-						_self.agent_prog.default_task_env = taskEnv.date;
 					}
 				);
 			}
@@ -255,15 +256,40 @@
 				$modal.open({
 					size: 'lg',//size,
 					templateUrl: 'memory-modal.html',
-					controller: function($scope, $modalInstance){
-						$scope.memory = {text: JSON.stringify(getMemoryByAgentProgramID($routeParams.id))};
+					resolve:{
+						memory: function($routeParams, $q){
+							if (!isLoggedIn())
+								return JSON.stringify(getMemoryByAgentProgramDate($routeParams.id));
+							else{
+								var deferred = $q.defer();
+								getMemoryByAgentProgramDate(
+									$routeParams.id,
+									function(memory){
+										deferred.resolve( memory?JSON.stringify(memory):'' )
+									},
+									$rootScope
+								);
+								return deferred.promise;
+							}
+						}
+					},
+					controller: function($scope, $modalInstance, memory){
+						$scope.memory = {text: memory};
 						$scope.alert = false;
 						$scope.hideAlert = function(){$scope.alert = false}
 						$scope.save = function(){
 							try{
 								JSON.parse($scope.memory.text); //is it a well-formed JSON string?
-								saveMemoryByAgentProgramID($routeParams.id, $scope.memory.text);
-								$modalInstance.close();
+								if (!isLoggedIn()){
+									saveMemoryByAgentProgramDate($routeParams.id, $scope.memory.text);
+									$modalInstance.close();
+								}else
+									saveMemoryByAgentProgramDate(
+										$routeParams.id,
+										$scope.memory.text,
+										$modalInstance.close,
+										$rootScope
+									);
 							}catch(e){$scope.alert = true}
 						}
 						$scope.close = function(){$modalInstance.dismiss()}
@@ -292,6 +318,7 @@
 			}
 
 			this.openRunModal = function(){
+				_self.save();
 				$modal.open({
 						size: 'lg',//size,
 						templateUrl: 'run-modal.html',

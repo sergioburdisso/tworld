@@ -31,6 +31,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			var _rob = new Array(_NUMBER_OF_AGENTS);
 
+			//NOTE: AP stands for Agent Program
+			var _nAPMemorySaved = 0;
+
 			var _self = this;
 			var _graphicTWorld;
 
@@ -159,6 +162,15 @@ function Environment(rows, columns, graphicEngine, parent) {
 						if (_AGENTS[irob].CONTROLLED_BY_AI)
 							_self.programAgentPerceive(irob);
 				}
+			}
+
+			//--------------------------------------------------------------------------------------> agentProgramMemorySaved
+			this.agentProgramMemorySaved = function(onlyCheck){
+				if (!onlyCheck)
+					_nAPMemorySaved++;
+
+				if ( (_nAPMemorySaved == _NUMBER_OF_AGENTS) && _SAVE_STATS)
+					_saveStats();
 			}
 
 			//--------------------------------------------------------------------------------------> togglePause
@@ -344,28 +356,41 @@ function Environment(rows, columns, graphicEngine, parent) {
 
 			//--------------------------------------------------------------------------------------> isBatteryChargeSufficient
 			this.checkIfAgentProgramsReady = function(){
-				var nReady = 0, nTotal = 0;
+				var nReady = 0, nTotal = 0, nReadyMem = 0, nMemTotal = 0;
 				var msg_status = "Waiting for agent programs to connect (";
+				var msg_mem_status = "Waiting for agent programs memory to download (";
 				var msg_ap_list = "";
+				var msg_ap_mem_list = "";
 
-				for (var irob= _NUMBER_OF_AGENTS; irob--;)
-					if (_rob[irob].AgentProgram && _AGENTS[irob].SOCKET_PROGRAM_AGENT){
+				for (var irob= _NUMBER_OF_AGENTS; irob--;){if (_rob[irob].AgentProgram){
+					if ( _AGENTS[irob].SOCKET_PROGRAM_AGENT){
 						nTotal++;
-						if (_rob[irob].AgentProgram.Ready){
+						if (_rob[irob].AgentProgram.isConnected()){
 							nReady++;
 							msg_ap_list+="	Agent "+irob+": '"+_AGENTS[irob].NAME+"' is READY!\n";
 						}else
 							msg_ap_list+="	Agent "+irob+": '"+_AGENTS[irob].NAME+"' is disconnected!\n";
+					}else{
+						nMemTotal++;
+						if (_rob[irob].AgentProgram.isMemoryReady()){
+							nReadyMem++;
+							msg_ap_mem_list+="	Agent "+irob+": '"+_AGENTS[irob].NAME+"'s memory is READY!\n";
+						}else
+							msg_ap_mem_list+="	Downloading Agent "+irob+"'s memory...\n";
 					}
 
-				_Ready = nReady === nTotal;
+				}}
+
+				_Ready = (nReady === nTotal) && (nReadyMem === nMemTotal);
 
 				msg_status += (nReady + "/" + nTotal + ")\n");
+				msg_mem_status += (nReadyMem + "/" + nMemTotal + ")\n");
 
-				if (nTotal){
-					console.clear();
+				console.clear();
+				if (nReadyMem !== nMemTotal)
+					console.log( msg_mem_status + msg_ap_mem_list);
+				if (nTotal)
 					console.log((_Ready? "All agent programs are ready =)\n" : msg_status) + msg_ap_list);
-				}
 
 				if (_Ready){
 					$("#playFrame").show().removeClass("no-events");
@@ -843,7 +868,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 			}
 
 			//--------------------------------------------------------------------------------------> _saveStats
-			function _saveStats(result){if (_KNOBS.trial.runs > 0){
+			function _saveStats(){if (_KNOBS.trial.runs > 0){
 				var agentProgs = [];
 				var trials,
 					trial={
@@ -851,7 +876,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 						task_env_id: _KNOBS.date,
 						speed: _KNOBS.trial.speed,
 						pause: _KNOBS.trial.pause,
-						result: result,
+						result: _Result,
 						stats:{
 							t_time: _time,
 							time: Date.now()-_START_TIME,
@@ -930,8 +955,9 @@ function Environment(rows, columns, graphicEngine, parent) {
 							_rob[r].AgentProgram.send( _percept );
 						}
 
-					if (_SAVE_STATS)
-						_saveStats(goal.RESULT);
+					_Result = goal.RESULT;
+
+					_self.agentProgramMemorySaved(true);
 
 					_graphicTWorld.gameIsOver(_rob, goal, _time);
 				}
@@ -1146,7 +1172,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 	//region Class Constructor Logic
 		_graphicTWorld = new GraphicTWorld(graphicEngine, this);
 
-		for (var irob= 0; irob < _NUMBER_OF_AGENTS; ++irob){
+		for (var irob= _NUMBER_OF_AGENTS; irob--;){
 			_rob[irob] = {index: irob};
 			_rob[irob].Location = {Row: -1, Column: -1};
 			_rob[irob].ListOfTilesToSlide = new ListOfPairs(Math.max(rows,columns));
@@ -1207,8 +1233,13 @@ function Environment(rows, columns, graphicEngine, parent) {
 						}
 					}
 				})
+
+				if (!_AGENTS[irob].SOCKET_PROGRAM_AGENT)
+					_nAPMemorySaved++;
 			}
 		}// for
+
+		_nAPMemorySaved = _NUMBER_OF_AGENTS - _nAPMemorySaved;
 
 		this.checkIfAgentProgramsReady();
 
@@ -1242,8 +1273,13 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 	var _percept = {header: null, data:""};
 	var _self = this;
 
+	var _connected = !isSocket;
+	var _memory, _memory_ready = false;
+
 	//public Methods
-	this.Ready = !isSocket;
+
+	if (!isSocket)
+		loadMemoryAsync();
 
 	//send to Program Agent
 	this.send = function( percept ) {
@@ -1274,12 +1310,45 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 			_agentProgram.send( percept );
 		}
 	}
+	this.isConnected = function(){ return _connected; }
+	this.isMemoryReady = function(){ return _memory_ready; }
 
 	//private methods
 
+	function loadMemoryAsync(){
+		if (!isLoggedIn()){
+			_memory = getMemoryByAgentProgramDate(_KNOBS_Agents[_index].program.date);
+			init();
+		}else
+			getMemoryByAgentProgramDate(
+				_KNOBS_Agents[_index].program.date,
+				function(memory){
+					_memory = memory;
+					init();
+				}
+			);
+	}
+
+	function init(){
+		_memory_ready = true;
+		_env.checkIfAgentProgramsReady();
+
+		if (!isSocket){
+			_percept.header = _PERCEPT_HEADER.INTERNAL;
+			_percept.data = {
+				ai_src: _AGENTS[_index].AI_SOURCE_CODE,
+				msg_src: _AGENTS[_index].TEAM_MSG_SOURCE_CODE,
+				start_src: _AGENTS[_index].START_SOURCE_CODE,
+				global_src:_AGENTS[_index].GLOBAL_SOURCE_CODE,
+				memory: _memory
+			}
+			_agentProgram.postMessage( _percept );
+		}
+	}
+
 	//is this agent program "ready" (connected)?
 	function _setReady(value){
-		_self.Ready = value;
+		_connected = value;
 		if (!_Running)
 			_env.checkIfAgentProgramsReady();
 	}
@@ -1385,10 +1454,18 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 				)}
 		else
 		//case _ACTION._SAVE_MEMORY_
-		if ( _ACTION_REGEX._SAVE_MEMORY_.test(action) )
-			{matchs = action.match(_ACTION_REGEX._SAVE_MEMORY_);
-			if ((matchs[3]||matchs[4]) != "{}")
-				saveMemoryByAgentProgramID(_KNOBS_Agents[_index].program.date, (matchs[3]||matchs[4]))}
+		if ( _ACTION_REGEX._SAVE_MEMORY_.test(action) ){
+			matchs = action.match(_ACTION_REGEX._SAVE_MEMORY_);
+				if (!isLoggedIn()){
+					saveMemoryByAgentProgramDate(_KNOBS_Agents[_index].program.date, (matchs[3]||matchs[4]))
+					_env.agentProgramMemorySaved();
+				}else
+					saveMemoryByAgentProgramDate(
+						_KNOBS_Agents[_index].program.date,
+						(matchs[3]||matchs[4]),
+						_env.agentProgramMemorySaved
+					);
+		}
 		//case INVALID ACTION
 		else{
 			_percept.header = _PERCEPT_HEADER.ERROR;
@@ -1404,19 +1481,6 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 	}
 
 	/* constructor logic */
-
-	if (!isSocket){
-		_percept.header = _PERCEPT_HEADER.INTERNAL;
-		_percept.data = {
-			ai_src: _AGENTS[_index].AI_SOURCE_CODE,
-			msg_src: _AGENTS[_index].TEAM_MSG_SOURCE_CODE,
-			start_src: _AGENTS[_index].START_SOURCE_CODE,
-			global_src:_AGENTS[_index].GLOBAL_SOURCE_CODE,
-			memory: _AGENTS[_index].MEMORY
-		}
-		_agentProgram.postMessage( _percept );
-	}
-
 	_agentProgram.onmessage = _agentProgramActionReceived;
 
 	_agentProgram.onopen = function(){_agentProgram.send("CONNECT:"+_AGENTS[_index].SOCKET_PROGRAM_AGENT.MAGIC_STRING)}

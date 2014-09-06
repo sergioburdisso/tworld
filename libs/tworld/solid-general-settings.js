@@ -99,7 +99,6 @@ if (_KNOBS.trial.test){
 			
 			if (_KNOBS_Agents[i].program.javascript){
 				var _source = _KNOBS_Agents[i].program.source;
-				_AGENTS[i].MEMORY					= getMemoryByAgentProgramID(_KNOBS_Agents[i].program.date);
 				_AGENTS[i].AI_SOURCE_CODE			= _source.agentProgram.code;
 				_AGENTS[i].START_SOURCE_CODE		= _source.onStart.code;
 				_AGENTS[i].GLOBAL_SOURCE_CODE		= _source.global.code;

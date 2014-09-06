@@ -424,6 +424,7 @@ function GraphicTWorld(graphicEngine, environment){
 						_sound_game_lost[random(_sound_game_lost.length)].play();
 					break;
 				case _GAME_RESULT.NEUTRAL:
+					_console.log($("#table-pos"));
 					$("#table-pos").show();
 					$("#bs-mid").css("opacity", 0).show();
 					$("#title").html(goal.MESSAGE? goal.MESSAGE : _ENDGAME.MESSAGES.NEUTRAL.TEXT);
@@ -480,7 +481,6 @@ function GraphicTWorld(graphicEngine, environment){
 				_CL_UserHelpers = NewMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
 				for (var r = _CL_UserHelpers.length; r--;)
 					for (var c = _CL_UserHelpers[0].length; c--;){
-						_console.log(r, c, _CL_UserHelpers[r][c]);
 						_CL_UserHelpers[r][c] = new CL3D.HoleCellHelper(0,0,0,_FloorCellSize,_CL_Engine, 0, 255, 0, 0.8);
 						_CL_UserHelpers[r][c].Pos.X = GraphicTWorld.RowIndexToXPosition(r);
 						_CL_UserHelpers[r][c].Pos.Z = GraphicTWorld.ColumnIndexToZPosition(c);
