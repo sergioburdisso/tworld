@@ -26,7 +26,7 @@
 				</div>
 			</form>
 			<span class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-50px; left:0">
-				<h1>T-World</h1>
+				<h1><span class="text-light-blue">T</span>-World</h1>
 				<p ng-bind-html="twc.text.desc"></p>
 				<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="mailto:sergio.burdisso@gmail.com"  tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a>.</h5>
 				<h5 style="color:white" class="header text-right">
@@ -146,6 +146,16 @@
 	<script type="text/javascript" src="libs/tworld/web-app/main.environments.js"></script>
 	<script type="text/javascript" src="libs/tworld/web-app/main.agent-programs.js"></script>
 	<script type="text/javascript" src="libs/tworld/web-app/main.stats.js"></script>
+
+	<script type="text/ng-template" id="account-confirmation.html">
+		<div>
+			<div style="martin-top:65px"><img src="./imgs/web-app/success.png" onload="$(this).addClass(&apos;animate-ok&apos;)" class="tinvisible"></div>
+			<div><h1><b class="text-blue">Congratulations!</b></h1></div>
+			<div>
+				Now you&apos;re ready to start coding and having fun <b>:D</b> Log in!
+			</div>
+		</div>
+	</script>
 
 	<script type="text/ng-template" id="yes-no-modal.html">
 		<div class="modal-header">

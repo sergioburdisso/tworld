@@ -37,6 +37,9 @@
 					controller: 'MainMenuController',
 					controllerAs: 'mmc'
 				})
+				.when('/account-confirmation', {
+					templateUrl: 'account-confirmation.html'
+				})
 				.when('/environments', {
 					templateUrl: 'environments.html',
 					controller: 'EnvController',
@@ -414,8 +417,10 @@
 											LoggedIn(data.body,_self.login.rember);
 											_self.login.state = _LOGIN_STATE.LOGGED;
 											_self.login.pwd = "";
-											//$location.url('/');
-											$route.reload();
+											if ($location.path() != '/account-confirmation')
+												$route.reload();
+											else
+												$location.url('/');
 											gotoTop();
 											break;
 										case 400:

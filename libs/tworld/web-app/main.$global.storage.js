@@ -399,11 +399,12 @@ function saveSessionInfo(){
 		sessionStorage.session_info = JSON.stringify(__lookupSession__.info);
 }
 function LoggedIn(data, remember){
+	console.log(data.s);
 	var session_info = {
 					email	: atob(data.e),
 					username: atob(data.u),
 					name	: atob(data.n),
-					settings: JSON.parse(data.s)
+					settings: JSON.parse(atob(data.s))
 				}
 	__lookupSession__.info = session_info;
 	if (remember){

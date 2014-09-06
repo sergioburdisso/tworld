@@ -424,7 +424,6 @@ function GraphicTWorld(graphicEngine, environment){
 						_sound_game_lost[random(_sound_game_lost.length)].play();
 					break;
 				case _GAME_RESULT.NEUTRAL:
-					_console.log($("#table-pos"));
 					$("#table-pos").show();
 					$("#bs-mid").css("opacity", 0).show();
 					$("#title").html(goal.MESSAGE? goal.MESSAGE : _ENDGAME.MESSAGES.NEUTRAL.TEXT);

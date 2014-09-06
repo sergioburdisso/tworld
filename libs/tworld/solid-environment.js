@@ -946,7 +946,6 @@ function Environment(rows, columns, graphicEngine, parent) {
 				var r = _NUMBER_OF_AGENTS;
 
 				if (_Running){
-					_Running = false;
 
 					while (r--)
 						if (_AGENTS[r].CONTROLLED_BY_AI){
@@ -956,6 +955,8 @@ function Environment(rows, columns, graphicEngine, parent) {
 						}
 
 					_Result = goal.RESULT;
+
+					_Running = false;
 
 					_self.agentProgramMemorySaved(true);
 
@@ -1290,9 +1291,10 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 
 		// once the percept was created by the perception function (thread that runs the solid-perception.js)
 		// send the percept to the Rob's mind (i.e the Program Agent)
-		if (!_AGENTS[_index].SOCKET_PROGRAM_AGENT)
-			_agentProgram.postMessage( percept );
-		else{
+		if (!_AGENTS[_index].SOCKET_PROGRAM_AGENT){
+			if (_Running)
+				_agentProgram.postMessage( percept );
+		}else{
 
 			if (percept.header)
 			switch(_AGENTS[_index].SOCKET_PROGRAM_AGENT.OUTPUT_FORMAT){
@@ -1488,7 +1490,7 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 	_agentProgram.onerror = function(event){
 		if (isSocket)
 			console.error(
-				(_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "")+"An error occurred while trying to connect to the T-World Proxy ("+_address+")"
+				(_NUMBER_OF_AGENTS > 1? "agent "+_index+": " : "")+"Oh snap! an error occurred while trying to connect to the T-World Proxy ("+_address+")"
 			);
 		_setReady(false);
 	}
