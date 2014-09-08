@@ -129,13 +129,17 @@ td input{text-align: center}
 .footer a{color: rgb(187, 221, 187)}
 .header a:hover, .footer a:hover{color: white}
 
+.tdisabled{opacity: 0.3 !important}
+.tdisabled,
 .treadonly,
 .no-events{pointer-events: none}
 .treadonly>*{
-	-webkit-animation: fade-in 2s ease-out;
+	/*-webkit-animation: fade-in 2s ease-out;
 	-moz-animation: fade-in 2s ease-out;
 	-o-animation: fade-in 2s ease-out;
-	animation: fade-in 2s ease-out;
+	animation: fade-in 2s ease-out;*/
+
+	opacity: 0.6;
 }
 
 .teditable{pointer-events: initial !important}

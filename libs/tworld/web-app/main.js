@@ -478,7 +478,9 @@
 			this.clickOutside = function (){
 				triggerClickOutside();
 				triggerDismissError();
-				_self.login.state= _LOGIN_STATE.HIDDEN;
+				if (_self.login.state != _LOGIN_STATE.LOADING &&
+					_self.login.state != _LOGIN_STATE.LOGOUT)
+					_self.login.state= _LOGIN_STATE.HIDDEN;
 			}
 
 			this.setLanguage = function(){
