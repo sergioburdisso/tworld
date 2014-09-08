@@ -406,9 +406,9 @@
 							if (Validate()){
 								$http({
 									method	: 'POST',
-									url		: 'http://tworld-ai.com/rest/login.php',
+									url		: 'http://tworld-ai.com/rest/main.php',
 									headers	: {'Content-Type': 'application/x-www-form-urlencoded'},
-									data	: 'e='+btoa(_self.login.email)+'&p='+btoa(antiNoobsCoder(_self.login.pwd))
+									data	: 'm=user_login&e='+btoa(_self.login.email)+'&p='+btoa(antiNoobsCoder(_self.login.pwd))
 								}).
 								success(function(data, status, headers, config) {
 									$("#frm-login").removeClass("animate-none");
@@ -449,7 +449,6 @@
 					_self.login.state = _LOGIN_STATE.HIDDEN;
 					_self.user.info = null;
 					gotoTop();
-					//$location.url('/');
 					$route.reload();
 					$scope.$apply();
 				});

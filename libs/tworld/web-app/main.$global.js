@@ -36,10 +36,14 @@ function startTWorld(){
 }
 
 function gotoTop(time, top){
+	if (top && Number.isNaN(Number(top)) && top.constructor == String)
+		top = $('#title').offset().top;
+
 	if (time === undefined)
 		time = 1000;
+
 	$('html, body').animate({
-		scrollTop: top===undefined? $("#top").offset().top : 0
+		scrollTop: top===undefined? $("#top").offset().top : top
 	}, time, "easeOutExpo")
 }
 

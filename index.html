@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">-->
 	<meta name="description" content="Cross programming language Web platform for Artificial Intelligence research and education. Put your algorithms through their paces! Content based on the book Artificial Intelligence: A Modern Approach by Stuart Russell and Peter Norvig. Inspired by the Tileworld by Martha E. Pollack and Marc Ringuette. tags: 3d tileworld webgl html5 ai aima tworld unsl 3dgame"> 
 	<title>T-World</title>
 	<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css" />
@@ -25,7 +25,7 @@
 					<span class="pull-right" style="margin-right:10px" for="language">Language</span>
 				</div>
 			</form>
-			<span class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-50px; left:0">
+			<span id="title" class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-50px; left:0">
 				<h1><span class="text-light-blue">T</span>-World</h1>
 				<p ng-bind-html="twc.text.desc"></p>
 				<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="mailto:sergio.burdisso@gmail.com"  tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a>.</h5>
@@ -47,7 +47,7 @@
 	<!-- LOGIN -->
 	<div style="padding: 10px; background-color: #f5f5f5" ng-class="{'treadonly':twc.login.state == 2 || twc.login.state == 4}" ng-cloak>
 		<span class="animate-only-show" ng-hide="twc.user.info">
-			<button class="btn btn-primary btn-sm pull-right margin-right-10" popover-placement="left" popover-trigger="click" popover-html-unsafe="{{twc.createAccountHtml}}" ng-click="twc.login.state=0;twc.gotoTop(1000,0)"><span class="glyphicon glyphicon-cloud-upload"></span> Create T-Account</button>
+			<button class="btn btn-primary btn-sm pull-right margin-right-10" popover-placement="left" popover-trigger="click" popover-html-unsafe="{{twc.createAccountHtml}}" ng-click="twc.login.state=0;twc.gotoTop(1000, '#title')"><span class="glyphicon glyphicon-cloud-upload"></span> Create T-Account</button>
 			<button id="login-submit" type="submit" form="frm-login" class="btn btn-sm pull-right margin-right-10" ng-click="twc.login.apply()" ng-class="{'btn-default':(twc.login.state!=1), 'btn-success':(twc.login.state==1)}"><span class="glyphicon glyphicon-user"></span> Login</button>
 
 			<form id="frm-login" role="form" class="form-inline pull-right margin-right-10 animate-show-3d-right" tooltip-html-unsafe="{{twc.loginErrorHtml}}" tooltip-placement="bottom" tooltip-trigger="errorEvent" ng-show="twc.login.state==1">
@@ -148,7 +148,7 @@
 	<script type="text/javascript" src="libs/tworld/web-app/main.stats.js"></script>
 
 	<script type="text/ng-template" id="account-confirmation.html">
-		<div>
+		<div ng-init="twc.gotoTop();twc.login.apply()">
 			<div style="martin-top:65px"><img src="./imgs/web-app/success.png" onload="$(this).addClass(&apos;animate-ok&apos;)" class="tinvisible"></div>
 			<div><h1><b class="text-blue">Congratulations!</b></h1></div>
 			<div>
@@ -262,7 +262,7 @@
 			</div>
 
 		</div>
-		<div class="modal-footer">
+		<div class="modal-footer" ng-class="{'treadonly': $loading}">
 			<button class="btn btn-default" ng-click="cancel()">Cancel</button>
 			<button class="btn btn-success" ng-click="save()">Save</button>
 		</div>

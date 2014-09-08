@@ -399,12 +399,11 @@ function saveSessionInfo(){
 		sessionStorage.session_info = JSON.stringify(__lookupSession__.info);
 }
 function LoggedIn(data, remember){
-	console.log(data.s);
 	var session_info = {
 					email	: atob(data.e),
 					username: atob(data.u),
 					name	: atob(data.n),
-					settings: JSON.parse(atob(data.s))
+					settings: data.s? JSON.parse(atob(data.s)) : null
 				}
 	__lookupSession__.info = session_info;
 	if (remember){
@@ -416,10 +415,9 @@ function LoggedIn(data, remember){
 	}
 }
 function LogOut(callback){
-	$.ajax({
-		type: "POST", url : 'http://tworld-ai.com/rest/logout.php',
-		data : gettt(),
-		success:function(data, textStatus, jqXHR){
+	sendToTCloud(
+		{m:'user_logout'},
+		function(data, textStatus, jqXHR){
 			localStorage.removeItem('session_info');
 			sessionStorage.removeItem('session_info');
 			localStorage.removeItem('tt');
@@ -427,14 +425,15 @@ function LogOut(callback){
 			if (callback)
 			callback.call();
 		},
-		error: function(jqXHR, textStatus, errorThrown){
+		null,
+		function(jqXHR, textStatus, errorThrown){
 			localStorage.removeItem('session_info');
 			sessionStorage.removeItem('session_info');
 			localStorage.removeItem('tt');
 			sessionStorage.removeItem('tt');
 			location.reload();
 		}
-	});
+	);
 }
 function gettt(){
 	return localStorage.tt? localStorage.tt :

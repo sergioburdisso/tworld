@@ -6,7 +6,7 @@
 	</h3>
 </div>
 
-<div class="modal-body">
+<div class="modal-body" ng-class="{'treadonly': $loading}">
 	<div class="row">
 		<div class="col-md-6" ng-repeat="team in teams track by $index">
 			<div class="panel panel-default">
@@ -65,7 +65,7 @@
 	</div>
 </div>
 
-<div class="modal-footer">
+<div class="modal-footer" ng-class="{'treadonly': $loading}">
 	<button class="btn btn-default pull-left" ng-click="viewSettings()">
 		<span class="glyphicon glyphicon-wrench"></span>
 		Settings
