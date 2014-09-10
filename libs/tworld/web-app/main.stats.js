@@ -199,12 +199,14 @@
 							}
 
 							function loadAgentNameAsync(agent, date, numAgents){
+								console.log(date);
 								if (!isLoggedIn())
 									agent.name = getAgentProgramByDate(date).name;
 								else{
 									getAgentProgramByDate(date,
 										function(response){
-											agent.name = response.name;
+											if (response)
+												agent.name = response.name;
 											if (++_READY.agentsCounter >= numAgents)
 												deferred.resolve(args)
 										},$rootScope
@@ -244,13 +246,13 @@
 			}else{
 				getAgentProgramByDate(
 					date,
-					function(response){
+					function(response){if (response){
 						if (trial.agent_progs == "Loading...")
 							trial.agent_progs = response.name;
 						else
 							trial.agent_progs += ", "+response.name;
 						$scope.$apply();
-					}
+					}}
 				);
 			}
 		}

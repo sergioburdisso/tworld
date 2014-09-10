@@ -26,7 +26,7 @@
 				</div>
 			</form>
 			<span id="title" class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-50px; left:0">
-				<h1><span class="text-light-blue">T</span>-World</h1>
+				<h1><span class="text-light-blue">T</span>-World <sub style="font-size:11px">v.{{twc.version}}</sub></h1>
 				<p ng-bind-html="twc.text.desc"></p>
 				<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="mailto:sergio.burdisso@gmail.com"  tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a>.</h5>
 				<h5 style="color:white" class="header text-right">
@@ -108,9 +108,16 @@
 			</a><br>
 			<span ng-bind-html="twc.text.agpl"></span>.<br>
 		</p>
+
+		<a href="http://www.unsl.edu.ar" target="_blank" tooltip="I want to thank all the teachers who've shaped me through these years. I started this project as my final thesis at the National University of San Luis (Argentina)" style="font-weight:bold;color:rgb(209, 209, 209);margin-bottom:10px;margin-left:15px;text-decoration:overline;">
+			<img src="imgs/web-app/unsl.png">
+			National University of San Luis 
+		</a>
+		<br>
 		<a href="http://www.w3.org/html/logo/" target="_blank">
 			<img src="imgs/web-app/html5-badge-h-connectivity-css3-graphics-multimedia-performance-storage.png" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, and Offline &amp; Storage"  tooltip="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, and Offline &amp; Storage">
 		</a>
+
 	</div>
 
 	<iframe name="download-iframe" style="display:none"></iframe>

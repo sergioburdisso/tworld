@@ -40,6 +40,9 @@
 				.when('/account-confirmation', {
 					templateUrl: 'account-confirmation.html'
 				})
+				.when('/support', {
+					templateUrl: 'support.html'
+				})
 				.when('/environments', {
 					templateUrl: 'environments.html',
 					controller: 'EnvController',
@@ -385,6 +388,7 @@
 		function($sce, $route, $location, $http, $scope){
 			var _self = this;
 			this.$loc = $location;
+			this.version = getVersion();
 			this.LANGUAGES = _LANGUAGES;
 			this.language = (window.navigator.userLanguage == 'es' || window.navigator.language == 'es')?
 							this.LANGUAGES.ENGLISH/*this.LANGUAGES.SPANISH*/ :
