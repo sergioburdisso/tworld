@@ -225,6 +225,40 @@ function getAgentProgramByDate(date, callback, $root){date=parseInt(date);
 			$root
 		);
 }
+function downloadAgentProgramSourceCode(date, $root){if (isLoggedIn()){//$root.$loading = true;
+	var data, name, tmp = gettt().split('&'),
+		iframe = document.getElementsByName("download-iframe")[0],
+		form = document.createElement("form"),
+		node = document.createElement("input");
+
+	data = {m : 'get_agent_program_code', date: date};
+
+	for (var i=tmp.length; i--;){
+		tmp[i] = tmp[i].split('=');
+		data[tmp[i][0]] = tmp[i][1];
+	}
+
+	iframe.addEventListener("load", function () { $root.$loading = false; });//not working
+
+	form.action = 'http://tworld-ai.com/rest/main.php';
+	form.target = iframe.name;
+	form.method = "post";
+	form.style.display = "none";
+
+	for(name in data) 
+		if (!(data[name] instanceof Function)){
+			node.name  = name;
+			node.value = data[name].toString();
+			form.appendChild(node.cloneNode());
+		}
+
+	document.body.appendChild(form);
+
+	form.submit();
+
+	document.body.removeChild(form);
+
+}}
 function emptyTrialsAgentProgram(date, callback, $root){
 	if (!isLoggedIn()){
 		var _trials = getTrials();
@@ -330,10 +364,8 @@ function removeTrial(date, callback, $root){
 function getSettings(callback, $root){
 	if ( !isLoggedIn() )
 		return localStorage.settings? JSON.parse(localStorage.settings) : defaults.settings;
-	else{
-		console.log(getSessionData(), getSessionData().settings);
+	else
 		return getSessionData().info.settings || defaults.settings;
-	}
 }
 function saveSettings(settings, callback, $root){
 	if (!isLoggedIn())
@@ -458,6 +490,38 @@ function sendToTCloud($data, onsucces, $root, onerror){
 		type: "POST",
 		url : 'http://tworld-ai.com/rest/main.php',
 		data : data,
+		success: function(data, textStatus, jqXHR){
+			$root.$loading = false;
+			onsucces(data, textStatus, jqXHR);
+		},
+		error: onerror
+	});
+}
+
+function sendToTCloudWithFile($data, $file, onsucces, $root, onerror){
+	var data = new FormData();
+	var tmp = gettt().split('&');
+
+	if (!$root)$root = {}
+	$root.$loading = true;
+
+	onerror = onerror || function(jqXHR, textStatus, errorThrown){console.error(jqXHR, textStatus, errorThrown); LogOut()};
+
+	for (var i=tmp.length; i--;){
+		tmp[i] = tmp[i].split('=');
+		data.append(tmp[i][0], tmp[i][1]);
+	}
+	for (p in $data)
+		if (!($data[p] instanceof Function))
+			data.append(p, $data[p]);
+	data.append('file', $file);
+
+	$.ajax({
+		url: 'http://tworld-ai.com/rest/main.php',
+		data: data,
+		processData: false,
+		contentType: false,
+		type: 'POST',
 		success: function(data, textStatus, jqXHR){
 			$root.$loading = false;
 			onsucces(data, textStatus, jqXHR);

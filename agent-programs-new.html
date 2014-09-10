@@ -47,9 +47,24 @@
 						</div>
 					</div>
 				</div>
+
+
+				<div class="panel panel-default animate-show-3d-top" ng-show="apnc.agent_prog.ai && !apnc.agent_prog.javascript" ng-class="{'tdisabled':!apnc.isLoggedIn()}">
+					<div class="panel-body">
+						<form action="http://tworld-ai.com/rest/main.php" method="post" enctype="multipart/form-data" role="form" class="form-inline" id="source-form">
+							<div class="form-group">
+								<label class="lead" for="file">Source Code <small>(ZIP file, size limit is 200KB)</small></label>
+								<alert type="danger" ng-hide="apnc.isLoggedIn()">Need to be logged in to upload your source code.</alert>
+								<input type="file" id="file" name="file" accept=".zip, application/zip">
+								<p class="help-block" ng-show="apnc.isLoggedIn()">Upload it so that you and other users are able to download it!</p>
+							</div>
+						</form>
+					</div>
+				</div>
+
 				<div class="panel panel-default animate-show-3d-top" ng-show="(apnc.agent_prog.ai && !apnc.agent_prog.javascript) || (!apnc.agent_prog.ai && !apnc.agent_prog.keyboard)">
 					<div class="panel-body">
-						<label class="lead">T-World proxy <small>(<a href="resrc/twproxy.zip">download it</a>)<small></label>
+						<label class="lead">T-World proxy <small>(<a href="resrc/twproxy.zip">download version 1.0</a>)<small></label>
 						<br>
 						<label for="ip-address">IP Address</label><input type="text" id="ip-address" class="form-control" ng-model="apnc.agent_prog.socket.ip_address" placeholder="IPv4 Address" ng-class="{'has-error':!apnc.agent_prog.socket.ip_address.trim().length}">
 						<br>
@@ -87,6 +102,7 @@
 						</div>
 					</div>
 				</div>
+
 				<div class="panel panel-default animate-show-3d-top text-center" ng-show="!apnc.agent_prog.ai && apnc.agent_prog.keyboard">
 					<div class="panel-body">
 						<label class="lead text-left">Controls</label>

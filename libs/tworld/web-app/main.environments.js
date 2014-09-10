@@ -138,7 +138,7 @@
 	}]);
 
 	mod.controller('EnvNewController', ['$scope', '$modal', '$location', '$rootScope', 'taskEnv', 'readOnly',
-		function($scope, $modal, $location, $rootScope, taskEnv, readOnly){
+		function($scope, $modal, $location, $rootScope, taskEnv, readOnly){if (!taskEnv){$location.url('/');return}
 			var _next = false;
 			var _self = this;
 			var _default = {

@@ -60,6 +60,8 @@
 			});
 		}
 
+		this.download = function(date){downloadAgentProgramSourceCode(date, $rootScope)};
+
 		this.open = function(){$location.url('/agent-programs/view:'+_selected)}
 
 		this.run = function(jsap){
@@ -135,6 +137,7 @@
 			}
 		}
 
+
 		function remove(){
 			if (!isLoggedIn())
 				_self.agentPrograms = removeAgentProgramByDate(_selected);
@@ -144,7 +147,7 @@
 	}]);
 
 	mod.controller('AgentProgSourceCodeController', ['$rootScope','$scope','$routeParams','$modal', '$location', 'agentProg',
-		function($rootScope, $scope, $routeParams, $modal, $location, agentProg){
+		function($rootScope, $scope, $routeParams, $modal, $location, agentProg){if (!agentProg || !agentProg.ai || !agentProg.javascript){$location.url('/');return}
 			var _self = this;
 			var _source;
 			var _editor;
@@ -173,7 +176,7 @@
 			this.saved = true;
 			this.dropdownopen = false;
 			this.agent_prog = agentProg;
-			if (!this.agent_prog || !this.agent_prog.ai || !this.agent_prog.javascript){$location.url('/');return}
+			
 
 			if (!this.agent_prog.default_task_env)
 				this.task_env =  undefined;
@@ -381,21 +384,40 @@
 		}]
 	);
 
-	mod.controller('AgentProgNewController', ['$rootScope', '$modal', '$location', 'agentProg',
-		function($rootScope, $modal, $location, agentProg){
+	mod.controller('AgentProgNewController', ['$scope', '$rootScope', '$modal', '$location', 'agentProg',
+		function($scope, $rootScope, $modal, $location, agentProg){if (!agentProg){$location.url('/');return}
 			var _self = this;
 			var _socket = agentProg.socket;
+
+			this.gett = gettt;
 
 			this.PERCEPT_FORMAT = _PERCEPT_FORMAT;
 
 			this.perceptFormats = formats;
 			this.agent_prog = agentProg;
+			this.isLoggedIn = isLoggedIn;
 
 			this.save = function(){if (Validate()){
-				if (!agentProg.date)
-					newAgentProgram(this.agent_prog, _finished, $rootScope);
-				else
-					updateAgentProgram(agentProg, _finished, $rootScope);
+				agentProg.source.file = $("#file").val() != "";
+
+				if (!agentProg.source.file){
+					if (!agentProg.date)
+						newAgentProgram(this.agent_prog, _finished, $rootScope);
+					else
+						updateAgentProgram(agentProg, _finished, $rootScope);
+				}else{
+					sendToTCloudWithFile(
+						{
+							nm: !agentProg.date? 'new_agent_program' : 'update_agent_program',
+							m: 'user_file_uploader',
+							date: (agentProg.date = !agentProg.date? Date.now() : agentProg.date),
+							ap: JSON.stringify(agentProg)
+						},
+						$('#file')[0].files[0],
+						_finished,
+						$rootScope
+					);
+				}
 			}}
 
 			this.readKey = function(key){
@@ -425,6 +447,8 @@
 					$location.url('/agent-programs/source-code:'+_self.agent_prog.date)
 				else
 					$location.url('/');
+
+				$scope.$apply(); // update current url
 
 				gotoTop();
 			}

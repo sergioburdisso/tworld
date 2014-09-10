@@ -226,6 +226,7 @@
 								ai: true,
 								javascript:true,
 								source:{
+									file: false,
 									agentProgram:{
 										cursor:{row:0, column:0},
 										//anchor: {start:1, end:3}, // rows indexes
