@@ -465,13 +465,15 @@
 
 			//INITIAL STATE
 			this.updateDimensions = function(){
-				taskEnvironment.environment.initial_state.length = taskEnvironment.environment.rows;
+				if (isNumeric(taskEnvironment.environment.rows) && isNumeric(taskEnvironment.environment.columns)){
+					taskEnvironment.environment.initial_state.length = taskEnvironment.environment.rows;
 
-				for (var r = taskEnvironment.environment.initial_state.length; r--;){
-					if (taskEnvironment.environment.initial_state[r])
-						taskEnvironment.environment.initial_state[r].length = taskEnvironment.environment.columns;
-					else
-						taskEnvironment.environment.initial_state[r] = new Array(taskEnvironment.environment.columns);
+					for (var r = taskEnvironment.environment.initial_state.length; r--;){
+						if (taskEnvironment.environment.initial_state[r])
+							taskEnvironment.environment.initial_state[r].length = taskEnvironment.environment.columns;
+						else
+							taskEnvironment.environment.initial_state[r] = new Array(taskEnvironment.environment.columns);
+					}
 				}
 			}
 
@@ -531,7 +533,8 @@
 
 			function _finished(){
 				$location.url('/');
-				gotoTop()
+				gotoTop();
+				if (isLoggedIn()) $scope.$apply();
 			}
 
 			//default teams values

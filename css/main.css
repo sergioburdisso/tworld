@@ -128,12 +128,12 @@ td input{text-align: center}
 
 .footer a{color: rgb(187, 221, 187)}
 .header a:hover, .footer a:hover{color: white}
-a.
 
 .tdisabled{opacity: 0.5 !important}
 .tdisabled,
 .treadonly,
-.no-events{pointer-events: none}
+.no-events{pointer-events: none !important}
+
 .treadonly>*{
 	/*-webkit-animation: fade-in 2s ease-out;
 	-moz-animation: fade-in 2s ease-out;

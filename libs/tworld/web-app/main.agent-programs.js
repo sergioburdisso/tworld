@@ -448,7 +448,7 @@
 				else
 					$location.url('/');
 
-				$scope.$apply(); // update current url
+				if (isLoggedIn()) $scope.$apply(); // update current url
 
 				gotoTop();
 			}

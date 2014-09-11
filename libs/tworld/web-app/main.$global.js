@@ -96,8 +96,14 @@ Array.prototype.flattening = function(pos) {
 	return flatten;
 }
 
-function Validate(){
-	var errors = $('.has-error').not($('.ng-hide .has-error'));
+function isNumeric(value){return !Number.isNaN( Number(value) ) }
+
+function Validate(parent){
+	if (!parent)
+		var errors = $('.has-error').not($('.ng-hide .has-error'));
+	else
+		var errors = parent.find('.has-error').not($('.ng-hide .has-error'));
+
 	if (errors.length){
 		errors.addClass("ng-dirty").focus();
 		return false;

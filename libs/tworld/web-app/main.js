@@ -63,91 +63,8 @@
 					controller: 'EnvNewController',
 					controllerAs: 'enc',
 					resolve:{
-						readOnly: function(){return false;},
-						taskEnv : function(){ 
-						return {
-								trial: {//Each trial is a self-contained simulation
-									/*default trial values*/
-									test: false,
-									runs: 1,
-									saveStats: false,
-									agents : [],
-									speed: 0, //[-9..9]
-									pause:  true,
-									camera: _CAMERA_TYPE.AROUND_GRID
-								},
-								name:'',
-								desc:'',
-								date:undefined,
-								battery: false,
-								prop: {
-									fullyObservable: true,
-									multiagent: false,
-									multiagent_type: 0, //0 competitive; 1 cooperative; 2 both
-									deterministic: true,
-									dynamic: 0, //0 static; 1 semidynamic; 2 dynamic
-									known: true
-								},
-								agents:{
-									percept:{
-										partialGrid: true,
-										radius: 2,
-										noise: false,
-										noise_cfg:{
-											tile:0.3,
-											obstacle:0.3,
-											hole:0.3
-										}
-									},
-									stochastic_model: {
-										type: _STOCHASTIC_ACTIONS_MODEL.ANOTHER_ACTION,
-										prob: [700, 0, 0, 0, 0]
-									}
-								},
-								environment:{
-									rows:6,
-									columns:6,
-									holes_size:{range:[1,3], prob:[]},
-									num_holes:{range:[2,3], prob:[]},
-									num_obstacles:{range:[1,2], prob:[]},
-									difficulty:{range:[0,0], prob:[]},
-									scores_variability: 0,
-									dynamic:{
-										dynamism:{range:[6,13], prob:[]},
-										hostility:{range:[1,13], prob:[]},
-										hard_bounds:true,
-									},
-									random_initial_state:false,
-									initial_state:[
-										[" "," "," "," "," ","#"],
-										["#"," "," ","2"," ","#"],
-										[" ","#"," ","T"," ","A"],
-										["1","T"," "," "," ","#"],
-										["#"," "," "," ","T","#"],
-										[" ","#"," ","#","3"," "]
-									],
-									final_state:[{name:_ENDGAME.TIME.NAME, value:5*60, result:_GAME_RESULT.NEUTRAL}] //default value
-								},
-								teams:[],
-								final_tweaks:{
-									easy: false,
-									battery:{
-										level:1000,
-										good_move:20,
-										bad_move:5,
-										sliding:10
-									},
-									multiplier:{
-										enabled:false,
-										timeout:6
-									},
-									score:{
-										cell: true
-									},
-									shapes:false
-								}
-							}
-						}
+						readOnly: function(){ return false; },
+						taskEnv : function(){ return clone(defaults.taskEnvironment); }
 					}
 				})
 				.when('/environments/view::id', {
@@ -219,64 +136,7 @@
 					templateUrl: 'agent-programs-new.html',
 					controller: 'AgentProgNewController',
 					controllerAs: 'apnc',
-					resolve:{
-						agentProg:function(){
-						return { 
-								name:"",
-								desc:"",
-								date:0,
-								team:-1,
-								ai: true,
-								javascript:true,
-								source:{
-									file: false,
-									agentProgram:{
-										cursor:{row:0, column:0},
-										//anchor: {start:1, end:3}, // rows indexes
-										code:
-											"\n"+
-											"function AGENT_PROGRAM(percept){\n"+
-											"\t\n"+
-											"}"
-									},
-									onStart:{
-										cursor:{row:0, column:0},
-										//anchor: {start:5, end:7},
-										code:
-											"\n"+
-											"function onStart(percept){\n"+
-											"\t\n"+
-											"}"
-									},
-									onMessage:{
-										cursor:{row:0, column:0},
-										//anchor: {start:9, end:11},
-										code:
-											"\n"+
-											"function onMessageReceived(message){\n"+
-											"\t\n"+
-											"}"
-									},
-									global:{
-										cursor:{row:0, column:0},
-										code: ""
-									}
-								},
-								socket:{
-									ip_address: "localhost",
-									port:3313,
-									magic_string: "",
-									percept_format: _PERCEPT_FORMAT.JSON
-								},
-								percept:{
-										sync:true,
-										interval:500
-								},
-								keyboard:true,
-								controls:{Up:38, Down:40, Left:37, Right:39, Restore:16}
-							}
-						}
-					}
+					resolve:{ agentProg:function(){ return clone(defaults.agentProgram); } }
 				})
 				.when('/agent-programs/source-code::id', {
 					templateUrl: 'agent-programs-source-code.html',
@@ -408,7 +268,7 @@
 							setTimeout(function() {$("#login-email").focus();}, 500);
 							break;
 						case _LOGIN_STATE.SHOWN:
-							if (Validate()){
+							if ( Validate($("#frm-login")) ){
 								$http({
 									method	: 'POST',
 									url		: 'http://tworld-ai.com/rest/main.php',

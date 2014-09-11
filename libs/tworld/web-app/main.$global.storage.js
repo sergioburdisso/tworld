@@ -28,24 +28,211 @@ var _LOGIN_STATE = {HIDDEN : 0, SHOWN: 1, LOADING:2, LOGGED: 3, LOGOUT: 4}
 
 var defaults = {
 	settings:{
-				video:{
-					lq_grid:false,
-					lq_env:false,
-					cover_window: false,
-					resolution: "854x480"
-				},
-				display:{
-					show_fps: true,
-					show_holes_helpers: true,
-					show_visibility_bounds: true,
-					show_console: true
-				},
-				audio:{
-					enabled: true,
-					volume: 80
-				},
-				general:{}
+		video:{
+			lq_grid:false,
+			lq_env:false,
+			cover_window: false,
+			resolution: "854x480"
+		},
+		display:{
+			show_fps: true,
+			show_holes_helpers: true,
+			show_visibility_bounds: true,
+			show_console: true
+		},
+		audio:{
+			enabled: true,
+			volume: 80
+		},
+		general:{}
+	},
+	taskEnvironment: {
+		trial: {//Each trial is a self-contained simulation
+			/*default trial values*/
+			test: false,
+			runs: 1,
+			saveStats: false,
+			agents : [],
+			speed: 0, //[-9..9]
+			pause:  true,
+			camera: _CAMERA_TYPE.AROUND_GRID
+		},
+		name:'',
+		desc:'',
+		date:undefined,
+		battery: false,
+		prop: {
+			fullyObservable: true,
+			multiagent: false,
+			multiagent_type: 0, //0 competitive; 1 cooperative; 2 both
+			deterministic: true,
+			dynamic: 0, //0 static; 1 semidynamic; 2 dynamic
+			known: true
+		},
+		agents:{
+			percept:{
+				partialGrid: true,
+				radius: 2,
+				noise: false,
+				noise_cfg:{
+					tile:0.3,
+					obstacle:0.3,
+					hole:0.3
+				}
 			},
+			stochastic_model: {
+				type: _STOCHASTIC_ACTIONS_MODEL.ANOTHER_ACTION,
+				prob: [700, 0, 0, 0, 0]
+			}
+		},
+		environment:{
+			rows:6,
+			columns:6,
+			holes_size:{range:[1,3], prob:[]},
+			num_holes:{range:[2,3], prob:[]},
+			num_obstacles:{range:[1,2], prob:[]},
+			difficulty:{range:[0,0], prob:[]},
+			scores_variability: 0,
+			dynamic:{
+				dynamism:{range:[6,13], prob:[]},
+				hostility:{range:[1,13], prob:[]},
+				hard_bounds:true,
+			},
+			random_initial_state:false,
+			initial_state:[
+				[" "," "," "," "," ","#"],
+				["#"," "," ","2"," ","#"],
+				[" ","#"," ","T"," ","A"],
+				["1","T"," "," "," ","#"],
+				["#"," "," "," ","T","#"],
+				[" ","#"," ","#","3"," "]
+			],
+			final_state:[{name:_ENDGAME.TIME.NAME, value:5*60, result:_GAME_RESULT.NEUTRAL}] //default value
+		},
+		teams:[],
+		final_tweaks:{
+			easy: false,
+			battery:{
+				level:1000,
+				good_move:20,
+				bad_move:5,
+				sliding:10
+			},
+			multiplier:{
+				enabled:false,
+				timeout:6
+			},
+			score:{
+				cell: true
+			},
+			shapes:false
+		}
+	},
+	agentProgram: { 
+		name:"",
+		desc:"",
+		date:0,
+		team:-1,
+		ai: true,
+		javascript:true,
+		source:{
+			file: false,
+			agentProgram:{
+				cursor:{row:0, column:0},
+				code:
+					'/*\n'+
+					'* Use this function to write your "agent program" (Colloquially speaking, your "robot\'s brain")\n'+
+					'* This function is called each time the agent (i.e. the robot) finish performing an action.\n'+
+					'* It receives a <percept> object and based on the information provided by this object it should $return\n'+
+					'* the right _ACTION.\n'+
+					'* NOTE: Allowed _ACTIONS(s) are:\n'+
+					'*       _ACTION.NORTH\n'+
+					'*       _ACTION.SOUTH\n'+
+					'*       _ACTION.WEST\n'+
+					'*       _ACTION.EAST\n'+
+					'*       _ACTION.RESTORE    robot restores its battery\n'+
+					'*       _ACTION.NONE       robot do nothing but perceive, i.e. this\n'+
+					'*                          AGENT_PROGRAM function is executed with a\n'+
+					'*                          new, updated, <percept> object\n'+
+					'*\n'+
+					'* The structure of the <percept> parameter below is described in the support material\n'+
+					'*/\n'+
+					'function AGENT_PROGRAM(percept){\n'+
+					'\n'+
+					'    $return(_ACTION.NONE); //<- An example of how actions should be returned\n'+
+					'}'
+			},
+			onStart:{
+				cursor:{row:0, column:0},
+				code:
+					'/*\n'+
+					'* Write here the code you only want to run once when the simulation starts, e.g.\n'+
+					'* variables / data structures initialization\n'+
+					'*/\n'+
+					'\n'+
+					'\n'+
+					'/*\n'+
+					'* this function handles the on-start event.\n'+
+					'* The On-start event is fired when the 3D T-World game starts\n'+
+					'* and the perception is sent for the very first time.\n'+
+					'*/\n'+
+					'function onStart(percept){\n'+
+					'\n'+
+					'}'
+			},
+			onMessage:{
+				cursor:{row:0, column:0},
+				code:
+					'/*\n'+
+					'* NOTE: If your agent is not going to perform in a cooperative\n'+
+					'* multiagent environment, then just ignore this section of code;\n'+
+					'* Otherwise write here the code you want to run every time your agent \n'+
+					'* receives a message from a teammate.\n'+
+					'*/\n'+
+					'\n'+
+					'\n'+
+					'/*\n'+
+					'* this function handles the on-message-received event.\n'+
+					'* The on-message-received event is fired when the agent receives a message\n'+
+					'* from a teammate.\n'+
+					'* NOTE: there are two functions to send messages to the agent\'s teammates:\n'+
+					'*\n'+
+					'*   $sendMessage(agentID, message)  sends <message> object to the agent\n'+
+					'*                                   with id <agentID> e.g.\n'+
+					'*                                   $sendMessage(1, {newGoal: [10,15]});\n'+
+					'*                                   sends a message to the "agent 1" saying,\n'+
+					'*                                   for instance, that the "New Goal" is at (10,15)\n'+
+					'*\n'+
+					'*   $sendTeamMessage(message))      sends <message> object to all the\n'+
+					'*                                   agent\'s teammates\n'+
+					'*/\n'+
+					'function onMessageReceived(message){\n'+
+					'  \n'+
+					'}'
+			},
+			global:{
+				cursor:{row:0, column:0},
+				code:
+					'/*\n'+
+					'* this section of code is used to declare/define variables that are visible/accessible\n'+
+					'* from all the other sections of code, namely the "Agent Program", "Start Event" and "Message Received Event"\n'+
+					'* sections above\n'+
+					'*/'
+			}
+		},
+		socket:{
+			ip_address: "localhost",
+			port:3313,
+			magic_string: "",
+			percept_format: _PERCEPT_FORMAT.JSON
+		},
+		percept:{
+				sync:true,
+				interval:500
+		},
+		keyboard:true,
+		controls:{Up:38, Down:40, Left:37, Right:39, Restore:16}
+	},
 	taskEnvironments : [],
 	agentPrograms : []
 }
