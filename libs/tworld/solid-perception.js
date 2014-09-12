@@ -154,12 +154,12 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 			}
 
 		//my_id, team_id, agents and teams
-		if (_NUMBER_OF_AGENTS <= 1){
+		/*if (_NUMBER_OF_AGENTS <= 1){
 			delete this.Percept.data.environment.agents;
 			delete this.Percept.data.agent.id;
 			delete this.Percept.data.agent.team_id;
 			delete this.Percept.data.builtin_knowledge.teams;
-		}else{
+		}else{*/
 			for (var len= _TEAMS.length, i=0; i < len; ++i){
 				this.Percept.data.builtin_knowledge.teams.push({
 					id: i,
@@ -167,7 +167,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 					members: _TEAMS[i].MEMBERS
 				});
 			}
-		}
+		//}
 
 		//-> creating grid
 		if (!TWorld.FullyObservableGrid){
@@ -259,8 +259,8 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 	this.Percept.data.agent.stats = environment.RobStats;
 
 	//Agents
-	if (_NUMBER_OF_AGENTS > 1)
-		this.Percept.data.environment.agents = environment.ListOfAgents;
+	//if (_NUMBER_OF_AGENTS > 1)
+	this.Percept.data.environment.agents = environment.ListOfAgents;
 
 
 	//->Agent's current location
@@ -469,7 +469,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 									[
 										["holes","hole"], ["tiles","tile"], ["obstacles", "obstacle"],
 										["cells","cell"], ["agents","agent"], ["teams","team"],
-										["battery_chargers","location"], ((_NUMBER_OF_AGENTS > 1)? ["agents_location","agent"]: [])
+										["battery_chargers","location"], /*((_NUMBER_OF_AGENTS > 1)? */["agents_location","agent"]/*: []*/)
 									]
 								)
 				);

@@ -673,8 +673,8 @@ function sendToTCloud($data, onsucces, $root, onerror){
 	//data+="&ch="+antiNoobsHash(data);
 
 	onerror = onerror || function(jqXHR, textStatus, errorThrown){
-							console.error(jqXHR, textStatus, errorThrown);
-							if (textStatus.status == 404)
+							//console.error(jqXHR, textStatus, errorThrown);
+							if (jqXHR.status == 404)
 								LogOut();
 						};
 
@@ -698,8 +698,8 @@ function sendToTCloudWithFile($data, $file, onsucces, $root, onerror){
 	$root.$loading = true;
 
 	onerror = onerror || function(jqXHR, textStatus, errorThrown){
-							console.error(jqXHR, textStatus, errorThrown);
-							if (textStatus.status == 404)
+							//console.error(jqXHR, textStatus, errorThrown);
+							if (jqXHR.status == 404)
 								LogOut();
 						};
 

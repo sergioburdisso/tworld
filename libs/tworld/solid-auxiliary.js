@@ -150,6 +150,21 @@ function NextProperty(obj, prop){
 }
 
 function copy(obj){ return JSON.parse(JSON.stringify(obj)) }
+
+function match(obj0, obj1){
+	if (!(obj0 instanceof Object)) return obj0 == obj1;
+	if (!(obj1 instanceof Object)) return false;
+
+	if (obj1 instanceof Array)
+		if (!(obj0 instanceof Array) || obj1.length != obj0.length)
+			return false;
+
+	for (p in obj1)
+		if (!(obj1[p] instanceof Function) && !match(obj0[p], obj1[p]))
+			return false;
+
+	return true;
+}
 //<-
 
 function SortAndPartition(list, criteria){
