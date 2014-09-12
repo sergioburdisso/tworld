@@ -198,7 +198,6 @@
 				_editor.focus();
 				_editor.gotoLine(_source.cursor.row+1, _source.cursor.column, true);
 				_editor.scrollToRow(_source.cursor.row);
-				console.log(eval("_GRID_CELL = _editor.session.getUndoManager()"));
 				_editor.session.setUndoManager(_undoManagers[iUndo]);
 			}
 
@@ -366,7 +365,6 @@
 
 			$(window).unbind('keydown').bind('keydown', function(event) {
 				if (event.ctrlKey || event.metaKey) {
-					console.log(String.fromCharCode(event.which).toLowerCase());
 					switch (String.fromCharCode(event.which).toLowerCase()) {
 						case 's':
 							event.preventDefault();

@@ -672,7 +672,11 @@ function sendToTCloud($data, onsucces, $root, onerror){
 			data+= "&"+p+"="+encodeURIComponent($data[p]);
 	//data+="&ch="+antiNoobsHash(data);
 
-	onerror = onerror || function(jqXHR, textStatus, errorThrown){console.error(jqXHR, textStatus, errorThrown); LogOut()};
+	onerror = onerror || function(jqXHR, textStatus, errorThrown){
+							console.error(jqXHR, textStatus, errorThrown);
+							if (textStatus.status == 404)
+								LogOut();
+						};
 
 	$.ajax({
 		type: "POST",
@@ -693,7 +697,11 @@ function sendToTCloudWithFile($data, $file, onsucces, $root, onerror){
 	if (!$root)$root = {}
 	$root.$loading = true;
 
-	onerror = onerror || function(jqXHR, textStatus, errorThrown){console.error(jqXHR, textStatus, errorThrown); LogOut()};
+	onerror = onerror || function(jqXHR, textStatus, errorThrown){
+							console.error(jqXHR, textStatus, errorThrown);
+							if (textStatus.status == 404)
+								LogOut();
+						};
 
 	for (var i=tmp.length; i--;){
 		tmp[i] = tmp[i].split('=');

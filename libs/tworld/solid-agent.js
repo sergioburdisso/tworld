@@ -209,80 +209,77 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
 }onmessage = __AgentProgram__Wrapper__; 
 
 // transition model
-function $result(state, action){if ($isValidMove(state, action)){
-	var ir, ic;
+function $result(state, action, paint){if (!$isValidMove(state, action)) return state;
+	var ir, ic, r, c;
 	var loc = state.agent.location;
 	var env = state.environment;
 	var grid = env.grid;
 
+	state.agent.stats.good_moves++;
+	//TODO: update battery stats
+
 	switch(action){
-		case _NORTH:
-			state.agent.stats.good_moves++;
-			//TODO: update battery stats
-
-			$paintCell(loc.row-1, loc.column);
-
-			for (ir= loc.row-1; ir >= 0 && grid[ir][loc.column] == _GRID_CELL.TILE; --ir);
-
-			if (ir == loc.row-1){
-				grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
-				grid[loc.row-1][loc.column] = _GRID_CELL.AGENT;
-			}else
-			if (grid[ir][loc.column] == _GRID_CELL.HOLE_CELL) {
-				grid[ir][loc.column] = _GRID_CELL.EMPTY;
-				grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
-				grid[loc.row-1][loc.column] = _GRID_CELL.AGENT;
-
-				for (var i=env.holes.length; i--;)
-					for (var j=env.holes[i].cells.length; j--;)
-						if (env.holes[i].cells[j].row == ir &&
-							env.holes[i].cells[j].column == loc.column)
-						{
-							env.holes[i].cells.remove(j);
-
-							state.agent.stats.filled_cells++;
-
-							if (!env.holes[i].cells.length){ // if hole's filled
-								//TODO: if multiplier
-								state.agent.stats.filled_holes++;
-								state.agent.score += env.holes[i].value;
-								env.holes.remove(i);
-								break;
-							}else
-								state.agent.score += (env.holes[i].size - env.holes[i].cells.length)*2;/*TODO: _SCORE_CELLS_MULTIPLIER if partial rewards 0 otherwise*/
-						}
-			}else
-			if (grid[ir][loc.column] == _GRID_CELL.EMPTY) {
-				grid[ir][loc.column] = _GRID_CELL.TILE;
-				grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
-				grid[loc.row-1][loc.column] = _GRID_CELL.AGENT;
-
-				for (var i=env.tiles.length; i--;)
-					if (env.tiles[i].row == loc.row-1 &&
-						env.tiles[i].column == loc.column)
-					{
-						env.tiles[i].row = ir;
-						env.tiles[i].column = loc.column;
-						break;
-					}
-			}
-
-			loc.row = loc.row - 1;
-			break;
-		case _SOUTH:
-			
-			break;
-		case _WEST:
-			
-			break;
-		case _EAST:
-			
-			break;
+		case _NORTH:	r = -1; break;
+		case _SOUTH:	r =  1; break;
+		case _WEST:		c = -1; break;
+		case _EAST:		c =  1; break;
 		default:
 			console.error('$result: invalid action');
+			return state;
 	}
+
+	if (paint)
+		$paintCell(loc.row+r, loc.column);
+
+	for (ir= loc.row+r; $isTile(state, ir, loc.column); ir=ir+r);
+
+	if (ir == loc.row+r){
+		grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
+		grid[loc.row+r][loc.column] = _GRID_CELL.AGENT;
+	}else
+	if ($isHoleCell(state, ir, loc.column)) {
+		grid[ir][loc.column] = _GRID_CELL.EMPTY;
+		grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
+		grid[loc.row+r][loc.column] = _GRID_CELL.AGENT;
+
+		for (var i=env.holes.length; i--;)
+			for (var j=env.holes[i].cells.length; j--;)
+				if (env.holes[i].cells[j].row == ir &&
+					env.holes[i].cells[j].column == loc.column)
+				{
+					env.holes[i].cells.remove(j);
+
+					state.agent.stats.filled_cells++;
+
+					if (!env.holes[i].cells.length){ // if hole's filled
+						//TODO: if multiplier
+						state.agent.stats.filled_holes++;
+						state.agent.score += env.holes[i].value;
+						env.holes.remove(i);
+						break;
+					}else
+						state.agent.score += (env.holes[i].size - env.holes[i].cells.length)*2;/*TODO: _SCORE_CELLS_MULTIPLIER if partial rewards 0 otherwise*/
+				}
+	}else
+	if ($isEmptyCell(state, ir, loc.column)) {
+		grid[ir][loc.column] = _GRID_CELL.TILE;
+		grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
+		grid[loc.row+r][loc.column] = _GRID_CELL.AGENT;
+
+		for (var i=env.tiles.length; i--;)
+			if (env.tiles[i].row == loc.row+r &&
+				env.tiles[i].column == loc.column)
+			{
+				env.tiles[i].row = ir;
+				env.tiles[i].column = loc.column;
+				break;
+			}
+	}
+
+	loc.row = loc.row+r;
+
 	return state;
-}}
+}
 
 function $paintCell(row, column){$return(_ACTION.PAINT_CELL+row+":"+column)}
 
@@ -335,6 +332,39 @@ function $sendMessage(robId, msg){
 
 function $perceive(){postMessage(_ACTION.NONE)}
 
+
+
+
+
+function $isValidCoordinates(percept, row, column) {var _grid= percept.environment.grid;
+	return (0 <= row && row < _grid.length)&&(0 <= column && column < _grid[0].length);
+}
+
+function $isEmptyCell(percept, row, column) {var _grid= percept.environment.grid;
+	return	$isValidCoordinates(percept, row,column)&&
+			(_grid[row][column] == _GRID_CELL.EMPTY);
+}
+
+function $isHoleCell(percept, row, column) {var _grid= percept.environment.grid;
+	return	$isValidCoordinates(percept, row,column)&&
+			(_grid[row][column] === (_grid[row][column]|0));
+}
+
+function $isTile(percept, row, column) {var _grid= percept.environment.grid;
+	return	$isValidCoordinates(percept, row,column)&&
+			(_grid[row][column] == _GRID_CELL.TILE);
+}
+
+function $isAgent(percept, row, column) {var _grid= percept.environment.grid;
+	return	$isValidCoordinates(percept, row,column)&&
+			(_grid[row][column] == _GRID_CELL.AGENT);
+}
+
+function $isObstacle(percept, row, column) {var _grid= percept.environment.grid;
+	return	$isValidCoordinates(percept, row,column)&&
+			(_grid[row][column] == _GRID_CELL.OBSTACLE);
+}
+
 function $isValidMove(percept, move){
 	var arow, acol;
 	var r = 0, c = 0;
@@ -381,17 +411,17 @@ function $isValidMove(percept, move){
 				return false;
 		r = tr;
 		c = tc;
-		return (_GRID[arow+r][acol+c] != _GRID_CELL.OBSTACLE &&
-				_GRID[arow+r][acol+c] != _GRID_CELL.AGENT);
+		return	!$isObstacle(percept, arow+r, acol+c) &&
+				!$isAgent(percept, arow+r, acol+c);
 	}
 
-	return (_GRID[arow+r][acol+c] != _GRID_CELL.HOLE_CELL &&
-			_GRID[arow+r][acol+c] != _GRID_CELL.OBSTACLE &&
-			_GRID[arow+r][acol+c] != _GRID_CELL.AGENT);
-	/*return (_GRID[arow+r][acol+c] == _GRID_CELL.EMPTY ||
-			_GRID[arow+r][acol+c] == _GRID_CELL.TILE  || 
-			_GRID[arow+r][acol+c] == _GRID_CELL.BATTERY_CHARGER);*/
+	return	!$isHoleCell(percept, arow+r, acol+c) &&
+			!$isObstacle(percept, arow+r, acol+c) &&
+			!$isAgent(percept, arow+r, acol+c);
 }
+
+
+
 
 function $printGrid(percept, noClear){
 	var strgLine = "   ";
@@ -420,5 +450,5 @@ function $printGrid(percept, noClear){
 
 	if (!noClear)
 		console.clear();
-	console.log("\n" + strgLine + strgGrid + strgLine);
+	_console.log("\n" + strgLine + strgGrid + strgLine + " Score: " + percept.agent.score);
 }
