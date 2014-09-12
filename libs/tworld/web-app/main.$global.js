@@ -42,7 +42,7 @@ function gotoTop(time, top){
 		top = $('#title').offset().top;
 
 	if (time === undefined)
-		time = 1000;
+		time = 700;
 
 	$('html, body').animate({
 		scrollTop: top===undefined? $("#top").offset().top : top

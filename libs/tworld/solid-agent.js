@@ -23,8 +23,6 @@ importScripts('solid-auxiliary.js', 'solid-global.js', '../util/sprintf.min.js')
 -coordenate_relativesToAgent(){ - porque como lo voy a hacer multi agente no puedo hacer que las cosas sean relativas al agente, para eso uso esta funcion
 	object[0] = _agentPos.Row - object[0];
 	object[1] = object[1] - _agentPos.Column;
-
--sucesor(estado) // sucesor debe descontar los segundos de vida de los objetos (segun el tiempo que demora en caminar)
 */
 
 var alert = function(msg){
@@ -64,24 +62,62 @@ var _RESTORE= _ACTION.RESTORE;
 var __AgentProgram__;
 var __onMessageReceived__;
 var __onStart__;
+var __error__;
 
 var $m;
 var $memory;
 var $persistent;
 
-function __AgentProgram__Wrapper__(percept)/*returns accion*/{
+function __AgentProgram__Wrapper__(percept)/*returns action*/{
 	percept = percept.data;
 
 	switch(percept.header){
 		case _PERCEPT_HEADER.INTERNAL:
+			__error__ = false;
 			$memory= $persistent= $m= percept.data.memory || {};
+
+			// searching for errors
+
+			try{ eval(percept.data.global_src); }
+			catch(e){
+				var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
+				if (!matchs)	console.error(e.stack);
+				else			console.error(e.name + ": " + e.message + " at 'Global Scope' section (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+				__error__ = true;
+			}
+			if (__error__) return;
+			try{ eval(percept.data.ai_src); }
+			catch(e){
+				var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
+				if (!matchs)	console.error(e.stack);
+				else			console.error(e.name + ": " + e.message + " at 'Agent Program' section (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+				__error__ = true;
+			}
+			if (__error__) return;
+			try{ eval(percept.data.start_src); }
+			catch(e){
+				var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
+				if (!matchs)	console.error(e.stack);
+				else			console.error(e.name + ": " + e.message + " at 'Start Event' section (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+				__error__ = true;
+			}
+			if (__error__) return;
+			try{ eval(percept.data.msg_src); }
+			catch(e){
+				var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
+				if (!matchs)	console.error(e.stack);
+				else			console.error(e.name + ": " + e.message + " at 'Message Received Event' section (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+				__error__ = true;
+			}
+			if (__error__) return;
+
 			eval(
 				"(function(){"+
 					percept.data.global_src+
 
 					"(function(){"+
 						percept.data.ai_src
-							.replace(/(\$(return|perceive)\s*\([^;}]*\)[^}]?)/g, "{$1;return}")
+							.replace(/(\$(return|perceive)\s*\([^;}]*?\)[^}]?)/g, "{$1;return}")
 						+"\
 						__AgentProgram__= AGENT_PROGRAM\
 					})();"+
@@ -105,7 +141,7 @@ function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 				try{
 					__onStart__(percept.data);
 				}catch(e){
-					var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
+					var matchs = false;//e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
 					if (!matchs)	console.error(e.stack);
 					else			console.error(e.name + ": " + e.message + " at 'onStart' (Line:"+matchs[2]+", Column:"+matchs[3]+")");
 				};
@@ -145,7 +181,7 @@ function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 				$perceive();
 			break;
 
-		default:
+		default: if (!__error__){
 			//HIDDEN
 			percept = percept.data;
 
@@ -168,8 +204,85 @@ function __AgentProgram__Wrapper__(percept)/*returns accion*/{
 			//ACTIONS GUARD
 			if (!_ACTION_SENT)
 				$perceive();
+		}
 	}
 }onmessage = __AgentProgram__Wrapper__; 
+
+// transition model
+function $result(state, action){if ($isValidMove(state, action)){
+	var ir, ic;
+	var loc = state.agent.location;
+	var env = state.environment;
+	var grid = env.grid;
+
+	switch(action){
+		case _NORTH:
+			state.agent.stats.good_moves++;
+			//TODO: update battery stats
+
+			$paintCell(loc.row-1, loc.column);
+
+			for (ir= loc.row-1; ir >= 0 && grid[ir][loc.column] == _GRID_CELL.TILE; --ir);
+
+			if (ir == loc.row-1){
+				grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
+				grid[loc.row-1][loc.column] = _GRID_CELL.AGENT;
+			}else
+			if (grid[ir][loc.column] == _GRID_CELL.HOLE_CELL) {
+				grid[ir][loc.column] = _GRID_CELL.EMPTY;
+				grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
+				grid[loc.row-1][loc.column] = _GRID_CELL.AGENT;
+
+				for (var i=env.holes.length; i--;)
+					for (var j=env.holes[i].cells.length; j--;)
+						if (env.holes[i].cells[j].row == ir &&
+							env.holes[i].cells[j].column == loc.column)
+						{
+							env.holes[i].cells.remove(j);
+
+							state.agent.stats.filled_cells++;
+
+							if (!env.holes[i].cells.length){ // if hole's filled
+								//TODO: if multiplier
+								state.agent.stats.filled_holes++;
+								state.agent.score += env.holes[i].value;
+								env.holes.remove(i);
+								break;
+							}else
+								state.agent.score += (env.holes[i].size - env.holes[i].cells.length)*2;/*TODO: _SCORE_CELLS_MULTIPLIER if partial rewards 0 otherwise*/
+						}
+			}else
+			if (grid[ir][loc.column] == _GRID_CELL.EMPTY) {
+				grid[ir][loc.column] = _GRID_CELL.TILE;
+				grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
+				grid[loc.row-1][loc.column] = _GRID_CELL.AGENT;
+
+				for (var i=env.tiles.length; i--;)
+					if (env.tiles[i].row == loc.row-1 &&
+						env.tiles[i].column == loc.column)
+					{
+						env.tiles[i].row = ir;
+						env.tiles[i].column = loc.column;
+						break;
+					}
+			}
+
+			loc.row = loc.row - 1;
+			break;
+		case _SOUTH:
+			
+			break;
+		case _WEST:
+			
+			break;
+		case _EAST:
+			
+			break;
+		default:
+			console.error('$result: invalid action');
+	}
+	return state;
+}}
 
 function $paintCell(row, column){$return(_ACTION.PAINT_CELL+row+":"+column)}
 
@@ -179,21 +292,21 @@ function $nextAction(arrayOfActions){
 	return (!arrayOfActions || arrayOfActions.length == 0)? _ACTION.NONE : arrayOfActions.shift();
 }
 
-function $chooseRandomAction(){return random(6)}
+function $randomAction(){return random(6)}
 
-function $chooseRandomValidAction(percept /*n,s,w,e*/){
+function $randomValidAction(percept /*n,s,w,e*/){
 	var actions = new Array();
 
-	if ($isValidMove(_ACTION.NORTH))
+	if ($isValidMove(percept, _ACTION.NORTH))
 		actions.push(_ACTION.NORTH);
 
-	if ($isValidMove(_ACTION.SOUTH))
+	if ($isValidMove(percept, _ACTION.SOUTH))
 		actions.push(_ACTION.SOUTH);
 
-	if ($isValidMove(_ACTION.EAST))
-		actions.push(_ACTION.EAST);
+	if ($isValidMove(percept, _ACTION.EAST))
+		actions.push(percept, _ACTION.EAST);
 
-	if ($isValidMove(_ACTION.WEST))
+	if ($isValidMove(percept, _ACTION.WEST))
 		actions.push(_ACTION.WEST);
 
 	return (actions.length == 0)? _ACTION.NONE : actions[parseInt(Math.random()*actions.length)];
@@ -222,10 +335,21 @@ function $sendMessage(robId, msg){
 
 function $perceive(){postMessage(_ACTION.NONE)}
 
-function $isValidMove(move){
-	var arow = _AGENT.location.row;
-	var acol = _AGENT.location.column;
+function $isValidMove(percept, move){
+	var arow, acol;
 	var r = 0, c = 0;
+	var _GRID = percept.environment.grid;
+		_GRID.ROWS = _GRID.length;
+		_GRID.COLUMNS = _GRID[0].length;
+
+	if (move === undefined){
+		arow = _AGENT.location.row;
+		acol = _AGENT.location.column;
+		move = percept;
+	}else{
+		arow = percept.agent.location.row;
+		acol = percept.agent.location.column;
+	}
 
 	switch(move){
 		case _ACTION.NORTH:
@@ -249,12 +373,27 @@ function $isValidMove(move){
 			c = 1;
 	}
 
-	return (_GRID[arow+r][acol+c] == _GRID_CELL.EMPTY ||
+	if (_GRID[arow+r][acol+c] == _GRID_CELL.TILE){
+		var tr = r, tc = c;
+		for (; _GRID[arow+tr][acol+tc] == _GRID_CELL.TILE; tr+= r, tc+= c)
+			if ( arow+tr+r < 0 || arow+tr+r > _GRID.ROWS-1 ||
+				 acol+tc+c < 0 || acol+tc+c > _GRID.COLUMNS-1)
+				return false;
+		r = tr;
+		c = tc;
+		return (_GRID[arow+r][acol+c] != _GRID_CELL.OBSTACLE &&
+				_GRID[arow+r][acol+c] != _GRID_CELL.AGENT);
+	}
+
+	return (_GRID[arow+r][acol+c] != _GRID_CELL.HOLE_CELL &&
+			_GRID[arow+r][acol+c] != _GRID_CELL.OBSTACLE &&
+			_GRID[arow+r][acol+c] != _GRID_CELL.AGENT);
+	/*return (_GRID[arow+r][acol+c] == _GRID_CELL.EMPTY ||
 			_GRID[arow+r][acol+c] == _GRID_CELL.TILE  || 
-			_GRID[arow+r][acol+c] == _GRID_CELL.BATTERY_CHARGER);
+			_GRID[arow+r][acol+c] == _GRID_CELL.BATTERY_CHARGER);*/
 }
 
-function $printGrid(percept){
+function $printGrid(percept, noClear){
 	var strgLine = "   ";
 	var strgGrid = "";
 	var _GRID = percept.environment.grid;
@@ -279,6 +418,7 @@ function $printGrid(percept){
 		strgGrid+= "|\n";
 	}
 
-	console.clear();
+	if (!noClear)
+		console.clear();
 	console.log("\n" + strgLine + strgGrid + strgLine);
 }

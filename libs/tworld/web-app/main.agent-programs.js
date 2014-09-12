@@ -151,6 +151,8 @@
 			var _self = this;
 			var _source;
 			var _editor;
+			var _undoManagers = [new ace.UndoManager(), new ace.UndoManager(), new ace.UndoManager(), new ace.UndoManager()];
+			var fontSize = 13;
 
 			ace.require("ace/ext/language_tools");
 			_editor = ace.edit("source-code");
@@ -169,7 +171,8 @@
 				mode:"ace/mode/javascript",
 				useWorker: true,
 				useSoftTabs:true,
-				tabSize:2
+				tabSize:2,
+				fontSize: 13
 			});
 
 			this.fullScreen = false;
@@ -183,7 +186,7 @@
 			else
 				loadEnvAsync(this.agent_prog.default_task_env);
 
-			this.open = function(source){
+			this.open = function(source, iUndo){
 				if (_source){
 					_source.cursor = _editor.getCursorPosition();
 					_source.code = _editor.getValue();
@@ -195,6 +198,8 @@
 				_editor.focus();
 				_editor.gotoLine(_source.cursor.row+1, _source.cursor.column, true);
 				_editor.scrollToRow(_source.cursor.row);
+				console.log(eval("_GRID_CELL = _editor.session.getUndoManager()"));
+				_editor.session.setUndoManager(_undoManagers[iUndo]);
 			}
 
 			this.save = function(){
@@ -361,22 +366,31 @@
 
 			$(window).unbind('keydown').bind('keydown', function(event) {
 				if (event.ctrlKey || event.metaKey) {
+					console.log(String.fromCharCode(event.which).toLowerCase());
 					switch (String.fromCharCode(event.which).toLowerCase()) {
-					case 's':
-						event.preventDefault();
-						_self.save();
-						$scope.$apply();
-						break;
-					case 'f':
-						//event.preventDefault();
-						break;
-					case 'g':
-						//event.preventDefault();
-						break;
-					case 'r':
-						event.preventDefault();
-						_self.run();
-						break;
+						case 's':
+							event.preventDefault();
+							_self.save();
+							$scope.$apply();
+							break;
+						case 'g':
+							//event.preventDefault();
+							break;
+						case 'r':
+							event.preventDefault();
+							_self.run();
+							break;
+					}
+
+					switch(event.which){
+						case 107://+
+							event.preventDefault();
+							_editor.setFontSize(++fontSize);
+							break;
+						case 109://-
+							event.preventDefault();
+							_editor.setFontSize(--fontSize);
+							break;
 					}
 				}
 			});

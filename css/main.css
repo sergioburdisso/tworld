@@ -221,7 +221,7 @@ td input{text-align: center}
 .text-white{color: white}
 .text-left{text-align: left !important}
 .text-center{text-align: center}
-.text-gray{color: #555}
+.text-gray, .ace_search_field{color: #555}
 .text-light-gray,.sett-item{color: #CCC}
 .text-red{color: #B82B28}
 .text-orange{color: #D54D1D}
@@ -258,11 +258,11 @@ h2,
 }
 
 .full-screen{
-	position: absolute;
-	top:0;
-	left:0;
-	width: 100%;
-	height: auto;
+	position: absolute !important;
+	top:0 !important;
+	left:0 !important;
+	width: 100% !important;
+	height: auto !important;
 }
 
 .background-color-white{background-color: white}

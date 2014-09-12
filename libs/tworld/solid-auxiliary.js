@@ -148,6 +148,8 @@ function NextProperty(obj, prop){
 				prevProp = p;
 	return "";
 }
+
+function copy(obj){ return JSON.parse(JSON.stringify(obj)) }
 //<-
 
 function SortAndPartition(list, criteria){

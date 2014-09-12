@@ -146,14 +146,15 @@ var defaults = {
 					'* It receives a <percept> object and based on the information provided by this object it should $return\n'+
 					'* the right _ACTION.\n'+
 					'* NOTE: Allowed _ACTIONS(s) are:\n'+
-					'*       _ACTION.NORTH\n'+
-					'*       _ACTION.SOUTH\n'+
-					'*       _ACTION.WEST\n'+
-					'*       _ACTION.EAST\n'+
-					'*       _ACTION.RESTORE    robot restores its battery\n'+
-					'*       _ACTION.NONE       robot do nothing but perceive, i.e. this\n'+
-					'*                          AGENT_PROGRAM function is executed with a\n'+
-					'*                          new, updated, <percept> object\n'+
+					'*       _ACTION.NORTH   or _NORTH\n'+
+					'*       _ACTION.SOUTH   or _SOUTH\n'+
+					'*       _ACTION.WEST    or _WEST\n'+
+					'*       _ACTION.EAST    or _EAST\n'+
+					'*       _ACTION.RESTORE or _RESTORE    robot restores its battery\n'+
+					'*       _ACTION.NONE    or _NONE       robot do nothing so it just perceives, i.e. this\n'+
+					'*                                      AGENT_PROGRAM function is executed with a\n'+
+					'*                                      new, updated, <percept> object (calling the $perceive()\n'+
+					'*                                      function produces the same effect)\n'+
 					'*\n'+
 					'* The structure of the <percept> parameter below is described in the support material\n'+
 					'*/\n'+

@@ -81,13 +81,13 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 			header : _PERCEPT_HEADER.START,
 			data:{
 				environment:{
-					grid: undefined/*[]*/,
-					time: 0,// optional
-					battery_chargers: [/*{row:,column:},..*/],// optional
+					grid: undefined/*[[..], [..], ..]*/,
+					time: 0, // optional
+					battery_chargers: [/*{row:,column:}, ..*/],// optional
 					agents: environment.ListOfAgents,// optional
 					holes: [],
-					tiles: [/*{row:,column:},..*/],
-					obstacles: [/*{row:,column:},..*/]
+					tiles: [/*{row:,column:}, ..*/],
+					obstacles: [/*{row:,column:}, ..*/]
 				},
 				agent:{
 					id: environment.RobID, // optional
@@ -95,9 +95,19 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 					location: {row: -1, column: -1},
 					score: -1,
 					battery: null, // optional
-					stats: null
+					stats: null /*{
+								good_moves: 0,
+								bad_moves: 0,
+								filled_cells: 0,
+								filled_holes: 0,
+								battery_used: 0,
+								battery_recharge: 0,
+								battery_restore: 0,
+								total_score: 0
+							}*/
 				},
 				builtin_knowledge:{
+					//TODO: add multiplier, easy mode flag and all other variations
 					grid_total_rows: 0,
 					grid_total_columns: 0,
 					teams: [/*{id:, leader:, members:[]}...*/], // optional
@@ -333,52 +343,58 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 
 	//region Noise generator
 		//-> List of Holes
-		for (var iHole, iHCells, i= 0;  i < this.Percept.data.environment.holes.length; ++i){
-			iHole =  this.Percept.data.environment.holes[i];
-			iHCells = iHole.cells;
-			//for each cell of the i-th hole...
-			for (var k= 0; k < iHCells.length; ++k)
-				if (Math.random() < TWorld.HolesNoisyPerception){
-					_grid[ iHCells[k].row ][ iHCells[k].column ] = _GRID_CELL.EMPTY;
-					delete iHCells[k];
-					iHCells.remove(k--);
-				}
+		if (TWorld.HolesNoisyPerception){
+			for (var iHole, iHCells, i= 0;  i < this.Percept.data.environment.holes.length; ++i){
+				iHole =  this.Percept.data.environment.holes[i];
+				iHCells = iHole.cells;
+				//for each cell of the i-th hole...
+				for (var k= 0; k < iHCells.length; ++k)
+					if (Math.random() < TWorld.HolesNoisyPerception){
+						_grid[ iHCells[k].row ][ iHCells[k].column ] = _GRID_CELL.EMPTY;
+						delete iHCells[k];
+						iHCells.remove(k--);
+					}
 
-			if (iHole.size != iHCells.length){
-				//if the i-th hole doesn't have any cell, then...
-				if(iHCells.length <= 0){
-					delete iHole;
-					this.Percept.data.environment.holes.remove(i--);
-				}else{
-					iHole.size = iHCells.length;
-					iHole.value = TWorld.valueOfHoleFilledCompletely(iHole.size)
+				if (iHole.size != iHCells.length){
+					//if the i-th hole doesn't have any cell, then...
+					if(iHCells.length <= 0){
+						delete iHole;
+						this.Percept.data.environment.holes.remove(i--);
+					}else{
+						iHole.size = iHCells.length;
+						iHole.value = TWorld.valueOfHoleFilledCompletely(iHole.size)
+					}
 				}
 			}
 		}
 
 		//-> List of Obstacles
-		for (var obst, i= 0; i < this.Percept.data.environment.obstacles.length; ++i)
-			if (Math.random() < TWorld.ObstaclesNoisyPerception){//Monte Carlos technique
-				obst = this.Percept.data.environment.obstacles[i];
+		if (TWorld.ObstaclesNoisyPerception){
+			for (var obst, i= 0; i < this.Percept.data.environment.obstacles.length; ++i)
+				if (Math.random() < TWorld.ObstaclesNoisyPerception){//Monte Carlos technique
+					obst = this.Percept.data.environment.obstacles[i];
 
-				_grid[ obst.row ][ obst.column ] = _GRID_CELL.EMPTY;
+					_grid[ obst.row ][ obst.column ] = _GRID_CELL.EMPTY;
 
-				this.Percept.data.environment.obstacles.remove(i--);
+					this.Percept.data.environment.obstacles.remove(i--);
 
-				delete obst;
-			}
+					delete obst;
+				}
+		}
 
 		//-> List of Tiles
-		for (var tile, i= 0; i < this.Percept.data.environment.tiles.length; ++i)
-			if (Math.random() < TWorld.TilesNoisyPerception){//Monte Carlos technique
-				tile = this.Percept.data.environment.tiles[i];//.cell;
+		if (TWorld.TilesNoisyPerception){
+			for (var tile, i= 0; i < this.Percept.data.environment.tiles.length; ++i)
+				if (Math.random() < TWorld.TilesNoisyPerception){//Monte Carlos technique
+					tile = this.Percept.data.environment.tiles[i];//.cell;
 
-				_grid[ tile.row ][ tile.column ] = _GRID_CELL.EMPTY;
+					_grid[ tile.row ][ tile.column ] = _GRID_CELL.EMPTY;
 
-				this.Percept.data.environment.tiles.remove(i--);
+					this.Percept.data.environment.tiles.remove(i--);
 
-				delete tile;
-			}
+					delete tile;
+				}
+		}
 	//end region Noise generator
 
 	_percept = this.Percept;
