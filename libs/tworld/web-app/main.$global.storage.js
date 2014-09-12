@@ -141,7 +141,7 @@ var defaults = {
 				cursor:{row:0, column:0},
 				code:
 					'/*\n'+
-					'* Use this function to write your "agent program" (Colloquially speaking, your "robot\'s brain")\n'+
+					'* Use this function to write your "agent program" (Colloquially speaking, your robot\'s "brain")\n'+
 					'* This function is called each time the agent (i.e. the robot) finish performing an action.\n'+
 					'* It receives a <percept> object and based on the information provided by this object it should $return\n'+
 					'* the right _ACTION.\n'+

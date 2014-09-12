@@ -187,15 +187,15 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 		//<-
 
 		//-> battery
-		if (!TWorld.Battery){
+		/*if (!TWorld.Battery){
 			delete this.Percept.data.agent.battery;
 			delete this.Percept.data.environment.battery_chargers;
-		}else{
+		}else{*/
 			this.Percept.data.builtin_knowledge.costs.battery = {}
 			this.Percept.data.builtin_knowledge.costs.battery.bad_move = _BATTERY_INVALID_MOVE_COST;
 			this.Percept.data.builtin_knowledge.costs.battery.good_move = _BATTERY_WALK_COST;
 			this.Percept.data.builtin_knowledge.costs.battery.slide_tile = _BATTERY_SLIDE_COST;
-		}
+		//}
 
 	}else{
 		environment.PerceptHeader = environment.PerceptHeader || _PERCEPT_HEADER.PERCEPT;
@@ -233,9 +233,9 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 	this.Percept.data.agent.score = environment.Score;
 
 	//-> battery
-	if (TWorld.Battery){
-		var _listOfBC = environment.BatteryChargers;
+	//if (TWorld.Battery){
 		this.Percept.data.agent.battery = environment.Battery;
+		var _listOfBC = environment.BatteryChargers;
 
 		if (!TWorld.FullyObservableGrid){
 			// if grid is partially observable
@@ -253,7 +253,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 		}
 
 		this.Percept.data.environment.battery_chargers = _listOfBC;
-	}
+	//}
 
 	//Agent stats
 	this.Percept.data.agent.stats = environment.RobStats;

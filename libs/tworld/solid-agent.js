@@ -209,43 +209,71 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
 }onmessage = __AgentProgram__Wrapper__; 
 
 // transition model
-function $result(state, action, paint){if (!$isValidMove(state, action)) return state;
-	var ir, ic, r, c;
+function $result(state, action, paint){ if (state.agent.battery == 0) return state;
+	var ir=0, ic=0, r=0, c=0;
 	var loc = state.agent.location;
 	var env = state.environment;
 	var grid = env.grid;
+	var costs = state.builtin_knowledge.costs;
+	// TODO: battery chargers
+
+	if (!$isValidMove(state, action)){
+		state.agent.stats.bad_moves++;
+		state.agent.battery -= costs.battery.bad_move;
+		state.agent.battery = state.agent.battery >= 0? state.agent.battery : 0;
+		env.time += costs.bad_move/1000;
+		return state;
+	}
 
 	state.agent.stats.good_moves++;
-	//TODO: update battery stats
+	state.agent.battery -= costs.battery.good_move;
+	state.agent.battery = state.agent.battery >= 0? state.agent.battery : 0; 
+	state.agent.stats.battery_used+= costs.battery.good_move;
+	env.time += costs.good_move/1000;
 
 	switch(action){
 		case _NORTH:	r = -1; break;
 		case _SOUTH:	r =  1; break;
 		case _WEST:		c = -1; break;
 		case _EAST:		c =  1; break;
+		case _RESTORE:
+			state.agent.battery = 1000;
+			state.agent.stats.battery_restore++;
+			state.agent.score -= (state.agent.score/2)|0; 
+			return state;
 		default:
 			console.error('$result: invalid action');
 			return state;
 	}
 
 	if (paint)
-		$paintCell(loc.row+r, loc.column);
+		$paintCell(loc.row+r, loc.column+c);
 
-	for (ir= loc.row+r; $isTile(state, ir, loc.column); ir=ir+r);
+	if ($isCharger(state, loc.row+r, loc.column+c)){
+		state.agent.battery = 1000;
+		state.agent.stats.battery_recharge++;
+		state.agent.score = state.agent.score-10 >= 0? state.agent.score-10 : 0; 
+	}
 
-	if (ir == loc.row+r){
-		grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
-		grid[loc.row+r][loc.column] = _GRID_CELL.AGENT;
+	for (ir= loc.row+r, ic= loc.column+c; $isTile(state, ir, ic); ir=ir+r, ic=ic+c);
+
+	if (ir == loc.row+r && ic == loc.column+c){
+		grid[loc.row][loc.column] =  $isCharger(state, loc.row, loc.column)?
+										_GRID_CELL.BATTERY_CHARGER : _GRID_CELL.EMPTY;
+		grid[loc.row+r][loc.column+c] = _GRID_CELL.AGENT;
 	}else
-	if ($isHoleCell(state, ir, loc.column)) {
-		grid[ir][loc.column] = _GRID_CELL.EMPTY;
-		grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
-		grid[loc.row+r][loc.column] = _GRID_CELL.AGENT;
+	if ($isHoleCell(state, ir, ic)) {
+		grid[ir][ic] = _GRID_CELL.EMPTY;
+		grid[loc.row][loc.column] =  $isCharger(state, loc.row, loc.column)?
+										_GRID_CELL.BATTERY_CHARGER : _GRID_CELL.EMPTY;
+		grid[loc.row+r][loc.column+c] = _GRID_CELL.AGENT;
+
+		state.agent.stats.battery_used+= costs.battery.slide_tile;
 
 		for (var i=env.holes.length; i--;)
 			for (var j=env.holes[i].cells.length; j--;)
 				if (env.holes[i].cells[j].row == ir &&
-					env.holes[i].cells[j].column == loc.column)
+					env.holes[i].cells[j].column == ic)
 				{
 					env.holes[i].cells.remove(j);
 
@@ -255,31 +283,38 @@ function $result(state, action, paint){if (!$isValidMove(state, action)) return 
 						//TODO: if multiplier
 						state.agent.stats.filled_holes++;
 						state.agent.score += env.holes[i].value;
+
+						env.time += costs.filled_hole/1000;
+
 						env.holes.remove(i);
 						break;
 					}else
 						state.agent.score += (env.holes[i].size - env.holes[i].cells.length)*2;/*TODO: _SCORE_CELLS_MULTIPLIER if partial rewards 0 otherwise*/
 				}
 	}else
-	if ($isEmptyCell(state, ir, loc.column)) {
-		grid[ir][loc.column] = _GRID_CELL.TILE;
-		grid[loc.row][loc.column] = _GRID_CELL.EMPTY;
-		grid[loc.row+r][loc.column] = _GRID_CELL.AGENT;
+	if ($isEmptyCell(state, ir, ic)) {
+		grid[ir][ic] = _GRID_CELL.TILE;
+		grid[loc.row][loc.column] = $isCharger(state, loc.row, loc.column)?
+										_GRID_CELL.BATTERY_CHARGER : _GRID_CELL.EMPTY;
+		grid[loc.row+r][loc.column+c] = _GRID_CELL.AGENT;
+
+		state.agent.stats.battery_used+= costs.battery.slide_tile;
 
 		for (var i=env.tiles.length; i--;)
 			if (env.tiles[i].row == loc.row+r &&
-				env.tiles[i].column == loc.column)
+				env.tiles[i].column == loc.column+c)
 			{
 				env.tiles[i].row = ir;
-				env.tiles[i].column = loc.column;
+				env.tiles[i].column = ic;
 				break;
 			}
 	}
 
 	loc.row = loc.row+r;
+	loc.column = loc.column+c;
 
 	return state;
-}
+}var $succesor = $result;
 
 function $paintCell(row, column){$return(_ACTION.PAINT_CELL+row+":"+column)}
 
@@ -363,6 +398,13 @@ function $isAgent(percept, row, column) {var _grid= percept.environment.grid;
 function $isObstacle(percept, row, column) {var _grid= percept.environment.grid;
 	return	$isValidCoordinates(percept, row,column)&&
 			(_grid[row][column] == _GRID_CELL.OBSTACLE);
+}
+
+function $isCharger(percept, row, column) {var _bChargerLoc= percept.environment.battery_chargers;
+	for (var bc = _bChargerLoc.length; bc--;)
+		if (_bChargerLoc[bc].row == row && _bChargerLoc[bc].column == column)
+			return bc+1;
+	return 0;
 }
 
 function $isValidMove(percept, move){
@@ -450,5 +492,14 @@ function $printGrid(percept, noClear){
 
 	if (!noClear)
 		console.clear();
-	_console.log("\n" + strgLine + strgGrid + strgLine + " Score: " + percept.agent.score);
+	console.log(
+		"\n" +
+		strgLine+
+		strgGrid+
+		strgLine+
+		"Score: " + percept.agent.score+
+		"\t Battery: " + percept.agent.battery +
+		"\t Time: " + percept.environment.time +
+		"\n = = = = = = = = = = = = = = = = = = = = = = = = = = = "
+	);
 }
