@@ -18,8 +18,8 @@
 */
 
 if (localStorage.version != "0.9"){
-	localStorage.clear();
-	localStorage.version = "0.9";
+    localStorage.clear();
+    localStorage.version = "0.9";
 }
 
 var _tworldWindow;
@@ -29,99 +29,99 @@ var _LOGIN_STATE = {HIDDEN : 0, SHOWN: 1, LOADING:2, LOGGED: 3, LOGOUT: 4}
 function getVersion(){ return localStorage.version }
 
 function startTWorld(){
-	if (!_tworldWindow || !_tworldWindow.location.reload)
-		_tworldWindow = window.open('tworld.html');//,'T-World','width=712, height=450');//height=400
-	else{
-		_tworldWindow.location.reload();
-		_tworldWindow.focus();
-	}
+    if (!_tworldWindow || !_tworldWindow.location.reload)
+        _tworldWindow = window.open('tworld.html');//,'T-World','width=712, height=450');//height=400
+    else{
+        _tworldWindow.location.reload();
+        _tworldWindow.focus();
+    }
 }
 
 function gotoTop(time, top){
-	if (top && Number.isNaN(Number(top)) && top.constructor == String)
-		top = $('#title').offset().top;
+    if (top && Number.isNaN(Number(top)) && top.constructor == String)
+        top = $('#title').offset().top;
 
-	if (time === undefined)
-		time = 700;
+    if (time === undefined)
+        time = 700;
 
-	$('html, body').animate({
-		scrollTop: top===undefined? $("#top").offset().top : top
-	}, time, "easeOutExpo")
+    $('html, body').animate({
+        scrollTop: top===undefined? $("#top").offset().top : top
+    }, time, "easeOutExpo")
 }
 
 Array.prototype.remove = function(index) {
-	var output=this[index];
+    var output=this[index];
 
-	for (var i= index; i < this.length; ++i)
-		this[i] = this[i+1];
-	this.length--;
+    for (var i= index; i < this.length; ++i)
+        this[i] = this[i+1];
+    this.length--;
 
-	return output;
+    return output;
 }
 
 Array.prototype.setTo = function(arr) {
-	if (arr.length != this.length)
-		this.length = arr.length;
+    if (arr.length != this.length)
+        this.length = arr.length;
 
-	var i= this.length;
-	while(i--)
-		this[i] = arr[i];
+    var i= this.length;
+    while(i--)
+        this[i] = arr[i];
 }
 
 Array.prototype.contains = function(obj) {
-	var i = this.length;
-	while (i--) {
-		if (this[i] == obj) {
-			return true;
-		}
-	}
-	return false;
+    var i = this.length;
+    while (i--) {
+        if (this[i] == obj) {
+            return true;
+        }
+    }
+    return false;
 }
 
 Array.prototype.flattening = function(pos) {
-	var flatten = [];
-	var subFlatten;
+    var flatten = [];
+    var subFlatten;
 
-	for (var len= this.length, i=0; i < len; ++i){
-		if (this[i] instanceof Array){
-			subFlatten = this[i].flattening(!pos && (this.length > 1 || (this.length == 1 && !(this[0] instanceof Array)))? i+1 : pos);
-			for (var slen= subFlatten.length, j=0; j < slen; ++j)
-				flatten.push(subFlatten[j]);
-		}else{
-			this[i].pos = pos || i + 1;
-			flatten.push(this[i]);
-		}
-	}
+    for (var len= this.length, i=0; i < len; ++i){
+        if (this[i] instanceof Array){
+            subFlatten = this[i].flattening(!pos && (this.length > 1 || (this.length == 1 && !(this[0] instanceof Array)))? i+1 : pos);
+            for (var slen= subFlatten.length, j=0; j < slen; ++j)
+                flatten.push(subFlatten[j]);
+        }else{
+            this[i].pos = pos || i + 1;
+            flatten.push(this[i]);
+        }
+    }
 
-	return flatten;
+    return flatten;
 }
 
 function isNumeric(value){return !Number.isNaN( Number(value) ) }
 
 function Validate(parent){
-	if (!parent)
-		var errors = $('.has-error').not($('.ng-hide .has-error'));
-	else
-		var errors = parent.find('.has-error').not($('.ng-hide .has-error'));
+    if (!parent)
+        var errors = $('.has-error').not($('.ng-hide .has-error'));
+    else
+        var errors = parent.find('.has-error').not($('.ng-hide .has-error'));
 
-	if (errors.length){
-		errors.addClass("ng-dirty").focus();
-		return false;
-	}
-	return true;
+    if (errors.length){
+        errors.addClass("ng-dirty").focus();
+        return false;
+    }
+    return true;
 }
 
 //-> custom events
 function triggerClickOutside(){
-	setTimeout(function() { $('button').trigger('clickOutsideEvent'); }, 0);
+    setTimeout(function() { $('button').trigger('clickOutsideEvent'); }, 0);
 }
 
 function triggerError(){
-	setTimeout(function() { $('form').trigger('errorEvent'); }, 0);
+    setTimeout(function() { $('form').trigger('errorEvent'); }, 0);
 }
 
 function triggerDismissError(){
-	setTimeout(function() { $('form').trigger('dismissError'); }, 0);
+    setTimeout(function() { $('form').trigger('dismissError'); }, 0);
 }
 //<-
 
@@ -130,14 +130,14 @@ function triggerDismissError(){
 
 //Object.nextProperty = function(prop){ <- JQuery crashes! dont know why
 function NextProperty(obj, prop){
-	var prevProp = null;
-	for (p in obj)
-		if (!(obj[p] instanceof Function))
-			if (prevProp == prop)
-				return p;
-			else
-				prevProp = p;
-	return "";
+    var prevProp = null;
+    for (p in obj)
+        if (!(obj[p] instanceof Function))
+            if (prevProp == prop)
+                return p;
+            else
+                prevProp = p;
+    return "";
 }
 
 function clone(obj){return JSON.parse(JSON.stringify(obj))}
@@ -146,61 +146,61 @@ function clone(obj){return JSON.parse(JSON.stringify(obj))}
 
 //Pseudo random generator
 function pRandom(value, MAX){
-	var golder_ratio = (1+Math.sqrt(5))/2;
-	var q = 1/golder_ratio;
+    var golder_ratio = (1+Math.sqrt(5))/2;
+    var q = 1/golder_ratio;
 
-	return MAX*(value*q-((value*q)|0))|0;
+    return MAX*(value*q-((value*q)|0))|0;
 }
 
 function SortAndPartition(list, criteria){
-	var tiePartitions = [];
-	var oapList = [];// oap stands for "Ordered and Partitioned"
+    var tiePartitions = [];
+    var oapList = [];// oap stands for "Ordered and Partitioned"
 
-	criteria = NextProperty(list[0].stats, criteria);
+    criteria = NextProperty(list[0].stats, criteria);
 
-	//recursion stopping condition
-	if (list.length <= 1 || !criteria)
-		return list;
+    //recursion stopping condition
+    if (list.length <= 1 || !criteria)
+        return list;
 
-	//sorting the list according to criteria
-	if (criteria[0] == "M")
-		list.sort(function(a,b){return b.stats[criteria] - a.stats[criteria]});
-	else
-		list.sort(function(b,a){return b.stats[criteria] - a.stats[criteria]});
+    //sorting the list according to criteria
+    if (criteria[0] == "M")
+        list.sort(function(a,b){return b.stats[criteria] - a.stats[criteria]});
+    else
+        list.sort(function(b,a){return b.stats[criteria] - a.stats[criteria]});
 
-	//creating partitions according to equal results (tied cases)
-	for (var prevValue = null, k=-1, i=0; i < list.length; i++)
-		if (list[i].stats[criteria] === prevValue)
-			tiePartitions[k].push(list[i]);
-		else{
-			//creating a new partition of "equal values"
-			tiePartitions.push([list[i]]);
-			prevValue = list[i].stats[criteria];
-			k++;
-		}
+    //creating partitions according to equal results (tied cases)
+    for (var prevValue = null, k=-1, i=0; i < list.length; i++)
+        if (list[i].stats[criteria] === prevValue)
+            tiePartitions[k].push(list[i]);
+        else{
+            //creating a new partition of "equal values"
+            tiePartitions.push([list[i]]);
+            prevValue = list[i].stats[criteria];
+            k++;
+        }
 
-	//for each partition
-	for (var p=0; p < tiePartitions.length; ++p)
-		oapList.push(
-			SortAndPartition(tiePartitions[p], criteria) //recursive call
-		);
+    //for each partition
+    for (var p=0; p < tiePartitions.length; ++p)
+        oapList.push(
+            SortAndPartition(tiePartitions[p], criteria) //recursive call
+        );
 
-	return oapList;
+    return oapList;
 }
 
 function antiNoobsCoder(str){
-	var output = "";
-	for (var l= str.length, c=0; c < l;++c)
-		output+= String.fromCharCode(str.charCodeAt(c) ^ 0x17);
-	return output;
+    var output = "";
+    for (var l= str.length, c=0; c < l;++c)
+        output+= String.fromCharCode(str.charCodeAt(c) ^ 0x17);
+    return output;
 }
 
 function antiNoobsHash(str){
-	var output = 0;
-	var _p = Math.PI-3;
+    var output = 0;
+    var _p = Math.PI-3;
 
-	for (var l= str.length, c=0; c < l;++c)
-		output+= str.charCodeAt(c) ^ 0xA4;
+    for (var l= str.length, c=0; c < l;++c)
+        output+= str.charCodeAt(c) ^ 0xA4;
 
-	return ((_p*output - ((_p*output)|0))*4294967295)|0;
+    return ((_p*output - ((_p*output)|0))*4294967295)|0;
 }
