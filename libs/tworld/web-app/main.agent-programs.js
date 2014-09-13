@@ -364,6 +364,7 @@
             });
 
             $(window).unbind('keydown').bind('keydown', function(event) {
+                //console.log(event.which);event.preventDefault();
                 if (event.ctrlKey || event.metaKey) {
                     switch (String.fromCharCode(event.which).toLowerCase()) {
                         case 's':
@@ -388,8 +389,15 @@
                         case 109://-
                             event.preventDefault();
                             _editor.setFontSize(--fontSize);
+                            if (fontSize < 1) fontSize = 1;
                             break;
                     }
+                }
+                switch(event.which){
+                    case 119://F8
+                        event.preventDefault();
+                        _self.run();
+                        break;
                 }
             });
 

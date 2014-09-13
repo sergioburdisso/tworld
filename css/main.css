@@ -421,6 +421,7 @@ a.list-group-item.step.active{
 
 	border-bottom-right-radius: 10px;
 	border-top-right-radius: 10px;
+	box-shadow: -8px 0px 15px 0px rgb(190, 189, 189);
 }
 a:hover{
 	-webkit-transform: translateY(2px);

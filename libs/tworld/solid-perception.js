@@ -469,7 +469,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
                                     [
                                         ["holes","hole"], ["tiles","tile"], ["obstacles", "obstacle"],
                                         ["cells","cell"], ["agents","agent"], ["teams","team"],
-                                        ["battery_chargers","location"], /*((_NUMBER_OF_AGENTS > 1)? */["agents_location","agent"]/*: []*/)
+                                        ["battery_chargers","location"], /*((_NUMBER_OF_AGENTS > 1)? */["agents_location","agent"]/*: [])*/
                                     ]
                                 )
                 );

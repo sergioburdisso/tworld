@@ -201,7 +201,7 @@ var defaults = {
                     '*   $sendMessage(agentID, message)  sends <message> object to the agent\n'+
                     '*                                   with id <agentID> e.g.\n'+
                     '*                                   $sendMessage(1, {newGoal: [10,15]});\n'+
-                    '*                                   sends a message to the "agent 1" saying,\n'+
+                    '*                                   sends a message to the "agent 1" to let him know,\n'+
                     '*                                   for instance, that the "New Goal" is at (10,15)\n'+
                     '*\n'+
                     '*   $sendTeamMessage(message))      sends <message> object to all the\n'+

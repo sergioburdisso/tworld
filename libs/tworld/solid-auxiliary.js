@@ -90,6 +90,16 @@ Array.prototype.contains = function(obj) {
     return false;
 }
 
+Array.prototype.containsMatch = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (match(this[i], obj)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 Array.prototype.multAll = function(value) {
     var newArray = new Array(this.length);
     for (var i = this.length; i--;)
@@ -150,6 +160,16 @@ function NextProperty(obj, prop){
 }
 
 function copy(obj){ return JSON.parse(JSON.stringify(obj)) }
+
+function instantiate(obj0, obj1){
+    for (p in obj0)
+        if (!(obj0[p] instanceof Function)){
+            if (!(obj0[p] instanceof Object))
+                obj0[p] = obj1[p];
+            else
+                instantiate(obj0[p], obj1[p])
+        }
+}
 
 function match(obj0, obj1){
     if (!(obj0 instanceof Object)) return obj0 == obj1;
