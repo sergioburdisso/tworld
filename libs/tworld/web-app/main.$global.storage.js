@@ -472,7 +472,7 @@ function getMemoryByAgentProgramDate(date, callback, $root){
             $root
         );
 }
-function saveMemoryByAgentProgramDate(date, memory/*json string*/, callback, $root){if (memory == "{}"){if(callback)callback.call();return;}
+function saveMemoryByAgentProgramDate(date, memory/*json string*/, callback, $root){if (!memory || memory == "{}" || memory == "undefined"){if(callback)callback.call();return;}
     if (!isLoggedIn()){
         var mem = {};
         if (localStorage.memory)

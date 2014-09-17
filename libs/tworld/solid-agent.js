@@ -51,6 +51,8 @@ var _LAST_ERROR_SENT = "";
 var _PERCEPT = null;
 var _GRID;
 var _AGENT;
+var _SCORE_CELLS_MULTIPLIER;
+var _EASY_MODE;
 
 var _WEST= _ACTION.WEST;
 var _EAST= _ACTION.EAST;
@@ -74,43 +76,9 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
 
     switch(percept.header){
         case _PERCEPT_HEADER.INTERNAL:
-            __error__ = false;
-            $memory= $persistent= $m= percept.data.memory || {};
 
-            // searching for errors
-
-            try{ eval(percept.data.global_src); }
-            catch(e){
-                var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
-                if (!matchs)    console.error(e.stack);
-                else            console.error(e.name + ": " + e.message + " at 'Global Scope' section (Line:"+matchs[2]+", Column:"+matchs[3]+")");
-                __error__ = true;
-            }
-            if (__error__) return;
-            try{ eval(percept.data.ai_src); }
-            catch(e){
-                var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
-                if (!matchs)    console.error(e.stack);
-                else            console.error(e.name + ": " + e.message + " at 'Agent Program' section (Line:"+matchs[2]+", Column:"+matchs[3]+")");
-                __error__ = true;
-            }
-            if (__error__) return;
-            try{ eval(percept.data.start_src); }
-            catch(e){
-                var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
-                if (!matchs)    console.error(e.stack);
-                else            console.error(e.name + ": " + e.message + " at 'Start Event' section (Line:"+matchs[2]+", Column:"+matchs[3]+")");
-                __error__ = true;
-            }
-            if (__error__) return;
-            try{ eval(percept.data.msg_src); }
-            catch(e){
-                var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
-                if (!matchs)    console.error(e.stack);
-                else            console.error(e.name + ": " + e.message + " at 'Message Received Event' section (Line:"+matchs[2]+", Column:"+matchs[3]+")");
-                __error__ = true;
-            }
-            if (__error__) return;
+            _SCORE_CELLS_MULTIPLIER = percept.data.CFG_CONSTANTS._SCORE_CELLS_MULTIPLIER;
+            _EASY_MODE = percept.data.CFG_CONSTANTS._EASY_MODE;
 
             eval(
                 "(function(){"+
@@ -142,9 +110,10 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
                 try{
                     __onStart__(percept.data);
                 }catch(e){
-                    var matchs = false;//e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
+                    var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
                     if (!matchs)    console.error(e.stack);
                     else            console.error(e.name + ": " + e.message + " at 'onStart' (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+                    __error__ = true;
                 };
                 $return(_ACTION.NONE);
             break;
@@ -157,7 +126,8 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
             break;
 
         case _PERCEPT_HEADER.END:
-            $return(_ACTION._SAVE_MEMORY_ + JSON.stringify($memory))
+            if ($memory)
+                $return(_ACTION._SAVE_MEMORY_ + JSON.stringify($memory))
             self.close();
             break;
 
@@ -173,6 +143,7 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
                 var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
                 if (!matchs)    console.error(e.stack);
                 else            console.error(e.name + ": " + e.message + " at onMessageReceived (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+                __error__ = true;
             };
             $perceive();
             break;
@@ -201,6 +172,7 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
                     var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
                     if (!matchs)    console.error(e.stack);
                     else            console.error(e.name + ": " + e.message + " at AGENT_PROGRAM (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+                    __error__ = true;
                 };
             }
 
@@ -214,8 +186,6 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
 // transition model
 function $result(state, action, paint){ if (state.agent.battery == 0) return state;
     //TODO: if multiplier
-    //      if no partial reward
-    //      if easy mode
     state = copy(state);
 
     var ir=0, ic=0, r=0, c=0;
@@ -223,6 +193,31 @@ function $result(state, action, paint){ if (state.agent.battery == 0) return sta
     var env = state.environment;
     var grid = env.grid;
     var costs = state.builtin_knowledge.costs;
+
+    function fillHoleCell(row, column){
+        for (var i=env.holes.length; i--;)
+                for (var j=env.holes[i].cells.length; j--;)
+                    if (env.holes[i].cells[j].row == row &&
+                        env.holes[i].cells[j].column == column)
+                    {
+                        env.holes[i].cells.remove(j);
+
+                        state.agent.stats.battery_used += costs.battery.slide_tile;
+                        state.agent.battery -= costs.battery.slide_tile;
+
+                        if (!env.holes[i].cells.length){ // if hole's filled
+                            //TODO: if multiplier
+                            state.agent.stats.filled_holes++;
+                            state.agent.score += env.holes[i].value;
+
+                            env.time += costs.filled_hole/1000;
+
+                            env.holes.remove(i);
+                            break;
+                        }else
+                            state.agent.score += (env.holes[i].size - env.holes[i].cells.length)*_SCORE_CELLS_MULTIPLIER;
+                    }
+    }
 
     if (!$isValidMove(state, action)){
         state.agent.stats.bad_moves++;
@@ -264,6 +259,10 @@ function $result(state, action, paint){ if (state.agent.battery == 0) return sta
     for (ir= loc.row+r, ic= loc.column+c; $isTile(state, ir, ic); ir=ir+r, ic=ic+c);
 
     if (ir == loc.row+r && ic == loc.column+c){//if there is no tile to push
+
+        if (_EASY_MODE && $isHoleCell(state, ir, ic))
+            fillHoleCell(loc.row+r, loc.column+c);
+
         grid[loc.row][loc.column] =  $isCharger(state, loc.row, loc.column)?
                                         _GRID_CELL.BATTERY_CHARGER : _GRID_CELL.EMPTY;
         grid[loc.row+r][loc.column+c] = _GRID_CELL.AGENT;
@@ -276,28 +275,7 @@ function $result(state, action, paint){ if (state.agent.battery == 0) return sta
 
         state.agent.stats.battery_used+= costs.battery.slide_tile;
 
-        for (var i=env.holes.length; i--;)
-            for (var j=env.holes[i].cells.length; j--;)
-                if (env.holes[i].cells[j].row == ir &&
-                    env.holes[i].cells[j].column == ic)
-                {
-                    env.holes[i].cells.remove(j);
-
-                    state.agent.stats.battery_used+= costs.battery.slide_tile;
-                    state.agent.battery -= costs.battery.slide_tile;
-
-                    if (!env.holes[i].cells.length){ // if hole's filled
-                        //TODO: if multiplier
-                        state.agent.stats.filled_holes++;
-                        state.agent.score += env.holes[i].value;
-
-                        env.time += costs.filled_hole/1000;
-
-                        env.holes.remove(i);
-                        break;
-                    }else
-                        state.agent.score += (env.holes[i].size - env.holes[i].cells.length)*2;/*TODO: _SCORE_CELLS_MULTIPLIER if partial rewards 0 otherwise*/
-                }
+        fillHoleCell(ir, ic);
     }else
     if ($isEmptyCell(state, ir, ic)) {
         grid[ir][ic] = _GRID_CELL.TILE;
@@ -324,40 +302,73 @@ function $result(state, action, paint){ if (state.agent.battery == 0) return sta
     return state;
 }var $succesor = $result;
 
-function $Node(e, p, a, g, d){
+function $Node(e, p, a, g, d){var _self = this;
     this.State = e;     // The state in the state space to which the node corresponds
     this.Parent = p;    // The node in the search tree that generated this node
     this.Action = a;    // The action that was applied to the parent to gennerate the node
-    this.g = g||0;         // The cost of the path from the initial state to the node, as indicated by the parent pointers
-    this.Depth = d||0;     // depth of the node in the search tree
+    this.g = g||0;      // The cost of the path from the initial state to the node, as indicated by the parent pointers
+    this.Depth = d||0;  // depth of the node in the search tree
 
     // used for informed search strategies
-   /* public int f()
-    {
-        switch (Busqueda.estrategia)
-        {
-            case EstrategiaBusqueda.AEstrella:
-                return g + h();
-            case EstrategiaBusqueda.Greedy:
-                return h();
-            case EstrategiaBusqueda.UniformCost:
-                return g;
+    this.f = function(){
+        switch(search.algorithm){
+            case _SEARCH_ALGORITHM.A_STAR:       return _self.g + h(); break;
+            case _SEARCH_ALGORITHM.GREEDY:       return h();           break;
+            case _SEARCH_ALGORITHM.UNIFORM_COST: return _self.g;       break;
         }
-        return int.MaxValue;
     }
 
     //Funcion heuristica
-    public int h()
-    {
-        if (Busqueda.problemaActual.xyObjetivo.X == -1) //Si "xyObjetivo == null", es decir, si "el objetivo del problema está implicito" entonces...
-            return estado.cantComida;
-        else //Si es explicito (un punto al donde ir)
-            return Util.celdasDistanciaManhattan(
-                        estado.xPacman, estado.yPacman,
-                        Busqueda.problemaActual.xyObjetivo.X, Busqueda.problemaActual.xyObjetivo.Y
-                    ) * Util._RECOMPENZA;
+    var excludedHoles = [];
+    var excludedTiles = [];
+    function h(){var h = 0;
+        //if goal state has to take into account the agent's location
+        if ( search.goal_agent_location )// Manhattan distance
+            h+= manhattand(e.agent.location, search.goal.agent.location);
 
-    }*/
+        if ( search.goal_agent_filled_holes || search.goal_agent_score ){
+            excludedHoles.length = 0;
+            if (search.goal_agent_filled_holes)
+                var i=search.goal.agent.stats.filled_holes-e.agent.stats.filled_holes;
+            for (var c1, c0=e.agent.location, t, sc = search.goal.agent.score - e.agent.score;
+                 (
+                    (search.goal_agent_filled_holes&&i>=1)||
+                    (search.goal_agent_score&&sc>0)
+                 )&&excludedHoles.length!=e.environment.holes.length;
+                 --i)
+            {
+                c1 = getClosestHole(c0, e.environment.holes, excludedHoles);
+                sc-= c1.value;
+
+                if (c1){
+                    excludedHoles.push(c1.id);
+                    excludedTiles.length = 0;
+                    t=getClosestTile(c1.cells[0], e.environment.tiles, excludedTiles);
+                    if (!t){
+                        h+=manhattand(c0, c1.cells[0]);
+                        c0 = c1.cells[0];
+                     }else{
+                        var holeCell = c1.cells[0];
+                        excludedTiles.push(t);
+                        h+= manhattand(c0, t)-1 + manhattand(t, holeCell);
+
+                        /*for (var len=c1.cells.length, hc=1; hc < len;++hc){
+                            t=getClosestTile(holeCell, e.environment.tiles, excludedTiles);
+                            if (t){
+                                excludedTiles.push(t);
+                                h+=manhattand(holeCell, t) + manhattand(t, c1.cells[hc]);
+                            }else break;
+                            holeCell = c1.cells[hc];
+                        }*/
+                        c0 = holeCell;
+                    }
+                }else
+                    return Number.MAX_VALUE;
+            }
+        }
+
+        return h;
+    }
 }
 
 function $expand(node){
@@ -430,10 +441,16 @@ function $solution(node, seq, limit, percept, goal, delay, equalByState, solutio
    return seq.reverse();
 }
 
-function $breadthFirstSearch(percept, goal, paint, delay, equalByState){ return search(percept, goal, 0, paint, delay, equalByState); }
-function $depthFirstSearch(percept, goal, paint, delay, equalByState){ return search(percept, goal, 1, paint, delay, equalByState); }
-function $depthLimitedSearch(percept, goal, limit, paint, delay, equalByState){ return search(percept, goal, 1, paint, delay, equalByState, limit); }
-function $iterativeDepthFirstSearch(percept, goal, paint, delay, equalByState){
+function $breadthFirstSearch(percept, goal, equalByState, paint, delay){
+    return search(percept, goal, _SEARCH_ALGORITHM.BFS, paint, delay, equalByState);
+}
+function $depthFirstSearch(percept, goal, equalByState, paint, delay){
+    return search(percept, goal, _SEARCH_ALGORITHM.DFS, paint, delay, equalByState);
+}
+function $depthLimitedSearch(percept, goal, limit, equalByState, paint, delay){
+    return search(percept, goal, _SEARCH_ALGORITHM.DFS, paint, delay, equalByState, limit);
+}
+function $iterativeDepthFirstSearch(percept, goal, equalByState, paint, delay){
     var seq, limit=limit||0;
     if (!paint)
         while(13){
@@ -441,11 +458,18 @@ function $iterativeDepthFirstSearch(percept, goal, paint, delay, equalByState){
             if (seq.length) return seq;
         }
     else
-        return search(percept, goal, 2, paint, delay, equalByState, limit+1);
+        return search(percept, goal, _SEARCH_ALGORITHM.IDFS, paint, delay, equalByState, limit+1);
+}
+function $greedyBestFirstSearch(percept, goal, equalByState, paint, delay){
+    return search(percept, goal, _SEARCH_ALGORITHM.GREEDY, paint, delay, equalByState);
+}
+function $aStarBestFirstSearch(percept, goal, equalByState, paint, delay){
+    return search(percept, goal, _SEARCH_ALGORITHM.A_STAR, paint, delay, equalByState);
 }
 
-//equalByState: whether or not states are going to be considered equal according to the structure of the goal state or the entire state 
-function search(percept, goal, type, paint, delay, equalByState, limit, solution){delay=delay||150;
+
+//equalByState: whether or not states are going to be considered equal according to the structure of the goal state or rather the entire state.
+function search(percept, goal, type, paint, delay, equalByState, limit, solution){delay=delay||100;
     var initial_state = percept;
     var node = new $Node(initial_state);
     var solution = solution || [];
@@ -455,20 +479,35 @@ function search(percept, goal, type, paint, delay, equalByState, limit, solution
     var children;
     var child = {State: copy(goal) };
 
-    if ( match(node.State, goal) ) return $solution(node, solution, type==2?limit:null, percept, goal, delay, equalByState, solution);
+    //static methods
+    search.algorithm = type;
+    search.sort = function(a, b){ return a.f()-b.f(); };
+    search.goal = goal;
+    search.goal_agent_location = structMatch(search.goal, {agent:{location:{row:0, column:0}}});
+    search.goal_agent_filled_holes = structMatch(search.goal, {agent:{stats:{filled_holes:0}}});
+    search.goal_agent_score = structMatch(search.goal, {agent:{score:0}});
+
+    if ( match(node.State, goal) )
+        return $solution(node);
 
     if (paint){
 
         __thinking__ = true;
         function infiniteLoop(){
-            if ( !frontier.length ) return $solution(null, solution, type==2?limit:null, percept, goal, delay, equalByState, solution);
+            if ( !frontier.length )
+                return $solution(null, solution, type==_SEARCH_ALGORITHM.IDFS?limit:null, percept, goal, delay, equalByState, solution);
 
             switch(type){
-                case 0: node = frontier.shift(); break;
-                case 1:
-                case 2: node = frontier.pop()  ; break;
-            } 
+                case _SEARCH_ALGORITHM.A_STAR:
+                case _SEARCH_ALGORITHM.GREEDY:
+                case _SEARCH_ALGORITHM.UNIFORM_COST:
+                    frontier.sort(search.sort);
+                case _SEARCH_ALGORITHM.BFS: node = frontier.shift(); break;
+                case _SEARCH_ALGORITHM.DFS:
+                case _SEARCH_ALGORITHM.IDFS: node = frontier.pop() ; break;
+            }
 
+            //painting cell to be expanded
              $paintCell(node.State.agent.location.row, node.State.agent.location.column);
 
             setTimeout(function(){
@@ -485,7 +524,8 @@ function search(percept, goal, type, paint, delay, equalByState, limit, solution
                             child.State = children[n].State;
 
                         if ( !explored.containsMatch(child.State) && !frontier.containsMatch(child) ){
-                            if (match(child.State, goal)) return $solution(children[n], solution, type==2?limit:null, percept, goal, delay, equalByState, solution);
+                            if (match(child.State, goal))
+                                return $solution(children[n], solution, type==_SEARCH_ALGORITHM.IDFS?limit:null, percept, goal, delay, equalByState, solution);
                             frontier.push(children[n]);
                        }
                     }
@@ -503,8 +543,12 @@ function search(percept, goal, type, paint, delay, equalByState, limit, solution
             if ( !frontier.length ) return [];
 
             switch(type){
-                case 0: node = frontier.shift(); break;
-                case 1: node = frontier.pop()  ; break;
+                case _SEARCH_ALGORITHM.A_STAR:
+                case _SEARCH_ALGORITHM.GREEDY:
+                case _SEARCH_ALGORITHM.UNIFORM_COST:
+                    frontier.sort(search.sort);
+                case _SEARCH_ALGORITHM.BFS: node = frontier.shift(); break;
+                case _SEARCH_ALGORITHM.DFS: node = frontier.pop()  ; break;
             } 
 
             explored.push( node.State );
@@ -671,7 +715,7 @@ function $isValidMove(percept, move){
                 !$isAgent(percept, arow+r, acol+c);
     }
 
-    return  !$isHoleCell(percept, arow+r, acol+c) &&
+    return  (!$isHoleCell(percept, arow+r, acol+c) || _EASY_MODE) &&
             !$isObstacle(percept, arow+r, acol+c) &&
             !$isAgent(percept, arow+r, acol+c);
 }

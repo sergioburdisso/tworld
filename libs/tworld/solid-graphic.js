@@ -478,17 +478,26 @@ function GraphicTWorld(graphicEngine, environment){
             //creating matrix on demand
             if (!_CL_UserHelpers){
                 _CL_UserHelpers = NewMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
-                for (var r = _CL_UserHelpers.length; r--;)
-                    for (var c = _CL_UserHelpers[0].length; c--;){
-                        _CL_UserHelpers[r][c] = new CL3D.HoleCellHelper(0,0,0,_FloorCellSize,_CL_Engine, 0, 255, 0, 0.8);
-                        _CL_UserHelpers[r][c].Pos.X = GraphicTWorld.RowIndexToXPosition(r);
-                        _CL_UserHelpers[r][c].Pos.Z = GraphicTWorld.ColumnIndexToZPosition(c);
-                        _CL_UserHelpers[r][c].Visible = false;
-                        _CL_Scene.getRootSceneNode().addChild(_CL_UserHelpers[r][c]);
-                    }
+
+                _CL_UserHelpers.current = new CL3D.HoleCellHelper(0,0,0,_FloorCellSize,_CL_Engine, 0, 250, 1, 0.8);
+                _CL_UserHelpers.current.Pos.Y = 18;
+                _CL_Scene.getRootSceneNode().addChild(_CL_UserHelpers.current);
+                _CL_UserHelpers.current.setVisible(true);
             }
 
+            if (!_CL_UserHelpers.current.Visible)
+                _CL_UserHelpers.current.setVisible(true);
+            _CL_UserHelpers.current.Pos.X = GraphicTWorld.RowIndexToXPosition(row);
+            _CL_UserHelpers.current.Pos.Z = GraphicTWorld.ColumnIndexToZPosition(column);
+
             if (row < _CL_UserHelpers.length && column < _CL_UserHelpers[0].length){
+                if (!_CL_UserHelpers[row][column]){
+                    _CL_UserHelpers[row][column] = new CL3D.HoleCellHelper(0,0,0,_FloorCellSize,_CL_Engine, 0, 255, 0, 0.8);
+                    _CL_UserHelpers[row][column].Pos.X = GraphicTWorld.RowIndexToXPosition(row);
+                    _CL_UserHelpers[row][column].Pos.Z = GraphicTWorld.ColumnIndexToZPosition(column);
+                    _CL_UserHelpers[row][column].setVisible(true);
+                    _CL_Scene.getRootSceneNode().addChild(_CL_UserHelpers[row][column]);
+                }else
                 if (!_CL_UserHelpers[row][column].Visible)
                     _CL_UserHelpers[row][column].setVisible(true);
                 _CL_UserHelpers[row][column].Pos.Y = Math.random()*4 + 13;
@@ -496,9 +505,11 @@ function GraphicTWorld(graphicEngine, environment){
         }
 
         this.clearPaintedCells = function(){
+            _CL_UserHelpers.current.Visible = false;
             for (var r = _CL_UserHelpers.length; r--;)
                     for (var c = _CL_UserHelpers[0].length; c--;)
-                        _CL_UserHelpers[r][c].Visible = false;
+                        if (_CL_UserHelpers[r][c])
+                            _CL_UserHelpers[r][c].Visible = false;
         }
 
         this.updateTime = function(value, countdown) {

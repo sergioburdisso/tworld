@@ -226,12 +226,13 @@
                 _self.fullScreen = !_self.fullScreen;
                 if (_self.fullScreen){
                     _editor.setOptions({autoScrollEditorIntoView: false});
-                    $(window).scrollTop(0).css("overflow","hidden");
+                    $('body').addClass("overflow-hidden");
+                    $(window).scrollTop(0);
                     $('#source-code').css("height", $(window).height()-100+"px")
                 }else{
                     _editor.setOptions({autoScrollEditorIntoView: true});
                     $('#source-code').css("height", "")
-                    $('body').css("overflow","initial");
+                    $('body').removeClass("overflow-hidden");
                     gotoTop()
                 }
                 _editor.resize();

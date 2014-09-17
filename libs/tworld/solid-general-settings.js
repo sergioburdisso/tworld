@@ -47,7 +47,7 @@ var _BATTERY_START_LOCATION = [/*{ROW : 0, COLUMN: 0}, {ROW : 1, COLUMN: 1} /*,.
 var _BATTERY_INITIAL_CHARGE     = _KNOBS.final_tweaks.battery.level;
 var _BATTERY_WALK_COST          = _KNOBS.final_tweaks.battery.good_move;
 var _BATTERY_INVALID_MOVE_COST  = _KNOBS.final_tweaks.battery.bad_move;
-var _BATTERY_SLIDE_COST         = _KNOBS.final_tweaks.battery.sliding;
+var _BATTERY_SLIDE_COST         = _EASY_MODE? 0 : _KNOBS.final_tweaks.battery.sliding;
 
 // Players
 if (_KNOBS.trial.test){

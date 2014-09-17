@@ -51,7 +51,7 @@ function Environment(rows, columns, graphicEngine, parent) {
             this.Costs = {};
             this.Costs.good_move = _ROB_WALK_TIME; // time it takes the agent to move (in "ticks")
             this.Costs.bad_move = 1000; // wasted time by the agent when it chooses and invalid action (1 "tick"--aprox. 1 second)
-            this.Costs.filled_hole = 1000; // time the animation takes to fill a cell hole (1 "tick"--aprox. 1 second)
+            this.Costs.filled_hole = _EASY_MODE? 0 : 1000; // time the animation takes to fill a cell hole (1 "tick"--aprox. 1 second)
     //end region Attributes
     //
     //region Methods
@@ -1342,7 +1342,11 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
                 msg_src: _AGENTS[_index].TEAM_MSG_SOURCE_CODE,
                 start_src: _AGENTS[_index].START_SOURCE_CODE,
                 global_src:_AGENTS[_index].GLOBAL_SOURCE_CODE,
-                memory: _memory
+                memory: _memory,
+                CFG_CONSTANTS:{
+                    _SCORE_CELLS_MULTIPLIER : _SCORE_CELLS_MULTIPLIER,
+                    _EASY_MODE: _EASY_MODE
+                }
             }
             _agentProgram.postMessage( _percept );
         }

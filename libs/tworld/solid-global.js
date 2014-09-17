@@ -168,10 +168,11 @@ var _ENDGAME = {
     },
     MESSAGES: {
         NEUTRAL: {TEXT: "THE GAME<br>HAS ENDED", SUBTEXTS: ["GREAT!", "AMAZING!", "AWESOME!", "COOL!"]},
-        WON: {TEXT: "GOALS<br>ACHIEVED", SUBTEXTS: ["YOU WIN!", "CONGRATULATIONS!", "GREAT JOB!", "SOLVED!"]},
-        LOST: {TEXT: "GAME OVER", SUBTEXTS: ["YOU LOSE!", "YOU JUST LOST<br>THE GAME!", "UPS!", "SORRY"]}
+        WON: {TEXT: "GOALS<br>ACHIEVED", SUBTEXTS: [/*"YOU WIN!"*/"AWESOME!", "CONGRATULATIONS!", "GREAT JOB!", "SOLVED!"]},
+        LOST: {TEXT: "GAME OVER", SUBTEXTS: ["YOU LOSE!", "YOU JUST LOST<br>THE GAME!", "OOPS!", "SORRY", "OH SNAP!"]}
     }
 }
+var _SEARCH_ALGORITHM = { BFS: 0, DFS:1, IDFS: 2, A_STAR: 3, GREEDY: 4, UNIFORM_COST: 5 };
 
 var _Running    = false;//did the user push the play button?
 var _Paused     = false;

@@ -161,6 +161,7 @@ function NextProperty(obj, prop){
 
 function copy(obj){ return JSON.parse(JSON.stringify(obj)) }
 
+//assigns obj0 the values of obj1 (structurally)
 function instantiate(obj0, obj1){
     for (p in obj0)
         if (!(obj0[p] instanceof Function)){
@@ -171,6 +172,7 @@ function instantiate(obj0, obj1){
         }
 }
 
+//structural equivalence
 function match(obj0, obj1){
     if (!(obj0 instanceof Object)) return obj0 == obj1;
     if (!(obj1 instanceof Object)) return false;
@@ -180,12 +182,65 @@ function match(obj0, obj1){
             return false;
 
     for (p in obj1)
-        if (!(obj1[p] instanceof Function) && !match(obj0[p], obj1[p]))
-            return false;
-
+        switch(p){
+            case "filled_cells":
+            case "filled_holes":
+            case "battery_used":
+            case "battery":
+            case "score": return obj0[p] >= obj1[p];
+            default:
+                if (!["time", "battery", "good_moves", "battery_used",
+                      "builtin_knowledge", "grid", "battery_chargers"].contains(p) &&
+                    !(obj1[p] instanceof Function) && !match(obj0[p], obj1[p]))
+                    return false;
+        }
     return true;
 }
+
+//obj0 structures includes the structure of obj1?
+function structMatch(obj0, obj1){
+    if ( ((obj0 instanceof Object) && !(obj1 instanceof Object)) ||
+         (!(obj0 instanceof Object) && (obj1 instanceof Object)))
+        return false;
+
+    if ((obj1 instanceof Array) && !(obj0 instanceof Array)) return false;
+
+    for (p in obj1)
+        if ((obj1.hasOwnProperty(p) && !obj0.hasOwnProperty(p)) || !structMatch(obj0[p], obj1[p]))
+            return false;
+    return true;
+}
+
 //<-
+
+//Manhattan Distance
+function manhattand(c0, c1){
+    return Math.abs(c0.row - c1.row) + Math.abs(c0.column - c1.column);
+}
+
+function getClosestHole(cell, holes, exclude){if (!holes.length) return undefined;
+    var closest, min=Number.MAX_VALUE;
+    for (var i=holes.length; i--;)
+        if (!exclude || !exclude.contains(holes[i].id)){
+            holes[i].cells.sort(function(a,b){ return manhattand(cell, a) - manhattand(cell, b); });
+
+            if ( manhattand(cell, holes[i].cells[0]) < min ){
+                closest = holes[i];
+                min = manhattand(cell, holes[i].cells[0]);
+            }
+        }
+    return closest;
+}
+
+function getClosestTile(cell, tiles, exclude){if (!tiles.length) return undefined;
+    var closest, min=Number.MAX_VALUE;
+    for (var i=tiles.length; i--;)
+        if ( (!exclude || !exclude.containsMatch(tiles[i])) && manhattand(cell, tiles[i]) < min ){
+            closest = tiles[i];
+            min = manhattand(cell, tiles[i]);
+        }
+    return closest;
+}
 
 function SortAndPartition(list, criteria){
     var tiePartitions = [];
