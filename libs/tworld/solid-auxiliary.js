@@ -186,8 +186,12 @@ function match(obj0, obj1){
             case "filled_cells":
             case "filled_holes":
             case "battery_used":
+            case "total_score":
             case "battery":
-            case "score": return obj0[p] >= obj1[p];
+            case "score":
+                if (obj0[p] < obj1[p])
+                    return false;
+                break;
             default:
                 if (!["time", "battery", "good_moves", "battery_used",
                       "builtin_knowledge", "grid", "battery_chargers"].contains(p) &&
@@ -232,12 +236,12 @@ function getClosestHole(cell, holes, exclude){if (!holes.length) return undefine
     return closest;
 }
 
-function getClosestTile(cell, tiles, exclude){if (!tiles.length) return undefined;
+function getClosestCell(cell, cells, exclude){if (!cells.length) return undefined;
     var closest, min=Number.MAX_VALUE;
-    for (var i=tiles.length; i--;)
-        if ( (!exclude || !exclude.containsMatch(tiles[i])) && manhattand(cell, tiles[i]) < min ){
-            closest = tiles[i];
-            min = manhattand(cell, tiles[i]);
+    for (var i=cells.length; i--;)
+        if ( (!exclude || !exclude.containsMatch(cells[i])) && manhattand(cell, cells[i]) < min ){
+            closest = cells[i];
+            min = manhattand(cell, cells[i]);
         }
     return closest;
 }

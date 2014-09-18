@@ -676,6 +676,7 @@ function sendToTCloud($data, onsucces, $root, onerror){
                             //console.error(jqXHR, textStatus, errorThrown);
                             if (jqXHR.status == 404)
                                 LogOut();
+                            $root.$loading = false;
                         };
 
     $.ajax({
@@ -701,6 +702,7 @@ function sendToTCloudWithFile($data, $file, onsucces, $root, onerror){
                             //console.error(jqXHR, textStatus, errorThrown);
                             if (jqXHR.status == 404)
                                 LogOut();
+                            $root.$loading = false;
                         };
 
     for (var i=tmp.length; i--;){

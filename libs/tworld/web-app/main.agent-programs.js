@@ -228,7 +228,7 @@
                     _editor.setOptions({autoScrollEditorIntoView: false});
                     $('body').addClass("overflow-hidden");
                     $(window).scrollTop(0);
-                    $('#source-code').css("height", $(window).height()-100+"px")
+                    $('#source-code').css("height", $(window).height()-95+"px")
                 }else{
                     _editor.setOptions({autoScrollEditorIntoView: true});
                     $('#source-code').css("height", "")

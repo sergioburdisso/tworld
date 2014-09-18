@@ -765,7 +765,7 @@ function Environment(rows, columns, graphicEngine, parent) {
                                     prob:   _KNOBS.environment.dynamic.hostility.prob.multAll(1/1000)
                                 },
                                 model_of_action: {
-                                    Intended:   TWorld.ModelOfStochasticMotion[0]/1000,
+                                    intended:   TWorld.ModelOfStochasticMotion[0]/1000,
                                     left:       TWorld.ModelOfStochasticMotion[1]/1000,
                                     right:      TWorld.ModelOfStochasticMotion[2]/1000,
                                     backward:   TWorld.ModelOfStochasticMotion[3]/1000,

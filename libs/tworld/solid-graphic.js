@@ -385,6 +385,7 @@ function GraphicTWorld(graphicEngine, environment){
                     stat = NextProperty(robs[0].Stats, stat);
             }
 
+            var subtitle;
             switch(goal.RESULT){
                 case _GAME_RESULT.WON:
                     $("#resetBtn")
@@ -397,7 +398,9 @@ function GraphicTWorld(graphicEngine, environment){
                     $("#title").
                         css("color","rgb(59, 255, 153)")
                         .html(_ENDGAME.MESSAGES.WON.TEXT);
-                    $("#sub-title").html(_ENDGAME.MESSAGES.WON.SUBTEXTS[random(_ENDGAME.MESSAGES.WON.SUBTEXTS)]);
+                    
+                    subtitle = _ENDGAME.MESSAGES.WON.SUBTEXTS[random(_ENDGAME.MESSAGES.WON.SUBTEXTS.length)];
+                    $("#sub-title").html(subtitle);
 
                     if (_AUDIO_ENABLE)
                         _sound_game_won.play();
@@ -414,11 +417,9 @@ function GraphicTWorld(graphicEngine, environment){
                         .css("color", "red")
                         .css("text-shadow", "rgb(255, 0, 72) 0px 0px 20px")
                         .html(_ENDGAME.MESSAGES.LOST.TEXT);
-                    $("#sub-title").html(
-                        goal.MESSAGE? goal.MESSAGE
-                        :
-                        _ENDGAME.MESSAGES.LOST.SUBTEXTS[random(_ENDGAME.MESSAGES.LOST.SUBTEXTS)]
-                    );
+                    subtitle =  goal.MESSAGE? goal.MESSAGE :
+                               _ENDGAME.MESSAGES.LOST.SUBTEXTS[random(_ENDGAME.MESSAGES.LOST.SUBTEXTS.length)]
+                    $("#sub-title").html(subtitle);
 
                     if (_AUDIO_ENABLE)
                         _sound_game_lost[random(_sound_game_lost.length)].play();
@@ -427,7 +428,8 @@ function GraphicTWorld(graphicEngine, environment){
                     $("#table-pos").show();
                     $("#bs-mid").css("opacity", 0).show();
                     $("#title").html(goal.MESSAGE? goal.MESSAGE : _ENDGAME.MESSAGES.NEUTRAL.TEXT);
-                    $("#sub-title").html(_ENDGAME.MESSAGES.NEUTRAL.SUBTEXTS[random(_ENDGAME.MESSAGES.NEUTRAL.SUBTEXTS)]);
+                    subtitle = _ENDGAME.MESSAGES.NEUTRAL.SUBTEXTS[random(_ENDGAME.MESSAGES.NEUTRAL.SUBTEXTS.length)];
+                    $("#sub-title").html(subtitle);
 
                     if (_AUDIO_ENABLE)
                         _sound_game_neutral.play();
@@ -480,7 +482,7 @@ function GraphicTWorld(graphicEngine, environment){
                 _CL_UserHelpers = NewMatrix(environment.getGridDimension().Rows, environment.getGridDimension().Columns);
 
                 _CL_UserHelpers.current = new CL3D.HoleCellHelper(0,0,0,_FloorCellSize,_CL_Engine, 0, 250, 1, 0.8);
-                _CL_UserHelpers.current.Pos.Y = 18;
+                _CL_UserHelpers.current.Pos.Y = 4 + 1;
                 _CL_Scene.getRootSceneNode().addChild(_CL_UserHelpers.current);
                 _CL_UserHelpers.current.setVisible(true);
             }
@@ -500,7 +502,7 @@ function GraphicTWorld(graphicEngine, environment){
                 }else
                 if (!_CL_UserHelpers[row][column].Visible)
                     _CL_UserHelpers[row][column].setVisible(true);
-                _CL_UserHelpers[row][column].Pos.Y = Math.random()*4 + 13;
+                _CL_UserHelpers[row][column].Pos.Y = Math.random()*4 + 1;
             }
         }
 

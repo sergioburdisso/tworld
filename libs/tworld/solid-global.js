@@ -37,8 +37,8 @@ var _ACTION_REGEX = {
                     CLEAR_CELLS:    /^\s*(clear_cells|clear_painted_cells)\s*$/i,
 
                     //Used for remote controling the agent
-                    KEY_DOWN:       /(key_down|keydown|key_pressed)\s*(\(\s*([^)]*)\s*\)|:([^]*))/i,
-                    KEY_UP:         /(key_up|keyup|key_released)\s*(\(\s*([^)]*)\s*\)|:([^]*))/i,
+                    KEY_DOWN:       /(key_down|keydown|key_pressed)\s*(\(\s*([^)]*?)\s*\)|:([^]*?))/i,
+                    KEY_UP:         /(key_up|keyup|key_released)\s*(\(\s*([^)]*?)\s*\)|:([^]*?))/i,
 
 
                     //internal actions (user shouldn't be aware of this action)
