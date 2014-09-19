@@ -17,9 +17,9 @@
 * along with this program. If not, see <http://www.gnu.org/licenses/>
 */
 
-if (localStorage.version != "0.93"){
+if (localStorage.version != "0.95"){
     localStorage.clear();
-    localStorage.version = "0.93";
+    localStorage.version = "0.95";
 }
 
 var _tworldWindow;

@@ -31,7 +31,7 @@
 
 				<h4 class="list-group-item-heading">
 					<span class="badge active">{{tr.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span>
-					<b>Task env.:</b> {{tr.task_env_name | stringLimit:22}}
+					<b>Task env.:</b> {{tr.task_env.name | stringLimit:22}}
 					<span ng-if="tr.agent_progs_num > 1"><b>Agent progs.:</b> {{tr.agent_progs | stringLimit:22}}</span>
 					<span ng-if="tr.agent_progs_num == 1"><b>Agent prog.:</b> {{tr.agent_progs | stringLimit:22}}</span>
 				</h4>

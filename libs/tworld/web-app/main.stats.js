@@ -24,6 +24,8 @@
         var _self = this;
         var _selected = -1;
         var _trials = trials;
+        var _taskEnvNames = {}; //task environment names cache
+        var _agentProgsNames = {}; //agent program names cache
 
         this.task_env = taskEnv;
         this.agent_prog = agentProg;
@@ -54,9 +56,9 @@
                     }
 
                     if (this.task_env)
-                        newTrial.task_env_name = this.task_env.name;
+                        newTrial.task_env = {name: this.task_env.name};
                     else
-                        newTrial.task_env_name = loadEnvNameAsync(newTrial, _trials[i].task_env_id);
+                        newTrial.task_env = loadEnvNameAsync(newTrial, _trials[i].task_env_id);
 
                     newTrial.agent_progs = "Loading...";
                     for (var j=0; j < aps.length;++j)
@@ -226,34 +228,45 @@
             if (!isLoggedIn())
                 return getEnvironmentByDate(date).name;
             else{
-                getEnvironmentByDate(
-                    date,
-                    function(response){
-                        trial.task_env_name = response.name;
-                        $scope.$apply();
-                    }
-                );
-                return "loading...";
+                if (!_taskEnvNames[date]){
+                    _taskEnvNames[date] = {name: "loading..."};
+                    getEnvironmentByDate(
+                        date,
+                        function(response){
+                            _taskEnvNames[date].name = response.name;
+                            $scope.$apply();
+                        }
+                    );
+                }
+                return _taskEnvNames[date];
             }
         }
 
         function loadAgentNamesAsync(trial, date){
-            if (!isLoggedIn()){
+
+            function concat(trial, name){
                 if (trial.agent_progs == "Loading...")
-                    trial.agent_progs = getAgentProgramByDate(date).name;
+                    trial.agent_progs = name;
                 else
-                    trial.agent_progs += ", "+getAgentProgramByDate(date).name;
-            }else{
-                getAgentProgramByDate(
-                    date,
-                    function(response){if (response){
-                        if (trial.agent_progs == "Loading...")
-                            trial.agent_progs = response.name;
-                        else
-                            trial.agent_progs += ", "+response.name;
-                        $scope.$apply();
-                    }}
-                );
+                    trial.agent_progs += ", "+name;
+            }
+
+            if (!isLoggedIn())
+                concat(trial, getAgentProgramByDate(date).name);
+            else{
+                if (!_agentProgsNames[date]){
+                    _agentProgsNames[date] = {trials: []/*trials waiting for this name to download*/};
+                    getAgentProgramByDate(
+                        date,
+                        function(response){if (response){
+                            concat(trial, response.name);
+                            while(_agentProgsNames[date].trials.length)
+                                concat(_agentProgsNames[date].trials.shift(), response.name);
+                            $scope.$apply();
+                        }}
+                    );
+                }else
+                    _agentProgsNames[date].trials.push(trial);
             }
         }
 

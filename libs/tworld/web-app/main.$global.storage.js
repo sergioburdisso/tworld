@@ -274,7 +274,7 @@ function newEnvironment(env, callback, $root){
         {updateEnvitonments(); taskEnvironments.push(env); saveEnvironments();}
     else
         sendToTCloud(
-            {m:'new_environment', date: env.date, env: JSON.stringify(env)},
+            {m:'new_environment', env: JSON.stringify(env)},
             function(data, textStatus, jqXHR){ callback.call(); },
             $root
         );
@@ -359,7 +359,7 @@ function newAgentProgram(ap, callback, $root){
         {updateAgentPrograms(); agentPrograms.push(ap); saveAgentPrograms();}
     else
         sendToTCloud(
-            {m:'new_agent_program', date: ap.date, ap: JSON.stringify(ap)},
+            {m:'new_agent_program', ap: JSON.stringify(ap)},
             function(data, textStatus, jqXHR){ callback.call(); },
             $root
         );
@@ -554,7 +554,6 @@ function newTrial(trial, taskEnvDate, agentProgs, callback){
         sendToTCloud(
             {
                 m:'new_trial',
-                date: trial.date,
                 trial: JSON.stringify(trial),
                 env_date: taskEnvDate,
                 agents: JSON.stringify(agentProgs)

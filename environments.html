@@ -87,7 +87,7 @@
 					</h4>
 					<p class="list-group-item-text text-gray2">{{env.desc|stringLimit:400}}</p>
 
-					<div class="row margin-10">
+					<div class="row">
 						<div class="pull-right animate-only-show margin-right-10" ng-show="ec.isSelected(env.date)">
 							<button class="btn btn-success glyphicon glyphicon-play" ng-click="ec.openRunModal()" tooltip="Run"></button>
 							<button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:'+env.date+'&agent-prog:all')" tooltip="View stats"></button>
