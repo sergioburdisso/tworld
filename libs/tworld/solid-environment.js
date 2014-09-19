@@ -1291,8 +1291,17 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
         // once the percept was created by the perception function (thread that runs the solid-perception.js)
         // send the percept to the Rob's mind (i.e the Program Agent)
         if (!_AGENTS[_index].SOCKET_PROGRAM_AGENT){
-            if (_Running)
+            if (_Running){
+                //if this is the end and I'm a webworker, I have to save my memory
+                //but what if I'm stuck doing some heavy computation? in that case,
+                //this message will never be received.
+                //In order to avoid this, let's give the agent a time limit of
+                //10 seconds.
+                if (percept.header == _PERCEPT_HEADER.END && !isSocket)
+                    setTimeout(_env.agentProgramMemorySaved, 10*1000);
+
                 _agentProgram.postMessage( percept );
+            }
         }else{
 
             if (percept.header)

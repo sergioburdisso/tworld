@@ -462,11 +462,11 @@
                     _socket.magic_string = this.agent_prog.name;
             }
 
-            function _finished(){
+            function _finished(date){
                 _socket.magic_string_dirty = (_socket.magic_string != _self.agent_prog.name);
 
                 if (_self.agent_prog.javascript && _self.agent_prog.ai)
-                    $location.url('/agent-programs/source-code:'+_self.agent_prog.date)
+                    $location.url('/agent-programs/source-code:'+(date?date:_self.agent_prog.date))
                 else
                     $location.url('/');
 

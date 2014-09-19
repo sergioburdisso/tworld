@@ -91,7 +91,7 @@
 						<div class="pull-right animate-only-show margin-right-10" ng-show="ec.isSelected(env.date)">
 							<button class="btn btn-success glyphicon glyphicon-play" ng-click="ec.openRunModal()" tooltip="Run"></button>
 							<button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:'+env.date+'&agent-prog:all')" tooltip="View stats"></button>
-							<button class="btn btn-info glyphicon glyphicon-user" ng-click="ec.testIt()" tooltip-html-unsafe="Test as human<br>(Arrows + R key)"></button>
+							<button class="btn btn-info glyphicon glyphicon-user" ng-click="ec.testIt()" tooltip-html-unsafe="Test as human<br>(Arrows + Shift key)"></button>
 							<button class="btn btn-info glyphicon glyphicon-list" ng-click="ec.open()" tooltip="View/Edit values"></button>
 							<button class="btn btn-danger glyphicon glyphicon-remove animate-none" ng-click="ec.remove()" tooltip="Delete" ng-hide="env.builtin"></button>
 						</div>

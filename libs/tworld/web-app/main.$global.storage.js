@@ -360,7 +360,7 @@ function newAgentProgram(ap, callback, $root){
     else
         sendToTCloud(
             {m:'new_agent_program', ap: JSON.stringify(ap)},
-            function(data, textStatus, jqXHR){ callback.call(); },
+            function(data, textStatus, jqXHR){ callback.call(this, data.date); },
             $root
         );
 }

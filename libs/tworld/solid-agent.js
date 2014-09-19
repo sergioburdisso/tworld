@@ -129,7 +129,7 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
             break;
 
         case _PERCEPT_HEADER.END:
-            $return(_ACTION._SAVE_MEMORY_ + JSON.stringify($memory))
+            $return(_ACTION._SAVE_MEMORY_ + JSON.stringify($memory));
             self.close();
             break;
 
