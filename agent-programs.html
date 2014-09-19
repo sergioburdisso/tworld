@@ -39,7 +39,7 @@
 			<h2><img src="imgs/web-app/rob_face.png" class="solid-icon-30"> Agent Programs<small class="pull-right" ng-if="totalPages-1">{{apc.page+'/'+totalPages}}</small></h2>
 			<!--Body content-->
 			<div class="list-group mouse-cursor" style="min-height: 300px">
-				<a class="list-group-item animate-filter transition-400" ng-repeat="ap in items = (apc.agentPrograms | filter:apc.userFilter) | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="apc.run(ap)" ng-class="{active:apc.isSelected(ap.date)}" ng-if="(apc.page-1)*apc.itemsPerPage <= $index&&$index < apc.page*apc.itemsPerPage">
+				<a class="list-group-item animate-filter transition-400 min-height-110" ng-repeat="ap in items = (apc.agentPrograms | filter:apc.userFilter) | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="apc.run(ap)" ng-class="{active:apc.isSelected(ap.date)}" ng-if="(apc.page-1)*apc.itemsPerPage <= $index&&$index < apc.page*apc.itemsPerPage">
 					<!-- PROPERTIES ICONS-->
 					<div class="pull-right">
 						<div class="solid-icon-16 icon-single-agent" ng-show="ap.ai" tooltip="Controlled by Algorithm"></div>
@@ -56,19 +56,24 @@
 						</span>
 					</div>
 
-					<h4 class="list-group-item-heading">{{ap.name}} <span class="badge active">{{ap.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span></h4>
-					<p class="list-group-item-text">{{ap.desc|stringLimit:400}}</p>
+					<h4 class="list-group-item-heading">
+						<span ng-class="{'text-white':apc.isSelected(ap.date),'text-blue':!apc.isSelected(ap.date)}">
+							{{ap.name}} 
+						</span>
+						<span class="badge active">{{ap.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span>
+						<small ng-if="ap.builtin" ng-class="{'text-white':apc.isSelected(ap.date),'text-green':!apc.isSelected(ap.date)}"><b>default</b></small>
+					</h4>
+					<p class="list-group-item-text text-gray2">{{ap.desc|stringLimit:400}}</p>
 
 
-					<div class="row panel-body">
-						<br>
-						<div class="pull-right animate-only-show" ng-show="apc.isSelected(ap.date)">
+					<div class="row margin-10">
+						<div class="pull-right animate-only-show margin-right-10" ng-show="apc.isSelected(ap.date)">
 							<button class="btn btn-success glyphicon glyphicon-list-alt" ng-click="apc.run(ap)" ng-if="apc.editor(ap)" tooltip="Run/View Source Code"></button>
 							<button class="btn btn-success glyphicon glyphicon-play" ng-click="apc.run()" ng-if="!apc.editor(ap)" tooltip="Run"></button>
 							<button class="btn btn-success glyphicon glyphicon-save" ng-click="apc.download(ap.date)" ng-if="!ap.javascript&&ap.source.file" tooltip="Download Source Code"></button>
 							<button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:all&agent-prog:'+ap.date)" tooltip="View stats"></button>
 							<button class="btn btn-info glyphicon glyphicon-list" ng-click="apc.open()" tooltip="View/Edit values"></button>
-							<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="apc.remove()" tooltip="Delete"></button>
+							<button class="btn btn-danger glyphicon glyphicon-remove animate-none" ng-click="apc.remove()" tooltip="Delete" ng-hide="ap.builtin"></button>
 						</div>
 					</div>
 				</a>

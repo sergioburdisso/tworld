@@ -3,7 +3,7 @@
 		<div class="col-md-2" style="padding-right:40px">
 			<!--Sidebar content-->
 
-			<button class="btn btn-primary" ng-click="twc.goto('/environments/new')">New Environment</button>
+			<button class="btn btn-primary" ng-click="twc.goto('/environments/new')">New T-Environment</button>
 
 			<hr>
 
@@ -54,7 +54,7 @@
 			<h2><span class="glyphicon glyphicon-th"></span> Task Environments<small class="pull-right" ng-if="totalPages-1">{{ec.page+'/'+totalPages}}</small></h2>
 			<!--Body content-->
 			<div class="list-group mouse-cursor" style="min-height: 300px">
-				<a class="list-group-item animate-filter transition-400" ng-repeat="env in items = (ec.taskEnvironments | filter:ec.userFilter) | orderBy:ec.orderCond track by $index" ng-click="ec.setSelected(env.date)" ng-dblclick="ec.openRunModal()" ng-class="{active:ec.isSelected(env.date)}" ng-if="(ec.page-1)*ec.itemsPerPage <= $index&&$index < ec.page*ec.itemsPerPage">
+				<a class="list-group-item animate-filter transition-400 min-height-110" ng-repeat="env in items = (ec.taskEnvironments | filter:ec.userFilter) | orderBy:ec.orderCond track by $index" ng-click="ec.setSelected(env.date)" ng-dblclick="ec.openRunModal()" ng-class="{active:ec.isSelected(env.date)}" ng-if="(ec.page-1)*ec.itemsPerPage <= $index&&$index < ec.page*ec.itemsPerPage">
 					<!-- PROPERTIES ICONS-->
 					<div class="pull-right">
 						<div class="glyphicon glyphicon-eye-open" ng-show="env.prop.fullyObservable" tooltip="Fully observable"></div>
@@ -78,18 +78,22 @@
 						<div class="glyphicon glyphicon-log-in" ng-show="env.final_tweaks.easy" tooltip="Easy-Mode"></div>
 					</div>
 
-					<h4 class="list-group-item-heading">{{env.name}} <span class="badge active">{{env.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span></h4>
-					<p class="list-group-item-text">{{env.desc|stringLimit:400}}</p>
+					<h4 class="list-group-item-heading">
+						<span ng-class="{'text-white':ec.isSelected(env.date),'text-blue':!ec.isSelected(env.date)}">
+							{{env.name}} 
+						</span> 
+						<span class="badge active">{{env.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span>
+						<small ng-if="env.builtin" ng-class="{'text-white':ec.isSelected(env.date),'text-green':!ec.isSelected(env.date)}"><b>default</b></small>
+					</h4>
+					<p class="list-group-item-text text-gray2">{{env.desc|stringLimit:400}}</p>
 
-
-					<div class="row panel-body">
-						<br>
-						<div class="pull-right animate-only-show" ng-show="ec.isSelected(env.date)">
+					<div class="row margin-10">
+						<div class="pull-right animate-only-show margin-right-10" ng-show="ec.isSelected(env.date)">
 							<button class="btn btn-success glyphicon glyphicon-play" ng-click="ec.openRunModal()" tooltip="Run"></button>
 							<button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:'+env.date+'&agent-prog:all')" tooltip="View stats"></button>
-							<button class="btn btn-info glyphicon glyphicon-user" ng-click="ec.testIt()" tooltip="Test as human"></button>
+							<button class="btn btn-info glyphicon glyphicon-user" ng-click="ec.testIt()" tooltip-html-unsafe="Test as human<br>(Arrows + R key)"></button>
 							<button class="btn btn-info glyphicon glyphicon-list" ng-click="ec.open()" tooltip="View/Edit values"></button>
-							<button class="btn btn-danger glyphicon glyphicon-remove" ng-click="ec.remove()" tooltip="Delete"></button>
+							<button class="btn btn-danger glyphicon glyphicon-remove animate-none" ng-click="ec.remove()" tooltip="Delete" ng-hide="env.builtin"></button>
 						</div>
 					</div>
 				</a>

@@ -167,7 +167,7 @@ var defaults = {
                 cursor:{row:0, column:0},
                 code:
                     '/*\n'+
-                    '* Write here the code you only want to run once when the simulation starts, e.g.\n'+
+                    '* Write here the code you want to run only once, when the simulation starts, e.g.\n'+
                     '* variables / data structures initialization\n'+
                     '*/\n'+
                     '\n'+
@@ -234,8 +234,8 @@ var defaults = {
         keyboard:true,
         controls:{Up:38, Down:40, Left:37, Right:39, Restore:16}
     },
-    taskEnvironments : [],
-    agentPrograms : []
+    taskEnvironments : getDefaultEnvironments(),
+    agentPrograms : getDefaultAgentPrograms()
 }
 
 // TASk ENVIRONMENTS
@@ -243,14 +243,30 @@ function saveEnvironments(){ localStorage.taskEnvironments = JSON.stringify(task
 function clearEnvironments(){localStorage.removeItem("taskEnvironments")}
 function updateEnvitonments(){return ( taskEnvironments= getEnvironments() )}
 function getEnvironments(callback, $root){
-    if (!isLoggedIn())
-        return localStorage.taskEnvironments? JSON.parse(localStorage.taskEnvironments) : [];
-    else
+    if (!isLoggedIn()){
+        var envs = localStorage.taskEnvironments? JSON.parse(localStorage.taskEnvironments) : []
+        return defaults.taskEnvironments.concat(envs);
+    }else
         sendToTCloud(
             {m:'get_environments'},
-            function(data, textStatus, jqXHR){ callback.call(this, data); },
+            function(data, textStatus, jqXHR){
+                callback.call(this, defaults.taskEnvironments.concat(data));
+            },
             $root
         );
+}
+function getDefaultEnvironments(){
+    if (isLoggedIn())
+        sendToTCloud(
+            {m:'get_default_environments'},
+            function(data, textStatus, jqXHR){
+                defaults.taskEnvironments.length = 0;
+                for (var len=data.length,e=0;e<len;++e)
+                    defaults.taskEnvironments.push(data[e]);
+                //console.log(JSON.stringify(defaults.taskEnvironments));
+            }
+        );
+    return [{"trial":{"test":false,"runs":1,"saveStats":false,"agents":[],"speed":0,"pause":true,"camera":4},"name":"6x6 Puzzle","desc":"This task environment is perfect as a starting point when it comes to the implementation of Problem-Solving Agents Programs. The  goals are to  fill all 3 holes and to locate the agent at (0,0). Note: Since the floor is a 6x6 square, Uninformed search strategies should solve this problem perfectly well.","battery":false,"prop":{"fullyObservable":true,"multiagent":false,"multiagent_type":0,"deterministic":true,"dynamic":0,"known":true},"agents":{"percept":{"partialGrid":true,"radius":2,"noise":false,"noise_cfg":{"tile":0.3,"obstacle":0.3,"hole":0.3}},"stochastic_model":{"type":1,"prob":[700,100,100,100,0]}},"environment":{"rows":6,"columns":6,"holes_size":{"range":[1,3],"prob":[334,333,333]},"num_holes":{"range":[2,3],"prob":[500,500]},"num_obstacles":{"range":[1,2],"prob":[500,500]},"difficulty":{"range":[0,0],"prob":[]},"scores_variability":0,"dynamic":{"dynamism":{"range":[6,13],"prob":[125,125,125,125,125,125,125,125]},"hostility":{"range":[1,13],"prob":[77,77,77,77,77,77,77,77,77,77,77,77,76]},"hard_bounds":true},"random_initial_state":false,"initial_state":[[" "," "," "," "," ","#"],["#"," "," ","2"," ","#"],[" ","#"," ","T"," ","A"],["1","T"," "," "," ","#"],["#"," "," "," ","T","#"],[" ","#"," ","#","3"," "]],"final_state":[{"name":"Agent(s) location","value":[{"row":0,"column":0}],"result":1,"$$hashKey":"0PO"},{"name":"Filled holes","value":3,"result":1,"$$hashKey":"0PP"}]},"teams":[{"name":"Team0","color":"red","members":1,"$$hashKey":"0MX"}],"final_tweaks":{"easy":false,"battery":{"level":1000,"good_move":20,"bad_move":5,"sliding":10},"multiplier":{"enabled":false,"timeout":6},"score":{"cell":false},"shapes":false},"date":1411017022456,"builtin":true},{"trial":{"test":false,"runs":1,"saveStats":false,"agents":[],"speed":0,"pause":true,"camera":4},"name":"15x15 Search Strategies illustrator","desc":"The single goal is to locate the agent at a given location. It was created to visually see how differently each one of the Search Strategies explores the State Space. It is intended to be used  to illustrate (a) each search strategy behavior and (b) how the use of heuristic guides, and radically improves, the search.","battery":false,"prop":{"fullyObservable":true,"multiagent":false,"multiagent_type":0,"deterministic":true,"dynamic":0,"known":true},"agents":{"percept":{"partialGrid":true,"radius":2,"noise":false,"noise_cfg":{"tile":0.3,"obstacle":0.3,"hole":0.3}},"stochastic_model":{"type":1,"prob":[700,100,100,100,0]}},"environment":{"rows":15,"columns":15,"holes_size":{"range":[1,3],"prob":[334,333,333]},"num_holes":{"range":[2,3],"prob":[500,500]},"num_obstacles":{"range":[1,2],"prob":[500,500]},"difficulty":{"range":[0,0],"prob":[]},"scores_variability":0,"dynamic":{"dynamism":{"range":[6,13],"prob":[125,125,125,125,125,125,125,125]},"hostility":{"range":[1,13],"prob":[77,77,77,77,77,77,77,77,77,77,77,77,76]},"hard_bounds":true},"random_initial_state":false,"initial_state":[[" "," "," "," "," "," ",null,null,null,null,null,null,null,null,null],[" "," ","#","#"," "," ",null,null,null,null,null,null,"#","#",null],[" ","#","#"," "," "," ",null,null,null,null,null,null,"#","#",null],[" "," "," "," "," "," ",null,null,null,null,null,null,null,null,null],[" "," "," "," "," "," ",null,null,null,null,null,null,null,null,null],[" "," "," "," "," "," ",null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,"A",null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],[null,"#",null,null,null,null,null,null,null,null,null,null,null,null,null],[null,"#",null,null,null,null,null,null,null,null,null,null,null,null,null],[null,"#",null,null,null,null,null,null,null,null,null,null,null,null,null],[null,"#",null,null,null,null,null,null,null,null,null,null,null,null,null],[null,"#",null,null,null,null,null,null,null,null,null,null,null,null,"#"],[null,"#","#","#",null,null,null,null,null,null,null,null,null,null,"#"],[" ",null," ","#",null,null,null,null,null,null,null,null,"#","#","#"]],"final_state":[{"name":"Agent(s) location","value":[{"row":14,"column":1}],"result":1,"$$hashKey":"0JA"}]},"teams":[{"name":"Team0","color":"red","members":1,"$$hashKey":"04E"}],"final_tweaks":{"easy":false,"battery":{"level":1000,"good_move":20,"bad_move":5,"sliding":10},"multiplier":{"enabled":false,"timeout":6},"score":{"cell":false},"shapes":false},"date":1411019329319,"builtin":true},{"trial":{"test":false,"runs":1,"saveStats":false,"agents":[{"team":0,"id":0,"program":{"date":1411022986730,"name":"Solving-Problem Uninformed"}}],"speed":0,"pause":true,"camera":4},"name":"20x20 Maze","desc":"A classic maze game; the agent has to get to the battery charger cell. Since it is a observable, discrete, known and deterministic task environment, this may be useful to illustrate how basic kind of agent programs (such as  model-based reflex or goal-based agents) can rapidly solve this well-known game.","battery":true,"prop":{"fullyObservable":true,"multiagent":false,"multiagent_type":0,"deterministic":true,"dynamic":0,"known":true},"agents":{"percept":{"partialGrid":true,"radius":2,"noise":false,"noise_cfg":{"tile":0.3,"obstacle":0.3,"hole":0.3}},"stochastic_model":{"type":1,"prob":[700,100,100,100,0]}},"environment":{"rows":20,"columns":20,"holes_size":{"range":[1,3],"prob":[334,333,333]},"num_holes":{"range":[2,3],"prob":[500,500]},"num_obstacles":{"range":[1,2],"prob":[500,500]},"difficulty":{"range":[0,0],"prob":[]},"scores_variability":0,"dynamic":{"dynamism":{"range":[6,13],"prob":[125,125,125,125,125,125,125,125]},"hostility":{"range":[1,13],"prob":[77,77,77,77,77,77,77,77,77,77,77,77,76]},"hard_bounds":true},"random_initial_state":false,"initial_state":[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1," "," "," ",1," "," "," "," "," ",1," "," "," "," "," "," "," "," "," "],[1,1,1," ",1,1,1," ",1,null,1," ",1,1,1,1,1,1,1," "],[1," ",1," "," "," ",1," ",1," "," "," ",1," "," "," "," "," ",1," "],[1," ",1,1,1," ",1,null,1,1,1,1,1," ",1," ",1,1,1," "],[1," ",1," "," "," ",1,null,1,null," "," ",1," ",1," "," "," ",1," "],[1," ",1,null,1,1,1,null,1,null,1,null,1,1,1,1,1," ",1," "],[1," ",1," ",1," "," "," ",1,null,1,null," "," ",1," "," "," ",1," "],[1," ",1,null,1,1,1," ",1," ",1,1,1," ",1," ",1,1,1," "],[1," ",1," "," "," ",1," ",1,null,1," "," "," ",1," ",null," ",1," "],[1," ",1,1,1," ",1,null,1,null,1," ",1,1,1,1,1," ",1," "],[1," "," "," "," "," ",1," "," ",null,1," ",1," "," "," ",null," ",1," "],[1," ",1,1,1,null,1,null,1,1,1," ",1,1,1," ",1," ",1," "],[1," "," "," ",1,null,1," ",1," "," "," ",1," "," "," ",1," ",1," "],[1,1,1," ",1,null,1,1,1," ",1,1,1," ",1,1,1," ",1," "],[1," "," "," ",1," "," "," "," "," ",1," "," "," ",1," "," "," ",1," "],[1," ",1," ",1,1,1,1,1,1,1,null,1,1,1,1,1,1,1," "],["A"," ",1," "," "," "," "," ",1," "," "," ",null," ",1," "," "," "," "," "],[1," ",1,1,1,1,1,1,1," ",1,1,1,1,1," ",1,1,1,1],[1," "," "," "," "," "," "," "," "," "," "," ",1," "," "," "," "," "," ","C"]],"final_state":[{"name":"Battery recharge","value":1,"result":"1","$$hashKey":"5HM"}]},"teams":[{"name":"Team0","color":"red","members":1,"$$hashKey":"0IQ"}],"final_tweaks":{"easy":false,"battery":{"level":1000,"good_move":0,"bad_move":0,"sliding":0},"multiplier":{"enabled":false,"timeout":6},"score":{"cell":false},"shapes":false},"date":1411022433403,"builtin":true},{"trial":{"test":false,"runs":1,"saveStats":false,"agents":[{"team":0,"id":0,"program":{"date":1411022986730,"name":"Solving-Problem Uninformed"}}],"speed":0,"pause":true,"camera":4},"name":"14x14 Multiple Goals","desc":"The agent's goals are to score at least 30 points and to get to the battery charger cell at least once. Note: take into account that the agent lost 10 points when its battery is recharged by the charger cell. Advanced search strategies are needed to be able to solve this problem, e.g. greedy best-first or A*  search.","battery":true,"prop":{"fullyObservable":true,"multiagent":false,"multiagent_type":0,"deterministic":true,"dynamic":0,"known":true},"agents":{"percept":{"partialGrid":true,"radius":2,"noise":false,"noise_cfg":{"tile":0.3,"obstacle":0.3,"hole":0.3}},"stochastic_model":{"type":1,"prob":[700,100,100,100,0]}},"environment":{"rows":14,"columns":14,"holes_size":{"range":[1,3],"prob":[334,333,333]},"num_holes":{"range":[2,3],"prob":[500,500]},"num_obstacles":{"range":[1,2],"prob":[500,500]},"difficulty":{"range":[0,0],"prob":[]},"scores_variability":0,"dynamic":{"dynamism":{"range":[6,13],"prob":[125,125,125,125,125,125,125,125]},"hostility":{"range":[1,13],"prob":[77,77,77,77,77,77,77,77,77,77,77,77,76]},"hard_bounds":true},"random_initial_state":false,"initial_state":[[" "," "," ",12,12,"#","#","#",null,null,null,null,null,null],[8,"#","#"," "," "," ",null,null,null,null,"#","#","#",null],[8,"#"," "," ","T"," ",null,null,null,null,null,null,"#",null],[" ","T"," "," ","T"," ",null,null,null,null,2,null,"#",null],[" "," ","T"," "," "," ",null,null," ","T",null,null,null,null],["#"," "," "," "," "," ",null,null,null,null,null,null,"#","#"],[null,null,"#",null,null,null,null,"A",null,null,null," ","#","#"],[null,"#","#",null,null,null," "," ",null,"T",null,6,"#","#"],[null,"#",null,null,null,null,null,null,null,null,null,null,"#","#"],[null,"#",null,null,null,null,null,null,null,"T",null,null,null,null],[null,"#",null,null,null,null,null,null,null,null,null,null,"#",null],[null,"#",null,null,null,null,null,null,3,null,null,"#","#",null],[null,"#","#",null,null,null,null,null,null,null,null,"#","#",null],[null,"C","#",null,null,null,null,null,null,null,null,null,null,null]],"final_state":[{"name":"Battery recharge","value":1,"result":"1","$$hashKey":"1AI"},{"name":"Score","value":30,"result":1,"$$hashKey":"1AE"}]},"teams":[{"name":"Team0","color":"red","members":1,"$$hashKey":"010"}],"final_tweaks":{"easy":false,"battery":{"level":1000,"good_move":0,"bad_move":0,"sliding":0},"multiplier":{"enabled":false,"timeout":6},"score":{"cell":false},"shapes":false},"date":1411060605543,"builtin":true},{"trial":{"test":false,"runs":1,"saveStats":false,"agents":[{"team":0,"id":0,"program":{"date":1411022986730,"name":"Solving-Problem Uninformed"}}],"speed":0,"pause":true,"camera":2},"name":"Pacman-Like Puzzle","desc":"The agent's goal is to fill all the holes . Holes are filled by walking over them (i.e. Easy-Mode is enabled) and therefore holes are analogous to Pacman's \"food\" dots. This problem is quite hard for those problem-solving agents that search the solution in terms of an atomic goal state, some hybrid approach must be taken in order to achieve the goal. (e.g. filling the closest hole one at a time)","battery":false,"prop":{"fullyObservable":true,"multiagent":false,"multiagent_type":0,"deterministic":true,"dynamic":0,"known":true},"agents":{"percept":{"partialGrid":true,"radius":2,"noise":false,"noise_cfg":{"tile":0.3,"obstacle":0.3,"hole":0.3}},"stochastic_model":{"type":1,"prob":[700,100,100,100,0]}},"environment":{"rows":9,"columns":18,"holes_size":{"range":[1,3],"prob":[334,333,333]},"num_holes":{"range":[2,3],"prob":[500,500]},"num_obstacles":{"range":[1,2],"prob":[500,500]},"difficulty":{"range":[0,0],"prob":[]},"scores_variability":0,"dynamic":{"dynamism":{"range":[6,13],"prob":[125,125,125,125,125,125,125,125]},"hostility":{"range":[1,13],"prob":[77,77,77,77,77,77,77,77,77,77,77,77,76]},"hard_bounds":true},"random_initial_state":false,"initial_state":[[1," ",25," ","#",26,53," "," ",56," ",58," ","#"," ",74," ",76],[" ","#","#",22,"#"," ","#","#","#","#","#","#"," ","#",72,"#","#",77],[" ","#",20," ",32," ",2," ",65," ",63," ",61," "," ",81,"#"," "],[4,"#"," ","#","#"," ","#","#","#","#","#","#",67,"#","#"," ","#"," "],[" ",17," ",33," ",30,"#","#","#","#","#","#"," "," ",88," ",84," "],[" ","#"," ","#","#"," ","#","#","#","#","#","#",69,"#","#",85,"#",96],[7,"#",15," "," ",36," ",40," ","A",47," "," ",89," "," ","#"," "],[" ","#","#",13,"#"," ","#","#","#","#","#","#",50,"#",90,"#","#",97],[" ",10," "," ","#"," ",42," "," ",45," ",52," ","#",91," ",93," "]],"final_state":[{"name":"Filled holes","value":44,"result":1,"$$hashKey":"22F"}]},"teams":[{"name":"Team0","color":"red","members":1,"$$hashKey":"1QP"}],"final_tweaks":{"easy":true,"battery":{"level":1000,"good_move":20,"bad_move":5,"sliding":10},"multiplier":{"enabled":false,"timeout":6},"score":{"cell":false},"shapes":false},"date":1411067311418,"builtin":true},{"trial":{"test":false,"runs":1,"saveStats":false,"agents":[{"team":0,"id":0,"program":{"date":1411022986730,"name":"Solving-Problem Uninformed"}}],"speed":0,"pause":false,"camera":2},"name":"Figure 17.1","desc":"The stochastic environment described in the chapter 17 of the book \"Artificial Intelligence: A Modern Approach 3rd edition\". A simple 3x4 environment that presents the agent with a sequential decision problem. The transition model of the environment is: the intended outcome occurs with probability 0.8 but with probability 0.2 the agent moves at right angles to the intended direction.","battery":false,"prop":{"fullyObservable":true,"multiagent":false,"multiagent_type":0,"deterministic":false,"dynamic":0,"known":true},"agents":{"percept":{"partialGrid":true,"radius":2,"noise":false,"noise_cfg":{"tile":0.3,"obstacle":0.3,"hole":0.3}},"stochastic_model":{"type":"3","prob":[800,100,100,0,0]}},"environment":{"rows":3,"columns":4,"holes_size":{"range":[1,3],"prob":[334,333,333]},"num_holes":{"range":[2,3],"prob":[500,500]},"num_obstacles":{"range":[1,2],"prob":[500,500]},"difficulty":{"range":[0,0],"prob":[]},"scores_variability":0,"dynamic":{"dynamism":{"range":[6,13],"prob":[125,125,125,125,125,125,125,125]},"hostility":{"range":[1,13],"prob":[77,77,77,77,77,77,77,77,77,77,77,77,76]},"hard_bounds":true},"random_initial_state":false,"initial_state":[[" "," "," ",1],[" ","#"," "," "],["A"," "," "," "]],"final_state":[{"name":"Agent(s) location","value":[{"row":1,"column":3}],"result":"2","$$hashKey":"0N5"},{"name":"Filled holes","value":1,"result":1,"$$hashKey":"0N6"}]},"teams":[{"name":"Team0","color":"red","members":1,"$$hashKey":"06A"}],"final_tweaks":{"easy":true,"battery":{"level":1000,"good_move":20,"bad_move":5,"sliding":10},"multiplier":{"enabled":false,"timeout":6},"score":{"cell":false},"shapes":false},"date":1411073490467,"builtin":true},{"trial":{"test":false,"runs":1,"saveStats":false,"agents":[],"speed":0,"pause":true,"camera":4},"name":"Dynamic and  Competitive (2 agents)","desc":"Default dynamic task environment, in which 2 agents compete  against each other for the highest score within a time limit of 5 minutes.\n-Grid dimension: 9 rows x 10 columns.\n-Battery use:  default values.\n-Probability distribution: uniform.\n-Multiplier: enabled (6 seconds).\n-Partial rewards: enabled.","battery":true,"prop":{"fullyObservable":true,"multiagent":true,"multiagent_type":0,"deterministic":true,"dynamic":2,"known":true},"agents":{"percept":{"partialGrid":true,"radius":2,"noise":false,"noise_cfg":{"tile":0.3,"obstacle":0.3,"hole":0.3}},"stochastic_model":{"type":1,"prob":[700,100,100,100,0]}},"environment":{"rows":9,"columns":10,"holes_size":{"range":[1,3],"prob":[334,333,333]},"num_holes":{"range":[2,3],"prob":[500,500]},"num_obstacles":{"range":[1,2],"prob":[500,500]},"difficulty":{"range":[0,0],"prob":[]},"scores_variability":0,"dynamic":{"dynamism":{"range":[6,13],"prob":[125,125,125,125,125,125,125,125]},"hostility":{"range":[1,13],"prob":[77,77,77,77,77,77,77,77,77,77,77,77,76]},"hard_bounds":true},"random_initial_state":false,"initial_state":[[" "," "," "," "," ","#",null,null,null,null],["#"," "," ","2"," ","#",null,null,null,null],[" ","#"," ","T"," ","A",null,null,null,null],["1","T"," "," "," ","#",null,null,null,null],["#"," "," "," ","T","#",null,null,null,null],[" ","#"," ","#","3"," ",null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null,null,null]],"final_state":[{"name":"Time","value":300,"result":0,"$$hashKey":"093"}]},"teams":[{"name":"Team0","color":"orange","members":1,"$$hashKey":"0C2"},{"name":"Team1","color":"green","members":1,"$$hashKey":"0C3"}],"final_tweaks":{"easy":false,"battery":{"level":1000,"good_move":20,"bad_move":5,"sliding":10},"multiplier":{"enabled":true,"timeout":6},"score":{"cell":true},"shapes":false},"date":1411080490467,"builtin":true}];
 }
 function newEnvironment(env, callback, $root){
     env.date = Date.now();
@@ -349,14 +365,27 @@ function newAgentProgram(ap, callback, $root){
         );
 }
 function getAgentPrograms(callback, $root){
-    if (!isLoggedIn())
-        return localStorage.agentPrograms? JSON.parse(localStorage.agentPrograms) : [];
-    else
+    if (!isLoggedIn()){
+        var agentProgs = localStorage.agentPrograms? JSON.parse(localStorage.agentPrograms) : [];
+        return defaults.agentPrograms.concat(agentProgs);
+    }else
         sendToTCloud(
             {m:'get_agent_programs'},
-            function(data, textStatus, jqXHR){ callback.call(this, data); },
+            function(data, textStatus, jqXHR){ callback.call(this, defaults.agentPrograms.concat(data)); },
             $root
         );
+}
+function getDefaultAgentPrograms(){
+    if (isLoggedIn())
+        sendToTCloud(
+            {m:'get_default_agent_programs'},
+            function(data, textStatus, jqXHR){
+                defaults.agentPrograms.length = 0;
+                for (var len=data.length,e=0;e<len;++e)
+                    defaults.agentPrograms.push(data[e]);
+            }
+        );
+    return [];//json!!!
 }
 function updateAgentProgram(ap, callback, $root){
     if (!isLoggedIn()){
@@ -365,6 +394,7 @@ function updateAgentProgram(ap, callback, $root){
         saveAgentPrograms();
         if (callback) callback.call();
     }else
+    if (!ap.builtin)
         sendToTCloud(
             {m:'update_agent_program', date: ap.date, ap: JSON.stringify(ap)},
             function(data, textStatus, jqXHR){ if (callback) callback.call(); },
@@ -472,16 +502,17 @@ function getMemoryByAgentProgramDate(date, callback, $root){
             $root
         );
 }
-function saveMemoryByAgentProgramDate(date, memory/*json string*/, callback, $root){if (!memory || memory == "{}" || memory == "undefined"){if(callback)callback.call();return;}
+function saveMemoryByAgentProgramDate(date, memory/*json string*/, callback, $root){try{memory=JSON.parse(memory);}catch(e){if(callback)callback.call();return;};
+    if (!memory) {if(callback)callback.call();return;};
     if (!isLoggedIn()){
         var mem = {};
         if (localStorage.memory)
             mem = JSON.parse(localStorage.memory);
-        mem[date] = JSON.parse(memory);
+        mem[date] = memory;
         localStorage.memory = JSON.stringify(mem);
     }else
         sendToTCloud(
-            {m:'save_agent_program_memory', date: date, mem: memory},
+            {m:'save_agent_program_memory', date: date, mem: JSON.stringify(memory)},
             function(data, textStatus, jqXHR){ if(callback)callback.call(); },
             $root
         );
@@ -633,6 +664,8 @@ function LoggedIn(data, remember){
         sessionStorage.tt = data.tt;
         sessionStorage.session_info = JSON.stringify(session_info);
     }
+    getDefaultAgentPrograms();
+    getDefaultEnvironments();
 }
 function LogOut(callback){
     sendToTCloud(

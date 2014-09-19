@@ -186,6 +186,7 @@ function match(obj0, obj1){
             case "filled_cells":
             case "filled_holes":
             case "battery_used":
+            case "battery_recharge":
             case "total_score":
             case "battery":
             case "score":
@@ -193,7 +194,7 @@ function match(obj0, obj1){
                     return false;
                 break;
             default:
-                if (!["time", "battery", "good_moves", "battery_used",
+                if (!["time", "agents", "battery", "good_moves", "battery_used", "time_elapsed",
                       "builtin_knowledge", "grid", "battery_chargers"].contains(p) &&
                     !(obj1[p] instanceof Function) && !match(obj0[p], obj1[p]))
                     return false;

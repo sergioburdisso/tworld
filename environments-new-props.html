@@ -12,7 +12,12 @@
 	<div class="row">
 		<div class="col-md-3"></div>
 		<div class="col-md-6" ng-class="{'treadonly':enc.readOnly}">
-			<alert type="info" ng-hide="!enc.readOnly"><span class="glyphicon glyphicon-info-sign" style="font-size:30px"></span><br>Since there are trials/states associate with this task environment, most configuration values won't be editable. In case you want to change some of these readonly values, create a new task environment and then load these configuration values using the "Load configuration" button above.</alert>
+			<alert type="info" ng-hide="!enc.readOnly">
+				<span class="glyphicon glyphicon-info-sign" style="font-size:30px"></span><br>
+				<span ng-if="!enc.task_env.builtin">Since there are trials/states associate with this task environment, most configuration values won't be editable. </span>
+				<span ng-if="enc.task_env.builtin">Since this is a default task environment, values won't be editable. </span>
+				In case you want to change some of these readonly values, create a new task environment and then load these configuration values using the "Load configuration" button above.
+			</alert>
 			<div class="row text-left">
 				<p class="lead"><b>1.</b> Select the properties of your new task environment according to the dimension listed below.</p>
 			</div>
@@ -70,12 +75,12 @@
 			<div class="separator"></div>
 			<div class="row text-left teditable">
 				<label class="lead"><b>3.</b> Give your task environment a name.</label>
-				<input type="text" class="form-control" ng-model="enc.task_env.name" placeholder="Name" ng-class="{'has-error':!enc.task_env.name.trim().length}">
+				<input type="text" class="form-control" ng-model="enc.task_env.name" placeholder="Name" ng-class="{'has-error':!enc.task_env.name.trim().length}" ng-readonly="enc.task_env.builtin">
 			</div>
 			<div class="separator"></div>
 			<div class="row text-left teditable">
 				<label class="lead"><b>4.</b> Optionally, write something about your task environment.</label>
-				<textarea class="form-control" ng-model="enc.task_env.desc" rows="8" placeholder="Description"></textarea>
+				<textarea class="form-control" ng-model="enc.task_env.desc" rows="8" placeholder="Description" ng-readonly="enc.task_env.builtin"></textarea>
 			</div>
 			<div class="separator"></div>
 		</div>

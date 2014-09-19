@@ -80,6 +80,9 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
             _SCORE_CELLS_MULTIPLIER = percept.data.CFG_CONSTANTS._SCORE_CELLS_MULTIPLIER;
             _EASY_MODE = percept.data.CFG_CONSTANTS._EASY_MODE;
 
+            if (percept.data.memory)
+                $memory = percept.data.memory;
+
             eval(
                 "(function(){"+
                     percept.data.global_src+
@@ -126,8 +129,7 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
             break;
 
         case _PERCEPT_HEADER.END:
-            if ($memory)
-                $return(_ACTION._SAVE_MEMORY_ + JSON.stringify($memory))
+            $return(_ACTION._SAVE_MEMORY_ + JSON.stringify($memory))
             self.close();
             break;
 
@@ -211,7 +213,8 @@ function $result(state, action, paint){ if (state.agent.battery == 0) return sta
                             state.agent.stats.total_score += env.holes[i].value;
                             state.agent.score += env.holes[i].value;
 
-                            env.time += costs.filled_hole/1000;
+                            if (!_EASY_MODE)
+                                env.time += costs.filled_hole/1000;
 
                             env.holes.remove(i);
                             break;
@@ -277,6 +280,14 @@ function $result(state, action, paint){ if (state.agent.battery == 0) return sta
         grid[loc.row+r][loc.column+c] = _GRID_CELL.AGENT;
 
         state.agent.stats.battery_used+= costs.battery.slide_tile;
+
+        for (var t=env.tiles.length; t--;)
+            if (env.tiles[t].row == loc.row+r &&
+                env.tiles[t].column == loc.column+c)
+            {
+                env.tiles.remove(t);
+                break;
+            }
 
         fillHoleCell(ir, ic);
     }else
@@ -632,7 +643,7 @@ function $randomValidAction(percept /*n,s,w,e*/){
         actions.push(_ACTION.SOUTH);
 
     if ($isValidMove(percept, _ACTION.EAST))
-        actions.push(percept, _ACTION.EAST);
+        actions.push(_ACTION.EAST);
 
     if ($isValidMove(percept, _ACTION.WEST))
         actions.push(_ACTION.WEST);

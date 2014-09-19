@@ -222,6 +222,7 @@ td input{text-align: center}
 .text-left{text-align: left !important}
 .text-center{text-align: center}
 .text-gray, .ace_search_field{color: #555}
+.text-gray2{color: #999}
 .text-light-gray,.sett-item{color: #CCC}
 .text-red{color: #B82B28}
 .text-orange{color: #D54D1D}
@@ -235,6 +236,8 @@ td input{text-align: center}
 .no-margin{margin: 0}
 .no-padding{padding: 0}
 .min-height{min-height: 800px}
+.min-height-110{min-height: 110px}
+.min-height-80{min-height: 80px}
 .overflow-hidden{overflow: hidden}
 h2,
 .top-shadow{text-shadow: rgb(190, 189, 189) 0px 10px 10px}

@@ -896,7 +896,6 @@ function Environment(rows, columns, graphicEngine, parent) {
 
                     if (!agentProgs.contains(trial.agents[i].program_id))
                         agentProgs.push(trial.agents[i].program_id);
-
                 }
 
                 if (!isLoggedIn()){
@@ -1460,7 +1459,7 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
                 )}
         else
         //case _ACTION._SAVE_MEMORY_
-        if ( _ACTION_REGEX._SAVE_MEMORY_.test(action) ){
+        if ( _ACTION_REGEX._SAVE_MEMORY_.test(action) ){if (_KNOBS_Agents[_index].program.builtin){_env.agentProgramMemorySaved();return;}
             matchs = action.match(_ACTION_REGEX._SAVE_MEMORY_);
                 if (!isLoggedIn()){
                     saveMemoryByAgentProgramDate(_KNOBS_Agents[_index].program.date, (matchs[3]||matchs[4]))

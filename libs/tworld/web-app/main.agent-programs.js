@@ -31,7 +31,7 @@
         this.orderCond = "-date";
         this.allProps = true;
         this.page = 1;
-        this.itemsPerPage = 10;
+        this.itemsPerPage = 7;
         this.query = {
             name:"",
             ai:true,
@@ -172,7 +172,8 @@
                 useWorker: true,
                 useSoftTabs:true,
                 tabSize:2,
-                fontSize: 13
+                fontSize: 13,
+                readOnly: agentProg.builtin
             });
 
             this.fullScreen = false;
@@ -201,7 +202,7 @@
                 _editor.session.setUndoManager(_undoManagers[iUndo]);
             }
 
-            this.save = function(){
+            this.save = function(){if(!agentProg.builtin){
                 this.dropdownopen = false;
                 _source.cursor = _editor.getCursorPosition();
                 _source.code = _editor.getValue();
@@ -212,7 +213,7 @@
                     updateAgentProgram(_self.agent_prog, function(){$scope.$apply();}, $rootScope);
 
                 _self.saved = true;
-            }
+            }}
 
             this.run = function(){
                 this.dropdownopen = false;
@@ -282,10 +283,10 @@
                         }
                     },
                     controller: function($scope, $modalInstance, memory){
-                        $scope.memory = {text: memory};
+                        $scope.memory = {text: memory, readonly: agentProg.builtin};
                         $scope.alert = false;
                         $scope.hideAlert = function(){$scope.alert = false}
-                        $scope.save = function(){
+                        $scope.save = function(){if (!agentProg.builtin){
                             try{
                                 JSON.parse($scope.memory.text); //is it a well-formed JSON string?
                                 if (!isLoggedIn()){
@@ -299,7 +300,7 @@
                                         $rootScope
                                     );
                             }catch(e){$scope.alert = true}
-                        }
+                        }}
                         $scope.close = function(){$modalInstance.dismiss()}
 
                         //to handle TABs properly

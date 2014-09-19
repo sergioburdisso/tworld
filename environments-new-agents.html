@@ -14,7 +14,7 @@
 				<div class="panel-body" ng-class="{'treadonly':enc.readOnly}">
 					<button ng-if="$index > 1" class="btn btn-danger pull-right glyphicon glyphicon-remove" ng-click="enc.removeTeam($index)" tooltip="remove"></button>
 					<section class="teditable" ng-show="enc.isCompetitiveCooperative()">
-						<label>Name: </label><input type="text" size="8" ng-model="team.name" ng-class="{'has-error':!team.name.trim().length}">
+						<label>Name: </label><input type="text" size="8" ng-model="team.name" ng-class="{'has-error':!team.name.trim().length}" ng-readonly="enc.task_env.builtin">
 					</section>
 					<section ng-hide="enc.isCompetitive()">
 						<label> Number of agents: </label>

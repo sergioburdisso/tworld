@@ -29,7 +29,7 @@ var _LOGIN_STATE = {HIDDEN : 0, SHOWN: 1, LOADING:2, LOGGED: 3, LOGOUT: 4}
 function getVersion(){ return localStorage.version }
 
 function startTWorld(){
-    if (!_tworldWindow || !_tworldWindow.location.reload)
+    if (!_tworldWindow || !_tworldWindow.location|| !_tworldWindow.location.reload)
         _tworldWindow = window.open('tworld.html');//,'T-World','width=712, height=450');//height=400
     else{
         _tworldWindow.location.reload();

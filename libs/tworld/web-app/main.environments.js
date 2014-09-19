@@ -32,7 +32,7 @@
         this.orderCond = "-date";
         this.allProps = true;
         this.page = 1;
-        this.itemsPerPage = 10;
+        this.itemsPerPage = 7;
         this.query = {
             name:"",
             battery: false,
@@ -54,7 +54,7 @@
                 runTest(getEnvironmentByDate(_selected));
             else{
                 startTWorld();
-                getEnvironmentByDate( _selected, function(result){ runTest(result) }, $rootScope);
+                getEnvironmentByDate( _selected, function(result){ runTest(result); $scope.$apply(); }, $rootScope);
             }
         }
 
@@ -154,7 +154,7 @@
                     }
                 }
 
-            this.readOnly = readOnly; 
+            this.readOnly = readOnly || taskEnv.builtin; 
             this.nTeam = 0;
             this.teamColors = colors;
             this.step = 0;

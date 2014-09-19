@@ -42,7 +42,7 @@ function itemsListController($rootScope, $scope, $modalInstance, items, agentPro
     $scope.orderCond = "-date";
     $scope.environments = !agentProgramsFlag;
     $scope.page = 1
-    $scope.itemsPerPage = 15;
+    $scope.itemsPerPage = 8;
     $scope.query = agentProgramsFlag?
                 {
                     name:"",

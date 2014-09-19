@@ -24,7 +24,7 @@
 					<button type="button" class="btn btn-default dropdown-toggle glyphicon glyphicon-align-justify"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu" ng-click="apscc.dropdownopen = false">
-						<li><a href="" ng-click="apscc.save()">Save All <span class="pull-right"><small>Crtl+S</small></span></a></li>
+						<li ng-class="{'treadonly':apscc.agent_prog.builtin}"><a href="" ng-click="apscc.save()">Save All <span class="pull-right"><small>Crtl+S</small></span></a></li>
 						<li class="divider"></li>
 						<li><a href="" ng-click="apscc.run()">Run <span class="pull-right"><small>Crtl+R</small></a></li>
 						<li><a href="" ng-click="apscc.openEnvironmentsModal()">Select Task Environment</a></li>
@@ -33,7 +33,7 @@
 					</ul>
 				</div>
 
-				<button id="save" class="btn btn-success glyphicon margin-10 pull-right" ng-class="{'disabled glyphicon-floppy-saved':apscc.saved, 'glyphicon-floppy-save':!apscc.saved}" ng-click="apscc.save()" tooltip="Save all"></button>
+				<button id="save" class="btn btn-success glyphicon margin-10 pull-right" ng-class="{'disabled glyphicon-floppy-saved':apscc.saved, 'glyphicon-floppy-save':!apscc.saved, 'disabled':apscc.agent_prog.builtin}" ng-click="apscc.save()" tooltip="Save all"></button>
 				<button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play margin-10 pull-right" tooltip="Run agent program"></button>
 
 				<tabset ng-class="{'treadonly': $loading}">
@@ -71,11 +71,11 @@
 	</div>
 	<div class="modal-body text-blue">
 		$memory =
-		<textarea id="memory" class="form-control text-blue" ng-model="memory.text" rows="8" placeholder="A JSON String e.g. {&quot;counter&quot;:10, &quot;attemps&quot;:4}"></textarea><br>
+		<textarea id="memory" class="form-control text-blue" ng-model="memory.text" rows="8" placeholder="A JSON String e.g. {&quot;counter&quot;:10, &quot;attemps&quot;:4}" ng-readonly="memory.readonly"></textarea><br>
 		<alert class="animate-show" type="danger" close="hideAlert()" ng-show="alert"><span class="glyphicon glyphicon-warning-sign"></span> The code above is not a well-formed JSON string</alert>
 	</div>
 	<div class="modal-footer">
 		<button class="btn btn-default" ng-click="close()">Cancel</button>
-		<button class="btn btn-success" ng-click="save()">Save</button>
+		<button class="btn btn-success" ng-click="save()" ng-if="!memory.readonly">Save</button>
 	</div>
 </script>
