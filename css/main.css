@@ -215,6 +215,7 @@ td input{text-align: center}
 .backcolor-red{background-color: #B82B28}
 .backcolor-blue{background-color: #428BCA}
 .margin-right-10{margin-right: 10px}
+.margin-top-100{margin: 100px}
 .margin-10{margin: 10px}
 .text-light-green{color: rgb(187, 221, 187)}
 .btn-logout:hover,

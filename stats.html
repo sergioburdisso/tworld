@@ -26,6 +26,13 @@
 		<div class="col-md-10">
 			<h2><span class="glyphicon glyphicon-stats"></span> Trials<small class="pull-right" ng-if="totalPages-1">{{sc.page+'/'+totalPages}}</small></h2>
 			<!--Body content-->
+			<div ng-hide="sc.trials.length" class="text-center margin-top-100">
+				<img src="./imgs/web-app/success.png" onload="$(this).addClass(&apos;animate-ok&apos;)" class="tinvisible">
+				<div><h1><b class="text-blue">Hello there!</b></h1></div>
+				<div>
+					It looks like you haven't saved any trials/stats yet
+				</div>
+			</div>
 			<div class="list-group mouse-cursor" style="min-height: 300px">
 				<a class="list-group-item step animate-filter transition-400" ng-repeat="tr in sc.trials | orderBy:sc.orderCond track by $index" ng-click="sc.setSelected(tr.date)" ng-dblclick="sc.viewStats(tr.task_env_id)" ng-class="{active:sc.isSelected(tr.date)}" ng-if="(sc.page-1)*sc.itemsPerPage <= $index&&$index < sc.page*sc.itemsPerPage">
 

@@ -297,7 +297,7 @@ function removeEnvironmentByDate(date, callback, $root){date=parseInt(date);
     }else
         sendToTCloud(
             {m:'remove_environment', date: date},
-            function(data, textStatus, jqXHR){ callback.call(this, data); },
+            function(data, textStatus, jqXHR){ callback.call(this, defaults.taskEnvironments.concat(data)); },
             $root
         );
 }
@@ -428,7 +428,7 @@ function removeAgentProgramByDate(date, callback, $root){date=parseInt(date);
     }else
         sendToTCloud(
             {m:'remove_agent_program', date: date},
-            function(data, textStatus, jqXHR){ callback.call(this, data); },
+            function(data, textStatus, jqXHR){ callback.call(this, defaults.agentPrograms.concat(data)); },
             $root
         );
 }
