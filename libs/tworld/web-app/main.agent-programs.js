@@ -187,6 +187,9 @@
             else
                 loadEnvAsync(this.agent_prog.default_task_env);
 
+            this.search = function(){_editor.execCommand('find')}
+            this.replace = function(){_editor.execCommand('replace')}
+
             this.open = function(source, iUndo){
                 if (_source){
                     _source.cursor = _editor.getCursorPosition();
@@ -432,7 +435,7 @@
                         {
                             nm: !agentProg.date? 'new_agent_program' : 'update_agent_program',
                             m: 'user_file_uploader',
-                            date: (agentProg.date = !agentProg.date? Date.now() : agentProg.date),
+                            date: agentProg.date,
                             ap: JSON.stringify(agentProg)
                         },
                         $('#file')[0].files[0],

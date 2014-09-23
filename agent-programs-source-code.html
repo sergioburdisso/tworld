@@ -24,9 +24,11 @@
 					<button type="button" class="btn btn-default dropdown-toggle glyphicon glyphicon-align-justify"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu" ng-click="apscc.dropdownopen = false">
-						<li ng-class="{'treadonly':apscc.agent_prog.builtin}"><a href="" ng-click="apscc.save()">Save All <span class="pull-right"><small>Crtl+S</small></span></a></li>
+						<li ng-class="{'treadonly':apscc.agent_prog.builtin}"><a href="" ng-click="apscc.save()">Save All <span class="text-light-gray"><small>(Crtl+S)</small></span></a></li>
+						<li><a href="" ng-click="apscc.search()">Search... <span class="text-light-gray"><small>(Crtl+F)</small></a></li>
+						<li><a href="" ng-click="apscc.replace()">Search and Replace... <span class="text-light-gray"><small>(Crtl+H)</small></a></li>
 						<li class="divider"></li>
-						<li><a href="" ng-click="apscc.run()">Run <span class="pull-right"><small>Crtl+R</small></a></li>
+						<li><a href="" ng-click="apscc.run()">Run <span class="text-light-gray"><small>(Crtl+R)</small></a></li>
 						<li><a href="" ng-click="apscc.openEnvironmentsModal()">Select Task Environment</a></li>
 						<li class="divider"></li>
 						<li><a href="" ng-click="apscc.openMemoryModal()">Persistent Memory State</a></li>

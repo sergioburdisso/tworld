@@ -215,7 +215,7 @@ var defaults = {
                 cursor:{row:0, column:0},
                 code:
                     '/*\n'+
-                    '* this section of code is used to declare/define variables that are visible/accessible\n'+
+                    '* this section of code is used to declare/define functions and variables that are visible/accessible\n'+
                     '* from all the other sections of code, namely the "Agent Program", "Start Event" and "Message Received Event"\n'+
                     '* sections above\n'+
                     '*/'
@@ -239,7 +239,11 @@ var defaults = {
 }
 
 // TASk ENVIRONMENTS
-function saveEnvironments(){ localStorage.taskEnvironments = JSON.stringify(taskEnvironments) }
+function saveEnvironments(){
+    for (var te=taskEnvironments.length;te--;)
+        if (taskEnvironments[te].builtin) taskEnvironments.remove(te);
+    localStorage.taskEnvironments = JSON.stringify(taskEnvironments)
+}
 function clearEnvironments(){localStorage.removeItem("taskEnvironments")}
 function updateEnvitonments(){return ( taskEnvironments= getEnvironments() )}
 function getEnvironments(callback, $root){
@@ -350,14 +354,18 @@ function saveEnvironmentRunDefaults(env, $root){
 }
 
 // AGENT PROGRAMS
-function saveAgentPrograms(){localStorage.agentPrograms = JSON.stringify(agentPrograms)}
+function saveAgentPrograms(){
+    for (var ap=agentPrograms.length;ap--;)
+        if (agentPrograms[ap].builtin) agentPrograms.remove(ap);
+    localStorage.agentPrograms = JSON.stringify(agentPrograms)
+}
 function clearAgentPrograms(){localStorage.removeItem("agentPrograms")}
 function updateAgentPrograms(){return ( agentPrograms = getAgentPrograms() )}
 function newAgentProgram(ap, callback, $root){
-    ap.date = Date.now();
-    if (!isLoggedIn())
-        {updateAgentPrograms(); agentPrograms.push(ap); saveAgentPrograms();}
-    else
+    if (!isLoggedIn()){
+        ap.date = Date.now();
+        updateAgentPrograms(); agentPrograms.push(ap); saveAgentPrograms();
+    }else
         sendToTCloud(
             {m:'new_agent_program', ap: JSON.stringify(ap)},
             function(data, textStatus, jqXHR){ callback.call(this, data.date); },
@@ -397,7 +405,7 @@ function updateAgentProgram(ap, callback, $root){
     if (!ap.builtin)
         sendToTCloud(
             {m:'update_agent_program', date: ap.date, ap: JSON.stringify(ap)},
-            function(data, textStatus, jqXHR){ if (callback) callback.call(); },
+            function(data, textStatus, jqXHR){ if (callback) callback.call(this, ap.date); },
             $root
         );
 }

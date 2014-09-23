@@ -3,6 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">-->
+	<meta name="viewport" content="initial-scale=1">
 	<meta name="description" content="Cross programming language Web platform for Artificial Intelligence research and education. Put your algorithms through their paces! Content based on the book Artificial Intelligence: A Modern Approach by Stuart Russell and Peter Norvig. Inspired by the Tileworld by Martha E. Pollack and Marc Ringuette. tags: 3d tileworld webgl html5 ai aima tworld unsl 3dgame"> 
 	<title>T-World</title>
 	<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css" />
@@ -20,7 +21,7 @@
 		</div>
 		<div class="jumbotron container-fluid shadow-inset" style="background-color: transparent; margin-bottom: 0; height: 492px;">
 			<form role="form" class="form-inline">
-				<div class="form-group col-md-3 pull-right text-white">
+				<div class="form-group col-md-3 pull-right text-white" style="margin-bottom: -25px;">
 						<select class="form-control input-sm pull-right" id="language" ng-model="twc.language" ng-options="value for (lang, value) in twc.LANGUAGES" ng-change="twc.setLanguage()"></select>
 					<span class="pull-right" style="margin-right:10px" for="language">Language</span>
 				</div>
