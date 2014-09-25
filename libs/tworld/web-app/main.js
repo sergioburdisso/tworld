@@ -323,6 +323,8 @@
             this.createAccountHtml  =   '<iframe style="width:100%; height:100%; opacity: 0" src="http://tworld-ai.com/rest/create-account-form.php" onload="$(this).css(\'opacity\',\'1\');$(\'#load-create-account\').css(\'opacity\',\'0\')"></iframe>'+
                                         '<div id="load-create-account" class="transition-600 text-center" style="position:absolute;left:50%;top:50%;margin-left:-25px;margin-top:-20px"><div class="atebits"><div></div><div></div></div><div class="margin-10">loading</div></div>';
 
+            this.connectionErrorHtml = '<div class="text-red">There was an error</div><div>Please try again</div>';
+
             this.gotoTop = gotoTop;
             this.goto = function(path){
                 $location.url(path);

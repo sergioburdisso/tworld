@@ -3,7 +3,8 @@
 	<div class="row">
 		<alert class="text-center" type="info" ng-if="apscc.agent_prog.builtin">
 			<span class="glyphicon glyphicon-info-sign"></span>
-			This is a default agent program, source code is read-only and cannot be modified.
+			This is a default agent program, source code is read-only and can't be modified.<br>
+			<b>Note:</b> you always can copy this source code to a new agent program and edit it as you please.
 		</alert>
 		<div id="editor" class="panel panel-primary" ng-class="{'full-screen':apscc.fullScreen}">
 			<div class="panel-heading" ng-class="{'treadonly': $loading}">
@@ -42,7 +43,7 @@
 				<button id="save" class="btn btn-success glyphicon margin-10 pull-right" ng-class="{'disabled glyphicon-floppy-saved':apscc.saved, 'glyphicon-floppy-save':!apscc.saved, 'disabled':apscc.agent_prog.builtin}" ng-click="apscc.save()" tooltip="Save all"></button>
 				<button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play margin-10 pull-right" tooltip="Run agent program"></button>
 
-				<tabset ng-class="{'treadonly': $loading}">
+				<tabset>
 					<tab select="apscc.open(apscc.agent_prog.source.agentProgram, 0)">
 						<tab-heading>
 							<i class="glyphicon glyphicon-pencil"></i> Agent Program

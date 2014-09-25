@@ -167,8 +167,9 @@ var defaults = {
                 cursor:{row:0, column:0},
                 code:
                     '/*\n'+
-                    '* Write here the code you want to run only once, when the simulation starts, e.g.\n'+
-                    '* variables / data structures initialization\n'+
+                    '* Write here the code you want to run only once, when the simulation starts\n'+
+                    '* and the first perception is received.\n'+
+                    '* (Useful for variables / data structures initialization)\n'+
                     '*/\n'+
                     '\n'+
                     '\n'+
@@ -719,6 +720,8 @@ function sendToTCloud($data, onsucces, $root, onerror){
                             $root.$loading = false;
                         };
 
+    $root.$error = false;
+
     $.ajax({
         type: "POST",
         url : 'http://tworld-ai.com/rest/main.php',
@@ -727,7 +730,11 @@ function sendToTCloud($data, onsucces, $root, onerror){
             $root.$loading = false;
             onsucces(data, textStatus, jqXHR);
         },
-        error: onerror
+        error: function(jqXHR, textStatus, errorThrown){
+            onerror(jqXHR, textStatus, errorThrown);
+            $root.$error = true;
+            $root.$apply();
+        }
     });
 }
 
@@ -764,6 +771,9 @@ function sendToTCloudWithFile($data, $file, onsucces, $root, onerror){
             $root.$loading = false;
             onsucces(data, textStatus, jqXHR);
         },
-        error: onerror
+        error: function(jqXHR, textStatus, errorThrown){
+            onerror(jqXHR, textStatus, errorThrown);
+            $root.$error = true;
+        }
     });
 }

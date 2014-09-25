@@ -200,8 +200,13 @@
 
                 _editor.setValue(_source.code);
                 _editor.focus();
-                _editor.gotoLine(_source.cursor.row+1, _source.cursor.column, true);
-                _editor.scrollToRow(_source.cursor.row);
+                if (!agentProg.builtin){
+                    _editor.gotoLine(_source.cursor.row+1, _source.cursor.column, true);
+                    _editor.scrollToRow(_source.cursor.row);
+                }else{
+                    _editor.gotoLine(1, 0, true);
+                    _editor.scrollToRow(0);
+                }
                 _editor.session.setUndoManager(_undoManagers[iUndo]);
             }
 

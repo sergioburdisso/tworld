@@ -844,15 +844,7 @@ function $printGrid(percept, noClear){
     );
 }
 function $printMatrix(matrix, noClear){
-    var strgLine = "";//"   ";
     var strgGrid = "";
-    //var _GRID = matrix;
-        //_GRID.ROWS = _GRID.length;
-        //_GRID.COLUMNS = _GRID[0].length;
-
-    /*for (var i=0; i < _GRID.COLUMNS; ++i)
-        strgLine+="-  ";
-    strgLine+= "\n";*/
 
     for (var i=0; i < matrix.length; ++i){
         strgGrid+= "|  ";
@@ -872,10 +864,5 @@ function $printMatrix(matrix, noClear){
 
     if (!noClear)
         console.clear();
-    console.log(
-        "\n" +
-        strgLine+
-        strgGrid+
-        strgLine
-    );
+    console.log("\n" + strgGrid);
 }

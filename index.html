@@ -73,12 +73,15 @@
 			</button>
 			<label class="pull-right margin-right-10 text-blue" style="margin-top: 5px;">{{twc.user.info.email}}</label>
 		</span>
-		<div id="load-login" class="transition-400 text-center pull-right animate-only-show" ng-show="twc.login.state == 2||twc.login.state == 4||$loading||$loadingView">
+		<div id="load-login" class="transition-400 text-center pull-right animate-only-show" ng-show="(twc.login.state == 2||twc.login.state == 4||$loading||$loadingView)&&!$error">
 			<div class="spinner">
 				<div class="bounce1"></div>
 				<div class="bounce2"></div>
 				<div class="bounce3"></div>
 			</div>
+		</div>
+		<div class="text-red  pull-right margin-10 animate-zoom-loop" ng-show="$error">
+			<span class="glyphicon glyphicon-exclamation-sign" tooltip-placement="bottom" tooltip-html-unsafe="{{twc.connectionErrorHtml}}"></span>
 		</div>
 		<br>
 		<div class="container" ng-click="twc.clickOutside()"><hr/></div>
