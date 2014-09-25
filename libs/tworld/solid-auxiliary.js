@@ -159,7 +159,14 @@ function NextProperty(obj, prop){
     return "";
 }
 
-function copy(obj){ return JSON.parse(JSON.stringify(obj)) }
+function copy(obj){
+    if (obj instanceof Object)
+        return JSON.parse(JSON.stringify(obj));
+    else{
+        console.error("copy(obj): obj is not an object");
+        return obj+"";
+    }
+}
 
 //assigns obj0 the values of obj1 (structurally)
 function instantiate(obj0, obj1){
@@ -282,6 +289,15 @@ function SortAndPartition(list, criteria){
 
     return oapList;
 }
+
+function newLineCounter(str){
+    var counter = 0;
+    for (var i=str.length; i--;)
+        if (str[i] == "\n") counter++;
+    return counter;
+}
+
+function isNumber(n){return !isNaN(parseInt(n))}
 
 function UpdateScreenResolution(width, height){
     try{

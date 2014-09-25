@@ -67,6 +67,11 @@ var __onStart__;
 var __error__;
 var __thinking__;
 
+var __GLOBAL_LINES__;
+var __AGENT_PROG_LINES__;
+var __ON_START_LINES__;
+var __ON_MSG_LINES__;
+
 var $m;
 var $memory;
 var $persistent;
@@ -83,29 +88,31 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
             if (percept.data.memory)
                 $memory = percept.data.memory;
 
+            __GLOBAL_LINES__ = newLineCounter(percept.data.global_src);
+            __AGENT_PROG_LINES__ = newLineCounter(percept.data.ai_src);
+            __ON_START_LINES__ = newLineCounter(percept.data.start_src);
+            __ON_MSG_LINES__ = newLineCounter(percept.data.msg_src);
+
             eval(
                 "(function(){"+
                     percept.data.global_src+
 
                     "(function(){"+
                         percept.data.ai_src
-                            .replace(/(\$(return|perceive)\s*\([^;}]*?\)[^}]?)/g, "{$1;return}")
-                        +"\
-                        __AgentProgram__= AGENT_PROGRAM\
-                    })();"+
+                            .replace(/(\$(return|perceive)\s*\([^;}]*?\)[^}]?)/g, "{$1;return}")+
+                        ";__AgentProgram__= AGENT_PROGRAM;"+
+                    "})();"+
 
                     "(function(){"+
-                        percept.data.start_src
-                        +"\
-                        __onStart__= onStart\
-                    })();"+
+                        percept.data.start_src+
+                        ";__onStart__= onStart;"+
+                    "})();"+
 
                     "(function(){"+
-                        percept.data.msg_src
-                        +"\
-                        __onMessageReceived__= onMessageReceived\
-                    })()\
-                })()"
+                        percept.data.msg_src+
+                        +";__onMessageReceived__= onMessageReceived;"+
+                    "})()"+
+                "})()"
             );
             break;
 
@@ -115,7 +122,17 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
                 }catch(e){
                     var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
                     if (!matchs)    console.error(e.stack);
-                    else            console.error(e.name + ": " + e.message + " at 'onStart' (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+                    else{
+                        var line = matchs[2];
+                        if (line <= __GLOBAL_LINES__)
+                            console.error(e.name + ": " + e.message + " at 'Global Scope' section (Line:"+line+", Column:"+matchs[3]+")");
+                        else
+                            console.error(
+                                e.name + ": " + e.message +
+                                " at 'Start Event' section (Line:"+(line-(__GLOBAL_LINES__+__AGENT_PROG_LINES__))+
+                                ", Column:"+matchs[3]+")"
+                            );
+                }
                     __error__ = true;
                 };
                 $return(_ACTION.NONE);
@@ -144,7 +161,17 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
             }catch(e){
                 var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
                 if (!matchs)    console.error(e.stack);
-                else            console.error(e.name + ": " + e.message + " at onMessageReceived (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+                else{
+                        var line = matchs[2];
+                        if (line <= __GLOBAL_LINES__)
+                            console.error(e.name + ": " + e.message + " at 'Global Scope' section (Line:"+line+", Column:"+matchs[3]+")");
+                        else
+                            console.error(
+                                e.name + ": " + e.message +
+                                " at 'Message Received Event' section (Line:"+(line-(__GLOBAL_LINES__+__AGENT_PROG_LINES__+__ON_START_LINES__))+
+                                ", Column:"+matchs[3]+")"
+                            );
+                }
                 __error__ = true;
             };
             $perceive();
@@ -173,7 +200,13 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
                 }catch(e){
                     var matchs = e.stack.match(/(anonymous|eval)[^0-9 ]*(\d+)[^0-9]*(\d+)/i);
                     if (!matchs)    console.error(e.stack);
-                    else            console.error(e.name + ": " + e.message + " at AGENT_PROGRAM (Line:"+matchs[2]+", Column:"+matchs[3]+")");
+                    else{
+                        var line = matchs[2];
+                        if (line <= __GLOBAL_LINES__)
+                            console.error(e.name + ": " + e.message + " at 'Global Scope' section (Line:"+line+", Column:"+matchs[3]+")");
+                        else
+                            console.error(e.name + ": " + e.message + " at 'Agent Program' section (Line:"+(line-__GLOBAL_LINES__)+", Column:"+matchs[3]+")");
+                    }
                     __error__ = true;
                 };
             }
@@ -808,5 +841,41 @@ function $printGrid(percept, noClear){
         "\t Battery: " + percept.agent.battery +
         "\t Time: " + percept.environment.time +
         "\n = = = = = = = = = = = = = = = = = = = = = = = = = = = "
+    );
+}
+function $printMatrix(matrix, noClear){
+    var strgLine = "";//"   ";
+    var strgGrid = "";
+    //var _GRID = matrix;
+        //_GRID.ROWS = _GRID.length;
+        //_GRID.COLUMNS = _GRID[0].length;
+
+    /*for (var i=0; i < _GRID.COLUMNS; ++i)
+        strgLine+="-  ";
+    strgLine+= "\n";*/
+
+    for (var i=0; i < matrix.length; ++i){
+        strgGrid+= "|  ";
+
+        for (var j=0, val; j < matrix[i].length; ++j){
+            val = !matrix[i][j]&&matrix[i][j]!==0? " ": matrix[i][j];
+            strgGrid+= (isNaN(parseInt(val)) || val < 10)?
+                val+"  " :
+                ((val < 100)?
+                    val+" " :
+                    val
+                )
+            }
+
+        strgGrid+= "\n";
+    }
+
+    if (!noClear)
+        console.clear();
+    console.log(
+        "\n" +
+        strgLine+
+        strgGrid+
+        strgLine
     );
 }

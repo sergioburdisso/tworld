@@ -714,8 +714,8 @@ function sendToTCloud($data, onsucces, $root, onerror){
 
     onerror = onerror || function(jqXHR, textStatus, errorThrown){
                             //console.error(jqXHR, textStatus, errorThrown);
-                            if (jqXHR.status == 404)
-                                LogOut();
+                            /*if (jqXHR.status == 404)
+                                LogOut();*/
                             $root.$loading = false;
                         };
 
@@ -740,8 +740,8 @@ function sendToTCloudWithFile($data, $file, onsucces, $root, onerror){
 
     onerror = onerror || function(jqXHR, textStatus, errorThrown){
                             //console.error(jqXHR, textStatus, errorThrown);
-                            if (jqXHR.status == 404)
-                                LogOut();
+                            /*if (jqXHR.status == 404)
+                                LogOut();*/
                             $root.$loading = false;
                         };
 

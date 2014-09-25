@@ -1,6 +1,10 @@
 <div class="text-left">
 	<div class="row"></div>
 	<div class="row">
+		<alert class="text-center" type="info" ng-if="apscc.agent_prog.builtin">
+			<span class="glyphicon glyphicon-info-sign"></span>
+			This is a default agent program, source code is read-only and cannot be modified.
+		</alert>
 		<div id="editor" class="panel panel-primary" ng-class="{'full-screen':apscc.fullScreen}">
 			<div class="panel-heading" ng-class="{'treadonly': $loading}">
 				{{apscc.agent_prog.name}}

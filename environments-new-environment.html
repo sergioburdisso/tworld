@@ -22,7 +22,7 @@
 		</div>
 
 		<!-- INITIAL STATE -->
-		<div class="panel panel-default animate-only-show" ng-class="{'treadonly':enc.readOnly}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state" ng-init="ismc.grid = enc.task_env.environment.initial_state">
+		<div class="panel panel-default animate-only-show" ng-class="{'treadonly':enc.readOnly}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state">
 			<div class="panel-body text-center">
 				<div class="row">
 					<span class="pull-right">
@@ -70,7 +70,7 @@
 				<br>
 				<div class="table-responsive">
 					<table class="no-selection table-grid center" ng-class="{'percept':ismc.percept}">
-						<tr ng-repeat="row in ismc.grid track by $index" style="height:32px;">
+						<tr ng-repeat="row in ismc.grid() track by $index" style="height:32px;">
 							<td ng-repeat="cell in row track by $index" ng-mouseenter="ismc.setCell(row, $index)" ng-mousedown="ismc.mouseDown(row, $index)" ng-mouseup="ismc.mouseUp()" style="width:32px;">
 								<img ng-if="!ismc.percept&&(cell|tcellimg) != 'hole'" ng-src="imgs/web-app/cell-{{cell|tcellimg}}.png" class="no-events">
 								<div ng-if="!ismc.percept&&(cell|tcellimg) == 'hole'" style="width:32px; height:32px;" ng-style="{'background-color': (cell|tcellcolor)}" tooltip="Hole id: {{cell}}"></div>

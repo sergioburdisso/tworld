@@ -211,6 +211,7 @@
                     else
                         _self.task_env.name = name;
 
+                    _self.task_env.builtin = false;
                     _self.task_env.date = undefined;
                 }});
             }
@@ -571,7 +572,7 @@
     mod.controller('InitialStateMakerController', function(){
         var _mouseDown = false;
 
-        this.grid = [];
+        this.grid = function(){return taskEnvironment.environment.initial_state};
         this.selected = "#";
         this.holeId = 1;
 
