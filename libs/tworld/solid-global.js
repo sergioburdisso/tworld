@@ -74,7 +74,7 @@ var _LANGUAGES = {ENGLISH:"English", SPANISH:"Spanish"}
 var _COLORS = {RED:"red", BLUE:"blue", GREEN:"green", YELLOW:"yellow", PURPLE:"purple", ORANGE:"orange", CYAN:"cyan", PINK:"pink", BLACK:"black", WHITE:"white"}
 var _CAMERA_TYPE    = {AROUND_ROB: 0, FIRST_PERSON: 1, PERCEPT: 2, UFO: 3, AROUND_GRID: 4};
 var _GUI = {ON_GAME_SCREEN:{$:null, LEFT:0, MARGIN_TOP:0}}
-var _GAME_RESULT = {NEUTRAL:0, WON:1, LOST: 2}
+var _GAME_RESULT = {NEUTRAL:0, SUCCESS:1, FAILURE: 2}
 var _SEARCH_ALGORITHM = { BFS: 0, DFS:1, IDFS: 2, A_STAR: 3, GREEDY: 4, UNIFORM_COST: 5 };
 var _ENDGAME = {
     TIME: {
@@ -169,8 +169,8 @@ var _ENDGAME = {
     },
     MESSAGES: {
         NEUTRAL: {TEXT: "THE GAME<br>HAS ENDED", SUBTEXTS: ["GREAT!", "AMAZING!", "AWESOME!", "COOL!"]},
-        WON: {TEXT: "GOALS<br>ACHIEVED", SUBTEXTS: [/*"YOU WIN!"*/"AWESOME!", "CONGRATULATIONS!", "GREAT JOB!", "SOLVED!"]},
-        LOST: {TEXT: "GAME OVER", SUBTEXTS: [/*"YOU LOSE!", "YOU JUST LOST<br>THE GAME!",*/ "OOPS!", "SORRY", "OH SNAP!"]}
+        SUCCESS: {TEXT: "GOALS<br>ACHIEVED", SUBTEXTS: [/*"YOU WIN!"*/"AWESOME!", "CONGRATULATIONS!", "GREAT JOB!", "SOLVED!"]},
+        FAILURE: {TEXT: "FAILURE"/*"GAME OVER"*/, SUBTEXTS: [/*"YOU LOSE!", "YOU JUST LOST<br>THE GAME!",*/ "OOPS!", "SORRY", "OH SNAP!"]}
     }
 }
 

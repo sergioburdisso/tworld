@@ -111,14 +111,14 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
                     grid_total_rows: 0,
                     grid_total_columns: 0,
                     teams: [/*{id:, leader:, members:[]}...*/], // optional
-                    endgame : {/*neutral: {}, won: {}, lost: {}*/}, //end game conditions
+                    end : {/*neutral: {}, success: {}, failure: {}*/}, //end game conditions
                     costs: environment.Costs,
                     probability: environment.Probability
                 }
             }
         }
 
-        //builtin_knowledge.endgame
+        //builtin_knowledge.end
         _bik = this.Percept.data.builtin_knowledge;
         for (cond in _ENDGAME)
             if (!(_ENDGAME[cond] instanceof Function) && _ENDGAME[cond].VALUE){
@@ -137,19 +137,19 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 
                 switch(_ENDGAME[cond].RESULT){
                     case _GAME_RESULT.NEUTRAL:
-                        if (!_bik.endgame.neutral)
-                            _bik.endgame.neutral = {};
-                        _bik.endgame.neutral[nCond] = _ENDGAME[cond].VALUE;
+                        if (!_bik.end.neutral)
+                            _bik.end.neutral = {};
+                        _bik.end.neutral[nCond] = _ENDGAME[cond].VALUE;
                         break;
-                    case _GAME_RESULT.WON:
-                        if (!_bik.endgame.won)
-                            _bik.endgame.won = {};
-                        _bik.endgame.won[nCond] = _ENDGAME[cond].VALUE;
+                    case _GAME_RESULT.SUCCESS:
+                        if (!_bik.end.success)
+                            _bik.end.success = {};
+                        _bik.end.success[nCond] = _ENDGAME[cond].VALUE;
                         break;
-                    case _GAME_RESULT.LOST:
-                        if (!_bik.endgame.lost)
-                            _bik.endgame.lost = {};
-                        _bik.endgame.lost[nCond] = _ENDGAME[cond].VALUE;
+                    case _GAME_RESULT.FAILURE:
+                        if (!_bik.end.failure)
+                            _bik.end.failure = {};
+                        _bik.end.failure[nCond] = _ENDGAME[cond].VALUE;
                 }
             }
 

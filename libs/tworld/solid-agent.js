@@ -19,12 +19,7 @@
 
 importScripts('solid-auxiliary.js', 'solid-global.js', '../util/sprintf.min.js'); 
 
-/*API
--coordenate_relativesToAgent(){ - porque como lo voy a hacer multi agente no puedo hacer que las cosas sean relativas al agente, para eso uso esta funcion
-    object[0] = _agentPos.Row - object[0];
-    object[1] = object[1] - _agentPos.Column;
-*/
-
+// overwriting alert function for this scope
 var alert = function(msg){
     if (msg instanceof Object)
         msg = JSON.stringify(msg);
@@ -96,22 +91,19 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
             eval(
                 "(function(){"+
                     percept.data.global_src+
-
                     "(function(){"+
                         percept.data.ai_src
-                            .replace(/(\$(return|perceive)\s*\([^;}]*?\)[^}]?)/g, "{$1;return}")+
+                            .replace(/(\$(return|perceive)\s*\(.*?\)\s*[;\n])/g, "{$1;return}")+
                         ";__AgentProgram__= AGENT_PROGRAM;"+
                     "})();"+
-
                     "(function(){"+
                         percept.data.start_src+
                         ";__onStart__= onStart;"+
                     "})();"+
-
                     "(function(){"+
                         percept.data.msg_src+
-                        +";__onMessageReceived__= onMessageReceived;"+
-                    "})()"+
+                        ";__onMessageReceived__= onMessageReceived;"+
+                    "})();"+
                 "})()"
             );
             break;
@@ -174,12 +166,11 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
                 }
                 __error__ = true;
             };
-            $perceive();
             break;
 
         case _PERCEPT_HEADER.PAUSE:
-            if (percept.data == "off")
-                $perceive();
+            /*if (percept.data == "off")
+                $perceive();*/
             break;
 
         default: if (!__error__){
@@ -377,7 +368,7 @@ function $Node(e, p, a, g, d){var _self = this;
         if ( __search__.goal_recharges )
             h+= manhattand(
                 e.agent.location,
-                getClosestCell(e.agent.location, e.environment.battery_chargers)
+                $getClosestCell(e.agent.location, e.environment.battery_chargers)
             );
 
 
@@ -412,12 +403,12 @@ function $Node(e, p, a, g, d){var _self = this;
                  &&excludedHoles.length!=e.environment.holes.length;
                  --i, sc-= c1.value, tsc-= c1.value)
             {
-                c1 = getClosestHole(c0, e.environment.holes, excludedHoles);
+                c1 = $getClosestHole(c0, e.environment.holes, excludedHoles);
 
                 if (c1){
                     excludedHoles.push(c1.id);
                     excludedTiles.length = 0;
-                    t=getClosestCell(c1.cells[0], e.environment.tiles, excludedTiles);
+                    t=$getClosestCell(c1.cells[0], e.environment.tiles, excludedTiles);
                     if (!t){
                         h+=manhattand(c0, c1.cells[0]);
                         c0 = c1.cells[0];
@@ -429,7 +420,7 @@ function $Node(e, p, a, g, d){var _self = this;
                         cs--;
 
                         for (var len=c1.cells.length, hc=1; hc < len;++hc){
-                            t=getClosestCell(holeCell, e.environment.tiles, excludedTiles);
+                            t=$getClosestCell(holeCell, e.environment.tiles, excludedTiles);
                             if (t){
                                 excludedTiles.push(t);
                                 h+=manhattand(holeCell, t) + manhattand(t, c1.cells[hc]);
@@ -865,4 +856,28 @@ function $printMatrix(matrix, noClear){
     if (!noClear)
         console.clear();
     console.log("\n" + strgGrid);
+}
+
+function $getClosestHole(cell, holes, exclude){if (!holes.length) return undefined;
+    var closest, min=Number.MAX_VALUE;
+    for (var i=holes.length; i--;)
+        if (!exclude || !exclude.contains(holes[i].id)){
+            holes[i].cells.sort(function(a,b){ return manhattand(cell, a) - manhattand(cell, b); });
+
+            if ( manhattand(cell, holes[i].cells[0]) < min ){
+                closest = holes[i];
+                min = manhattand(cell, holes[i].cells[0]);
+            }
+        }
+    return closest;
+}
+
+function $getClosestCell(cell, cells, exclude){if (!cells.length) return undefined;
+    var closest, min=Number.MAX_VALUE;
+    for (var i=cells.length; i--;)
+        if ( (!exclude || !exclude.containsMatch(cells[i])) && manhattand(cell, cells[i]) < min ){
+            closest = cells[i];
+            min = manhattand(cell, cells[i]);
+        }
+    return closest;
 }

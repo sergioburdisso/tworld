@@ -230,30 +230,6 @@ function manhattand(c0, c1){
     return Math.abs(c0.row - c1.row) + Math.abs(c0.column - c1.column);
 }
 
-function getClosestHole(cell, holes, exclude){if (!holes.length) return undefined;
-    var closest, min=Number.MAX_VALUE;
-    for (var i=holes.length; i--;)
-        if (!exclude || !exclude.contains(holes[i].id)){
-            holes[i].cells.sort(function(a,b){ return manhattand(cell, a) - manhattand(cell, b); });
-
-            if ( manhattand(cell, holes[i].cells[0]) < min ){
-                closest = holes[i];
-                min = manhattand(cell, holes[i].cells[0]);
-            }
-        }
-    return closest;
-}
-
-function getClosestCell(cell, cells, exclude){if (!cells.length) return undefined;
-    var closest, min=Number.MAX_VALUE;
-    for (var i=cells.length; i--;)
-        if ( (!exclude || !exclude.containsMatch(cells[i])) && manhattand(cell, cells[i]) < min ){
-            closest = cells[i];
-            min = manhattand(cell, cells[i]);
-        }
-    return closest;
-}
-
 function SortAndPartition(list, criteria){
     var tiePartitions = [];
     var oapList = [];// oap stands for "Ordered and Partitioned"

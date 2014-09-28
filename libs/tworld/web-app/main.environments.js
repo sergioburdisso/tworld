@@ -160,15 +160,15 @@
             this.step = 0;
             this.end_game_cond = end_game_conditions = [
                 {name:_ENDGAME.TIME.NAME                , value:5*60, result:_GAME_RESULT.NEUTRAL   },
-                {name:_ENDGAME.AGENTS_LOCATION.NAME     , value:[]  , result:_GAME_RESULT.WON       },
-                {name:_ENDGAME.FILLED_HOLES.NAME        , value:0   , result:_GAME_RESULT.WON       },
-                {name:_ENDGAME.FILLED_CELLS.NAME        , value:0   , result:_GAME_RESULT.WON       },
-                {name:_ENDGAME.SCORE.NAME               , value:0   , result:_GAME_RESULT.WON       },
+                {name:_ENDGAME.AGENTS_LOCATION.NAME     , value:[]  , result:_GAME_RESULT.SUCCESS       },
+                {name:_ENDGAME.FILLED_HOLES.NAME        , value:0   , result:_GAME_RESULT.SUCCESS       },
+                {name:_ENDGAME.FILLED_CELLS.NAME        , value:0   , result:_GAME_RESULT.SUCCESS       },
+                {name:_ENDGAME.SCORE.NAME               , value:0   , result:_GAME_RESULT.SUCCESS       },
                 {name:_ENDGAME.GOOD_MOVES.NAME          , value:0   , result:_GAME_RESULT.NEUTRAL   },
-                {name:_ENDGAME.BAD_MOVES.NAME           , value:0   , result:_GAME_RESULT.LOST      },
-                {name:_ENDGAME.BATTERY_USED.NAME        , value:0   , result:_GAME_RESULT.LOST      },
-                {name:_ENDGAME.BATTERY_RECHARGE.NAME    , value:0   , result:_GAME_RESULT.LOST      },
-                {name:_ENDGAME.BATTERY_RESTORE.NAME     , value:0   , result:_GAME_RESULT.LOST      }
+                {name:_ENDGAME.BAD_MOVES.NAME           , value:0   , result:_GAME_RESULT.FAILURE      },
+                {name:_ENDGAME.BATTERY_USED.NAME        , value:0   , result:_GAME_RESULT.FAILURE      },
+                {name:_ENDGAME.BATTERY_RECHARGE.NAME    , value:0   , result:_GAME_RESULT.FAILURE      },
+                {name:_ENDGAME.BATTERY_RESTORE.NAME     , value:0   , result:_GAME_RESULT.FAILURE      }
             ];
             this.task_env = taskEnvironment = taskEnv;
             this.stochastic_model = taskEnv.agents.stochastic_model;

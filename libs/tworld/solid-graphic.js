@@ -387,7 +387,7 @@ function GraphicTWorld(graphicEngine, environment){
 
             var subtitle;
             switch(goal.RESULT){
-                case _GAME_RESULT.WON:
+                case _GAME_RESULT.SUCCESS:
                     $("#resetBtn")
                         .addClass("center")
                         .css("width","128px")
@@ -397,15 +397,15 @@ function GraphicTWorld(graphicEngine, environment){
 
                     $("#title").
                         css("color","rgb(59, 255, 153)")
-                        .html(_ENDGAME.MESSAGES.WON.TEXT);
+                        .html(_ENDGAME.MESSAGES.SUCCESS.TEXT);
                     
-                    subtitle = _ENDGAME.MESSAGES.WON.SUBTEXTS[random(_ENDGAME.MESSAGES.WON.SUBTEXTS.length)];
+                    subtitle = _ENDGAME.MESSAGES.SUCCESS.SUBTEXTS[random(_ENDGAME.MESSAGES.SUCCESS.SUBTEXTS.length)];
                     $("#sub-title").html(subtitle);
 
                     if (_AUDIO_ENABLE)
                         _sound_game_won.play();
                     break;
-                case _GAME_RESULT.LOST:
+                case _GAME_RESULT.FAILURE:
                     $("#resetBtn")
                         .addClass("center")
                         .css("width","128px")
@@ -416,9 +416,9 @@ function GraphicTWorld(graphicEngine, environment){
                     $("#title")
                         .css("color", "red")
                         .css("text-shadow", "rgb(255, 0, 72) 0px 0px 20px")
-                        .html(_ENDGAME.MESSAGES.LOST.TEXT);
+                        .html(_ENDGAME.MESSAGES.FAILURE.TEXT);
                     subtitle =  goal.MESSAGE? goal.MESSAGE :
-                               _ENDGAME.MESSAGES.LOST.SUBTEXTS[random(_ENDGAME.MESSAGES.LOST.SUBTEXTS.length)]
+                               _ENDGAME.MESSAGES.FAILURE.SUBTEXTS[random(_ENDGAME.MESSAGES.FAILURE.SUBTEXTS.length)]
                     $("#sub-title").html(subtitle);
 
                     if (_AUDIO_ENABLE)
@@ -1871,6 +1871,12 @@ function GraphicTWorld(graphicEngine, environment){
             _CLN_Flag.Pos.Z = GraphicTWorld.ColumnIndexToZPosition(_LOCS[0].column);
             _CLN_Flag.Pos.Y = 8;
 
+            for (var l = _LOCS.length-1; l>=1;--l){
+                _CLN_Flag = _CLN_Flag.createClone(_CL_Scene.getRootSceneNode())
+                _CLN_Flag.Pos.X = GraphicTWorld.RowIndexToXPosition(_LOCS[l].row);
+                _CLN_Flag.Pos.Z = GraphicTWorld.ColumnIndexToZPosition(_LOCS[l].column);
+            }
+
             _CLN_Flag = _CL_Scene.getSceneNodeFromName('clouds').createClone(_CL_Scene.getRootSceneNode());
             _CLN_Flag.getMaterial(1).Type = _CLN_Flag.getMaterial(0).Type = CL3D.Material.EMT_TRANSPARENT_ALPHA_CHANNEL;
             _CLN_Flag.getMaterial(2).Tex1 = _CL_Engine.getTextureManager().getTexture("./copperlichtdata/black.png", true);
@@ -1893,15 +1899,16 @@ function GraphicTWorld(graphicEngine, environment){
                 _CLN_Flag = _CLN_Flag.createClone(_CL_Scene.getRootSceneNode())
                 _CLN_Flag.Pos.X = GraphicTWorld.RowIndexToXPosition(_LOCS[l].row);
                 _CLN_Flag.Pos.Z = GraphicTWorld.ColumnIndexToZPosition(_LOCS[l].column);
+                _CLN_Flag.setVisible(true, true);
             }
         }
 
         var wonC=[], lostC=[], $goalsTable = $("#table-goals");
         for (cond in _ENDGAME)
-            if (_ENDGAME[cond].VALUE && _ENDGAME[cond].RESULT == _GAME_RESULT.WON)
+            if (_ENDGAME[cond].VALUE && _ENDGAME[cond].RESULT == _GAME_RESULT.SUCCESS)
                 wonC.push(cond);
             else
-            if (_ENDGAME[cond].VALUE && _ENDGAME[cond].RESULT == _GAME_RESULT.LOST)
+            if (_ENDGAME[cond].VALUE && _ENDGAME[cond].RESULT == _GAME_RESULT.FAILURE)
                 lostC.push(cond);
 
         for (var list, img, title, color, type= 0; type < 2; ++type){

@@ -49,10 +49,10 @@
 					<label><input type="checkbox" ng-model="task_env.trial.pause"> Enable Pause</label>
 				</div>
 				<div class="checkbox">
-					<label><input type="checkbox" ng-model="task_env.trial.saveStats"> Save stats</label>
+					<label tooltip="Trials will run one after the other in a batch-like fashion"><input type="checkbox" ng-model="task_env.trial.saveStats"> Save stats</label>
 				</div>
 				<div class="animate-show-3d-top" ng-show="task_env.trial.saveStats">
-					<label>Number of Trials</label><input type="number" min="0" class="form-control" ng-model="task_env.trial.runs">
+					<label>Number of Trials</label><input type="number" min="0" class="form-control" ng-model="task_env.trial.runs" ng-class="{'has-error':(task_env.trial.runs|num)<=0}">
 				</div>
 			</div>
 

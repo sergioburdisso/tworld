@@ -927,7 +927,7 @@ function Environment(rows, columns, graphicEngine, parent) {
                     goal.ACHIEVED = true;
                     $("#"+goal.$ID).prop("src", "imgs/goal-accomp.png");
 
-                    if (goal.RESULT == _GAME_RESULT.WON)
+                    if (goal.RESULT == _GAME_RESULT.SUCCESS)
                         for (PROP in _ENDGAME) //are all the condition satisfied?
                             if (_ENDGAME[PROP].VALUE && _ENDGAME[PROP].RESULT == goal.RESULT && !_ENDGAME[PROP].ACHIEVED)
                                 return;
@@ -1328,7 +1328,7 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
     function loadMemoryAsync(){
         if (!isLoggedIn()){
             _memory = getMemoryByAgentProgramDate(_KNOBS_Agents[_index].program.date);
-            init();
+            init(true);
         }else
             getMemoryByAgentProgramDate(
                 _KNOBS_Agents[_index].program.date,
@@ -1339,9 +1339,11 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
             );
     }
 
-    function init(){
+    function init(local){
         _memory_ready = true;
-        _env.checkIfAgentProgramsReady();
+
+        if (!local)
+            _env.checkIfAgentProgramsReady();
 
         if (!isSocket){
             _percept.header = _PERCEPT_HEADER.INTERNAL;
@@ -1375,13 +1377,13 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 
         if (_Running){
             //case _ACTION.SOUTH
-            if ( _ACTION_REGEX.SOUTH.test(action) )
+            if ( _ACTION_REGEX.SOUTH.test(action) ){
                 _gtw.RobWalkSouth(_index);
-            else
+            }else
             //case _ACTION.NORTH
-            if ( _ACTION_REGEX.NORTH.test(action) )
+            if ( _ACTION_REGEX.NORTH.test(action) ){
                 _gtw.RobWalkNorth(_index);
-            else
+            }else
             //case _ACTION.EAST
             if ( _ACTION_REGEX.EAST.test(action) )
                 _gtw.RobWalkEast(_index);
