@@ -70,7 +70,7 @@
                 gotoTop();
             }else{
                 modalInstance = $modal.open({
-                    size: 'lg',//size,
+                    size: 'lg',
                     templateUrl: 'items-list-modal.html',
                     controller: itemsListController,
                     resolve:{
@@ -80,7 +80,7 @@
                 }).result.then(
                     function (taskEnv) {
                         $modal.open({
-                            size: 'lg',//size,
+                            size: 'lg',
                             templateUrl: 'run-modal.html',
                             controller: runModalController,
                             resolve:{
@@ -180,7 +180,6 @@
             this.saved = true;
             this.dropdownopen = false;
             this.agent_prog = agentProg;
-            
 
             if (!this.agent_prog.default_task_env)
                 this.task_env =  undefined;
@@ -249,7 +248,7 @@
 
             this.openEnvironmentsModal = function(run){
                 $modal.open({
-                    size: 'lg',//size,
+                    size: 'lg',
                     templateUrl: 'items-list-modal.html',
                     controller: itemsListController,
                     resolve: {
@@ -271,7 +270,7 @@
 
             this.openMemoryModal = function(){
                 $modal.open({
-                    size: 'lg',//size,
+                    size: 'lg',
                     templateUrl: 'memory-modal.html',
                     resolve:{
                         memory: function($routeParams, $q){
@@ -337,7 +336,7 @@
             this.openRunModal = function(){
                 _self.save();
                 $modal.open({
-                        size: 'lg',//size,
+                        size: 'lg',
                         templateUrl: 'run-modal.html',
                         controller: runModalController,
                         resolve:{
@@ -353,6 +352,15 @@
                                         },
                             agentProgs: function(){return [_self.agent_prog]}
                         }
+                    });
+            }
+
+            this.openAPIModal = function(){
+                _self.save();
+                $modal.open({
+                        size: 'lg',
+                        templateUrl: 'api-reference-modal.html',
+                        controller: APIReferenceController,
                     });
             }
 
@@ -408,6 +416,10 @@
                         event.preventDefault();
                         _self.run();
                         break;
+                    case 112://F1
+                        event.preventDefault();
+                        _self.openAPIModal();
+                        break;
                 }
             });
 
@@ -452,7 +464,7 @@
 
             this.readKey = function(key){
                 $modal.open({
-                    size: 'sm',//size,
+                    size: 'sm',
                     templateUrl: 'read-key.html',
                     controller: readKeyController
                 })

@@ -41,6 +41,7 @@
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; } /*UI Bootstrap require this*/
 
 iframe {border: 0}
+.width-214{width: 214px !important}
 .width-120{width: 120px !important}
 .tfocus:focus,
 .width-200{width: 200px !important}
@@ -214,8 +215,11 @@ td input{text-align: center}
 .backcolor-light-red{background-color: #d9534f}
 .backcolor-red{background-color: #B82B28}
 .backcolor-blue{background-color: #428BCA}
+.margin-left-10{margin-left: 10px}
 .margin-right-10{margin-right: 10px}
+.margin-bot-10{margin-bottom: 10px}
 .margin-top-100{margin: 100px}
+.margin-left-214{margin-left: 214px !important;}
 .margin-10{margin: 10px}
 .text-light-green{color: rgb(187, 221, 187)}
 .btn-logout:hover,
@@ -229,7 +233,7 @@ td input{text-align: center}
 .text-orange{color: #D54D1D}
 .text-green{color: #5CB85C}
 .text-light-blue, .header a{color: rgb(155, 192, 255);}
-.text-blue,.sett-item.active{color: #428BCA}
+.text-blue,.sett-item.active, .hover.blue:hover{color: #428BCA}
 .border-right{border-right: 0px}
 .border-top{border-top: 0px}
 .white{background-color: white}
@@ -519,6 +523,7 @@ a:hover{
 		    transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
 }
 
+.hover,
 .table-grid td,
 button,
 .btn,
@@ -529,7 +534,7 @@ button,
 	-webkit-transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	   -moz-transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	     -o-transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005); /* custom */
+	        transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
 }
 
 .to-top:hover{
@@ -637,7 +642,7 @@ button:hover:not(.animate-none),
 	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005); /* custom */
+	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 }
 
 .animate-view.ng-enter {
@@ -678,7 +683,7 @@ button:hover:not(.animate-none),
 	-webkit-transition: all 0.15s linear;
 	   -moz-transition: all 0.15s linear;
 	     -o-transition: all 0.15s linear;
-	        transition: all 0.15s linear; /* custom */
+	        transition: all 0.15s linear;
 
 	opacity:0;
 }
@@ -689,7 +694,7 @@ button:hover:not(.animate-none),
 	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005); /* custom */
+	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 
 	opacity:1;
 }
@@ -701,13 +706,13 @@ button:hover:not(.animate-none),
 	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005); /* custom */
+	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 }
 .animate-filter.ng-leave{
 	-webkit-transition: all 200ms ease-in; 
 	   -moz-transition: all 200ms ease-in; 
 		 -o-transition: all 200ms ease-in; 
-		    transition: all 200ms ease-in; /* custom */
+		    transition: all 200ms ease-in;
 }
 
 .animate-filter.ng-leave.ng-leave-active,
@@ -752,7 +757,7 @@ button:hover:not(.animate-none),
 	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005); /* custom */
+	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 
 	-webkit-transform: perspective(1000px) rotateX(0deg);
 	   -moz-transform: perspective(1000px) rotateX(0deg);
@@ -776,7 +781,7 @@ button:hover:not(.animate-none),
 	-webkit-transition: all 300ms ease-in;
 	   -moz-transition: all 300ms ease-in;
 	     -o-transition: all 300ms ease-in;
-	        transition: all 300ms ease-in; /* custom */
+	        transition: all 300ms ease-in;
 
 	opacity:0;
 }
@@ -790,7 +795,7 @@ button:hover:not(.animate-none),
 	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005); /* custom */
+	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 
 	opacity:1;
 }
@@ -856,7 +861,7 @@ button:hover:not(.animate-none),
 	-webkit-transition: all 0ms ease-in;
 	   -moz-transition: all 0ms ease-in;
 	     -o-transition: all 0ms ease-in;
-	        transition: all 0ms ease-in; /* custom */
+	        transition: all 0ms ease-in;
 
 	-webkit-transform: perspective(1000px) rotateY(-90deg);
 	   -moz-transform: perspective(1000px) rotateY(-90deg);
@@ -871,7 +876,7 @@ button:hover:not(.animate-none),
 	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005); /* custom */
+	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 
 	-webkit-transform: perspective(1000px) rotateY(0deg);
 	   -moz-transform: perspective(1000px) rotateY(0deg);

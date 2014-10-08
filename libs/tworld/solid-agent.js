@@ -657,7 +657,7 @@ function $nextAction(arrayOfActions){
 
 function $randomAction(){return random(6)}
 
-function $randomValidAction(percept /*n,s,w,e*/){
+function $randomValidAction(percept){
     var actions = new Array();
 
     if ($isValidMove(percept, _ACTION.NORTH))
@@ -702,32 +702,32 @@ function $perceive(){postMessage(_ACTION.NONE)}
 
 
 
-function $isValidCoordinates(percept, row, column) {var _grid= percept.environment.grid;
+function $isInBounds(percept, row, column) {var _grid= percept.environment.grid;
     return (0 <= row && row < _grid.length)&&(0 <= column && column < _grid[0].length);
 }
 
 function $isEmptyCell(percept, row, column) {var _grid= percept.environment.grid;
-    return  $isValidCoordinates(percept, row,column)&&
+    return  $isInBounds(percept, row,column)&&
             (_grid[row][column] == _GRID_CELL.EMPTY);
 }
 
 function $isHoleCell(percept, row, column) {var _grid= percept.environment.grid;
-    return  $isValidCoordinates(percept, row,column)&&
+    return  $isInBounds(percept, row,column)&&
             (_grid[row][column] === (_grid[row][column]|0));
 }
 
 function $isTile(percept, row, column) {var _grid= percept.environment.grid;
-    return  $isValidCoordinates(percept, row,column)&&
+    return  $isInBounds(percept, row,column)&&
             (_grid[row][column] == _GRID_CELL.TILE);
 }
 
 function $isAgent(percept, row, column) {var _grid= percept.environment.grid;
-    return  $isValidCoordinates(percept, row,column)&&
+    return  $isInBounds(percept, row,column)&&
             (_grid[row][column] == _GRID_CELL.AGENT);
 }
 
 function $isObstacle(percept, row, column) {var _grid= percept.environment.grid;
-    return  $isValidCoordinates(percept, row,column)&&
+    return  $isInBounds(percept, row,column)&&
             (_grid[row][column] == _GRID_CELL.OBSTACLE);
 }
 
@@ -738,23 +738,23 @@ function $isCharger(percept, row, column) {var _bChargerLoc= percept.environment
     return 0;
 }
 
-function $isValidMove(percept, move){
+function $isValidMove(percept, action){
     var arow, acol;
     var r = 0, c = 0;
     var _GRID = percept.environment.grid;
         _GRID.ROWS = _GRID.length;
         _GRID.COLUMNS = _GRID[0].length;
 
-    if (move === undefined){
+    if (action === undefined){
         arow = _AGENT.location.row;
         acol = _AGENT.location.column;
-        move = percept;
+        action = percept;
     }else{
         arow = percept.agent.location.row;
         acol = percept.agent.location.column;
     }
 
-    switch(move){
+    switch(action){
         case _ACTION.NORTH:
             if (arow <= 0)
                 return false;

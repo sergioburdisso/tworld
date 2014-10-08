@@ -80,7 +80,7 @@
 
         this.openRunModal = function(){
             $modal.open({
-                    size: 'lg',//size,
+                    size: 'lg',
                     templateUrl: 'run-modal.html',
                     controller: runModalController,
                     resolve:{
