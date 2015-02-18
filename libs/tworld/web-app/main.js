@@ -406,7 +406,10 @@
     }]);
 
     main.filter('stringLimit', function() {
-        return function(input, limit, limitnl) {return (input.length > limit)? input.substr(0,limit-3)+"..." : input}
+        return function(input, limit, limitnl) {
+            if (!input) return input;
+            return (input.length > limit)? input.substr(0,limit-3)+"..." : input
+        }
     });
 
     main.filter('nounderscore', function() {

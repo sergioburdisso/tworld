@@ -176,6 +176,7 @@
                                     loadAgentNameAsync(agent, agent.program_id, len);
 
                                     agent.stats = {
+                                        MFinalScore : agent.score,
                                         MTotalScore: agent.stats.total_score,
                                         MHoles: agent.stats.filled_holes,
                                         MCells: agent.stats.filled_cells,
@@ -188,7 +189,7 @@
 
                                     if (!team.stats)
                                         team.stats = {}
-                                    team.score = (team.score|0) + agent.score;
+                                    team.stats.MFinalScore = (team.stats.MFinalScore|0) + agent.score;
                                     team.stats.MTotalScore = (team.stats.MTotalScore|0) + agent.stats.MTotalScore;
                                     team.stats.MHoles= (team.stats.MHoles|0) + agent.stats.MHoles;
                                     team.stats.MCells= (team.stats.MCells|0) + agent.stats.MCells;
@@ -201,7 +202,6 @@
                             }
 
                             function loadAgentNameAsync(agent, date, numAgents){
-                                console.log(date);
                                 if (!isLoggedIn())
                                     agent.name = getAgentProgramByDate(date).name;
                                 else{
@@ -226,7 +226,7 @@
 
         function loadEnvNameAsync(trial, date){
             if (!isLoggedIn())
-                return getEnvironmentByDate(date).name;
+                return {name: getEnvironmentByDate(date).name};
             else{
                 if (!_taskEnvNames[date]){
                     _taskEnvNames[date] = {name: "loading..."};
@@ -273,6 +273,7 @@
         function viewStatsController($scope, $modal, $modalInstance, args){
             $scope.trial = args.trial;
             $scope.task_env = args.task_env;
+            $scope.original_teams = clone(args.teams);
             $scope.teams = args.teams;
             $scope.teamsTable = false;
 

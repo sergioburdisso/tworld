@@ -109,7 +109,7 @@
 					<td class="text-orange"><b>{{item.pos}}</b></td>
 
 					<td class="text-blue" ng-if="!teamsTable&&showTeams()&&task_env.teams[item.team].color">
-						<img ng-src="copperlichtdata/color-{{task_env.teams[item.team].color}}.png" height="20" style="margin-top:-4px" class="pull-left" tooltip="{{teams[item.team].name}}">
+						<img ng-src="copperlichtdata/color-{{original_teams[item.team].color}}.png" height="20" style="margin-top:-4px" class="pull-left" tooltip="{{original_teams[item.team].name}}">
 						{{item.name|stringLimit:28}}
 					</td>
 					<td class="text-blue" ng-if="teamsTable&&showTeams()&&item.color">
@@ -120,7 +120,7 @@
 						{{item.name|stringLimit:28}}
 					</td>
 
-					<td class="text-green">{{item.score}}</td>
+					<td class="text-green">{{item.stats.MFinalScore}}</td>
 					<td>{{item.stats.MTotalScore}}</td>
 					<td>{{item.stats.mGoodMoves}}</td>
 					<td>{{item.stats.mBadMoves}}</td>

@@ -19,14 +19,15 @@
 						</b>
 						)
 					</span>
-					<button ng-click="apscc.toggleMaximaze()" ng-class="{'glyphicon-resize-small':apscc.fullScreen,'glyphicon-resize-full':!apscc.fullScreen}" class="btn btn-default glyphicon glyphicon" tooltip="Maximaze/Restore"></button>
+					<button ng-click="apscc.toggleMaximaze()" ng-class="{'glyphicon-resize-small':apscc.fullScreen,'glyphicon-resize-full':!apscc.fullScreen}" class="btn btn-default glyphicon" tooltip="Maximaze/Restore" tooltip-placement="left"></button>
+					<button ng-click="apscc.openAPIModal()" class="btn btn-default glyphicon glyphicon-question-sign text-blue" tooltip="Help / API Reference" tooltip-placement="left"></button>
 				</div>
 			</div>
 
 			<div class="panel-body no-padding">
 
 				<div class="btn-group  margin-10 pull-right" dropdown is-open="apscc.dropdownopen">
-					<button type="button" class="btn btn-default dropdown-toggle glyphicon glyphicon-align-justify"></span>
+					<button type="button" class="btn btn-default dropdown-toggle glyphicon glyphicon-align-justify" tooltip="Open menu"></span>
 					</button>
 					<ul class="dropdown-menu" role="menu" ng-click="apscc.dropdownopen = false">
 						<li ng-class="{'treadonly':apscc.agent_prog.builtin}"><a href="" ng-click="apscc.save()">Save All <span class="text-light-gray"><small>(Crtl+S)</small></span></a></li>

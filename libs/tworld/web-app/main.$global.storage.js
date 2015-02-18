@@ -156,7 +156,9 @@ var defaults = {
                     '*                                      new, updated, <percept> object (calling the $perceive()\n'+
                     '*                                      function produces the same effect)\n'+
                     '*\n'+
-                    '* The structure of the <percept> parameter below is described in the support material (press the F1 key)\n'+
+                    '* Click the Help button (?) in the upper right or press the F1 key on your keyboard to open the Help\n'+
+                    '* menu. There you\'ll find everything you need to start coding, for instance, the structure of the percept\n'+
+                    '* argument below and a list of built-in functions, constants, variable, data types, etc.\n'+
                     '*/\n'+
                     'function AGENT_PROGRAM(percept){\n'+
                     '\n'+

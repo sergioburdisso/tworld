@@ -70,6 +70,17 @@ Array.prototype.remove = function(index) {
     return output;
 };
 
+
+Array.prototype.removeByMatch = function(pattern) {
+    var i = this.length;
+
+    while (i--)
+        if (match(this[i],pattern))
+            break;
+
+    return this.remove(i);
+}
+
 Array.prototype.clone = function() {
     var newArray = new Array(this.length);
     var i = this.length;

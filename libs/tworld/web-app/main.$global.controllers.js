@@ -271,9 +271,14 @@ function APIReferenceController($scope, $modal, $modalInstance){
 
     $scope.functions = [
         {
+            name: "copy",
+            params : [{t:_TYPE.OBJECT, i:"obj"}],
+            desc: "Clones the obj object and returns it."
+        },
+        {
             name: "printf",
             params : [{t:_TYPE.STR, i:"format"}, {t:"", i:"..."}],
-            desc: "The well-known C printf function. Writes the 'format' string to the T-World console. "+
+            desc: "The well-known C printf function. Writes the format string to the T-World console. "+
             "If format includes format specifiers (subsequences beginning with %), the additional arguments "+
             "following format are formatted and inserted in the resulting string replacing their respective specifiers."
         },
@@ -281,7 +286,7 @@ function APIReferenceController($scope, $modal, $modalInstance){
             name: "$printGrid",
             params : [{t:_TYPE.PERCT, i:"p"}/*, {t:_TYPE.BOOL, i:"noCLear"}*/],
             desc: "This function is useful for debugging purpose. "+
-                  "It prints the percept grid plus some other useful information such as percept "+
+                  "It prints the percept grid plus some other useful information such as perceived "+
                   "time, score, etc. Note: this function clears the console before printing."
         },
         {
@@ -479,6 +484,58 @@ function APIReferenceController($scope, $modal, $modalInstance){
                   "In order to do this, it paints the cell where the agent is located in the state corresponding to the current search tree node. "+
                   "The delay argument is optional, it indicates the number of milliseconds to delay execution of the next algorithm step (default is 20)."
         }
+    ];
+
+    $scope.constants = [
+        {
+            name: "_ACTION.NORTH",
+            desc: ""
+        },
+        {
+            name: "_ACTION.SOUTH",
+            desc: ""
+        },
+        {
+            name: "_ACTION.WEST",
+            desc: ""
+        },
+        {
+            name: "_ACTION.EAST",
+            desc: ""
+        },
+        {
+            name: "_ACTION.RESTORE",
+            desc: ""
+        },
+        {
+            name: "_ACTION.NONE",
+            desc: ""
+        },
+        {
+            name: "_NORTH",
+            desc: ""
+        },
+        {
+            name: "_SOUTH",
+            desc: ""
+        },
+        {
+            name: "_WEST",
+            desc: ""
+        },
+        {
+            name: "_EAST",
+            desc: ""
+        },
+        {
+            name: "_RESTORE",
+            desc: ""
+        },
+        {
+            name: "_NONE",
+            desc: ""
+        }
+        //_GRID_CELL  = {EMPTY:" ", TILE:"T", OBSTACLE:"#", HOLE_CELL:1, AGENT:"A", BATTERY_CHARGER:"C"};
     ];
 }
 

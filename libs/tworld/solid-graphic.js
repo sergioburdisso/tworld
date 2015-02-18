@@ -276,7 +276,7 @@ function GraphicTWorld(graphicEngine, environment){
             //TEAMS STATS:
             for (var holes, moves, battery, i=0; i < _TEAMS.length; i++){
                 _TEAMS[i].stats = {
-                                    MFinalScore: robs[_TEAMS[i].MEMBERS[0]].Score,
+                                    MFinalScore: 0,
                                     MTotalScore: 0,
                                     MHoles: 0,
                                     MCells: 0,
@@ -287,6 +287,7 @@ function GraphicTWorld(graphicEngine, environment){
                                     mBattery_Recharge:0,
                                 };
                 for (var m=_TEAMS[i].MEMBERS.length; m--;){
+                    _TEAMS[i].stats.MFinalScore += robs[_TEAMS[i].MEMBERS[0]].Score;
                     _TEAMS[i].stats.MTotalScore += robs[_TEAMS[i].MEMBERS[m]].Stats.total_score;
                     _TEAMS[i].stats.MHoles += robs[_TEAMS[i].MEMBERS[m]].Stats.filled_holes;
                     _TEAMS[i].stats.MCells += robs[_TEAMS[i].MEMBERS[m]].Stats.filled_cells;
