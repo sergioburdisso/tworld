@@ -309,12 +309,13 @@ function Environment(rows, columns, graphicEngine, parent) {
             this.updateScore = function(rIndex, value, cells, filled) {
                 var lIndex = _GET_TEAM_LEADER(rIndex);
                 var multr = _rob[lIndex].ScoreMultiplier;
-                var strPoints = ((filled && multr.Value > 1)? multr.Value+"x" : "") + value;
+                var strPoints = ((value > 0 && multr.Value > 1)? multr.Value+"x" : "") + value;
 
-                value = filled? value*multr.Value : value;
                 //-> Stats
-                if (value > 0)
+                if (value > 0){
+                    value = value*multr.Value;
                     _rob[rIndex].Stats.total_score+= value;
+                }
                 //<-
 
                 //if the rob recharged after he went off!

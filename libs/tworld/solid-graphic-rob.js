@@ -83,6 +83,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
                     new buzz.sound(_tmp+"/voice_rob-cant1.mp3"),//ah ah
                     new buzz.sound(_tmp+"/voice_rob-cant2.mp3")
                 ];
+                _sound_voice_cant.prob = [100,800,100];
             }
     //end region Attributes
     //
@@ -753,7 +754,7 @@ function GraphicRob(CLNode, graphicTileWorld, index){
 
                         if (_AUDIO_ENABLE){
                             _sound_walk.stop();
-                            _sound_voice_cant[random(_sound_voice_cant.length)].play();
+                            _sound_voice_cant[UncertaintyMaker(0,_sound_voice_cant.prob)].play();
                         }
                     }
 

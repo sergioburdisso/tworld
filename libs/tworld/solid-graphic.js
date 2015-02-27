@@ -287,7 +287,7 @@ function GraphicTWorld(graphicEngine, environment){
                                     mBattery_Recharge:0,
                                 };
                 for (var m=_TEAMS[i].MEMBERS.length; m--;){
-                    _TEAMS[i].stats.MFinalScore += robs[_TEAMS[i].MEMBERS[0]].Score;
+                    _TEAMS[i].stats.MFinalScore += robs[_TEAMS[i].MEMBERS[m]].Score;
                     _TEAMS[i].stats.MTotalScore += robs[_TEAMS[i].MEMBERS[m]].Stats.total_score;
                     _TEAMS[i].stats.MHoles += robs[_TEAMS[i].MEMBERS[m]].Stats.filled_holes;
                     _TEAMS[i].stats.MCells += robs[_TEAMS[i].MEMBERS[m]].Stats.filled_cells;
@@ -1194,42 +1194,6 @@ function GraphicTWorld(graphicEngine, environment){
 
                 for (var i=0; i < _NUMBER_OF_AGENTS; ++i)
                 _self.Rob[i].setMinimalUpdateDelay(frames);
-        }
-
-        function SortAndPartition(list, criteria){
-            var tiePartitions = [];
-            var oapList = [];// oap stands for "Ordered and Partitioned"
-
-            criteria = NextProperty(list[0].STATS, criteria);
-
-            //recursion stopping condition
-            if (list.length <= 1 || !criteria)
-                return list;
-
-            //sorting the list according to criteria
-            if (criteria[0] == "M")
-                list.sort(function(a,b){return b.STATS[criteria] - a.STATS[criteria]});
-            else
-                list.sort(function(b,a){return b.STATS[criteria] - a.STATS[criteria]});
-
-            //creating partitions according to equal results (tied cases)
-            for (var prevValue = null, k=-1, i=0; i < list.length; i++)
-                if (list[i].STATS[criteria] === prevValue)
-                    tiePartitions[k].push(list[i]);
-                else{
-                    //creating a new partition of "equal values"
-                    tiePartitions.push([list[i]]);
-                    prevValue = list[i].STATS[criteria];
-                    k++;
-                }
-
-            //for each partition
-            for (var p=0; p < tiePartitions.length; ++p)
-                oapList.push(
-                    SortAndPartition(tiePartitions[p], criteria) //recursive call
-                );
-
-            return oapList;
         }
 
         function _toggleOnScreenInfo(value, forced){

@@ -502,7 +502,7 @@ function $solution(node, seq, limit, percept, goal, delay, equalByState, solutio
 
     //if iterative depth first search
     if (!seq.length && limit){
-        __search__(percept, goal, 2, true, delay, equalByState, limit+1, solution);
+        __search__(percept, goal, 2, true, delay, equalByState, limit+1, null, solution);
         return;
     }
     __thinking__ = false;
@@ -531,13 +531,19 @@ function $iterativeDepthFirstSearch(percept, goal, paint, delay, equalByGoalStru
 function $greedyBestFirstSearch(percept, goal, paint, delay, equalByGoalStructure){
     return __search__(percept, goal, _SEARCH_ALGORITHM.GREEDY, paint, delay, !equalByGoalStructure);
 }
+function $greedyBestFirstLimitedSearch(percept, goal, limit, timeLimit, paint, delay, equalByGoalStructure){
+    return __search__(percept, goal, _SEARCH_ALGORITHM.GREEDY, paint, delay, !equalByGoalStructure, limit, timeLimit);
+}
 function $aStarBestFirstSearch(percept, goal, paint, delay, equalByGoalStructure){
     return __search__(percept, goal, _SEARCH_ALGORITHM.A_STAR, paint, delay, !equalByGoalStructure);
+}
+function $aStarBestFirstLimitedSearch(percept, goal, limit, timeLimit, paint, delay, equalByGoalStructure){
+    return __search__(percept, goal, _SEARCH_ALGORITHM.A_STAR, paint, delay, !equalByGoalStructure, limit, timeLimit);
 }
 
 
 //equalByState: whether or not states are going to be considered equal according to the structure of the goal state or rather the entire state.
-function __search__(percept, goal, type, paint, delay, equalByState, limit, solution){delay=delay||20;
+function __search__(percept, goal, type, paint, delay, equalByState, limit, timeLimit, solution){delay=delay||20;
     var initial_state = percept;
     var node = new $Node(initial_state);
     var solution = solution || [];
@@ -546,6 +552,8 @@ function __search__(percept, goal, type, paint, delay, equalByState, limit, solu
 
     var children;
     var child = {State: copy(goal) };
+
+    var timestamp = Date.now();
 
     //static methods
     __search__.sort = function(a, b){ return a.f()-b.f(); };
@@ -613,6 +621,10 @@ function __search__(percept, goal, type, paint, delay, equalByState, limit, solu
     }else{
 
         while(13){//infinite loop
+
+            if (timeLimit && Date.now() - timestamp >= timeLimit)
+                return undefined;
+
             if ( !frontier.length ) return [];
 
             switch(type){
@@ -856,6 +868,11 @@ function $printMatrix(matrix, noClear){
     if (!noClear)
         console.clear();
     console.log("\n" + strgGrid);
+}
+
+function $getHoleDistance(cell, hole){
+    hole.cells.sort(function(a,b){ return manhattand(cell, a) - manhattand(cell, b); });
+    return manhattand(cell, hole.cells[0]);
 }
 
 function $getClosestHole(cell, holes, exclude){if (!holes.length) return undefined;
