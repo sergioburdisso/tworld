@@ -158,18 +158,6 @@
             this.nTeam = 0;
             this.teamColors = colors;
             this.step = 0;
-            this.end_game_cond = end_game_conditions = [
-                {name:_ENDGAME.TIME.NAME                , value:5*60, result:_GAME_RESULT.NEUTRAL   },
-                {name:_ENDGAME.AGENTS_LOCATION.NAME     , value:[]  , result:_GAME_RESULT.SUCCESS       },
-                {name:_ENDGAME.FILLED_HOLES.NAME        , value:0   , result:_GAME_RESULT.SUCCESS       },
-                {name:_ENDGAME.FILLED_CELLS.NAME        , value:0   , result:_GAME_RESULT.SUCCESS       },
-                {name:_ENDGAME.SCORE.NAME               , value:0   , result:_GAME_RESULT.SUCCESS       },
-                {name:_ENDGAME.GOOD_MOVES.NAME          , value:0   , result:_GAME_RESULT.NEUTRAL   },
-                {name:_ENDGAME.BAD_MOVES.NAME           , value:0   , result:_GAME_RESULT.FAILURE      },
-                {name:_ENDGAME.BATTERY_USED.NAME        , value:0   , result:_GAME_RESULT.FAILURE      },
-                {name:_ENDGAME.BATTERY_RECHARGE.NAME    , value:0   , result:_GAME_RESULT.FAILURE      },
-                {name:_ENDGAME.BATTERY_RESTORE.NAME     , value:0   , result:_GAME_RESULT.FAILURE      }
-            ];
             this.task_env = taskEnvironment = taskEnv;
             this.stochastic_model = taskEnv.agents.stochastic_model;
             this.stchastic_user_model = new Array(5);
@@ -213,6 +201,8 @@
 
                     _self.task_env.builtin = false;
                     _self.task_env.date = undefined;
+
+                    _updateEndGameConditions(_self.task_env);
                 }});
             }
 
@@ -538,6 +528,29 @@
                 if (isLoggedIn()) $scope.$apply();
             }
 
+            function _updateEndGameConditions(te){
+                _self.end_game_cond = end_game_conditions = [
+                    {name:_ENDGAME.TIME.NAME                , value:5*60, result:_GAME_RESULT.NEUTRAL   },
+                    {name:_ENDGAME.AGENTS_LOCATION.NAME     , value:[]  , result:_GAME_RESULT.SUCCESS       },
+                    {name:_ENDGAME.FILLED_HOLES.NAME        , value:0   , result:_GAME_RESULT.SUCCESS       },
+                    {name:_ENDGAME.FILLED_CELLS.NAME        , value:0   , result:_GAME_RESULT.SUCCESS       },
+                    {name:_ENDGAME.SCORE.NAME               , value:0   , result:_GAME_RESULT.SUCCESS       },
+                    {name:_ENDGAME.GOOD_MOVES.NAME          , value:0   , result:_GAME_RESULT.NEUTRAL   },
+                    {name:_ENDGAME.BAD_MOVES.NAME           , value:0   , result:_GAME_RESULT.FAILURE      },
+                    {name:_ENDGAME.BATTERY_USED.NAME        , value:0   , result:_GAME_RESULT.FAILURE      },
+                    {name:_ENDGAME.BATTERY_RECHARGE.NAME    , value:0   , result:_GAME_RESULT.FAILURE      },
+                    {name:_ENDGAME.BATTERY_RESTORE.NAME     , value:0   , result:_GAME_RESULT.FAILURE      }
+                ];
+
+                //computing end_game_conditions default values
+                for (var i = te.environment.final_state.length; i--;)
+                    for (var j= end_game_conditions.length; j--;)
+                        if (te.environment.final_state[i].name == end_game_conditions[j].name){
+                            end_game_conditions.remove(j);
+                            break;
+                        }
+            }
+
             //default teams values
             _addTeam(_default.teams.single, 1);
 
@@ -560,13 +573,7 @@
 
             this.updateTeams();
 
-            //computing end_game_conditions default values
-            for (var i = taskEnv.environment.final_state.length; i--;)
-                for (var j= end_game_conditions.length; j--;)
-                    if (taskEnv.environment.final_state[i].name == end_game_conditions[j].name){
-                        end_game_conditions.remove(j);
-                        break;
-                    }
+            _updateEndGameConditions(taskEnv);
     }]);
 
     mod.controller('InitialStateMakerController', function(){

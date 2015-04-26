@@ -91,7 +91,7 @@ function __AgentProgram__Wrapper__(percept)/*returns action*/{
             eval(
                 "(function(){"+
                     percept.data.global_src+
-                    "(function(){"+
+                    ";(function(){"+
                         percept.data.ai_src
                             .replace(/(\$(return|perceive)\s*\(.*?\)\s*[;\n])/g, "{$1;return}")+
                         ";__AgentProgram__= AGENT_PROGRAM;"+
@@ -365,7 +365,7 @@ function $Node(e, p, a, g, d){var _self = this;
             h+= manhattand(e.agent.location, __search__.goal.agent.location);
 
         //if goal state has to take into account the number of battery recharges
-        if ( __search__.goal_recharges )
+        if ( __search__.goal_recharges && e.environment.battery_chargers.length)
             h+= manhattand(
                 e.agent.location,
                 $getClosestCell(e.agent.location, e.environment.battery_chargers)
@@ -806,8 +806,6 @@ function $isValidMove(percept, action){
 }
 
 
-
-
 function $printGrid(percept, noClear){
     var strgLine = "   ";
     var strgGrid = "";
@@ -898,3 +896,7 @@ function $getClosestCell(cell, cells, exclude){if (!cells.length) return undefin
         }
     return closest;
 }
+
+var $manhattan = manhattand;
+var $match = match;
+var $random = random;

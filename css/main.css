@@ -8,6 +8,35 @@
 	src: url('../resrc/raleway-regular.ttf');
 }
 
+ul.tree, ul.tree ul {
+	list-style-type: none;
+	background: url(../imgs/web-app/vline.png) repeat-y;
+	margin: 0;
+	padding: 0;
+}
+
+ul.tree ul {
+	margin-left: 10px;
+}
+
+ul.tree li {
+	margin: 0;
+	padding: 0 12px;
+	line-height: 20px;
+	background: url(../imgs/web-app/node.png) no-repeat;
+	/*color: #369;
+	font-weight: bold;*/
+}
+
+ul.tree li:last-child {
+	background: white url(../imgs/web-app/lastnode.png) no-repeat;
+}
+
+ul.tree span{
+	font-weight:normal;
+	color: gray;
+}
+
 .spinner {
 	margin: 5px 5px;
 	width: 70px;
@@ -234,6 +263,8 @@ td input{text-align: center}
 .text-green{color: #5CB85C}
 .text-light-blue, .header a{color: rgb(155, 192, 255);}
 .text-blue,.sett-item.active, .hover.blue:hover{color: #428BCA}
+.text-bold{font-weight:bold;}
+.text-normal{font-weight:normal;}
 .border-right{border-right: 0px}
 .border-top{border-top: 0px}
 .white{background-color: white}

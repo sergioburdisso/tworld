@@ -237,7 +237,9 @@ function runModalController($rootScope, $scope, $modal, $modalInstance, taskEnv,
 
 function APIReferenceController($scope, $modal, $modalInstance){
     var _selected = 0;
-    var _fSeleced = "";
+    var _fSelected = "";
+    var _cSelected = "";
+    var _pfSelected = -1;
     var _TYPE = {
         ARRAYA: {name:"ArrayA",   desc:"array of Actions. See constants section to see what Actions look like"},
         ARRAYC: {name:"ArrayC",   desc:"array of Cell Objects"},
@@ -266,21 +268,32 @@ function APIReferenceController($scope, $modal, $modalInstance){
 
     $scope.close = function () {$modalInstance.dismiss()};
 
-    $scope.setFunction = function(value){_fSeleced = $scope.isFunction(value)? "" : value;}
-    $scope.isFunction = function(value){return _fSeleced == value;}
+    $scope.setFunction = function(value){_fSelected = $scope.isFunction(value)? "" : value;}
+    $scope.isFunction = function(value){return _fSelected == value;}
+
+    $scope.setConstant = function(value){_cSelected = $scope.isConstant(value)? "" : value;}
+    $scope.isConstant = function(value){return _cSelected == value;}
+
+    $scope.setPerceptField = function(value){_pfSelected = $scope.isPerceptField(value)? -1 : value;}
+    $scope.isPerceptField = function(value){return _pfSelected == value;}
 
     $scope.functions = [
-        {
-            name: "copy",
-            params : [{t:_TYPE.OBJECT, i:"obj"}],
-            desc: "Clones the obj object and returns it."
-        },
         {
             name: "printf",
             params : [{t:_TYPE.STR, i:"format"}, {t:"", i:"..."}],
             desc: "The well-known C printf function. Writes the format string to the T-World console. "+
             "If format includes format specifiers (subsequences beginning with %), the additional arguments "+
             "following format are formatted and inserted in the resulting string replacing their respective specifiers."
+        },
+        {
+            name: "$manhattan",
+            params : [{t:_TYPE.CELL, i:"c0"},{t:_TYPE.CELL, i:"c1"}],
+            desc: "returns the Manhattan distance from cell c0 to cell c1."
+        },
+        {
+            name: "$match",
+            params : [{t:_TYPE.OBJECT, i:"obj0"},{t:_TYPE.OBJECT, i:"obj1"}],
+            desc: ""
         },
         {
             name: "$printGrid",
@@ -297,7 +310,7 @@ function APIReferenceController($scope, $modal, $modalInstance){
                   "It prints a matrix (an array of arrays). Note: this function clears the console before printing."
         },
         {
-            name: "random",
+            name: "$random",
             params : [{t:_TYPE.INT, i:"min"}, {t:_TYPE.INT, i:"max"}],
             desc: "Returns a pseudo-random number between a and b. "+
                   "If called without the optional max arguments random(n) returns a pseudo-random integer between 0 and n-1 (inclusive)."
@@ -419,9 +432,9 @@ function APIReferenceController($scope, $modal, $modalInstance){
         },
         {
             name: "$sendMessage",
-            params : [{t:_TYPE.INT, i:"teammateId"}, {t:_TYPE.STR, i:"message"}],
+            params : [{t:_TYPE.INT, i:"teammateId"}, {t:_TYPE.OBJECT, i:"message"}],
             desc: "Sends the given message object to the given teammate. For example, "+
-                  "$sendMessage({row:10, column:10}, 1) will send the JavaScript Object {row:10, column:10} "+
+                  "$sendMessage(10, {row:10, column:10}) will send the JavaScript Object {row:10, column:10} "+
                   "to the teammate with id 10. Note: This function is useful when working with cooperative "+
                   "task environments where agents need to communicate with each other."
         },
@@ -483,59 +496,137 @@ function APIReferenceController($scope, $modal, $modalInstance){
                   "The paint argument is optional, when set to true this function graphically shows the states it explores while searching. "+
                   "In order to do this, it paints the cell where the agent is located in the state corresponding to the current search tree node. "+
                   "The delay argument is optional, it indicates the number of milliseconds to delay execution of the next algorithm step (default is 20)."
+        },
+        {
+            name: "$greedyBestFirstLimitedSearch",
+            params : [{t:_TYPE.PERCT, i:"p"}, {t:_TYPE.GOAL, i:"g"}, {t:_TYPE.INT, i:"limit"}, {t:_TYPE.INT, i:"timeLimit"}, {t:_TYPE.BOOL, i:"paint"}, {t:_TYPE.INT, i:"delay"}],
+            desc: ""
+        },
+        {
+            name: "$aStarBestFirstLimitedSearch",
+            params : [{t:_TYPE.PERCT, i:"p"}, {t:_TYPE.GOAL, i:"g"}, {t:_TYPE.INT, i:"limit"}, {t:_TYPE.INT, i:"timeLimit"}, {t:_TYPE.BOOL, i:"paint"}, {t:_TYPE.INT, i:"delay"}],
+            desc: ""
         }
     ];
 
     $scope.constants = [
         {
-            name: "_ACTION.NORTH",
-            desc: ""
-        },
-        {
-            name: "_ACTION.SOUTH",
-            desc: ""
-        },
-        {
             name: "_ACTION.WEST",
-            desc: ""
+            value: _ACTION.WEST,
+            desc: "Constant associated with the 'west' action. For instance, when you want the robot to move one cell to the west "+
+                  "you could use '$return(_ACTION.WEST);'."
         },
         {
             name: "_ACTION.EAST",
-            desc: ""
+            value: _ACTION.EAST,
+            desc: "Constant associated with the 'east' action. For instance, when you want the robot to move one cell to the east "+
+                  "you could use '$return(_ACTION.EAST);'."
+        },
+        {
+            name: "_ACTION.NORTH",
+            value: _ACTION.NORTH,
+            desc: "Constant associated with the 'north' action. For instance, when you want the robot to move one cell to the north "+
+                  "you could use '$return(_ACTION.NORTH);'."
+        },
+        {
+            name: "_ACTION.SOUTH",
+            value: _ACTION.SOUTH,
+            desc: "Constant associated with the 'south' action. For instance, when you want the robot to move one cell to the south "+
+                  "you could use '$return(_ACTION.SOUTH);'."
         },
         {
             name: "_ACTION.RESTORE",
-            desc: ""
+            value: _ACTION.RESTORE,
+            desc: "Constant associated with the 'battery restoration' action. For instance, when you want the robot to restore its battery "+
+                  "you could use '$return(_ACTION.RESTORE);'."
         },
         {
             name: "_ACTION.NONE",
-            desc: ""
+            value: _ACTION.NONE,
+            desc: "Constant associated with the 'null' action. For instance, when you want the robot to do nothing at all and "+
+                  "just perceive a new updated percept, you could use '$return(_ACTION.NONE);'."
         },
         {
             name: "_NORTH",
-            desc: ""
+            value: _ACTION.NORTH,
+            desc: "An alias for _ACTION.NORTH"
         },
         {
             name: "_SOUTH",
-            desc: ""
+            value: _ACTION.SOUTH,
+            desc: "An alias for _ACTION.SOUTH"
         },
         {
             name: "_WEST",
-            desc: ""
+            value: _ACTION.WEST,
+            desc: "An alias for _ACTION.WEST"
         },
         {
             name: "_EAST",
-            desc: ""
-        },
-        {
-            name: "_RESTORE",
-            desc: ""
+            value: _ACTION.EAST,
+            desc: "An alias for _ACTION.EAST"
         },
         {
             name: "_NONE",
-            desc: ""
+            value: _ACTION.NONE,
+            desc: "An alias for _ACTION.NONE"
+        },
+        {
+            name: "_RESTORE",
+            value: _ACTION.RESTORE,
+            desc: "An alias for _ACTION.RESTORE"
+        },
+        {
+            name: "_GRID_CELL.EMPTY",
+            value: "\""+_GRID_CELL.EMPTY+"\"",
+            desc: "A special value representing the empty cell on the perceived environment grid."
+        },
+        {
+            name: "_GRID_CELL.TILE",
+            value: "\""+_GRID_CELL.TILE+"\"",
+            desc: "A special value representing the tile cell on the perceived environment grid."
+        },
+        {
+            name: "_GRID_CELL.OBSTACLE",
+            value: "\""+_GRID_CELL.OBSTACLE+"\"",
+            desc: "A special value representing the obstacle cell on the perceived environment grid."
+        },
+        {
+            name: "_GRID_CELL.HOLE_CELL",
+            value: _GRID_CELL.HOLE_CELL,
+            desc: "A special value representing a hole cell on the perceived environment grid.. Note: be careful not to use this constant to check if a certain cell is a hole cell. Instead the $isHoleCell function should be used."
+        },
+        {
+            name: "_GRID_CELL.AGENT",
+            value: "\""+_GRID_CELL.AGENT+"\"",
+            desc: "A special value representing the agent cell on the perceived environment grid."
+        },
+        {
+            name: "_GRID_CELL.BATTERY_CHARGER",
+            value: "\""+_GRID_CELL.BATTERY_CHARGER+"\"",
+            desc: "A special value representing the battery charger cell on the perceived environment grid."
         }
-        //_GRID_CELL  = {EMPTY:" ", TILE:"T", OBSTACLE:"#", HOLE_CELL:1, AGENT:"A", BATTERY_CHARGER:"C"};
+        //_SEARCH_ALGORITHM.BFS, _SEARCH_ALGORITHM.DFS, _SEARCH_ALGORITHM.IDFS, _SEARCH_ALGORITHM.A_STAR, _SEARCH_ALGORITHM.GREEDY
+    ];
+
+    $scope.variables = [
+        {
+            name: "$memory",
+            desc: "User can use this variable to define persistent variables, that is, variables that store "+
+                  "and keep their value once the simulation has finished. This is useful for creating learning "+
+                  "mechanisms, in which the agent needs to be able to remember 'things' across different trials "+
+                  "during its training. For instance, suppose the agent need to remember a certain number across different "+
+                  "simulations, then the user could use $memory.aCertainValue to make aCertainValue variable persistent. "+
+                  "Note: he/she must use $memory.aCertainValue every time he/she needs to refer to that variable."
+        },
+        {
+            name: "$m",
+            desc: "An alias for $memory."
+        },
+        {
+            name: "$persistent",
+            desc: "An alias for $memory."
+        }
     ];
 }
 

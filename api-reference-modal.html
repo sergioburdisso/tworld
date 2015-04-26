@@ -14,25 +14,234 @@
 		</div>
 
 
-		<div class="col-md-6 animate-only-show-3d-left margin-left-10" ng-show="isPerceptTab()">
+		<div class="col-md-9 animate-only-show-3d-left margin-left-10" ng-show="isPerceptTab()">
 
-			<div class="row"><h4><b>Percept Object</b></h4></div>
-			Work In Progress
+			<div class="row"><h4><b>Percept Object Structure</b></h4></div>
+			<p>
+				<b>Note:</b> click on a percept field to unfold it.
+			</p>
+			<span class="text-red text-bold" style="margin-left:-10px">percept</span>
+			<ul class="tree text-red text-bold">
+				<li>
+					<div ng-click="setPerceptField(0)" class="cursor-pointer hover blue">environment</div>
+					<ul ng-show="isPerceptField(0)" class="animate-show-3d-top">
+						<li>
+							grid:<span>"Row-Major Order" matrix, rows are numbered by the first index and columns by the second index</span>
+						</li>
+						<li>time</li>
+						<li>
+							battery_chargers: <span>Array of</span>
+							<ul>
+								<li>row</li>
+								<li>column</li>
+							</ul>
+						</li>
+						<li>
+							agents: <span>Array of</span>
+							<ul>
+								<li>id</li>
+								<li>team_id</li>
+								<li>
+									location
+									<ul>
+										<li>row</li>
+										<li>column</li>
+									</ul>
+								</li>
+								<li>score</li>
+								<li>battery</li>
+							</ul>
+						</li>
+						<li>
+							holes: <span>Array of</span>
+							<ul>
+								<li>id</li>
+								<li>
+									cells: <span>Array of</span>
+									<ul>
+										<li>row</li>
+										<li>column</li>
+									</ul>
+								</li>
+								<li>size</li>
+								<li>value</li>
+								<li>time_elapsed</li>
+								<li>lifetime_left</li>
+							</ul>
+						</li>
+						<li>
+							tiles: <span>Array of</span>
+							<ul>
+								<li>row</li>
+								<li>column</li>
+							</ul>
+						</li>
+						<li>
+							obstacles: <span>Array of</span>
+							<ul>
+								<li>row</li>
+								<li>column</li>
+								<li>time_elapsed</li>
+								<li>lifetime_left</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<div ng-click="setPerceptField(1)" class="cursor-pointer hover blue">agent</div>
+					<ul ng-show="isPerceptField(1)" class="animate-show-3d-top">
+						<li>id</li>
+						<li>team_id</li>
+						<li>
+							location
+							<ul>
+								<li>row</li>
+								<li>column</li>
+							</ul>
+						</li>
+						<li>score</li>
+						<li>battery</li>
+						<li>
+							stats
+							<ul>
+								<li>good_moves</li>
+								<li>bad_moves</li>
+								<li>filled_cells</li>
+								<li>filled_holes</li>
+								<li>battery_used</li>
+								<li>battery_recharge</li>
+								<li>battery_restore</li>
+								<li>total_score</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<div ng-click="setPerceptField(2)" class="cursor-pointer hover blue">builtin_knowledge</div>
+					<ul ng-show="isPerceptField(2)" class="animate-show-3d-top">
+						<li>grid_total_rows</li>
+						<li>grid_total_columns</li>
+						<li>
+							teams: <span>Array of</span>
+							<ul>
+								<li>id</li>
+								<li>leader</li>
+								<li>members: <span>Array of integer (agents id)</span></li>
+							</ul>
+						</li>
+						<li>
+							end
+							<ul>
+								<li>
+									neutral: <span>Conditions Object</span>
+									<ul>
+										<li>time</li>
+										<li>good_moves</li>
+										<li>agents_location: <span>Array of Pairs</span></li>
+										<li>filled_holes</li>
+										<li>filled_cells</li>
+										<li>score</li>
+										<li>bad_moves</li>
+										<li>battery_used</li>
+										<li>battery_recharge</li>
+										<li>battery_restore</li>
+									</ul>
+								</li>
+								<li>success: <span>Conditions Object</span></li>
+								<li>failure: <span>Conditions Object</span></li>
+							</ul>
+						</li>
+						<li>
+							costs
+							<ul>
+								<li>good_move</li>
+								<li>bad_move</li>
+								<li>filled_hole</li>
+								<li>
+									battery
+									<ul>
+										<li>bad_move</li>
+										<li>good_move</li>
+										<li>slide_tile</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li>
+							probability
+							<ul>
+								<li>
+									holes_size: <span>RangeProb Object</span>
+									<ul>
+										<li>range: <span>Array of 2 integers</span></li>
+										<li>prob: <span>Array of float</span></li>
+									</ul>
+								</li>
+								<li>num_holes: <span>RangeProb Object</span></li>
+								<li>num_obstacles: <span>RangeProb Object</span></li>
+								<li>difficulty: <span>RangeProb Object</span></li>
+								<li>dynamism: <span>RangeProb Object</span></li>
+								<li>hostility: <span>RangeProb Object</span></li>
+								<li>
+									model_of_action
+									<ul>
+										<li>intended</li>
+										<li>left</li>
+										<li>right</li>
+										<li>backward</li>
+										<li>refuses</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
 
 		</div>
 
-		<div class="col-md-6 animate-only-show-3d-left margin-left-10" ng-show="isConstantsTab()">
+		<div class="col-md-9 animate-only-show-3d-left margin-left-10" ng-show="isConstantsTab()">
 
 			<div class="row"><h4><b>Built-in Constants</b></h4></div>
-			Work In Progress
+			<p>
+				<b>Note:</b> click on a constant name for details.
+			</p>
+			<dl class="dl-horizontal">
+				<dt ng-repeat-start="c in constants" class="width-214">
+					<code ng-click="setConstant(c.name)" class="cursor-pointer hover blue">
+						{{c.name}}
+					</code>
+				</dt>
+				<dd class="margin-left-214 margin-bot-10" ng-repeat-end>
+					<div>
+						<b>= </b><span class="text-orange">{{c.value}}</span>
+					</div>
+					<span ng-show="isConstant(c.name)" class="animate-show-3d-top">
+						<blockquote>
+							<small class="text-justify">{{c.desc}}</small>
+						</blockquote>
+					</span>
+				</dd>
+			</dl>
+
+			<div class="row" style="border-top: rgb(231, 224, 224) solid;"><h4><b>Built-in Variables</b></h4></div>
 			<br>
 			<dl class="dl-horizontal">
-				<dt ng-repeat-start="c in constants">
-					<code>{{c.name}}</code>
+				<dt ng-repeat-start="v in variables" class="width-214">
+					<code ng-click="setConstant(v.name)" class="cursor-pointer hover blue">
+						{{v.name}}
+					</code>
 				</dt>
-				<dd ng-repeat-end>{{c.desc}}</dd>
+				<dd class="margin-left-214 margin-bot-10" ng-repeat-end>
+					<br>
+					<span ng-show="isConstant(v.name)" class="animate-show-3d-top">
+						<blockquote>
+							<small class="text-justify">{{v.desc}}</small>
+						</blockquote>
+					</span>
+				</dd>
 			</dl>
-			$memory, $m, $persistent
+
 		</div>
 
 		<div class="col-md-9 animate-only-show-3d-left margin-left-10" ng-show="isFunctionsTab()">
