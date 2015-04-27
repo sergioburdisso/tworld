@@ -499,12 +499,12 @@ function APIReferenceController($scope, $modal, $modalInstance){
         },
         {
             name: "$greedyBestFirstLimitedSearch",
-            params : [{t:_TYPE.PERCT, i:"p"}, {t:_TYPE.GOAL, i:"g"}, {t:_TYPE.INT, i:"limit"}, {t:_TYPE.INT, i:"timeLimit"}, {t:_TYPE.BOOL, i:"paint"}, {t:_TYPE.INT, i:"delay"}],
+            params : [{t:_TYPE.PERCT, i:"p"}, {t:_TYPE.GOAL, i:"g"}, {t:_TYPE.INT, i:"limit"}, {t:_TYPE.INT, i:"time"}, {t:_TYPE.BOOL, i:"paint"}, {t:_TYPE.INT, i:"delay"}],
             desc: ""
         },
         {
             name: "$aStarBestFirstLimitedSearch",
-            params : [{t:_TYPE.PERCT, i:"p"}, {t:_TYPE.GOAL, i:"g"}, {t:_TYPE.INT, i:"limit"}, {t:_TYPE.INT, i:"timeLimit"}, {t:_TYPE.BOOL, i:"paint"}, {t:_TYPE.INT, i:"delay"}],
+            params : [{t:_TYPE.PERCT, i:"p"}, {t:_TYPE.GOAL, i:"g"}, {t:_TYPE.INT, i:"limit"}, {t:_TYPE.INT, i:"time"}, {t:_TYPE.BOOL, i:"paint"}, {t:_TYPE.INT, i:"delay"}],
             desc: ""
         }
     ];
