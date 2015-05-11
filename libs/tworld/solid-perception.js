@@ -330,16 +330,24 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
     this.Percept.data.environment.obstacles = _listOfObs;
 
     //-> List Of Tiles
-    for (var tileCounter= 0, r= 0; r < _bik.grid_total_rows; ++r)
-        for (var c= 0; c < _bik.grid_total_columns; ++c)
-            if (_grid[r][c] == _GRID_CELL.TILE){
-                if (tileCounter < this.Percept.data.environment.tiles.length){
-                    this.Percept.data.environment.tiles[tileCounter].row = r;
-                    this.Percept.data.environment.tiles[tileCounter++].column = c;
-                }else
-                    this.Percept.data.environment.tiles[tileCounter++] = {row: r, column: c};
-            }
-    this.Percept.data.environment.tiles.length = tileCounter; //set the new tiles length
+    var _listOfTs = environment.ListOfTiles;
+
+    if (!TWorld.FullyObservableGrid){
+        // if grid is partially observable
+        for (var i= 0; i < _listOfTs.length; ++i){
+            //if the i-th obstacle is not visible, then remove it...
+            if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfTs[i].row && _listOfTs[i].row <= _robLoc.Row + TWorld.VisibilityRadius) &&
+                 (_robLoc.Column - TWorld.VisibilityRadius <= _listOfTs[i].column && _listOfTs[i].column <= _robLoc.Column + TWorld.VisibilityRadius)){
+                rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+                cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+                _listOfTs[i].row -= rVOEnvGrid;
+                _listOfTs[i].column -= cVOEnvGrid;
+            }else
+                _listOfTs.remove(i--);
+        }
+    }
+
+    this.Percept.data.environment.tiles = _listOfTs;
 
     //region Noise generator
         //-> List of Holes

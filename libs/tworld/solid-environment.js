@@ -23,6 +23,7 @@ function Environment(rows, columns, graphicEngine, parent) {
         //private:
             var _grid               = NewMatrix(rows, columns); // "Row-Major Order", rows are numbered by the first index and columns by the second index
             var _listOfHoles        = new ListOfHoles(rows*columns); // rows*columns is space-inefficient but it speed up some calculation (js engine don't use hashes)
+            var _listOfTiles        = new List(/*rows*columns*/);
             var _listOfObstacles    = new List(/*rows*columns*/);
             var _listOfEmptyCells   = new ListOfPairs(rows*columns);
 
@@ -47,6 +48,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 
             this.ListOfHoles = _listOfHoles;
             this.ListOfObstacles = _listOfObstacles;
+            this.ListOfTiles = _listOfTiles;
 
             this.Costs = {};
             this.Costs.good_move = _ROB_WALK_TIME; // time it takes the agent to move (in "ticks")
@@ -148,7 +150,7 @@ function Environment(rows, columns, graphicEngine, parent) {
                         );
                     }
                 }else{
-                    _self.AbstractLevel.createHoles();
+                    _self.AbstractLevel.createHoles(true);
                     _self.AbstractLevel.createObstacles();
                 }
 
@@ -482,11 +484,12 @@ function Environment(rows, columns, graphicEngine, parent) {
             }
 
             //--------------------------------------------------------------------------------------> newTile
-            this.newTile = function(tileCell) {
+            this.newTile = function(tileCell, lifeTime) {
                 if (tileCell){
                     _grid[tileCell[0]][tileCell[1]] = _GRID_CELL.TILE;
-
                     _listOfEmptyCells.remove(tileCell[0], tileCell[1]);
+
+                    _listOfTiles.append(new Tile(tileCell, lifeTime, true));
 
                     _graphicTWorld.newTile(tileCell);
                 }
@@ -636,12 +639,26 @@ function Environment(rows, columns, graphicEngine, parent) {
                     return false;
                 }
 
+                for (var i= _rob[rIndex].ListOfTilesToSlide.getLength()-1, st; i >= 0; --i){
+                    st = _rob[rIndex].ListOfTilesToSlide.getItemAt(i);
+                    for (var j= _listOfTiles.getLength()-1, t; j >= 0; --j){
+                        t = _listOfTiles.getItemAt(j);
+                        if (t.Cell[0] == st[0] && t.Cell[1] == st[1]){
+                            t.Cell[0] += xSlide;
+                            t.Cell[1] += ySlide;
+                        }
+                        if (this.isAHole(t.Cell[0], t.Cell[1]))
+                            _listOfTiles.removeItemAt(j);
+                    }
+                }
+
+
                 farthestTile = [farthestTile[0]+xSlide, farthestTile[1]+ySlide];
                 _rob[rIndex].ListOfTilesToSlide.appendUnique(farthestTile);
 
-                if (this.isAHole(farthestTile[0], farthestTile[1]))
+                if (this.isAHole(farthestTile[0], farthestTile[1])){
                     _fillHoleCell(rIndex, farthestTile[0], farthestTile[1]);
-                else{
+                }else{
 
                     _grid[farthestTile[0]][farthestTile[1]] = _GRID_CELL.TILE;
                     _listOfEmptyCells.remove(farthestTile[0], farthestTile[1]);
@@ -659,7 +676,7 @@ function Environment(rows, columns, graphicEngine, parent) {
                 }
                 _rob[rIndex].ListOfTilesToSlide.removeItemAt(0);
 
-                _self.updateBattery(rIndex, -_BATTERY_SLIDE_COST);
+                _self.updateBattery(rIndex, -_BATTERY_SLIDE_COST*_rob[rIndex].ListOfTilesToSlide.getLength());
                 return true;
             }
 
@@ -738,6 +755,7 @@ function Environment(rows, columns, graphicEngine, parent) {
                             RobStats: _rob[rIndex].Stats,
                             ListOfAgents : new Array(_NUMBER_OF_AGENTS),
                             ListOfHoles : [],
+                            ListOfTiles : [],
                             ListOfObstacles :[],
                             Costs : _self.Costs,
                             Probability: {
@@ -836,7 +854,7 @@ function Environment(rows, columns, graphicEngine, parent) {
                         if (!this.environment.ListOfObstacles[i])
                             this.environment.ListOfObstacles[i] = {};
 
-                        //this.environment.ListOfObstacles[i].id = iObs.Id; //<-- esto deberia ser opcional, segun quiera el usuario implementar un mecanismo para "reconocer" un objeto en el ambiente o no
+                        this.environment.ListOfObstacles[i].id = iObs.Id;
                         this.environment.ListOfObstacles[i].row = iObs.Cell[0];
                         this.environment.ListOfObstacles[i].column = iObs.Cell[1];
 
@@ -845,6 +863,27 @@ function Environment(rows, columns, graphicEngine, parent) {
 
                             if (TWorld.ShowTimeLeft)
                                 this.environment.ListOfObstacles[i].lifetime_left = iObs.getTimeRemaindingToTimeout();
+                        }
+                    }
+
+                    //-> List Of Tiles
+                    var _totalTiles = _self.ListOfTiles.getLength();
+                    this.environment.ListOfTiles.length = _totalTiles;
+                    for (var iTs, i= 0;  i < _totalTiles; ++i){
+                        iTs = _self.ListOfTiles.getItemAt(i);
+
+                        if (!this.environment.ListOfTiles[i])
+                            this.environment.ListOfTiles[i] = {};
+
+                        this.environment.ListOfTiles[i].id = iTs.Id;
+                        this.environment.ListOfTiles[i].row = iTs.Cell[0];
+                        this.environment.ListOfTiles[i].column = iTs.Cell[1];
+
+                        if (TWorld.Dynamic){
+                            this.environment.ListOfTiles[i].time_elapsed = iTs.getTimeElapsed();
+
+                            if (TWorld.ShowTimeLeft)
+                                this.environment.ListOfTiles[i].lifetime_left = iTs.getTimeRemaindingToTimeout();
                         }
                     }
 
@@ -966,8 +1005,12 @@ function Environment(rows, columns, graphicEngine, parent) {
 
             //--------------------------------------------------------------------------------------> _holesAndObstaclesTick
             function _holesAndObstaclesTick() {
-                var cellRemoved;
-                for (var hole, i= _listOfHoles.getLength(); i--;){
+                var cellRemoved,
+                    nHoles= _listOfHoles.getLength(),
+                    nObstacles= _listOfObstacles.getLength(),
+                    nTiles= _listOfTiles.getLength();
+
+                for (var hole, i= nHoles; i--;){
                     hole = _listOfHoles.getItemAt(i);
 
                     if (hole.tickAndTest())
@@ -987,13 +1030,20 @@ function Environment(rows, columns, graphicEngine, parent) {
                             hole.shrinkScore();
                 }
 
-                if (TWorld.Dynamic)
-                    for (var obstacle, i= _listOfObstacles.getLength(); i--;){
+                if (TWorld.Dynamic){
+                    for (var obstacle, i= nObstacles; i--;){
                         obstacle = _listOfObstacles.getItemAt(i);
 
                         if (obstacle.tickAndTest())
                             _removeObstacle(i);
                     }
+                    for (var tile, i= nTiles; i--;){
+                        tile = _listOfTiles.getItemAt(i);
+
+                        if (tile.tickAndTest())
+                            _removeTile(i);
+                    }
+                }
             }
 
             //--------------------------------------------------------------------------------------> _updateScoreBattery
@@ -1078,7 +1128,7 @@ function Environment(rows, columns, graphicEngine, parent) {
                 _graphicTWorld.removeHoleCell(holeCell, isTeleported);
 
                 //TODO: o asi removeATile(); pero con animacion de teletransp las tiles a los huecos (RESPETA MEJOR LOS TIEMPOS DEL PAPER) PROBAR CON SACAR SOLO LOS RAYOS DEL ALIEN A VER COMO QUEDA
-                CallWithDelay.Enqueue(removeATile, null, 1 /*time in seconds*/);
+                //CallWithDelay.Enqueue(removeATile, null, 1 /*time in seconds*/);
             }
 
             function removeHoleHelper(holeCell) {
@@ -1091,27 +1141,29 @@ function Environment(rows, columns, graphicEngine, parent) {
             }
 
             //--------------------------------------------------------------------------------------> removeATile
-            function removeATile(){
-                var tileCell = getRandomTile();
+            function _removeTile(tileIndex){
+                var tileCell = _listOfTiles.getItemAt(tileIndex);//getRandomTile();
 
-                if (tileCell){
-                    //if Tile were on top of the battery charger
-                    if (_self.isABatteryCharger(tileCell[0], tileCell[1]))
-                        _grid[tileCell[0]][tileCell[1]] = _GRID_CELL.BATTERY_CHARGER;
-                    else{
-                        _grid[tileCell[0]][tileCell[1]] = _GRID_CELL.EMPTY;
-                        _listOfEmptyCells.appendUnique(tileCell);
-                    }
-
-                    for (var t= _rob.length; t--;)
-                        if (_rob[t].ListOfTilesToSlide.remove(tileCell[0], tileCell[1]))
-                            break;
-
-                    _graphicTWorld.removeTile(tileCell, true);
+                //if (tileCell){
+                //if Tile were on top of the battery charger
+                if (_self.isABatteryCharger(tileCell.Cell[0], tileCell.Cell[1]))
+                    _grid[tileCell.Cell[0]][tileCell.Cell[1]] = _GRID_CELL.BATTERY_CHARGER;
+                else{
+                    _grid[tileCell.Cell[0]][tileCell.Cell[1]] = _GRID_CELL.EMPTY;
+                    _listOfEmptyCells.appendUnique(tileCell.Cell);
                 }
+
+                _listOfTiles.removeItemAt(tileIndex);
+
+                for (var t= _rob.length; t--;)
+                    if (_rob[t].ListOfTilesToSlide.remove(tileCell.Cell[0], tileCell.Cell[1]))
+                        break;
+
+                _graphicTWorld.removeTile(tileCell.Cell, true);
+                //}
             }
 
-            //--------------------------------------------------------------------------------------> getRandomTile
+            /*//--------------------------------------------------------------------------------------> getRandomTile
             function getRandomTile() {
                 var listOfTiles = new ListOfPairs((_grid.length*_grid[0].length)/2);
 
@@ -1125,7 +1177,7 @@ function Environment(rows, columns, graphicEngine, parent) {
                     return null;
                 else
                     return listOfTiles.getItemAt(parseInt(random(0, listOfTiles.getLength())));
-            }
+            }*/
 
             //--------------------------------------------------------------------------------------> robWalking
             function robWalking(rIndex, row, column) {
@@ -1517,9 +1569,17 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
 }
 
 //Class Obstacle
-function Obstacle(cell, lifeTime) {
+function Obstacle(cell, lifeTime, isTile) {
     var _currentLifeTime = lifeTime;
     var _initalTime = lifeTime;
+
+    if (!isTile){
+        Obstacle.Counter = (Obstacle.Counter)? Obstacle.Counter+1 : 1;
+        this.Id = Obstacle.Counter;
+    }else{
+        Obstacle.TCounter = (Obstacle.TCounter)? Obstacle.TCounter+1 : 1;
+        this.Id = Obstacle.TCounter;
+    }
 
     this.Cell = cell;
 
@@ -1533,6 +1593,9 @@ function Obstacle(cell, lifeTime) {
 
     this.getTimeElapsed = function(){return _initalTime - _currentLifeTime;}
 }
+
+//class Tile
+Tile = Obstacle;
 
 //Class Hole
 function Hole(environment, holeCells, holeLifetime, actualVariabilityOfUtility) {

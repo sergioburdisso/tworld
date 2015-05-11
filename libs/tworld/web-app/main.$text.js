@@ -23,7 +23,7 @@ $text.main = {};
 
 $text.main.ccLicense = {}
 $text.main.ccLicense[_LANGUAGES.ENGLISH] = 'Except where otherwise noted, all multimedia is subject to a <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.</a>';
-$text.main.ccLicense[_LANGUAGES.SPANISH] = 'Excepto cuando se indique lo contrario, toda el material multimedia est&aacute; sujeta a una <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licencia Creative Commons Atribuci&oacute;n-NoComercial-CompartirIgual 4.0 Internacional.</a>';
+$text.main.ccLicense[_LANGUAGES.SPANISH] = 'Excepto cuando se indique lo contrario, todo el material multimedia est&aacute; sujeto a una <a rel="license" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Licencia Creative Commons Atribuci&oacute;n-NoComercial-CompartirIgual 4.0 Internacional.</a>';
 
 $text.main.agplLicense = {}
 $text.main.agplLicense[_LANGUAGES.ENGLISH] = '<a href="https://code.google.com/p/t-world/" target="_blank">This project</a> is free software, you can redistribute it and/or modify it under the terms of the GNU AGPL License <a rel="license" target="_blank" href="http://www.gnu.org/licenses/agpl-3.0.html">(Affero General Public License)</a>';

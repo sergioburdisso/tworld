@@ -45,6 +45,14 @@ function TWorld(){}
     TWorld.Dynamism = _KNOBS.environment.dynamic.dynamism.range[0]; // time in seconds (the rate at which new holes appear and disappear)
     TWorld.Dynamism_UncertaintyThreshold = _KNOBS.environment.dynamic.dynamism.prob; //P(HoleTimeout= Dynamism) = 1/(Floor((Dynamism-1)*p) + 1)
 
+    TWorld.AsyncTilesAndHole = _KNOBS.environment.dynamic.async_tiles_holes;
+    if (TWorld.AsyncTilesAndHole){
+        TWorld.DynamismTiles = _KNOBS.environment.dynamic.dynamism_tiles.range[0];//20;
+        TWorld.DynamismTiles_UncertaintyThreshold = _KNOBS.environment.dynamic.dynamism_tiles.prob;//[333,333,334];
+        _console.log(TWorld.DynamismTiles);
+        _console.log(TWorld.DynamismTiles_UncertaintyThreshold);
+    }
+
     TWorld.Hostility = _KNOBS.environment.dynamic.hostility.range[0]; // time in seconds (the rate at which obstacles appear)
     TWorld.Hostility_UncertaintyThreshold = _KNOBS.environment.dynamic.hostility.prob; //P(ObstTimeout= Hostility) = 1/(Floor((Hostility-1)*p) + 1)
 
@@ -101,12 +109,13 @@ function TWorld(args) {
     //region Methods
         //region Public Methods
             //--------------------------------------------------------------------------------------> createHoles
-            this.createHoles = function() {
+            this.createHoles = function(init) {
                 var nHoles = UncertaintyMaker(TWorld.NumberOfHoles, TWorld.NumberOfHoles_UncertaintyThreshold);
                 for (var i = 0; i < nHoles; i++)
                     createHole(
                         UncertaintyMaker(TWorld.HoleSize, TWorld.HolesSize_UncertaintyThreshold),
-                        UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold)
+                        UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold),
+                        init
                     );
             }
 
@@ -123,8 +132,8 @@ function TWorld(args) {
         //
         //region Private Methods
             //--------------------------------------------------------------------------------------> createHole
-            function createHole(holeSize, holeLifetime){
-                var emptyCell, holeCells;
+            function createHole(holeSize, holeLifetime, init){
+                var emptyCell, holeCells, tileLifetime;
 
                 _environment.initializeEmptyCellsRandomSearch();
 
@@ -142,8 +151,15 @@ function TWorld(args) {
                 _environment.newHole(holeCells, holeLifetime + _TILES_TELEPORT_DELAY, 1-Math.random()*TWorld.VariabilityOfScores);
 
                 if (!_EASY_MODE){
+
                     //for each cell of the new hole...
-                    for (var i= 0; i < holeCells.getLength(); i++){
+                    for (var i= holeCells.getLength()-1; i >= 0; --i){
+
+                        tileLifetime =  TWorld.AsyncTilesAndHole?
+                                            UncertaintyMaker(TWorld.DynamismTiles, TWorld.DynamismTiles_UncertaintyThreshold)
+                                            :
+                                            holeLifetime + _TILES_TELEPORT_DELAY - 1; //undefined;
+
                         //...there must be created a tile for Rob to fill it
                         if (_TILES_TELEPORT_DELAY > 0)
                             CallWithDelay.Enqueue(
@@ -151,7 +167,8 @@ function TWorld(args) {
                                 [
                                 UncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
                                 holeCells.getItemAt(i)[0],
-                                holeCells.getItemAt(i)[1]
+                                holeCells.getItemAt(i)[1],
+                                tileLifetime
                                 ],
                                 _TILES_TELEPORT_DELAY /*time in seconds*/
                             );
@@ -159,22 +176,23 @@ function TWorld(args) {
                             createTile(
                                 UncertaintyMaker(TWorld.TileDistanceFromHole, TWorld.TileDistanceFromHole_UncertaintyThreshold),
                                 holeCells.getItemAt(i)[0],
-                                holeCells.getItemAt(i)[1]
+                                holeCells.getItemAt(i)[1],
+                                tileLifetime
                             );
                     }
                 }
             }
 
             //--------------------------------------------------------------------------------------> createTile
-            function createTile(tileDistance, holeRowIndex, holeColumnIndex){
+            function createTile(tileDistance, holeRowIndex, holeColumnIndex, tileLifeTime){
                 var tileCell;
-                var _MaxDepth = _environment.getGridDimension().Rows + _environment.getGridDimension().Columns-1;
+                var _MaxDepth = _ROWS + _COLUMNS - 1;
 
                 //Iterative Depth First Search
                 for (var depth= tileDistance; tileCell == null && depth <= _MaxDepth; depth++)
                     tileCell = tryCreatingTile(depth, [holeRowIndex, holeColumnIndex]);
 
-                _environment.newTile(tileCell);
+                _environment.newTile(tileCell, tileLifeTime);
             }
 
             //--------------------------------------------------------------------------------------> createObstacle

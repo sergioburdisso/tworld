@@ -8,6 +8,13 @@
 	src: url('../resrc/raleway-regular.ttf');
 }
 
+.img-header{
+	position:fixed;
+	width:100%;
+	height:493px;
+	z-index:-1;
+}
+
 ul.tree, ul.tree ul {
 	list-style-type: none;
 	background: url(../imgs/web-app/vline.png) repeat-y;

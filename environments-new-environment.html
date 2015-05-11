@@ -140,6 +140,21 @@
 					</div>
 				</div>
 				<br>
+				<label>Rate at which tiles appear/disappear</label><label ng-show="enc.task_env.environment.dynamic.async_tiles_holes" style="margin-left:5px">(closed interval: {{enc.task_env.environment.dynamic.dynamism_tiles.range}})</label>
+				<div class="row" ng-class="{'treadonly':enc.readOnly}">
+					<div class="col-md-10 col-xs-10">
+						<div class="checkbox"><label><input type="checkbox" ng-init="sync_tiles_holes = !enc.task_env.environment.dynamic.async_tiles_holes" ng-model="sync_tiles_holes" ng-change="enc.task_env.environment.dynamic.async_tiles_holes = !sync_tiles_holes"> Synchronize with holes</label></div>
+					</div>
+					<span class="animate-show-3d-top" ng-show="enc.task_env.environment.dynamic.async_tiles_holes">
+						<div class="col-md-10 col-xs-10">
+							<div class="ui-slider-size" ui-slider="{range: true}" min="1" max="60" ng-model="enc.task_env.environment.dynamic.dynamism_tiles.range"></div>
+						</div>
+						<div class="col-md-1 col-xs-10 teditable">
+							<button class="btn btn-primary glyphicon glyphicon-stats" tooltip="Probability Distribution" ng-show="enc.isRange(enc.task_env.environment.dynamic.dynamism_tiles.range)" ng-click="enc.openProbDistModal(enc.task_env.environment.dynamic.dynamism_tiles)"></button>
+						</div>
+					</span>
+				</div>
+				<br>
 				<label>Rate at which obstacles appear/disappear (closed interval: {{enc.task_env.environment.dynamic.hostility.range}})</label>
 				<div class="row" ng-class="{'treadonly':enc.readOnly}">
 					<div class="col-md-10 col-xs-10">

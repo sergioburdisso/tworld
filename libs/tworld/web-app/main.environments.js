@@ -230,6 +230,7 @@
                 _self.checkDistribution(taskEnvironment.environment.num_obstacles);
                 _self.checkDistribution(taskEnvironment.environment.difficulty);
                 _self.checkDistribution(taskEnvironment.environment.dynamic.dynamism);
+                _self.checkDistribution(taskEnvironment.environment.dynamic.dynamism_tiles);
                 _self.checkDistribution(taskEnvironment.environment.dynamic.hostility);
             }
 
