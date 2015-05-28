@@ -1370,7 +1370,7 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
                     break;
             }
 
-            _agentProgram.send( percept );
+            _agentProgram.send( percept+"\n" );
         }
     }
     this.isConnected = function(){ return _connected; }

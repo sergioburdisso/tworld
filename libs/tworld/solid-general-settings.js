@@ -159,7 +159,7 @@ var _MINIMAL_UPDATE_DELAY = 0; //the less, the smoother animations are
 
 // Audio
 var _AUDIO_ENABLE = _KNOBS_SETTINGS.audio.enabled;
-var     _VOLUME_LEVEL = _KNOBS_SETTINGS.audio.volume;
+var _VOLUME_LEVEL = _KNOBS_SETTINGS.audio.volume;
 
 var _START_TIME;
 

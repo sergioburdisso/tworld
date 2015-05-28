@@ -111,7 +111,11 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
                     grid_total_rows: 0,
                     grid_total_columns: 0,
                     teams: [/*{id:, leader:, members:[]}...*/], // optional
-                    end : {/*neutral: {}, success: {}, failure: {}*/}, //end game conditions
+                    end : {//end game conditions
+                        neutral: {},
+                        success: {},
+                        failure: {}
+                    }, 
                     costs: environment.Costs,
                     probability: environment.Probability
                 }
@@ -120,8 +124,11 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 
         //builtin_knowledge.end
         _bik = this.Percept.data.builtin_knowledge;
+
         for (cond in _ENDGAME)
-            if (!(_ENDGAME[cond] instanceof Function) && _ENDGAME[cond].VALUE){
+
+        for (cond in _ENDGAME)
+            if (!(_ENDGAME[cond] instanceof Function)){
                 var nCond;
                 var _sockPA = _AGENTS[environment.RobID].SOCKET_PROGRAM_AGENT;
                 switch(cond){
@@ -135,21 +142,21 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
                         nCond =cond.toLowerCase();
                 }
 
-                switch(_ENDGAME[cond].RESULT){
-                    case _GAME_RESULT.NEUTRAL:
-                        if (!_bik.end.neutral)
-                            _bik.end.neutral = {};
-                        _bik.end.neutral[nCond] = _ENDGAME[cond].VALUE;
-                        break;
-                    case _GAME_RESULT.SUCCESS:
-                        if (!_bik.end.success)
-                            _bik.end.success = {};
-                        _bik.end.success[nCond] = _ENDGAME[cond].VALUE;
-                        break;
-                    case _GAME_RESULT.FAILURE:
-                        if (!_bik.end.failure)
-                            _bik.end.failure = {};
-                        _bik.end.failure[nCond] = _ENDGAME[cond].VALUE;
+                _bik.end.neutral[nCond] = null;
+                _bik.end.success[nCond] = null;
+                _bik.end.failure[nCond] = null;
+
+                if (_ENDGAME[cond].VALUE){
+                    switch(_ENDGAME[cond].RESULT){
+                        case _GAME_RESULT.NEUTRAL:
+                            _bik.end.neutral[nCond] = _ENDGAME[cond].VALUE;
+                            break;
+                        case _GAME_RESULT.SUCCESS:
+                            _bik.end.success[nCond] = _ENDGAME[cond].VALUE;
+                            break;
+                        case _GAME_RESULT.FAILURE:
+                            _bik.end.failure[nCond] = _ENDGAME[cond].VALUE;
+                    }
                 }
             }
 

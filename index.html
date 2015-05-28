@@ -95,7 +95,7 @@
 		<div class="glyphicon glyphicon-hand-up pull-right to-top" ng-click="twc.gotoTop()" tooltip="to the top" tooltip-placement="left"></div>
 	</div>
 	<!-- FOOTER -->
-	<div class="container text-white text-justify footer logo-center overflow-hidden">
+	<div class="container text-white text-justify footer logo-center overflow-hidden" id="footer">
 		<p class="pull-right no-margin" style="width: 300px; margin-right: 10px">
 			<a rel="license" class="a-image" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" alt="Creative Commons License">
 				<img style="border-width:0" src="imgs/web-app/cc.png" width="32"/>
@@ -113,7 +113,7 @@
 			<span ng-bind-html="twc.text.agpl"></span>.<br>
 		</p>
 
-		<a href="http://www.unsl.edu.ar" target="_blank" tooltip="I want to thank all the teachers and professors who've shaped me through these years. I started this project as my final thesis at the National University of San Luis (Argentina)" style="color:rgb(209, 209, 209);margin-bottom:10px;margin-left:15px;text-decoration:overline;">
+		<a href="http://www.unsl.edu.ar" target="_blank" tooltip="I want to thank all the teachers and professors who've shaped me through these years. I started this project as part of my thesis at the National University of San Luis (Argentina)" style="color:rgb(209, 209, 209);margin-bottom:10px;margin-left:15px;text-decoration:overline;">
 			<img src="imgs/web-app/unsl.png">
 			National University of San Luis 
 		</a>
@@ -122,7 +122,7 @@
 			<img src="imgs/web-app/html5-badge-h-connectivity-css3-graphics-multimedia-performance-storage.png" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, and Offline &amp; Storage"  tooltip="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, and Offline &amp; Storage">
 		</a>
 		<br>
-		<a href="https://www.google.com/chrome/browser/" target="_blank" tooltip="Since T-World does CPU-intensive JavaScript computation, it is recommended to use Google Chrome." style="color:rgb(209, 209, 209);margin-top:10px;margin-left:14px;text-decoration:none;">
+		<a href="https://www.google.com/chrome/browser/" target="_blank" tooltip="Since T-World make intensive use of JavaScript, it is highly recommended to use Google Chrome." style="color:rgb(209, 209, 209);margin-top:10px;margin-left:14px;text-decoration:none;">
 			<img src="imgs/web-app/chrome_logo.png">
 			Google Chrome-optimized
 		</a>
@@ -290,6 +290,7 @@
 
 	<script type="text/javascript">
 		var $imgs_header = $(".img-header");
+		var $footer = $("#footer");
 		var $doc = $(document);
 /*		var bots = null;
 		var mouseBot = [new SolidBot({location:new Vector(0,0)})];
@@ -300,8 +301,13 @@
 */
 
 		$(window).scroll(function(){
+			var _ratio = $doc.scrollTop()/$doc.height();
+			if (_ratio > 0.4)
+				$footer.css({"background-position": "50% "+ (-550+_ratio*880) + "%"});
+
+			if (_ratio < 0.3)
 			$imgs_header.css({
-				'top' : (-$doc.scrollTop()/$doc.height()*700)/*,
+				'top' : -_ratio*800/*,
 				'-webkit-filter': 'blur(' + (($doc.scrollTop()/$doc.height()*15)|0) + 'px)',*/
 			});
 		});
