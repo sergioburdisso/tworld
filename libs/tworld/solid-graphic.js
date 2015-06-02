@@ -184,7 +184,6 @@ function GraphicTWorld(graphicEngine, environment){
                 _self.Rob[rIndex].upArrowKeyPressed(true);
             else
                 _self.Rob[rIndex].WalkNorth();
-
         }
         this.RobWalkSouth = function(rIndex, relative){
             if (relative)

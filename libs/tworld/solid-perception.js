@@ -87,7 +87,8 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
                     agents: environment.ListOfAgents,// optional
                     holes: [],
                     tiles: [/*{row:,column:}, ..*/],
-                    obstacles: [/*{row:,column:}, ..*/]
+                    obstacles: [/*{row:,column:}, ..*/],
+                    stats:null
                 },
                 agent:{
                     id: environment.RobID, // optional
@@ -124,8 +125,6 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 
         //builtin_knowledge.end
         _bik = this.Percept.data.builtin_knowledge;
-
-        for (cond in _ENDGAME)
 
         for (cond in _ENDGAME)
             if (!(_ENDGAME[cond] instanceof Function)){
@@ -235,6 +234,8 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
     this.Percept.data.environment.grid = _grid;
 
     this.Percept.data.environment.time = environment.Time;
+
+    this.Percept.data.environment.stats = environment.Stats;
 
     //-> score
     this.Percept.data.agent.score = environment.Score;
@@ -568,6 +569,9 @@ function json2prolog_facts(json, skipFunctors, arrayFunctors, parent){
     skipFunctors = skipFunctors || [];
     arrayFunctors = arrayFunctors || [];
 
+    if (json === null || json === undefined)
+        return "null";
+    else
     if (json.constructor === String && isNaN(parseInt(json)))
         return "'" + json + "'";
     else

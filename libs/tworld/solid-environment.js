@@ -749,6 +749,11 @@ function Environment(rows, columns, graphicEngine, parent) {
                             /*Time : _time,
                             Score : _self.Score,
                             Battery : _battery,*/
+                            Stats:{
+                                time: undefined,
+                                total_holes: undefined,
+                                total_cells: undefined
+                            },
                             BatteryChargers : _bChargerLoc,
                             RobID:-1,
                             RobLocation : null,
@@ -810,6 +815,9 @@ function Environment(rows, columns, graphicEngine, parent) {
                     this.environment.Battery = _rob[_GET_TEAM_LEADER(rIndex)].Battery;
                     this.environment.RobID = rIndex;
                     this.environment.RobLocation = _rob[rIndex].Location;
+                    this.environment.Stats.time = Date.now() - _START_TIME;
+                    this.environment.Stats.total_holes = Hole.Counter || 0;
+                    this.environment.Stats.total_cells = Hole.CellCounter || 0;
 
                     //-> List Of Agents
                     for (var r= 0; r < _NUMBER_OF_AGENTS; ++r){
@@ -920,7 +928,8 @@ function Environment(rows, columns, graphicEngine, parent) {
                         stats:{
                             t_time: _time,
                             time: Date.now()-_START_TIME,
-                            total_holes: Hole.Counter || 0
+                            total_holes: Hole.Counter || 0,
+                            total_cells: Hole.CellCounter || 0
                         },
                         agents: new Array(_NUMBER_OF_AGENTS)
                     }
@@ -1599,21 +1608,25 @@ Tile = Obstacle;
 
 //Class Hole
 function Hole(environment, holeCells, holeLifetime, actualVariabilityOfUtility) {
-    Hole.Counter = (Hole.Counter)? Hole.Counter+1 : 1;
     var _currentLifeTime = 0;
     var _lifeTime = holeLifetime; // time remaining to timeout (seconds)
     var _variabilityOfUtility = actualVariabilityOfUtility;
 
-    this.Id = Hole.Counter;
-    this.OriginalCells = new Array(holeCells.getLength()); //array
-    this.CurrentCells = holeCells; // (ListOfPairs) cells that aren't filled yet
     this.Size = holeCells.getLength();
+
+    // Static attributes
+    Hole.Counter = (Hole.Counter)? Hole.Counter+1 : 1;
+    Hole.CellCounter = (Hole.CellCounter)? Hole.CellCounter + this.Size : this.Size;
+
+    this.Id = Hole.Counter;
+    this.OriginalCells = new Array(this.Size); //array
+    this.CurrentCells = holeCells; // (ListOfPairs) cells that aren't filled yet
     this.Environment = environment;
     this.Value = TWorld.valueOfHoleFilledCompletely(this.Size)*_variabilityOfUtility | 0;
 
-    for(var i=0; i < holeCells.getLength(); i++) {
+
+    for(var i=this.Size-1; i >= 0; --i)
         this.OriginalCells[i] = holeCells.getInternalArray()[i];
-    }
 
     //hey hole! a second has passed
     this.tickAndTest = function(){
