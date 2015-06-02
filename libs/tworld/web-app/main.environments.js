@@ -202,6 +202,13 @@
                     _self.task_env.builtin = false;
                     _self.task_env.date = undefined;
 
+                    //to patch new changes Ive made, so for compatibility reasons I needed to add this
+                    //so that older task. env. can work properly
+                    if (!_self.task_env.environment.dynamic.dynamism_tiles){
+                        _self.task_env.environment.dynamic.async_tiles_holes = false;
+                        _self.task_env.environment.dynamic.dynamism_tiles = {range:[6,13], prob:[]};
+                    }
+
                     _updateEndGameConditions(_self.task_env);
                 }});
             }

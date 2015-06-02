@@ -265,16 +265,31 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
     //Agent stats
     this.Percept.data.agent.stats = environment.RobStats;
 
-    //Agents
-    //if (_NUMBER_OF_AGENTS > 1)
-    this.Percept.data.environment.agents = environment.ListOfAgents;
-
-
     //->Agent's current location
     if (TWorld.FullyObservableGrid){
         this.Percept.data.agent.location.row = _robLoc.Row;
         this.Percept.data.agent.location.column = _robLoc.Column;
     }
+
+    //List of Agents
+    var _listOfAgs = environment.ListOfAgents;
+
+    if (!TWorld.FullyObservableGrid){
+        // if grid is partially observable
+        for (var i= _listOfAgs.length-1; i >= 0; i--){
+            //if the i-th agent is not visible, then remove it...
+            if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfAgs[i].location.row && _listOfAgs[i].location.row <= _robLoc.Row + TWorld.VisibilityRadius) &&
+                 (_robLoc.Column - TWorld.VisibilityRadius <= _listOfAgs[i].location.column && _listOfAgs[i].location.column <= _robLoc.Column + TWorld.VisibilityRadius)){
+                rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+                cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+                _listOfAgs[i].location.row -= rVOEnvGrid;
+                _listOfAgs[i].location.column -= cVOEnvGrid;
+            }else
+                _listOfAgs.remove(i);
+        }
+    }
+
+    this.Percept.data.environment.agents = _listOfAgs;
 
     //-> List Of Holes
     this.Percept.data.environment.holes = environment.ListOfHoles;
@@ -297,7 +312,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
             iHCells = iHole.cells
 
             //for each cell of the i-th hole...
-            for (var k= 0; k < iHCells.length; ++k){
+            for (var k= iHCells.length-1; k >= 0; --k){
                 //if the k-th cell of the i-th hole is not visible, then remove it...
                 if ( (_robLoc.Row - TWorld.VisibilityRadius <= iHCells[k][0] && iHCells[k][0] <= _robLoc.Row + TWorld.VisibilityRadius) &&
                      (_robLoc.Column - TWorld.VisibilityRadius <= iHCells[k][1] && iHCells[k][1] <= _robLoc.Column + TWorld.VisibilityRadius)){
@@ -307,7 +322,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
                     iHCells[k].row -= rVOEnvGrid;
                     iHCells[k].column -= cVOEnvGrid;
                 }else
-                    iHCells.remove(k--);
+                    iHCells.remove(k);
             }
 
             //if the i-th hole hasn't any visible cell, then...
@@ -321,7 +336,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 
     if (!TWorld.FullyObservableGrid){
         // if grid is partially observable
-        for (var i= 0; i < _listOfObs.length; ++i){
+        for (var i= _listOfObs.length-1; i >= 0 ; --i){
             //if the i-th obstacle is not visible, then remove it...
             if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfObs[i].row && _listOfObs[i].row <= _robLoc.Row + TWorld.VisibilityRadius) &&
                  (_robLoc.Column - TWorld.VisibilityRadius <= _listOfObs[i].column && _listOfObs[i].column <= _robLoc.Column + TWorld.VisibilityRadius)){
@@ -330,7 +345,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
                 _listOfObs[i].row -= rVOEnvGrid;
                 _listOfObs[i].column -= cVOEnvGrid;
             }else
-                _listOfObs.remove(i--);
+                _listOfObs.remove(i);
         }
     }
 
@@ -341,7 +356,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 
     if (!TWorld.FullyObservableGrid){
         // if grid is partially observable
-        for (var i= 0; i < _listOfTs.length; ++i){
+        for (var i= _listOfTs.length-1; i >= 0; --i){
             //if the i-th obstacle is not visible, then remove it...
             if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfTs[i].row && _listOfTs[i].row <= _robLoc.Row + TWorld.VisibilityRadius) &&
                  (_robLoc.Column - TWorld.VisibilityRadius <= _listOfTs[i].column && _listOfTs[i].column <= _robLoc.Column + TWorld.VisibilityRadius)){
@@ -350,7 +365,7 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
                 _listOfTs[i].row -= rVOEnvGrid;
                 _listOfTs[i].column -= cVOEnvGrid;
             }else
-                _listOfTs.remove(i--);
+                _listOfTs.remove(i);
         }
     }
 
