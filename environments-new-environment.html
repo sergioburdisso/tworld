@@ -16,13 +16,13 @@
 		<!-- INITIAL RADIO BUTTONS -->
 		<div class="row" ng-class="{'treadonly':enc.readOnly}" ng-hide="enc.isDynamic()">
 			<div class="btn-group btn-group-justified">
-				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="false" tooltip="Draw the initial state on the grid below">User-defined initial state</label>
-				<label class="btn btn-default" ng-model="enc.task_env.environment.random_initial_state" btn-radio="true" tooltip="Inital state is randomly generated every execution">Random initial state</label>
+				<label class="btn btn-primary" ng-model="enc.task_env.environment.random_initial_state" btn-radio="false" tooltip="Draw the initial state on the grid below">User-defined initial state</label>
+				<label class="btn btn-primary" ng-model="enc.task_env.environment.random_initial_state" btn-radio="true" tooltip="Inital state is randomly generated every execution">Random initial state</label>
 			</div>
 		</div>
-
+		<button type="button" class="btn btn-primary ng-valid ng-dirty ng-valid-parse ng-touched" ng-model="enc.task_env.environment.random_initial_state" btn-checkbox btn-checkbox-true="false" btn-checkbox-false="true" style="margin-bottom: 30px;" ng-show="enc.isDynamic()" ng-class="{'treadonly':enc.readOnly}">User-defined initial state: <b><span ng-hide="enc.task_env.environment.random_initial_state">ON</span><span ng-show="enc.task_env.environment.random_initial_state">OFF</span></b></button>
 		<!-- INITIAL STATE -->
-		<div class="panel panel-default animate-only-show" ng-class="{'treadonly':enc.readOnly}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.isDynamic() || enc.task_env.environment.random_initial_state">
+		<div class="panel panel-default animate-only-show" ng-class="{'panel-primary':enc.isDynamic(), 'treadonly':enc.readOnly}" ng-controller="InitialStateMakerController as ismc" ng-hide="enc.task_env.environment.random_initial_state">
 			<div class="panel-body text-center">
 				<div class="row">
 					<span class="pull-right">
@@ -83,7 +83,8 @@
 			</div>
 		</div>
 
-		<div class="panel panel-default animate-only-show" ng-show="enc.isDynamic()||enc.task_env.environment.random_initial_state">
+		<div class="panel panel-default animate-only-show" ng-show="enc.task_env.environment.random_initial_state||enc.isDynamic()" ng-class="{'panel-primary':enc.isDynamic()}">
+			<div class="panel-heading btn-primary" ng-show="enc.isDynamic()">World-evolution knobs</div>
 			<div class="panel-body">
 				<label>Hole size (closed interval: {{enc.task_env.environment.holes_size.range}})</label>
 				<div class="row" ng-class="{'treadonly':enc.readOnly}">
@@ -127,7 +128,7 @@
 			</div>
 		</div><br>
 
-		<div class="panel panel-default" ng-show="enc.isDynamic()">
+		<div class="panel panel-primary" ng-show="enc.isDynamic()">
 			<div class="panel-heading">Dynamism knobs</div>
 			<div class="panel-body">
 				<label>Rate at which holes appear/disappear (closed interval: {{enc.task_env.environment.dynamic.dynamism.range}})</label>
@@ -143,7 +144,7 @@
 				<label>Rate at which tiles appear/disappear</label><label ng-show="enc.task_env.environment.dynamic.async_tiles_holes" style="margin-left:5px">(closed interval: {{enc.task_env.environment.dynamic.dynamism_tiles.range}})</label>
 				<div class="row" ng-class="{'treadonly':enc.readOnly}">
 					<div class="col-md-10 col-xs-10">
-						<div class="checkbox"><label><input type="checkbox" ng-init="sync_tiles_holes = !enc.task_env.environment.dynamic.async_tiles_holes" ng-model="sync_tiles_holes" ng-change="enc.task_env.environment.dynamic.async_tiles_holes = !sync_tiles_holes"> Synchronize with holes</label></div>
+						<div class="checkbox"><label><input type="checkbox" ng-init="sync_tiles_holes = !enc.task_env.environment.dynamic.async_tiles_holes" ng-model="sync_tiles_holes" ng-change="enc.task_env.environment.dynamic.async_tiles_holes = !sync_tiles_holes"> Synchronized with holes</label></div>
 					</div>
 					<span class="animate-show-3d-top" ng-show="enc.task_env.environment.dynamic.async_tiles_holes">
 						<div class="col-md-10 col-xs-10">
@@ -201,7 +202,7 @@
 		</div>
 
 		<div class="row">
-		<div class="panel panel-default">
+		<div class="panel panel-primary">
 			<div class="panel-heading">Final State/T-World ends when...</div>
 			<div class="panel-body text-center">
 				<div class="animate-filter" ng-repeat="cond in enc.task_env.environment.final_state">

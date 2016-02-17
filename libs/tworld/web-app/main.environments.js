@@ -167,7 +167,7 @@
                     this.step++; _next= true;
                     gotoTop(0)
                 }
-            }   
+            }
             this.prevStep = function(){
                 if (true){//Validate()){
                     this.step--; _next= false;
@@ -263,7 +263,7 @@
             this.isOppositeMove = function()
             {return (_self.stochastic_model.type|0) === _STOCHASTIC_ACTIONS_MODEL.OPPOSITE_ACTION}
 
-            this.isUsedDefined = function()
+            this.isUserDefined = function()
             {return (_self.stochastic_model.type|0) === _STOCHASTIC_ACTIONS_MODEL.USER_DEFINED}
 
             this.updateUserStochasticModel = function(index){
@@ -477,11 +477,11 @@
             }
 
             //MULTIAGENT
-            this.isCompetitive = function(){return taskEnvironment.prop.multiagent_type === 0}
-            this.isCooperative = function(){return taskEnvironment.prop.multiagent_type === 1}
-            this.isCompetitiveCooperative = function(){return taskEnvironment.prop.multiagent_type === 2}
-            this.addTeam = function(nMembers){_addTeam(_self.task_env.teams, nMembers)}
-            this.removeTeam = function(index){_self.task_env.teams.remove(index)}
+            this.isCompetitive = function(){ return taskEnvironment.prop.multiagent_type === 0; }
+            this.isCooperative = function(){ return taskEnvironment.prop.multiagent_type === 1; }
+            this.isCompetitiveCooperative = function(){ return taskEnvironment.prop.multiagent_type === 2; }
+            this.addTeam = function(nMembers){ _addTeam(_self.task_env.teams, nMembers); }
+            this.removeTeam = function(index){ _self.task_env.teams.remove(index); }
 
             this.updateTeams = function(){
                 if (!this.task_env.prop.multiagent)
@@ -510,13 +510,16 @@
                 _self.nTeam++;
             }
 
+
+            this.setDynamic = function(value){ taskEnvironment.environment.random_initial_state = value; }
+
             function setCompetitive(){
                 _self.nTeam = _default.teams.comp.length;
                 taskEnvironment.teams = _default.teams.comp;
                 taskEnvironment.prop.multiagent_type = 0;
             }
 
-            function setSingleAgent(){taskEnvironment.teams=_default.teams.single}
+            function setSingleAgent(){ taskEnvironment.teams=_default.teams.single; }
 
             function setCooperative(){
                 _self.nTeam = _default.teams.coop.length;

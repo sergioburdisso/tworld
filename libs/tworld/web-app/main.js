@@ -17,7 +17,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 (function(){
-    var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironments', 'tworldAgentPrograms', 'tworldStats', 'ui.bootstrap', 'ui.slider', 'ngRoute', 'ngAnimate']);
+    var main = angular.module("tworld", ['tworldMainMenu', 'tworldEnvironments', 'tworldAgentPrograms', 'tworldStats', 'tworldSupport', 'ui.bootstrap', 'ui.slider', 'ngRoute', 'ngAnimate']);
 
     main.config(['$routeProvider', '$locationProvider', '$tooltipProvider',
         function($routeProvider, $locationProvider, $tooltipProvider) {
@@ -41,7 +41,9 @@
                     templateUrl: 'account-confirmation.html'
                 })
                 .when('/support', {
-                    templateUrl: 'support.html'
+                    templateUrl: 'support.html',
+                    controller: 'SupportController',
+                    controllerAs: 'sc'
                 })
                 .when('/environments', {
                     templateUrl: 'environments.html',

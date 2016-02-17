@@ -29,7 +29,7 @@ var _LANGUAGE = _LANGUAGES.SPANISH;
 var _ROWS = _KNOBS.environment.rows;
 var _COLUMNS = _KNOBS.environment.columns;
 
-var _INITIAL_STATE = (!(_KNOBS.prop.dynamic == 2) && !_KNOBS.environment.random_initial_state)?
+var _INITIAL_STATE = !_KNOBS.environment.random_initial_state?//(!(_KNOBS.prop.dynamic == 2) && !_KNOBS.environment.random_initial_state)?
                     {
                         grid:_KNOBS.environment.initial_state,
                         obstacles:[],

@@ -122,17 +122,23 @@ function Environment(rows, columns, graphicEngine, parent) {
                 if ( !TWorld.Dynamic )
                     _TILES_TELEPORT_DELAY= 0;
 
-                if (_INITIAL_STATE){
+                if ( _INITIAL_STATE ){
                     while (!_EASY_MODE && _INITIAL_STATE.tiles.length){
                         elem = _INITIAL_STATE.tiles.shift();
                         if (_self.isAnEmptyCell(elem[0], elem[1]))
-                            _self.newTile(elem);
+                            _self.newTile(
+                                elem,
+                                UncertaintyMaker(TWorld.DynamismTiles, TWorld.DynamismTiles_UncertaintyThreshold) // null si quiero que no sea dinámico lo que creo el usuario
+                            );
                     }
 
                     while (_INITIAL_STATE.obstacles.length){
                         elem = _INITIAL_STATE.obstacles.shift()
                         if (_self.isAnEmptyCell(elem[0], elem[1]))
-                            _self.newObstacle(elem);
+                            _self.newObstacle(
+                                elem,
+                                UncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold)+1  // null si quiero que no sea dinámico lo que creo el usuario
+                            );
                     }
 
                     for (id in _INITIAL_STATE.holes){
@@ -145,7 +151,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 
                         _self.newHole(
                             _INITIAL_STATE.holes[id],
-                            UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold),
+                            UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold),  // null si quiero que no sea dinámico lo que creo el usuario
                             1-Math.random()*TWorld.VariabilityOfScores
                         );
                     }
@@ -752,7 +758,8 @@ function Environment(rows, columns, graphicEngine, parent) {
                             Stats:{
                                 time: undefined,
                                 total_holes: undefined,
-                                total_cells: undefined
+                                total_cells: undefined,
+                                total_score: undefined
                             },
                             BatteryChargers : _bChargerLoc,
                             RobID:-1,
@@ -818,6 +825,7 @@ function Environment(rows, columns, graphicEngine, parent) {
                     this.environment.Stats.time = Date.now() - _START_TIME;
                     this.environment.Stats.total_holes = Hole.Counter || 0;
                     this.environment.Stats.total_cells = Hole.CellCounter || 0;
+                    this.environment.Stats.total_score = Hole.TotalScore || 0;
 
                     //-> List Of Agents
                     for (var r= 0; r < _NUMBER_OF_AGENTS; ++r){
@@ -1612,18 +1620,19 @@ function Hole(environment, holeCells, holeLifetime, actualVariabilityOfUtility) 
     var _lifeTime = holeLifetime; // time remaining to timeout (seconds)
     var _variabilityOfUtility = actualVariabilityOfUtility;
 
-    this.Size = holeCells.getLength();
-
-    // Static attributes
     Hole.Counter = (Hole.Counter)? Hole.Counter+1 : 1;
-    Hole.CellCounter = (Hole.CellCounter)? Hole.CellCounter + this.Size : this.Size;
 
+    // public attributes
     this.Id = Hole.Counter;
+    this.Size = holeCells.getLength();
     this.OriginalCells = new Array(this.Size); //array
     this.CurrentCells = holeCells; // (ListOfPairs) cells that aren't filled yet
     this.Environment = environment;
     this.Value = TWorld.valueOfHoleFilledCompletely(this.Size)*_variabilityOfUtility | 0;
 
+    // Static attributes
+    Hole.CellCounter = (Hole.CellCounter)? Hole.CellCounter + this.Size : this.Size;
+    Hole.TotalScore = (Hole.TotalScore)? Hole.TotalScore + this.Value : this.Value;
 
     for(var i=this.Size-1; i >= 0; --i)
         this.OriginalCells[i] = holeCells.getInternalArray()[i];
@@ -1637,7 +1646,7 @@ function Hole(environment, holeCells, holeLifetime, actualVariabilityOfUtility) 
             if (this.Environment.isThereAHoleFilling(cell[0], cell[1]))
                 return false;
         }
- 
+
         if (++_currentLifeTime >= _lifeTime) {
             _currentLifeTime = 0;
             return true;

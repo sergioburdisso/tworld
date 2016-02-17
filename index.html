@@ -26,10 +26,12 @@
 					<span class="pull-right" style="margin-right:10px" for="language">Language</span>
 				</div>
 			</form>
-			<span id="title" class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom:-50px; left:0">
-				<h1><span class="text-light-blue">T</span>-World <sub style="font-size:11px">v.{{twc.version}}</sub></h1>
+			<span id="title" class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom: -20px/*-50px*/; left:0">
+				<h1><span class="text-light-blue">T</span>-World
+					<sub style="font-size:14px">by <a href="https://plus.google.com/+SergioBurdisso" target="_blank"  tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a></sub>
+					<sup style="font-size:11px">(v.{{twc.version}})</sup></h1>
 				<p ng-bind-html="twc.text.desc"></p>
-				<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="https://plus.google.com/+SergioBurdisso" target="_blank"  tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a>.</h5>
+				<!--<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="https://plus.google.com/+SergioBurdisso" target="_blank"  tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a>.</h5>-->
 				<h5 style="color:white" class="header text-right">
 					<span ng-bind-html="twc.text.aima"></span><br>
 					<span ng-bind-html="twc.text.martha_marc"></span>
@@ -166,6 +168,7 @@
 	<script type="text/javascript" src="libs/tworld/web-app/main.environments.js"></script>
 	<script type="text/javascript" src="libs/tworld/web-app/main.agent-programs.js"></script>
 	<script type="text/javascript" src="libs/tworld/web-app/main.stats.js"></script>
+	<script type="text/javascript" src="libs/tworld/web-app/main.support.js"></script>
 
 	<script type="text/ng-template" id="account-confirmation.html">
 		<div ng-init="twc.gotoTop();twc.login.apply()">

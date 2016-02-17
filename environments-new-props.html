@@ -53,9 +53,9 @@
 			<br>
 			<div class="row">
 				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" btn-radio="0" tooltip-placement="left" tooltip="The environment itself does not change">Static</label>
-					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" btn-radio="1" tooltip-placement="bottom" tooltip="The environment itself does not change but scores associated with holes gradually decay in value">Semidynamic</label>
-					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" btn-radio="2" tooltip-placement="right" tooltip="The environment can change while the robot is deliberating">Dynamic</label>
+					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" ng-change="enc.setDynamic(false)" btn-radio="0" tooltip-placement="left" tooltip="The environment itself does not change">Static</label>
+					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" ng-change="enc.setDynamic(false)" btn-radio="1" tooltip-placement="bottom" tooltip="The environment itself does not change but scores associated with holes gradually decay in value">Semidynamic</label>
+					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" ng-change="enc.setDynamic(true)" btn-radio="2" tooltip-placement="right" tooltip="The environment can change while the robot is deliberating">Dynamic</label>
 				</div>
 			</div>
 			<br>

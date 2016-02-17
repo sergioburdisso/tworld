@@ -269,7 +269,7 @@ td input{text-align: center}
 .text-orange{color: #D54D1D}
 .text-green{color: #5CB85C}
 .text-light-blue, .header a{color: rgb(155, 192, 255);}
-.text-blue,.sett-item.active, .hover.blue:hover{color: #428BCA}
+.text-blue,.sett-item.active, .hover.blue:hover{color: #428BCA !important}
 .text-bold{font-weight:bold;}
 .text-normal{font-weight:normal;}
 .border-right{border-right: 0px}
@@ -283,6 +283,7 @@ td input{text-align: center}
 .min-height-80{min-height: 80px}
 .overflow-hidden{overflow: hidden}
 h2,
+.sett-item.active,
 .top-shadow{text-shadow: rgb(190, 189, 189) 0px 10px 10px}
 .shadow{
 	-webkit-box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
@@ -474,6 +475,30 @@ a:hover{
 	/*-moz-transform: translateY(2px);*/
 	-o-transform: translateY(2px);
 	/*transform: translateY(2px);*/
+}
+
+.a-supp:hover{
+	-webkit-transform: translateX(-2px);
+	/*-moz-transform: translateY(2px);*/
+	-o-transform: translateX(-2px);
+	/*transform: translateY(2px);*/
+}
+
+a.a-supp-thumb{
+	background: white no-repeat center;
+	background-size: contain;
+	width:398px;
+	height:512px;
+	box-shadow: rgb(190, 189, 189) 0px 10px 10px;
+}
+
+a.a-supp-thumb:hover{
+	-webkit-transform: scale(0.98);
+	   -moz-transform: scale(0.98);
+	     -o-transform: scale(0.98);
+	        transform: scale(0.98);
+
+	box-shadow: rgb(190, 189, 189) 0px 3px 5px;
 }
 
 @keyframes fade-in { %{ opacity: 1; } 100% { opacity: 0.6; } }
