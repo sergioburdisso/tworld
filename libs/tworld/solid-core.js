@@ -46,9 +46,10 @@ function TWorld(){}
     TWorld.Dynamism_UncertaintyThreshold = _KNOBS.environment.dynamic.dynamism.prob; //P(HoleTimeout= Dynamism) = 1/(Floor((Dynamism-1)*p) + 1)
 
     TWorld.AsyncTilesAndHole = _KNOBS.environment.dynamic.async_tiles_holes;
-    TWorld.DynamismTiles = _KNOBS.environment.dynamic.dynamism_tiles.range[0];//20;
-    TWorld.DynamismTiles_UncertaintyThreshold = _KNOBS.environment.dynamic.dynamism_tiles.prob;//[333,333,334];
-
+    if (TWorld.AsyncTilesAndHole){
+        TWorld.DynamismTiles = _KNOBS.environment.dynamic.dynamism_tiles.range[0];//20;
+        TWorld.DynamismTiles_UncertaintyThreshold = _KNOBS.environment.dynamic.dynamism_tiles.prob;//[333,333,334];
+    }
     TWorld.Hostility = _KNOBS.environment.dynamic.hostility.range[0]; // time in seconds (the rate at which obstacles appear)
     TWorld.Hostility_UncertaintyThreshold = _KNOBS.environment.dynamic.hostility.prob; //P(ObstTimeout= Hostility) = 1/(Floor((Hostility-1)*p) + 1)
 
