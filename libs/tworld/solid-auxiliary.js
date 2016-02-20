@@ -22,6 +22,8 @@ function alert(msg){
     if ($.type(msg) === "string"){
         msg = he.encode(msg, {encodeEverything: true});
         msg = msg.replace(/&#xA;/g,"<br>").replace(/&#x9;/g,"&nbsp;&nbsp;").replace(/&#x20;/g, "&nbsp;");
+    }else{
+        msg = JSON.stringify(msg);
     }
     $("#console").append(
         '<div class="console log header">'+

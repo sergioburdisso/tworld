@@ -34,7 +34,10 @@ var _INITIAL_STATE = !_KNOBS.environment.random_initial_state?//(!(_KNOBS.prop.d
                         grid:_KNOBS.environment.initial_state,
                         obstacles:[],
                         holes:{},
-                        tiles:[]
+                        tiles:[],
+                        user_static_obstacles: _KNOBS.environment.dynamic.user_static_obstacles,
+                        user_static_tiles: _KNOBS.environment.dynamic.user_static_tiles,
+                        user_static_holes: _KNOBS.environment.dynamic.user_static_holes
                     }
                     :
                     null;
@@ -296,5 +299,5 @@ if (_INITIAL_STATE){
             }
 }
 
-document.title = "T-World ("+_KNOBS.name+")";
+document.title = "T-World 3D Simulation ("+_KNOBS.name+")";
 //window.opener = null;

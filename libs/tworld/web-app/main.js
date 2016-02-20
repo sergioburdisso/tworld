@@ -461,11 +461,12 @@
     });
 
     main.filter('tcellcolor', function() {
-        return function(input) {
+        return function(input, isStatic) {
+            r = pRandom(input,255);
             return "rgba("+
-                pRandom(input,255)+","+
-                pRandom(pRandom(input, 1000),255)+","+
-                pRandom(pRandom(pRandom(input, 1000), 1000),255)+
+                r+","+
+                (isStatic?r:pRandom(pRandom(input, 1000),255))+","+
+                (isStatic?r:pRandom(pRandom(pRandom(input, 1000), 1000),255))+
                 ",0.4)";
         }
     });

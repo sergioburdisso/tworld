@@ -99,6 +99,10 @@ var defaults = {
                 dynamism_tiles:{range:[6,13], prob:[]},
                 hostility:{range:[1,13], prob:[]},
                 hard_bounds:true,
+                // user-defined initial state elements that won't be affected by the world's dynamism
+                user_static_obstacles: false,
+                user_static_tiles: false,
+                user_static_holes: false
             },
             random_initial_state: false,
             initial_state:[

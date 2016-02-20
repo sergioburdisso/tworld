@@ -47,7 +47,6 @@ var _ACTION_REGEX = {
                     // used by the t-world proxy
                     _CONNECTED_:    /^_connected_$/i,
                     _DISCONNECTED_: /^_disconnected_$/i
-
                 };
 
 //if you change some values or add/remove new ones remember to change the tw_msg.xsd too

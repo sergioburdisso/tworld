@@ -336,6 +336,7 @@
                     function (index) {taskEnvironment.environment.final_state.push(end_game_conditions.remove(index))}
                 );
             }
+
             this.setFinalLocations = function(locCond){
                 $modal.open({
                     size: 'lg',
@@ -589,11 +590,15 @@
 
     mod.controller('InitialStateMakerController', function(){
         var _mouseDown = false;
+        var _mouseEnter = false
 
         this.grid = function(){return taskEnvironment.environment.initial_state};
         this.selected = "#";
         this.holeId = 1;
 
+        this.isMouseEnter = function(){return _mouseEnter;}
+        this.mouseEnter = function(row, index){_mouseEnter = true;}
+        this.mouseLeave = function(row, index){_mouseEnter = false;}
         this.mouseDown = function(row, index){_mouseDown = true; this.setCell(row, index)}
         this.mouseUp = function(){_mouseDown = false}
         this.setCell = function(row, index){if (_mouseDown) row[index] = this.selected}

@@ -57,7 +57,7 @@
 							<span ng-if="ismc.percept">C</span>
 						</label>
 						<label class="btn btn-default text-center" ng-model="ismc.selected" btn-radio="ismc.holeId" tooltip="Hole Cell (Hole id: {{ismc.holeId}})">
-							<div ng-if="!ismc.percept" class="center" style="width:32px; height:32px;" ng-style="{'background-color': (ismc.holeId|tcellcolor)}"></div>
+							<div ng-if="!ismc.percept" class="center transition-400" style="width:32px; height:32px;" ng-style="{'background-color': (ismc.holeId|tcellcolor)}"></div>
 							<span ng-if="ismc.percept">{{ismc.holeId}}</span>
 							<span class="center animate-show-3d-top" ng-show="(ismc.selected|tcellimg) == 'hole'">
 								<button style="font-size:8px" class="btn btn-primary btn-sm glyphicon glyphicon-chevron-left" ng-click="ismc.prevHoleId()"></button>
@@ -69,15 +69,36 @@
 				</div>
 				<br>
 				<div class="table-responsive">
-					<table class="no-selection table-grid center" ng-class="{'percept':ismc.percept}">
+					<table class="no-selection table-grid center" ng-class="{'percept':ismc.percept}" ng-mouseenter="ismc.mouseEnter()" ng-mouseleave="ismc.mouseLeave()">
 						<tr ng-repeat="row in ismc.grid() track by $index" style="height:32px;">
 							<td ng-repeat="cell in row track by $index" ng-mouseenter="ismc.setCell(row, $index)" ng-mousedown="ismc.mouseDown(row, $index)" ng-mouseup="ismc.mouseUp()" style="width:32px;">
-								<img ng-if="!ismc.percept&&(cell|tcellimg) != 'hole'" ng-src="imgs/web-app/cell-{{cell|tcellimg}}.png" class="no-events">
-								<div ng-if="!ismc.percept&&(cell|tcellimg) == 'hole'" style="width:32px; height:32px;" ng-style="{'background-color': (cell|tcellcolor)}" tooltip="Hole id: {{cell}}"></div>
+								<span ng-if="!ismc.percept&&(cell|tcellimg) != 'hole'">
+									<img ng-if="cell == '#'" ng-src="imgs/web-app/cell-obstacle{{enc.task_env.environment.dynamic.user_static_obstacles&&enc.isDynamic()?'-static':''}}.png" class="no-events" ng-class="{'tdisabled':enc.task_env.environment.dynamic.user_static_obstacles&&enc.isDynamic(), 'transition-600': !ismc.isMouseEnter()}">
+									<img ng-if="cell == 'T'" ng-src="imgs/web-app/cell-tile{{enc.task_env.environment.dynamic.user_static_tiles&&enc.isDynamic()?'-static':''}}.png" class="no-events" ng-class="{'tdisabled':enc.task_env.environment.dynamic.user_static_tiles&&enc.isDynamic(), 'transition-600': !ismc.isMouseEnter()}">
+									<img ng-if="(cell != '#')&&(cell != 'T')" ng-src="imgs/web-app/cell-{{cell|tcellimg}}.png" class="no-events">
+								</span>
+								<div ng-if="!ismc.percept&&(cell|tcellimg) == 'hole'" style="width:32px; height:32px;" ng-style="{'background-color': (cell|tcellcolor:enc.task_env.environment.dynamic.user_static_holes&&enc.isDynamic())}" tooltip="Hole id: {{cell}}" ng-class="{'transition-600': !ismc.isMouseEnter()}"></div>
 								<span ng-if="ismc.percept">{{cell}}</span>
 							</td>
 						</tr>
 					</table>
+				</div>
+
+				<div class="panel panel-default" style="margin-top: 30px; margin-left: 100px; margin-right: 100px" ng-show="enc.isDynamic()">
+					<div class="panel-heading">
+						<b>Initial State objects that won't be affected by the dynamism</b>
+					</div>
+					<div class="text-left panel-body" ng-show="enc.isDynamic()">
+							<div class="checkbox">
+								<label><input type="checkbox" ng-model="enc.task_env.environment.dynamic.user_static_obstacles"> Obstacles</label>
+							</div>
+							<div class="checkbox">
+								<label><input type="checkbox" ng-model="enc.task_env.environment.dynamic.user_static_tiles"> Tiles</label>
+							</div>
+							<div class="checkbox">
+								<label><input type="checkbox" ng-model="enc.task_env.environment.dynamic.user_static_holes"> Holes</label>
+							</div>
+					</div>
 				</div>
 
 			</div>

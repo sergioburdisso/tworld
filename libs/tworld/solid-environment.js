@@ -128,7 +128,12 @@ function Environment(rows, columns, graphicEngine, parent) {
                         if (_self.isAnEmptyCell(elem[0], elem[1]))
                             _self.newTile(
                                 elem,
-                                UncertaintyMaker(TWorld.DynamismTiles, TWorld.DynamismTiles_UncertaintyThreshold) // null si quiero que no sea dinámico lo que creo el usuario
+                                _INITIAL_STATE.user_static_tiles?
+                                    null :
+                                    UncertaintyMaker(
+                                        TWorld.AsyncTilesAndHole? TWorld.DynamismTiles : TWorld.Dynamism,
+                                        TWorld.AsyncTilesAndHole? TWorld.DynamismTiles_UncertaintyThreshold : TWorld.Dynamism_UncertaintyThreshold
+                                    )
                             );
                     }
 
@@ -137,7 +142,7 @@ function Environment(rows, columns, graphicEngine, parent) {
                         if (_self.isAnEmptyCell(elem[0], elem[1]))
                             _self.newObstacle(
                                 elem,
-                                UncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold)+1  // null si quiero que no sea dinámico lo que creo el usuario
+                                _INITIAL_STATE.user_static_obstacles? null : UncertaintyMaker(TWorld.Hostility, TWorld.Hostility_UncertaintyThreshold)+1  // null si quiero que no sea dinámico lo que creo el usuario
                             );
                     }
 
@@ -151,7 +156,7 @@ function Environment(rows, columns, graphicEngine, parent) {
 
                         _self.newHole(
                             _INITIAL_STATE.holes[id],
-                            UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold),  // null si quiero que no sea dinámico lo que creo el usuario
+                            _INITIAL_STATE.user_static_holes? null : UncertaintyMaker(TWorld.Dynamism, TWorld.Dynamism_UncertaintyThreshold),
                             1-Math.random()*TWorld.VariabilityOfScores
                         );
                     }
@@ -513,7 +518,6 @@ function Environment(rows, columns, graphicEngine, parent) {
                     _grid[iCell[0]][iCell[1]] = newHole.Id;
                     _listOfEmptyCells.remove(iCell[0], iCell[1]);
                 }
-
                 _graphicTWorld.newHole(holeCells);
             }}
 
@@ -1646,8 +1650,7 @@ function Hole(environment, holeCells, holeLifetime, actualVariabilityOfUtility) 
             if (this.Environment.isThereAHoleFilling(cell[0], cell[1]))
                 return false;
         }
-
-        if (++_currentLifeTime >= _lifeTime) {
+        if ((_lifeTime !== null) && (++_currentLifeTime >= _lifeTime)) {
             _currentLifeTime = 0;
             return true;
         }
