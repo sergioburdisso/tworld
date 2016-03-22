@@ -19,7 +19,7 @@
 
 /*if (localStorage.version != "0.98.7"){
     localStorage.clear();*/
-    localStorage.version = "0.98.8";
+    localStorage.version = "0.98.9";
 /*}*/
 
 var _tworldWindow;

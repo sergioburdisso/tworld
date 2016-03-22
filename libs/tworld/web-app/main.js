@@ -330,7 +330,7 @@
             this.gotoTop = gotoTop;
             this.goto = function(path){
                 $location.url(path);
-                gotoTop()
+                gotoTop();
             }
 
             this.getSubPath = function(fi){if (fi == 0) return "/";

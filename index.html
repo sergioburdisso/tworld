@@ -14,10 +14,18 @@
 <body ng-app="tworld" class="tbody" ng-controller="TWorldController as twc">
 	<!-- HEADER -->
 	<div class="header" ng-click="twc.clickOutside()">
-		<div id="header-images">
-			<div id="h-img-2" style="background: url(imgs/web-app/header2.png) center; display:none;" class="img-header"></div>
+		<div>
+			<div class="img-header text-center">
+				<video id="video-header" autoplay loop>
+					<source src="videos/header.ogv" type='video/ogg; codecs="theora, vorbis"'/>
+					<source src="videos/header.webm" type='video/webm' >
+					<source src="videos/header.mp4" type='video/mp4'>
+					<p>Video is not visible, most likely your browser does not support HTML5 video</p>
+				</video>
+			</div>
+			<!-- <div id="h-img-2" style="background: url(imgs/web-app/header2.png) center; display:none;" class="img-header"></div>
 			<div id="h-img-1" style="background: url(imgs/web-app/header0.png) center; display:none;" class="img-header"></div>
-			<div id="h-img-0" style="background: url(imgs/web-app/header1.png) center;" class="img-header"></div>
+			<div id="h-img-0" style="background: url(imgs/web-app/header1.png) center;" class="img-header"></div> -->
 		</div>
 		<div class="jumbotron container-fluid shadow-inset" style="background-color: transparent; margin-bottom: 0; height: 492px;">
 			<form role="form" class="form-inline">
@@ -293,16 +301,11 @@
 
 	<script type="text/javascript">
 		var $imgs_header = $(".img-header");
+		var $video_header = document.getElementById('video-header');
 		var $footer = $("#footer");
 		var $doc = $(document);
 		var $win_height = $(window).height();
-/*		var bots = null;
-		var mouseBot = [new SolidBot({location:new Vector(0,0)})];
-		window.requestAnimationFrame =	window.requestAnimationFrame ||
-										window.mozRequestAnimationFrame ||
-										window.webkitRequestAnimationFrame ||
-										window.msRequestAnimationFrame;
-*/
+
 		$(window)
 			.resize(function(){
 				$win_height = $(window).height();
@@ -312,50 +315,14 @@
 				var _ratio = $doc.scrollTop()/($doc.height()-$win_height);
 				if (_ratio > 0.5)
 					$footer.css({"background-position": "50% " + (50 - (1-_ratio)*800) + "%"});
+				else if (window.location.hash.search("source-code") == -1)
+					$imgs_header.css({ 'top' : -_ratio*800 });
 				else
-					$imgs_header.css({
-						'top' : -_ratio*800/*,
-						'-webkit-filter': 'blur(' + (($doc.scrollTop()/$doc.height()*15)|0) + 'px)',*/
-					});
+					$imgs_header.css({ 'top' : 0 });
+
+				if (_ratio > 0.4) $video_header.pause();
+				else if (_ratio < 0.3) $video_header.play();
 			});
-
-		$(document).ready(function(){
-			var img_i = 0;
-			var imgs_length = $("#header-images").children().length;
-
-			/*function display(){
-				bots.flockAndFlee(mouseBot);
-				bots.display();
-				requestAnimationFrame(display);
-			}
-
-			$(document).mousemove(function(e){mouseBot[0].setLocation(e.pageX, e.pageY)})
-
-			$("#copyright").dblclick(function(){
-				if (!bots){
-					bots = new SolidBots({
-						$bots: $("#copyright"),
-						idDOMParent: document
-					});
-					requestAnimationFrame(display);
-				}
-			});*/
-
-			function toggleHeaderImgs(){
-				if (img_i < imgs_length-1){
-					$("#h-img-"+(img_i+1)%imgs_length).show();
-					$("#h-img-"+img_i).animate({opacity: 0}, 1000, function(){$(this).hide()});
-				}else
-					for (var i=0; i < imgs_length-1; ++i){
-						$("#h-img-"+i).show().animate({opacity: 1}, 1000);
-					}
-
-				img_i = (img_i+1)%imgs_length;
-
-				setTimeout(toggleHeaderImgs, 10000);
-			}
-			setTimeout(toggleHeaderImgs, 10000);
-		});
 	</script>
 
 	<script>
