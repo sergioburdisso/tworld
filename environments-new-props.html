@@ -1,88 +1,88 @@
 <h2><b>Properties of your new task environment</b></h2>
 <section class="text-justify">
-	<blockquote class="blockquote-reverse">
-		<p>The range of task environments that might arise in AI is obviously vast. We can, however, identify a fairly small number of dimensions along which task environments can be categorized. These dimensions determine, to a large extent, the appropriate agent design and the applicability of each of the principal families of techniques for agent implementation.</p>
-		<footer>Artificial Intelligence: A Modern Approach (Third edition) by Stuart Russell and Peter Norvig</footer>
-	</blockquote>
+    <blockquote class="blockquote-reverse">
+        <p>The range of task environments that might arise in AI is obviously vast. We can, however, identify a fairly small number of dimensions along which task environments can be categorized. These dimensions determine, to a large extent, the appropriate agent design and the applicability of each of the principal families of techniques for agent implementation.</p>
+        <footer>Artificial Intelligence: A Modern Approach (Third edition) by Stuart Russell and Peter Norvig</footer>
+    </blockquote>
 </section>
 <div class="row">
-	<button ng-click="enc.loadConfig()" ng-disabled="enc.readOnly" class="btn btn-primary pull-right margin-10" tooltip="Load and copy all configuration values from an existing task environment"><span class="glyphicon glyphicon-open"></span> Load configuration</button>
+    <button ng-click="enc.loadConfig()" ng-disabled="enc.readOnly" class="btn btn-primary pull-right margin-10" tooltip="Load and copy all configuration values from an existing task environment"><span class="glyphicon glyphicon-open"></span> Load configuration</button>
 </div>
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-md-3"></div>
-		<div class="col-md-6" ng-class="{'treadonly':enc.readOnly}">
-			<alert type="info" ng-hide="!enc.readOnly">
-				<span class="glyphicon glyphicon-info-sign" style="font-size:30px"></span><br>
-				<span ng-if="!enc.task_env.builtin">Since there are trials/states associate with this task environment, most configuration values won't be editable. </span>
-				<span ng-if="enc.task_env.builtin">Since this is a default task environment, values won't be editable. </span>
-				In case you want to change some of these read-only values, create a new task environment and then load these configuration values using the "Load configuration" button above.
-			</alert>
-			<div class="row text-left">
-				<p class="lead"><b>1.</b> Select the properties of your new task environment according to the dimension listed below.</p>
-			</div>
-			<div class="row ">
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default" ng-model="enc.task_env.prop.fullyObservable" btn-radio="true" tooltip-placement="left" tooltip="The robot's sensors give it access to the complete state of the environment at each point in time">Fully observable</label>
-					<label class="btn btn-default" ng-model="enc.task_env.prop.fullyObservable" btn-radio="false" tooltip-placement="right" tooltip="The environment might be partially observable because of noisy and inaccurate sensors or because parts of the state are simply missing from the sensor data">Partially observable</label>
-				</div>
-			</div>
-			<br>
-			<div class="row">
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent" ng-change="enc.updateTeams()" btn-radio="false" tooltip-placement="left" tooltip="A single robot will perform in the environment">Single agent</label>
-					<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent" ng-change="enc.updateTeams()" btn-radio="true" tooltip-placement="right" tooltip="The environment will have more than one robot">Multiagent</label>
-				</div>
-			</div>
-			<br>
-			<div class="container-fluid animate-show-3d-top" ng-class="{'treadonly':enc.readOnly}" ng-show="enc.task_env.prop.multiagent">
-				<div class="row" style="margin-top: -15px; padding-bottom: 20px">
-					<div class="btn-group">
-						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="0" tooltip-placement="left" tooltip="one-vs-one match (single-robot teams)">Competitive</label>
-						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="1" tooltip-placement="bottom" tooltip="A single team with multiple robots">Cooperative</label>
-						<label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="2" tooltip-placement="right" tooltip="Teams are composed of more than one robot">Competitive &amp; Cooperative</label>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default" ng-model="enc.task_env.prop.deterministic" btn-radio="true" tooltip-placement="left" tooltip="The next state of the environment is completely determined by the current state and the action executed by the robot">Deterministic</label>
-					<label class="btn btn-default" ng-model="enc.task_env.prop.deterministic" btn-radio="false" tooltip-placement="right" tooltip="Nondeterministic plus uncertainty about outcomes is quantified in terms of probabilities">Stochastic</label>
-				</div>
-			</div>
-			<br>
-			<div class="row">
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" ng-change="enc.setDynamic(false)" btn-radio="0" tooltip-placement="left" tooltip="The environment itself does not change">Static</label>
-					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" ng-change="enc.setDynamic(false)" btn-radio="1" tooltip-placement="bottom" tooltip="The environment itself does not change but scores associated with holes gradually decay in value">Semidynamic</label>
-					<label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" ng-change="enc.setDynamic(true)" btn-radio="2" tooltip-placement="right" tooltip="The environment can change while the robot is deliberating">Dynamic</label>
-				</div>
-			</div>
-			<br>
-			<div class="row treadonly">
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default" ng-model="enc.task_env.prop.known" btn-radio="true" tooltip-placement="left" tooltip="The outcomes (or outcome probabilities if the environment is stochastic) for all actions are given">Known</label>
-					<label class="btn btn-default" ng-model="enc.task_env.prop.known" btn-radio="false" tooltip-placement="right" tooltip="The outcomes of actions are not given">Unknown</label>
-				</div>
-			</div>
-			<div class="separator"></div>
-			<div class="row text-left">
-				<label class="lead "><b>2.</b> Do you want Robots to have a battery?</label>
-				<div class="checkbox">
-					<label><input type="checkbox" ng-model="enc.task_env.battery"> Yes, I do &mdash;this enable the study of maintenance.</label>
-				</div>
-			</div>
-			<div class="separator"></div>
-			<div class="row text-left teditable">
-				<label class="lead"><b>3.</b> Give your task environment a name.</label>
-				<input type="text" class="form-control" ng-model="enc.task_env.name" placeholder="Name" ng-class="{'has-error':!enc.task_env.name.trim().length}" ng-readonly="enc.task_env.builtin">
-			</div>
-			<div class="separator"></div>
-			<div class="row text-left teditable">
-				<label class="lead"><b>4.</b> Optionally, write something about your task environment.</label>
-				<textarea class="form-control" ng-model="enc.task_env.desc" rows="8" placeholder="Description" ng-readonly="enc.task_env.builtin"></textarea>
-			</div>
-			<div class="separator"></div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6" ng-class="{'treadonly':enc.readOnly}">
+            <alert type="info" ng-hide="!enc.readOnly">
+                <span class="glyphicon glyphicon-info-sign" style="font-size:30px"></span><br>
+                <span ng-if="!enc.task_env.builtin">Since there are trials/states associate with this task environment, most configuration values won't be editable. </span>
+                <span ng-if="enc.task_env.builtin">Since this is a default task environment, values won't be editable. </span>
+                In case you want to change some of these read-only values, create a new task environment and then load these configuration values using the "Load configuration" button above.
+            </alert>
+            <div class="row text-left">
+                <p class="lead"><b>1.</b> Select the properties of your new task environment according to the dimension listed below.</p>
+            </div>
+            <div class="row ">
+                <div class="btn-group btn-group-justified">
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.fullyObservable" btn-radio="true" tooltip-placement="left" tooltip="The robot's sensors give it access to the complete state of the environment at each point in time">Fully observable</label>
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.fullyObservable" btn-radio="false" tooltip-placement="right" tooltip="The environment might be partially observable because of noisy and inaccurate sensors or because parts of the state are simply missing from the sensor data">Partially observable</label>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="btn-group btn-group-justified">
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.multiagent" ng-change="enc.updateTeams()" btn-radio="false" tooltip-placement="left" tooltip="A single robot will perform in the environment">Single agent</label>
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.multiagent" ng-change="enc.updateTeams()" btn-radio="true" tooltip-placement="right" tooltip="The environment will have more than one robot">Multiagent</label>
+                </div>
+            </div>
+            <br>
+            <div class="container-fluid animate-show-3d-top" ng-class="{'treadonly':enc.readOnly}" ng-show="enc.task_env.prop.multiagent">
+                <div class="row" style="margin-top: -15px; padding-bottom: 20px">
+                    <div class="btn-group">
+                        <label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="0" tooltip-placement="left" tooltip="one-vs-one match (single-robot teams)">Competitive</label>
+                        <label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="1" tooltip-placement="bottom" tooltip="A single team with multiple robots">Cooperative</label>
+                        <label class="btn btn-default" ng-model="enc.task_env.prop.multiagent_type" ng-change="enc.updateTeams()" btn-radio="2" tooltip-placement="right" tooltip="Teams are composed of more than one robot">Competitive &amp; Cooperative</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="btn-group btn-group-justified">
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.deterministic" btn-radio="true" tooltip-placement="left" tooltip="The next state of the environment is completely determined by the current state and the action executed by the robot">Deterministic</label>
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.deterministic" btn-radio="false" tooltip-placement="right" tooltip="Nondeterministic plus uncertainty about outcomes is quantified in terms of probabilities">Stochastic</label>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="btn-group btn-group-justified">
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" ng-change="enc.setDynamic(false)" btn-radio="0" tooltip-placement="left" tooltip="The environment itself does not change">Static</label>
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" ng-change="enc.setDynamic(false)" btn-radio="1" tooltip-placement="bottom" tooltip="The environment itself does not change but scores associated with holes gradually decay in value">Semidynamic</label>
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.dynamic" ng-change="enc.setDynamic(true)" btn-radio="2" tooltip-placement="right" tooltip="The environment can change while the robot is deliberating">Dynamic</label>
+                </div>
+            </div>
+            <br>
+            <div class="row treadonly">
+                <div class="btn-group btn-group-justified">
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.known" btn-radio="true" tooltip-placement="left" tooltip="The outcomes (or outcome probabilities if the environment is stochastic) for all actions are given">Known</label>
+                    <label class="btn btn-default" ng-model="enc.task_env.prop.known" btn-radio="false" tooltip-placement="right" tooltip="The outcomes of actions are not given">Unknown</label>
+                </div>
+            </div>
+            <div class="separator"></div>
+            <div class="row text-left">
+                <label class="lead "><b>2.</b> Do you want Robots to have a battery?</label>
+                <div class="checkbox">
+                    <label><input type="checkbox" ng-model="enc.task_env.battery"> Yes, I do &mdash;this enable the study of maintenance.</label>
+                </div>
+            </div>
+            <div class="separator"></div>
+            <div class="row text-left teditable">
+                <label class="lead"><b>3.</b> Give your task environment a name.</label>
+                <input type="text" class="form-control" ng-model="enc.task_env.name" placeholder="Name" ng-class="{'has-error':!enc.task_env.name.trim().length}" ng-readonly="enc.task_env.builtin">
+            </div>
+            <div class="separator"></div>
+            <div class="row text-left teditable">
+                <label class="lead"><b>4.</b> Optionally, write something about your task environment.</label>
+                <textarea class="form-control" ng-model="enc.task_env.desc" rows="8" placeholder="Description" ng-readonly="enc.task_env.builtin"></textarea>
+            </div>
+            <div class="separator"></div>
+        </div>
+    </div>
 </div>

@@ -1,87 +1,88 @@
 <div class="container-fluid text-left" ng-class="{'treadonly': $loading}">
-	<div class="row">
-		<div class="col-md-2" style="padding-right:40px">
-			<!--Sidebar content-->
+    <div class="row">
+        <div class="col-md-2" style="padding-right:40px">
+            <!--Sidebar content-->
 
-			<button class="btn btn-primary" ng-click="twc.goto('/agent-programs/new')">New Agent Program</button>
+            <button class="btn btn-primary" ng-click="twc.goto('/agent-programs/new')">New Agent Program</button>
 
-			<hr>
+            <hr>
 
-			Filter by name: <input class="form-control" ng-model="apc.query.name">
+            Filter by name: <input class="form-control" ng-model="apc.query.name">
 
-			<div class="checkbox">
-				<label><input type="checkbox" ng-model="apc.allProps"> All properties</label>
-			</div>
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="apc.allProps"> All properties</label>
+            </div>
 
-			<div class="animate-show-3d-top" ng-hide="apc.allProps">
-				<b>Only Agent Programs that are:</b>
-				<div class="btn-group btn-group-justified">
-					<label class="btn btn-default" ng-model="apc.query.ai" btn-radio="true" tooltip="Controlled by Algorithm"><img src="imgs/web-app/icon-single-agent.png"></label>
-					<label class="btn btn-default glyphicon glyphicon-user" ng-model="apc.query.ai" btn-radio="false" tooltip="Controlled by Human"></label>
-				</div>
-				<div class="btn-group btn-group-justified animate-only-show" ng-show="apc.query.ai">
-					<label class="btn btn-default" ng-model="apc.query.javascript" btn-radio="true" tooltip="JavaScript"><img src="imgs/web-app/icon-js.png"></label>
-					<label class="btn btn-default glyphicon glyphicon-link" ng-model="apc.query.javascript" btn-radio="false" tooltip="Extern language"></label>
-				</div>
-				<div class="btn-group btn-group-justified animate-only-show" ng-hide="apc.query.ai">
-					<label class="btn btn-default" ng-model="apc.query.keyboard" btn-radio="true" tooltip="Keyboard"><img src="imgs/web-app/icon-keyboard.png"></label>
-					<label class="btn btn-default glyphicon glyphicon-phone" ng-model="apc.query.keyboard" btn-radio="false" tooltip="Remote Control"></label>
-				</div>
-			</div>
+            <div class="animate-show-3d-top" ng-hide="apc.allProps">
+                <b>Only Agent Programs that are:</b>
+                <div class="btn-group btn-group-justified">
+                    <label class="btn btn-default" ng-model="apc.query.ai" btn-radio="true" tooltip="Controlled by Algorithm"><img src="imgs/web-app/icon-single-agent.png"></label>
+                    <label class="btn btn-default glyphicon glyphicon-user" ng-model="apc.query.ai" btn-radio="false" tooltip="Controlled by Human"></label>
+                </div>
+                <div class="btn-group btn-group-justified animate-only-show" ng-show="apc.query.ai">
+                    <label class="btn btn-default" ng-model="apc.query.javascript" btn-radio="true" tooltip="JavaScript"><img src="imgs/web-app/icon-js.png"></label>
+                    <label class="btn btn-default glyphicon glyphicon-link" ng-model="apc.query.javascript" btn-radio="false" tooltip="Extern language"></label>
+                </div>
+                <div class="btn-group btn-group-justified animate-only-show" ng-hide="apc.query.ai">
+                    <label class="btn btn-default" ng-model="apc.query.keyboard" btn-radio="true" tooltip="Keyboard"><img src="imgs/web-app/icon-keyboard.png"></label>
+                    <label class="btn btn-default glyphicon glyphicon-phone" ng-model="apc.query.keyboard" btn-radio="false" tooltip="Remote Control"></label>
+                </div>
+            </div>
 
-			Sort by:
-			<select class="form-control" ng-model="apc.orderCond">
-				<option value="name">Alphabetical</option>
-				<option value="-date">Newest</option>
-			</select>
-		</div>
-		<div class="col-md-10">
-			<h2><img src="imgs/web-app/rob_face.png" class="solid-icon-30"> Agent Programs<small class="pull-right" ng-if="totalPages-1">{{apc.page+'/'+totalPages}}</small></h2>
-			<!--Body content-->
-			<div class="list-group mouse-cursor" style="min-height: 300px">
-				<a class="list-group-item animate-filter transition-400 min-height-110" ng-repeat="ap in items = (apc.agentPrograms | filter:apc.userFilter) | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="apc.run(ap)" ng-class="{active:apc.isSelected(ap.date)}" ng-if="(apc.page-1)*apc.itemsPerPage <= $index&&$index < apc.page*apc.itemsPerPage">
-					<!-- PROPERTIES ICONS-->
-					<div class="pull-right">
-						<div class="solid-icon-16 icon-single-agent" ng-show="ap.ai" tooltip="Controlled by Algorithm"></div>
-						<div class="glyphicon glyphicon-user" ng-hide="ap.ai" tooltip="Controlled by Human"></div>
+            Sort by:
+            <select class="form-control" ng-model="apc.orderCond">
+                <option value="name">Alphabetical</option>
+                <option value="-date">Newest</option>
+            </select>
+        </div>
+        <div class="col-md-10">
+            <h2><img src="imgs/web-app/rob_face.png" class="solid-icon-30"> Agent Programs<small class="pull-right" ng-if="totalPages-1">{{apc.page+'/'+totalPages}}</small></h2>
+            <!--Body content-->
+            <div class="list-group mouse-cursor" style="min-height: 300px">
+                <a class="list-group-item animate-filter transition-400 min-height-110" ng-repeat="ap in items = (apc.agentPrograms | filter:apc.userFilter) | orderBy:apc.orderCond track by $index" ng-click="apc.setSelected(ap.date)" ng-dblclick="apc.run(ap)" ng-class="{active:apc.isSelected(ap.date)}" ng-if="(apc.page-1)*apc.itemsPerPage <= $index&&$index < apc.page*apc.itemsPerPage">
+                    <!-- PROPERTIES ICONS-->
+                    <div class="pull-right">
+                        <div class="solid-icon-16 icon-single-agent" ng-show="ap.ai" tooltip="Controlled by Algorithm"></div>
+                        <div class="glyphicon glyphicon-user" ng-hide="ap.ai" tooltip="Controlled by Human"></div>
 
-						<span ng-if="ap.ai">
-							<div class="solid-icon-16 icon-js" ng-show="ap.javascript" tooltip="JavaScript"></div>
-							<div class="glyphicon glyphicon-link" ng-hide="ap.javascript" tooltip="Extern language"></div>
-						</span>
+                        <span ng-if="ap.ai">
+                            <div class="solid-icon-16 icon-js" ng-show="ap.javascript" tooltip="JavaScript"></div>
+                            <div class="glyphicon glyphicon-link" ng-hide="ap.javascript" tooltip="Extern language"></div>
+                        </span>
 
-						<span ng-if="!ap.ai">
-							<div class="solid-icon-16 icon-keyboard" ng-show="ap.keyboard" tooltip="Keyboard"></div>
-							<div class="glyphicon glyphicon-phone" ng-hide="ap.keyboard" tooltip="Remote Control"></div>
-						</span>
-					</div>
+                        <span ng-if="!ap.ai">
+                            <div class="solid-icon-16 icon-keyboard" ng-show="ap.keyboard" tooltip="Keyboard"></div>
+                            <div class="glyphicon glyphicon-phone" ng-hide="ap.keyboard" tooltip="Remote Control"></div>
+                        </span>
+                    </div>
 
-					<h4 class="list-group-item-heading">
-						<span ng-class="{'text-white':apc.isSelected(ap.date),'text-blue':!apc.isSelected(ap.date)}">
-							{{ap.name}} 
-						</span>
-						<span class="badge active">{{ap.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span>
-						<small ng-if="ap.builtin" ng-class="{'text-white':apc.isSelected(ap.date),'text-green':!apc.isSelected(ap.date)}"><b>default</b></small>
-					</h4>
-					<p class="list-group-item-text text-gray2">{{ap.desc|stringLimit:400}}</p>
+                    <h4 class="list-group-item-heading">
+                        <span ng-class="{'text-white':apc.isSelected(ap.date),'text-blue':!apc.isSelected(ap.date)}">
+                            {{ap.name}} 
+                        </span>
+                        <span class="badge active">{{ap.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span>
+                        <small ng-if="ap.builtin" ng-class="{'text-white':apc.isSelected(ap.date),'text-green':!apc.isSelected(ap.date)}"><b>default</b></small>
+                    </h4>
+                    <p class="list-group-item-text text-gray2">{{ap.desc|stringLimit:400}}</p>
 
 
-					<div class="row">
-						<div class="pull-right animate-only-show margin-right-10" ng-show="apc.isSelected(ap.date)">
-							<button class="btn btn-success glyphicon glyphicon-list-alt" ng-click="apc.run(ap)" ng-if="apc.editor(ap)" tooltip="Run/View Source Code"></button>
-							<button class="btn btn-success glyphicon glyphicon-play" ng-click="apc.run()" ng-if="!apc.editor(ap)" tooltip="Run"></button>
-							<button class="btn btn-success glyphicon glyphicon-save" ng-click="apc.download(ap.date)" ng-if="!ap.javascript&&ap.source.file" tooltip="Download Source Code"></button>
-							<button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:all&agent-prog:'+ap.date)" tooltip="View stats"></button>
-							<button class="btn btn-info glyphicon glyphicon-list" ng-click="apc.open()" tooltip="View/Edit values"></button>
-							<button class="btn btn-danger glyphicon glyphicon-remove animate-none" ng-click="apc.remove()" tooltip="Delete" ng-hide="ap.builtin"></button>
-						</div>
-					</div>
-				</a>
-			</div>
-			<div class="text-center animate-show" ng-show="items.length > apc.itemsPerPage">
-				<pagination total-items="items.length" ng-model="apc.page" max-size="5" class="pagination" boundary-links="true" items-per-page="apc.itemsPerPage"  num-pages="totalPages" ng-change="twc.gotoTop()"></pagination>
-			</div>
-			<div class="separator"></div>
-		</div>
-	</div>
+                    <div class="row">
+                        <div class="pull-right animate-only-show margin-right-10" ng-show="apc.isSelected(ap.date)">
+                            <button class="btn btn-success glyphicon glyphicon-list-alt" ng-click="apc.run(ap)" ng-if="apc.editor(ap)" tooltip="Open Agent Program Source Code"></button>
+                            <button class="btn btn-success glyphicon glyphicon-play" ng-click="apc.run()" ng-if="!apc.editor(ap)" tooltip="Run"></button>
+                            <button class="btn btn-success glyphicon glyphicon-save" ng-click="apc.download(ap.date)" ng-if="!ap.javascript&&ap.source.file" tooltip="Download Source Code"></button>
+                            <button  ng-if="ap.builtin" class="btn btn-warning glyphicon glyphicon-cog" ng-click="apc.open()" tooltip="View configuration"></button>
+                            <button  ng-if="!ap.builtin" class="btn btn-warning glyphicon glyphicon-cog" ng-click="apc.open()" tooltip="Edit configuration"></button>
+                            <button class="btn btn-info glyphicon glyphicon-stats" ng-click="twc.goto('/stats/task-env:all&agent-prog:'+ap.date)" tooltip="View stats"></button>
+                            <button class="btn btn-danger glyphicon glyphicon-remove animate-none" ng-click="apc.remove()" tooltip="Delete" ng-hide="ap.builtin"></button>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="text-center animate-show" ng-show="items.length > apc.itemsPerPage">
+                <pagination total-items="items.length" ng-model="apc.page" max-size="5" class="pagination" boundary-links="true" items-per-page="apc.itemsPerPage"  num-pages="totalPages" ng-change="twc.gotoTop()"></pagination>
+            </div>
+            <div class="separator"></div>
+        </div>
+    </div>
 </div>

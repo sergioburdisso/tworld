@@ -1,224 +1,224 @@
 <html>
 <head>
-	<title>T-World</title>
-	<meta name="viewport" content="width=720px, initial-scale=1, maximum-scale=1, user-scalable=no">
-	<link rel="stylesheet" type="text/css" href="css/tworld.css" />
+    <title>T-World</title>
+    <meta name="viewport" content="width=720px, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="css/tworld.css" />
 </head>
 <body>
-	<div id="tw-root" class="body-background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow:hidden">
-		<span id="playPauseBtn" class ="no-selection center no-events" style="margin-top: -64px; margin-left: -64px; z-index: 12; display:none; opacity:0">
-			<img src="imgs/play_inv.png" class="no-events">
-		</span>
-		<span id="robs-hud" class="no-events robsHudBackground" style="bottom: 0; position: absolute; width: 100%; z-index: 11; opacity:0; display: none;">
-			<span id= "controls" class="no-selection" style="pointer-events: all; width:192px; height:128px; float:left; margin-top: -128px">
-				<span style="width:64px; height:64px; float:left">
-				</span>
-				<span id="ctrl-up" style="width:64px; height:64px; float:left; background-image: url(imgs/up.png)">
-				</span>
-				<span id="ctrl-restore" style="width:64px; height:64px; float:left">
-				</span>
-				<span id="ctrl-left" style="width:64px; height:64px; float:left; background-image: url(imgs/left.png)">
-				</span>
-				<span id="ctrl-down" style="width:64px; height:64px; float:left; background-image: url(imgs/down.png)">
-				</span>
-				<span id="ctrl-right" style="width:64px; height:64px; float:left; background-image: url(imgs/right.png)">
-				</span>
-			</span>
-		</span>
-		<div class="no-events" style="z-index: 100; position:absolute; width:100%; height:100%; overflow:hidden">
-			<div style="overflow: hidden; position: absolute;  top:70px; background-color: transparent; height: 100%; width: 100%; text-align: left;">
-				<div style="position: absolute; bottom: 120px; width: 100%;">
-					<div id="console"></div>
-				</div>
-			</div>
-		</div>
-		<div id="loading" style="z-index:50; position:absolute; top:50%; left:50%; width: 300px; margin-left: -150px; color: white">
-			<div id="cube" class="animate-rot">
-				<div class="backgroundCube"></div>
-				<div class="backgroundCube"></div>
-				<div class="backgroundCube"></div>
-				<div class="backgroundCube"></div>
-				<div class="backgroundCube"></div>
-				<div class="backgroundCube"></div>
-				<div style="background-color: rgba(0, 255, 69, 0.5); width:10px; height:10px; top:50%; left:50%; margin-top:-5px; margin-left:-5px;"></div>
-			</div>
-		</div>
-		<img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
-		<div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; opacity:0">
-			<div id="on-game-screen" class= "center no-events no-selection" style="z-index: 41; font-family: airstrike; width:100%; left: 0">
-				<table id="table-goals" style="width:400px; text-align: left; border-collapse: collapse; background-color: rgba(0, 0, 0, 0.6); font-size: 15px; float:left">
-				</table>
-			</div>
-			<div id="black-screen" class="no-selection" style="display:none; opacity:0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); position: absolute; z-index: 40; font-size: 20px; font-family: airstrike;">
-				<div id="title" style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;"></div>
-				<div id="sub-title" style="color: rgb(255, 158, 10); font-size: 36px; text-shadow: rgb(255, 156, 0) 0px 0px 10px;"></div>
-				<div id="bs-mid" style="position:absolute; width: 600px; top:50%; left:50%; margin-top:-130px; margin-left:-300px;">
-					<table id="table-pos" style="display:none; width:100%; text-align: center; border-collapse: collapse; background-color: rgba(0, 0, 0, 0.45);">
-						<tr> 
-							<th></th>
-							<th>PLAYER(S)</th>
-							<th>SCORE<br><span class="header-sub">final/total</span></th>
-							<th>HOLES/<br>CELLS</span></th>
-							<th>MOVES<br><span class="header-sub">good/bad</span></th>
-							<th>BATTERY<br><span class="header-sub">used/restored</span></th>
-						</tr>
-						<tr>
-							<td id="1-pos" class="columnRight"></td>
-							<td id="1-player"></td>
-							<td id="1-score">-</td>
-							<td id="1-holes">-</td>
-							<td id="1-moves">-</td>
-							<td id="1-battery">-</td>
-						</tr>
-						<tr id="2-row">
-							<td id="2-pos" class="columnRight"></td>
-							<td id="2-player"></td>
-							<td id="2-score">-</td>
-							<td id="2-holes">-</td>
-							<td id="2-moves">-</td>
-							<td id="2-battery">-</td>
-						</tr>
-						<tr id="3-row">
-							<td id="3-pos" class="columnRight"></td>
-							<td id="3-player"></td>
-							<td id="3-score">-</td>
-							<td id="3-holes">-</td>
-							<td id="3-moves">-</td>
-							<td id="3-battery">-</td>
-						</tr>
-					</table>
-				</div>
-				<div id="stats" style="display: none; position:absolute; bottom:0; width:100%; background-color: rgba(0, 0, 0, 0.45); padding: 5px 0; font-size: 15px;">
-					<span class="logo">
-						<span><img src="./imgs/-footsteps.png" title="fewest number of moves"/></span>
-						<span id="min-moves"></span>
-					</span>
-					<span class="logo">
-						<span><img src="./imgs/+footsteps.png" title="greatest number of moves"/></span>
-						<span id="max-moves"></span>
-					</span>
-					<span class="logo">
-						<span><img src="./imgs/xfootsteps.png" title="greatest number of bad moves"/></span>
-						<span id="invalid-moves"></span>
-					</span>
-					<span class="logo">
-						<span><img src="./imgs/cells.png" title="greatest number of filled cells"/></span>
-						<span id="max-cells"></span>
-					</span>
-					<span class="logo">
-						<span><img src="./imgs/battery-use.png" title="greatest number of energy used"/></span>
-						<span id="max-battery-use"></span>
-					</span>
-					<span class="logo">
-						<span><img src="./imgs/battery-recharge.png" title="greatest number of energy recharges"/></span>
-						<span id="max-battery-recharge"></span>
-					</span>
-					<span class="logo">
-						<span><img src="./imgs/battery-restore.png" title="greatest number of energy restorations"/></span>
-						<span id="max-battery-restore"></span>
-					</span>
-					<span class="logo">
-						<span><img src="./imgs/score.png" title="greatest number of accumulated score"/></span>
-						<span id="max-score"></span>
-					</span>
-				</div>
-			</div>
-			<img src="./imgs/circuit-frame_mirror.png" class="no-events no-selection" style="z-index:100; margin-top: 3px; position: absolute"/>
-			<!--<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>-->
-			<div id="time" class="no-events no-selection" style="z-index: 9; font-family: airstrike; width: 100%; font-size: 40px; position: absolute; color: darkorange; text-shadow: 0 0 10px white; background: url(./copperlichtdata/tp-background.png) 50% 50% no-repeat;"></div>
-			<div id="header" class="no-selection" style="z-index: 40; width: 100%; position: absolute; opacity: 0; display: none; padding-left: 5px;">
-				<img id="pauseBtn" src="imgs/pause.png" style="float:left;">
-				<img id="resetBtn" src="imgs/restart.png" style="float:left;">
-				<img id="cameraBtn" src="imgs/camera.png" style="float:left;">
-				<img id="fullScreenBtn" src="imgs/full_screen.png" style="float:left;">
-				<div id="fps" class="fps no-selection">00 fps</div>
-			</div>
-			<div id="pie" class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
-				<div style="height: 100%; width: 100%; position: absolute;">
-					<img src="./imgs/circuit-frame.png" style="height: 100%; float: right; margin-top: -8px;"/>
-				</div>
-				<ul style="margin:7px; padding:0; list-style:none; pointer-events: auto">
-					<li id="sb-logo" style="float:left; overflow:hidden; ">
-						<a target="_blank" href="https://plus.google.com/+SergioBurdisso">
-							<img src="data:image/png;base64,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" alt="A creation of Sergio Burdisso" border="0">
-						</a>
-					</li>
-					<li id="logos-line" style="float:left;margin-top: 4px; height: 24px; border-right: 1px solid rgba(255,255,255,0.2);">&nbsp;</li>
-					<li id="unsl-logo" style="float:left; padding-left:8px; overflow:hidden; ">
-					</li>
-					<li style="float:left">&nbsp;</li>
-				</ul>
-				<ul id="pie-derecho" style="margin:10px; padding:0; float:right; font-size:10px; line-height: 18px; list-style:none; pointer-events: auto">
-					<li class="piepagina">
-						TECHNOLOGY
-					</li>
-					<li class="piepagina">
-						CREDITS
-					</li>
-					<li style="float:left;	padding: 0 5px 0 10px;">
-						SHARE
-					</li>
-					<li  style="float:left;	padding: 0 5px 0 5px;">
-						<a target="_blank" href="http://www.facebook.com/sharer.php?u=http://tworld-ai.com">
-							<img src="imgs/fb-icon.png" alt="" border="0">
-						</a>
-					</li>
-					<li  style="float:left;	padding: 0 5px 0 5px;">
-						<a target="_blank" href="http://twitter.com/share?text=3D+T-World.+Web+platform+for+Artificial+Intelligence+research+and+education%21+http%3A%2F%2Ftworld-ai.com+%23AI+%23webgl">
-							<img src="imgs/twitter-icon.png" alt="" border="0">
-						</a>
-					</li>
-					<li  style="float:left;	padding: 0 5px 0 5px;">
-						<a target="_blank" href="https://plus.google.com/share?url=http%3A%2F%2Ftworld-ai.com">
-							<img src="imgs/gplus-icon.png" alt="" border="0">
-						</a>
-					</li>
-					<li style="float:left">&nbsp;</li>
-				</ul>
-			</div>
-			<div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: url('imgs/shadow_frame.png') no-repeat; height:100%; width:100%; background-size: 100% 100%;">
-				<div class="title no-events" style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;">T-WORLD</div>
-				<div class="title no-events" style="font-size:42px; font-weight: bold; background-color: rgba(0, 0, 0, 0.4);">AN ALGORITHMIC<br> VOYAGE</div>
-				<div class="title no-events" style="font-size:18px; padding-top:13px; background-color: rgba(0, 0, 0, 0.6);">
-					OUR SPACESHIP HAS STOPPED AT THE PLANNED<br>T-SPOT (T FOR TURING) BECAUSE HERE P = NP, COOL, UH?
-				</div>
-				<div id="playFrame" class="no-events" style="display: none; opacity: 0;">
-					<img id="playBtn" src="imgs/play.png" class ="element no-selection">
-				</div>
-			</div>
-			<div id="frameColor" class="no-selection element" style="pointer-events: none; position: absolute; z-index: 11; display:none; width : 100%; height : 100%"></div>
-			<canvas id="tworld" class="blur" style="background-color: black; width : 100%; height : 100%;"></canvas>
-		</div>
-	</div>
-	<script type="text/javascript" src="libs/solid-loader.js"></script>
-	<script type="text/javascript">
-		var tileWorld;
-		var sound_keyboard;
+    <div id="tw-root" class="body-background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow:hidden">
+        <span id="playPauseBtn" class ="no-selection center no-events" style="margin-top: -64px; margin-left: -64px; z-index: 12; display:none; opacity:0">
+            <img src="imgs/play_inv.png" class="no-events">
+        </span>
+        <span id="robs-hud" class="no-events robsHudBackground" style="bottom: 0; position: absolute; width: 100%; z-index: 11; opacity:0; display: none;">
+            <span id= "controls" class="no-selection" style="pointer-events: all; width:192px; height:128px; float:left; margin-top: -128px">
+                <span style="width:64px; height:64px; float:left">
+                </span>
+                <span id="ctrl-up" style="width:64px; height:64px; float:left; background-image: url(imgs/up.png)">
+                </span>
+                <span id="ctrl-restore" style="width:64px; height:64px; float:left">
+                </span>
+                <span id="ctrl-left" style="width:64px; height:64px; float:left; background-image: url(imgs/left.png)">
+                </span>
+                <span id="ctrl-down" style="width:64px; height:64px; float:left; background-image: url(imgs/down.png)">
+                </span>
+                <span id="ctrl-right" style="width:64px; height:64px; float:left; background-image: url(imgs/right.png)">
+                </span>
+            </span>
+        </span>
+        <div class="no-events" style="z-index: 100; position:absolute; width:100%; height:100%; overflow:hidden">
+            <div style="overflow: hidden; position: absolute;  top:70px; background-color: transparent; height: 100%; width: 100%; text-align: left;">
+                <div style="position: absolute; bottom: 120px; width: 100%;">
+                    <div id="console"></div>
+                </div>
+            </div>
+        </div>
+        <div id="loading" style="z-index:50; position:absolute; top:50%; left:50%; width: 300px; margin-left: -150px; color: white">
+            <div id="cube" class="animate-rot">
+                <div class="backgroundCube"></div>
+                <div class="backgroundCube"></div>
+                <div class="backgroundCube"></div>
+                <div class="backgroundCube"></div>
+                <div class="backgroundCube"></div>
+                <div class="backgroundCube"></div>
+                <div style="background-color: rgba(0, 255, 69, 0.5); width:10px; height:10px; top:50%; left:50%; margin-top:-5px; margin-left:-5px;"></div>
+            </div>
+        </div>
+        <img id="loading-shadow" class="no-events" src="./imgs/loading_shadow.png" style="z-index:100; position:absolute; top:60%; left:50%; margin-left: -85px;"/>
+        <div id="frame" align="center" style="overflow : hidden; background-color:black; width:auto; height:auto; opacity:0">
+            <div id="on-game-screen" class= "center no-events no-selection" style="z-index: 41; font-family: airstrike; width:100%; left: 0">
+                <table id="table-goals" style="width:400px; text-align: left; border-collapse: collapse; background-color: rgba(0, 0, 0, 0.6); font-size: 15px; float:left">
+                </table>
+            </div>
+            <div id="black-screen" class="no-selection" style="display:none; opacity:0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); position: absolute; z-index: 40; font-size: 20px; font-family: airstrike;">
+                <div id="title" style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;"></div>
+                <div id="sub-title" style="color: rgb(255, 158, 10); font-size: 36px; text-shadow: rgb(255, 156, 0) 0px 0px 10px;"></div>
+                <div id="bs-mid" style="position:absolute; width: 600px; top:50%; left:50%; margin-top:-130px; margin-left:-300px;">
+                    <table id="table-pos" style="display:none; width:100%; text-align: center; border-collapse: collapse; background-color: rgba(0, 0, 0, 0.45);">
+                        <tr> 
+                            <th></th>
+                            <th>PLAYER(S)</th>
+                            <th>SCORE<br><span class="header-sub">final/total</span></th>
+                            <th>HOLES/<br>CELLS</span></th>
+                            <th>MOVES<br><span class="header-sub">good/bad</span></th>
+                            <th>BATTERY<br><span class="header-sub">used/restored</span></th>
+                        </tr>
+                        <tr>
+                            <td id="1-pos" class="columnRight"></td>
+                            <td id="1-player"></td>
+                            <td id="1-score">-</td>
+                            <td id="1-holes">-</td>
+                            <td id="1-moves">-</td>
+                            <td id="1-battery">-</td>
+                        </tr>
+                        <tr id="2-row">
+                            <td id="2-pos" class="columnRight"></td>
+                            <td id="2-player"></td>
+                            <td id="2-score">-</td>
+                            <td id="2-holes">-</td>
+                            <td id="2-moves">-</td>
+                            <td id="2-battery">-</td>
+                        </tr>
+                        <tr id="3-row">
+                            <td id="3-pos" class="columnRight"></td>
+                            <td id="3-player"></td>
+                            <td id="3-score">-</td>
+                            <td id="3-holes">-</td>
+                            <td id="3-moves">-</td>
+                            <td id="3-battery">-</td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="stats" style="display: none; position:absolute; bottom:0; width:100%; background-color: rgba(0, 0, 0, 0.45); padding: 5px 0; font-size: 15px;">
+                    <span class="logo">
+                        <span><img src="./imgs/-footsteps.png" title="fewest number of moves"/></span>
+                        <span id="min-moves"></span>
+                    </span>
+                    <span class="logo">
+                        <span><img src="./imgs/+footsteps.png" title="greatest number of moves"/></span>
+                        <span id="max-moves"></span>
+                    </span>
+                    <span class="logo">
+                        <span><img src="./imgs/xfootsteps.png" title="greatest number of bad moves"/></span>
+                        <span id="invalid-moves"></span>
+                    </span>
+                    <span class="logo">
+                        <span><img src="./imgs/cells.png" title="greatest number of filled cells"/></span>
+                        <span id="max-cells"></span>
+                    </span>
+                    <span class="logo">
+                        <span><img src="./imgs/battery-use.png" title="greatest number of energy used"/></span>
+                        <span id="max-battery-use"></span>
+                    </span>
+                    <span class="logo">
+                        <span><img src="./imgs/battery-recharge.png" title="greatest number of energy recharges"/></span>
+                        <span id="max-battery-recharge"></span>
+                    </span>
+                    <span class="logo">
+                        <span><img src="./imgs/battery-restore.png" title="greatest number of energy restorations"/></span>
+                        <span id="max-battery-restore"></span>
+                    </span>
+                    <span class="logo">
+                        <span><img src="./imgs/score.png" title="greatest number of accumulated score"/></span>
+                        <span id="max-score"></span>
+                    </span>
+                </div>
+            </div>
+            <img src="./imgs/circuit-frame_mirror.png" class="no-events no-selection" style="z-index:100; margin-top: 3px; position: absolute"/>
+            <!--<div id="menu" class="menu no-selection" style="z-index: 10;">Menu</div>-->
+            <div id="time" class="no-events no-selection" style="z-index: 9; font-family: airstrike; width: 100%; font-size: 40px; position: absolute; color: darkorange; text-shadow: 0 0 10px white; background: url(./copperlichtdata/tp-background.png) 50% 50% no-repeat;"></div>
+            <div id="header" class="no-selection" style="z-index: 40; width: 100%; position: absolute; opacity: 0; display: none; padding-left: 5px;">
+                <img id="pauseBtn" src="imgs/pause.png" style="float:left;">
+                <img id="resetBtn" src="imgs/restart.png" style="float:left;">
+                <img id="cameraBtn" src="imgs/camera.png" style="float:left;">
+                <img id="fullScreenBtn" src="imgs/full_screen.png" style="float:left;">
+                <div id="fps" class="fps no-selection">00 fps</div>
+            </div>
+            <div id="pie" class="no-selection no-events" style="position:absolute; bottom:0; width:100%; height: 50px; text-align: left; z-index:9; background-color: rgba(0, 0, 0, 0.7);">
+                <div style="height: 100%; width: 100%; position: absolute;">
+                    <img src="./imgs/circuit-frame.png" style="height: 100%; float: right; margin-top: -8px;"/>
+                </div>
+                <ul style="margin:7px; padding:0; list-style:none; pointer-events: auto">
+                    <li id="sb-logo" style="float:left; overflow:hidden; ">
+                        <a target="_blank" href="https://plus.google.com/+SergioBurdisso">
+                            <img src="data:image/png;base64,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" alt="A creation of Sergio Burdisso" border="0">
+                        </a>
+                    </li>
+                    <li id="logos-line" style="float:left;margin-top: 4px; height: 24px; border-right: 1px solid rgba(255,255,255,0.2);">&nbsp;</li>
+                    <li id="unsl-logo" style="float:left; padding-left:8px; overflow:hidden; ">
+                    </li>
+                    <li style="float:left">&nbsp;</li>
+                </ul>
+                <ul id="pie-derecho" style="margin:10px; padding:0; float:right; font-size:10px; line-height: 18px; list-style:none; pointer-events: auto">
+                    <li class="piepagina">
+                        TECHNOLOGY
+                    </li>
+                    <li class="piepagina">
+                        CREDITS
+                    </li>
+                    <li style="float:left;  padding: 0 5px 0 10px;">
+                        SHARE
+                    </li>
+                    <li  style="float:left; padding: 0 5px 0 5px;">
+                        <a target="_blank" href="http://www.facebook.com/sharer.php?u=http://tworld-ai.com">
+                            <img src="imgs/fb-icon.png" alt="" border="0">
+                        </a>
+                    </li>
+                    <li  style="float:left; padding: 0 5px 0 5px;">
+                        <a target="_blank" href="http://twitter.com/share?text=3D+T-World.+Web+platform+for+Artificial+Intelligence+research+and+education%21+http%3A%2F%2Ftworld-ai.com+%23AI+%23webgl">
+                            <img src="imgs/twitter-icon.png" alt="" border="0">
+                        </a>
+                    </li>
+                    <li  style="float:left; padding: 0 5px 0 5px;">
+                        <a target="_blank" href="https://plus.google.com/share?url=http%3A%2F%2Ftworld-ai.com">
+                            <img src="imgs/gplus-icon.png" alt="" border="0">
+                        </a>
+                    </li>
+                    <li style="float:left">&nbsp;</li>
+                </ul>
+            </div>
+            <div id="frameShadow" class="no-selection element" style="position: absolute; z-index: 8; background: url('imgs/shadow_frame.png') no-repeat; height:100%; width:100%; background-size: 100% 100%;">
+                <div class="title no-events" style="font-size:72px; font-weight: bold; padding-top:0; text-shadow: 0 0 20px rgb(0, 255, 69); background-color: rgba(0, 0, 0, 0.7);font-family: airstrike;">T-WORLD</div>
+                <div class="title no-events" style="font-size:42px; font-weight: bold; background-color: rgba(0, 0, 0, 0.4);">AN ALGORITHMIC<br> VOYAGE</div>
+                <div class="title no-events" style="font-size:18px; padding-top:13px; background-color: rgba(0, 0, 0, 0.6);">
+                    OUR SPACESHIP HAS STOPPED AT THE PLANNED<br>T-SPOT (T FOR TURING) BECAUSE HERE P = NP, COOL, UH?
+                </div>
+                <div id="playFrame" class="no-events" style="display: none; opacity: 0;">
+                    <img id="playBtn" src="imgs/play.png" class ="element no-selection">
+                </div>
+            </div>
+            <div id="frameColor" class="no-selection element" style="pointer-events: none; position: absolute; z-index: 11; display:none; width : 100%; height : 100%"></div>
+            <canvas id="tworld" class="blur" style="background-color: black; width : 100%; height : 100%;"></canvas>
+        </div>
+    </div>
+    <script type="text/javascript" src="libs/solid-loader.js"></script>
+    <script type="text/javascript">
+        var tileWorld;
+        var sound_keyboard;
 
-		//Ready function
-		window.onerror=function(evt){
-			if (window["console"])
-				console.error(evt);
-		}
-		window.onload=function(){
-			//TWorld class guard
-			if (TWorld){
-				_TWorld = new TWorld({
-								graphicEngine : startCopperLichtFromFile('tworld', 'copperlichtdata/core.3d'),
-								dimension : [_ROWS, _COLUMNS]
-							});
-			}
-		};
+        //Ready function
+        window.onerror=function(evt){
+            if (window["console"])
+                console.error(evt);
+        }
+        window.onload=function(){
+            //TWorld class guard
+            if (TWorld){
+                _TWorld = new TWorld({
+                                graphicEngine : startCopperLichtFromFile('tworld', 'copperlichtdata/core.3d'),
+                                dimension : [_ROWS, _COLUMNS]
+                            });
+            }
+        };
 
-	</script>
-	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
+    </script>
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
 
-		ga('create', 'UA-54081225-1', 'auto');
-		ga('send', 'pageview');
-	</script>
+        ga('create', 'UA-54081225-1', 'auto');
+        ga('send', 'pageview');
+    </script>
 </body>
 </html>

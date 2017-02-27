@@ -1,74 +1,74 @@
 <div class="modal-header">
-	<h3 class="modal-title top-shadow">
-		<span class="glyphicon glyphicon-cog"></span> 
-		Starting T-World trial <small>({{task_env.name}})</small>
-		<button class="btn btn-danger glyphicon glyphicon-remove pull-right margin-10" ng-click="close()"></button>
-	</h3>
+    <h3 class="modal-title top-shadow">
+        <span class="glyphicon glyphicon-cog"></span> 
+        Starting T-World trial <small>({{task_env.name}})</small>
+        <button class="btn btn-danger glyphicon glyphicon-remove pull-right margin-10" ng-click="close()"></button>
+    </h3>
 </div>
 
 <div class="modal-body" ng-class="{'treadonly': $loading}">
-	<div class="row">
-		<div class="col-md-6" ng-repeat="team in teams track by $index">
-			<div class="panel panel-default">
-				<div class="panel-heading" ng-if="singleTeam() && !singleAgent()">Agent Programs</div>
-				<div class="panel-heading" ng-if="!singleTeam()">
-					<img ng-src="copperlichtdata/color-{{task_env.teams[$index].color}}.png" height="32" style="margin-top:-16px">
-					{{task_env.teams[$index].name}}
-				</div>
-				<div class="panel-body">
-					<div ng-repeat="agent in team track by $index">
-						<span ng-if="!singleAgent()">Agent (id {{agent.id}}): </span>
-						<span ng-if="singleAgent()">Agent Program: </span>
-						<label class="cursor-pointer" tooltip="Click to select an agent program"> 
-							<span ng-if="agent.program" class="text-blue"> {{agent.program.name|stringLimit:30}}</span>
-							<span ng-if="!agent.program" class="text-red"> (empty)</span>
-							<button class="btn btn-default glyphicon glyphicon-pencil btn-sm" ng-click="selectAgentProgram(agent.id)" ng-class="{'has-error':!agent.program}"></button>
-						</label>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-md-6" ng-repeat="team in teams track by $index">
+            <div class="panel panel-default">
+                <div class="panel-heading" ng-if="singleTeam() && !singleAgent()">Agent Programs</div>
+                <div class="panel-heading" ng-if="!singleTeam()">
+                    <img ng-src="copperlichtdata/color-{{task_env.teams[$index].color}}.png" height="32" style="margin-top:-16px">
+                    {{task_env.teams[$index].name}}
+                </div>
+                <div class="panel-body">
+                    <div ng-repeat="agent in team track by $index">
+                        <span ng-if="!singleAgent()">Agent (id {{agent.id}}): </span>
+                        <span ng-if="singleAgent()">Agent Program: </span>
+                        <label class="cursor-pointer" tooltip="Click to select an agent program"> 
+                            <span ng-if="agent.program" class="text-blue"> {{agent.program.name|stringLimit:30}}</span>
+                            <span ng-if="!agent.program" class="text-red"> (empty)</span>
+                            <button class="btn btn-default glyphicon glyphicon-pencil btn-sm" ng-click="selectAgentProgram(agent.id)" ng-class="{'has-error':!agent.program}"></button>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="panel panel-default">
-		<div class="panel-body">
+    <div class="panel panel-default">
+        <div class="panel-body">
 
-			<br>
-			<div class="col-md-4">
-				T-World speed is {{ task_env.trial.speed | tspeed }}
-				<div class="ui-slider-size" ui-slider min="-9" max="9" step="1" ng-model="task_env.trial.speed"></div>
-				<label>({{
-					(task_env.trial.speed < 0 && (-task_env.trial.speed+1)+ " seconds = 1 t-second")||
-					(task_env.trial.speed == 0 && "1 t-second = 1 second") ||
-					(task_env.trial.speed+1)+" t-seconds = 1 second"}})
-				</label>
-			</div>
+            <br>
+            <div class="col-md-4">
+                T-World speed is {{ task_env.trial.speed | tspeed }}
+                <div class="ui-slider-size" ui-slider min="-9" max="9" step="1" ng-model="task_env.trial.speed"></div>
+                <label>({{
+                    (task_env.trial.speed < 0 && (-task_env.trial.speed+1)+ " seconds = 1 t-second")||
+                    (task_env.trial.speed == 0 && "1 t-second = 1 second") ||
+                    (task_env.trial.speed+1)+" t-seconds = 1 second"}})
+                </label>
+            </div>
 
-			<div class="col-md-3">
-				<div class="checkbox">
-					<label><input type="checkbox" ng-model="task_env.trial.pause"> Enable Pause</label>
-				</div>
-				<div class="checkbox">
-					<label tooltip="Trials will run one after the other in a batch-like fashion"><input type="checkbox" ng-model="task_env.trial.saveStats"> Save stats</label>
-				</div>
-				<div class="animate-show-3d-top" ng-show="task_env.trial.saveStats">
-					<label>Number of Trials</label><input type="number" min="0" class="form-control" ng-model="task_env.trial.runs" ng-class="{'has-error':(task_env.trial.runs|num)<=0}">
-				</div>
-			</div>
+            <div class="col-md-3">
+                <div class="checkbox">
+                    <label><input type="checkbox" ng-model="task_env.trial.pause"> Enable Pause</label>
+                </div>
+                <div class="checkbox">
+                    <label tooltip="Trials will run one after the other in a batch-like fashion"><input type="checkbox" ng-model="task_env.trial.saveStats"> Save stats</label>
+                </div>
+                <div class="animate-show-3d-top" ng-show="task_env.trial.saveStats">
+                    <label>Number of Trials</label><input type="number" min="0" class="form-control" ng-model="task_env.trial.runs" ng-class="{'has-error':(task_env.trial.runs|num)<=0}">
+                </div>
+            </div>
 
-			<div class="col-md-3">
-				<label>Default Camera</label>
-				<select class="form-control" ng-model="task_env.trial.camera" ng-options="value as camera|nounderscore for (camera, value) in cameras"></select>
-			</div>
+            <div class="col-md-3">
+                <label>Default Camera</label>
+                <select class="form-control" ng-model="task_env.trial.camera" ng-options="value as camera|nounderscore for (camera, value) in cameras"></select>
+            </div>
 
-		</div>
-	</div>
+        </div>
+    </div>
 </div>
 
 <div class="modal-footer" ng-class="{'treadonly': $loading}">
-	<button class="btn btn-default pull-left" ng-click="viewSettings()">
-		<span class="glyphicon glyphicon-wrench"></span>
-		Settings
-	</button>
-	<button class="btn btn-success pull-right" ng-click="run()"><span class="glyphicon glyphicon-play"></span> Let's go!</button>
+    <button class="btn btn-default pull-left" ng-click="viewSettings()">
+        <span class="glyphicon glyphicon-wrench"></span>
+        Settings
+    </button>
+    <button class="btn btn-success pull-right" ng-click="run()"><span class="glyphicon glyphicon-play"></span> Let's go!</button>
 </div>

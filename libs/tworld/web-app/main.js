@@ -384,6 +384,66 @@
         }
     ]);
 
+    main.controller('LiveTutorialsController', ['$scope', function($scope){
+        var _self = this;
+        var $tuto_panel = $("#tuto-panel");
+        var $tuto_panel_toggle = $("#tuto-panel-toggle");
+        var $video_header = document.getElementById('video-header');
+        var $doc = $(document);
+        var offset= 23;
+        var scrollValue = 0;
+
+        this.introPanel = true;
+        this.enterStyle = {height: undefined, left: undefined, width: undefined};
+
+        function _setPreviewCss(show){
+            if (show){
+                _self.enterStyle.height = "25px";
+                _self.enterStyle.left = "0";
+                _self.enterStyle.width = "100%";
+            }else{
+                _self.enterStyle.height = "15px";
+                _self.enterStyle.left = "25%";
+                _self.enterStyle.width = "50%";
+            }
+        }
+
+        this.setPreview = function(show){
+            if (!_self.introPanel){
+                if (show){
+                    $tuto_panel_toggle.addClass("tuto-panel-close");
+                    $tuto_panel.css({top:(offset-$tuto_panel.height())+"px", opacity:1});
+                }else{
+                    $tuto_panel_toggle.removeClass("tuto-panel-close");
+                    $tuto_panel.css({top:"-100%", opacity:0});
+                }
+                _setPreviewCss(show);
+            }
+        }
+
+        this.toggleIntroPanel = function(){
+            if (_self.introPanel){
+                $video_header.play();
+                $("#main").css({opacity:1}).show();
+                gotoTop(700, scrollValue);
+                $tuto_panel.css({top:"-100%", opacity:0});
+                $(window).scroll();
+            }else{
+                scrollValue = $doc.scrollTop();
+                $video_header.pause();
+                gotoTop(700, scrollValue-100);
+                $("#main").animate({opacity:0}, 150, function(){$(this).hide();});
+                $tuto_panel.css({top:0});
+                _setPreviewCss(false);
+            }
+
+            $tuto_panel_toggle.removeClass("tuto-panel-close");
+            _self.introPanel = !_self.introPanel;
+        }
+
+        this.toggleIntroPanel();
+    }]);
+
     main.run( function($rootScope, $location) {
         $rootScope.$on( "$routeChangeStart", function() {
             $rootScope.$loadingView = true;

@@ -1,77 +1,104 @@
 @font-face {
-	font-family: Lato;
-	src: url('../resrc/lato-regular.ttf');
+    font-family: Lato;
+    src: url('../resrc/lato-regular.ttf');
 }
 
 @font-face {
-	font-family: Raleway;
-	src: url('../resrc/raleway-regular.ttf');
+    font-family: Raleway;
+    src: url('../resrc/raleway-regular.ttf');
 }
 
-.img-header{
-	position:fixed;
-	width:100%;
-	height:493px;
-	z-index:-1;
+@media screen and (min-width : 1921px) { .video-header{ width: 100%; } }
+
+.tuto-panel-close{
+    -webkit-transform: rotate(180deg);
+       -moz-transform: rotate(180deg);
+         -o-transform: rotate(180deg);
+            transform: rotate(180deg);
+}
+
+.tuto-footer:hover{opacity: 0.8}
+.tuto-footer{
+    padding-top: 2px;
+    padding-bottom: 2px;
+    background-color: #555;
+    color: #DDD;
+    cursor: pointer;
+}
+
+#tuto-panel{
+    z-index: 100;
+    position: fixed;
+    background-color: #E6E6E6;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 14px 20px -6px rgba(41, 41, 41,.5);
+}
+
+.frame-header{
+    position:fixed;
+    width:100%;
+    height:493px;
+    z-index:-1;
 }
 
 ul.tree, ul.tree ul {
-	list-style-type: none;
-	background: url(../imgs/web-app/vline.png) repeat-y;
-	margin: 0;
-	padding: 0;
+    list-style-type: none;
+    background: url(../imgs/web-app/vline.png) repeat-y;
+    margin: 0;
+    padding: 0;
 }
 
 ul.tree ul {
-	margin-left: 10px;
+    margin-left: 10px;
 }
 
 ul.tree li {
-	margin: 0;
-	padding: 0 12px;
-	line-height: 20px;
-	background: url(../imgs/web-app/node.png) no-repeat;
-	/*color: #369;
-	font-weight: bold;*/
+    margin: 0;
+    padding: 0 12px;
+    line-height: 20px;
+    background: url(../imgs/web-app/node.png) no-repeat;
+    /*color: #369;
+    font-weight: bold;*/
 }
 
 ul.tree li:last-child {
-	background: white url(../imgs/web-app/lastnode.png) no-repeat;
+    background: white url(../imgs/web-app/lastnode.png) no-repeat;
 }
 
 ul.tree span{
-	font-weight:normal;
-	color: gray;
+    font-weight:normal;
+    color: gray;
 }
 
 .spinner {
-	margin: 5px 5px;
-	width: 70px;
-	text-align: center;
+    margin: 5px 5px;
+    width: 70px;
+    text-align: center;
 }
 
 .spinner > div {
-	width: 10px;
-	height: 10px;
-	background-color: #555;
+    width: 10px;
+    height: 10px;
+    background-color: #555;
 
-	border-radius: 100%;
-	display: inline-block;
-	-webkit-animation: bouncedelay 1.4s infinite ease-in-out;
-	animation: bouncedelay 1.4s infinite ease-in-out;
-	/* Prevent first frame from flickering when animation starts */
-	-webkit-animation-fill-mode: both;
-	animation-fill-mode: both;
+    border-radius: 100%;
+    display: inline-block;
+    -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+    animation: bouncedelay 1.4s infinite ease-in-out;
+    /* Prevent first frame from flickering when animation starts */
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
 }
 
 .spinner .bounce1 {
-	-webkit-animation-delay: -0.32s;
-	animation-delay: -0.32s;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
 }
 
 .spinner .bounce2 {
-	-webkit-animation-delay: -0.16s;
-	animation-delay: -0.16s;
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
 }
 
 .nav, .pagination, .carousel, .panel-title a { cursor: pointer; } /*UI Bootstrap require this*/
@@ -85,67 +112,67 @@ iframe {border: 0}
 .popover-content {height: 410px}
 
 body.tbody{
-	font-family: "Lato";
-	font-weight: 300;
-	font-size: 16px;
-	color: #555;
-	background-color: #555;
-	overflow-x: hidden;
+    font-family: "Lato";
+    font-weight: 300;
+    font-size: 16px;
+    color: #555;
+    background-color: #555;
+    overflow-x: hidden;
 
-	-webkit-font-smoothing: antialiased;
-	   -moz-font-smoothing: antialiased;
-	     -o-font-smoothing: antialiased;
-	        font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+       -moz-font-smoothing: antialiased;
+         -o-font-smoothing: antialiased;
+            font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
-	font-family: "Raleway";
-	font-weight: 300;
-	color: #333;
+    font-family: "Raleway";
+    font-weight: 300;
+    color: #333;
 }
 
 p {
-	line-height: 28px;
-	margin-bottom: 25px;
+    line-height: 28px;
+    margin-bottom: 25px;
 }
 
 .center {
-	margin-left:auto; 
-	margin-right:auto;
+    margin-left:auto; 
+    margin-right:auto;
 }
 
 .popover, .tooltip{z-index: 10000}/*for modal compatibility*/
 
 .has-error.ng-dirty{
-	border-color: #EA3838;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	   -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-	     -o-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-			box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    border-color: #EA3838;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+       -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+         -o-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
 .has-error.ng-dirty:focus{
-	border-color: #FF1D00;
-	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00;
-	   -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00;
-	     -o-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00;
-			box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00
+    border-color: #FF1D00;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00;
+       -moz-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00;
+         -o-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00;
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #FF1D00
 }
 .table-grid.percept td{
-	border:1px solid #DDD;
+    border:1px solid #DDD;
 }
 .table-grid
 {
-	border:1px solid #EEE;
-	border-collapse:collapse;
+    border:1px solid #EEE;
+    border-collapse:collapse;
 }
 
 table.stats th{vertical-align: middle !important}
 table.stats th, table.stats td{text-align: center}
 
 .table-grid td:hover{
-	background-color: #428BCA;
-	color: white;
-	cursor: copy;
+    background-color: #428BCA;
+    color: white;
+    cursor: copy;
 }
 
 .color-gray{background-color: #CCC}
@@ -154,13 +181,13 @@ table.stats th, table.stats td{text-align: center}
 td input{text-align: center}
 
 .highlight-readonly{
-	position: absolute;
-	background: rgba(66, 139, 202, 0.15); /*rgba(93, 255, 93, 0.15)*/
+    position: absolute;
+    background: rgba(66, 139, 202, 0.15); /*rgba(93, 255, 93, 0.15)*/
 }
 #source-code {
-	position: relative;
-	height: 770px; /*100%;*/
-	width: 100%;
+    position: relative;
+    height: 770px; /*100%;*/
+    width: 100%;
 }
 
 .footer a{color: rgb(187, 221, 187)}
@@ -172,12 +199,12 @@ td input{text-align: center}
 .no-events{pointer-events: none !important}
 
 .treadonly>*{
-	/*-webkit-animation: fade-in 2s ease-out;
-	-moz-animation: fade-in 2s ease-out;
-	-o-animation: fade-in 2s ease-out;
-	animation: fade-in 2s ease-out;*/
+    /*-webkit-animation: fade-in 2s ease-out;
+    -moz-animation: fade-in 2s ease-out;
+    -o-animation: fade-in 2s ease-out;
+    animation: fade-in 2s ease-out;*/
 
-	opacity: 0.6;
+    opacity: 0.6;
 }
 
 .teditable{pointer-events: initial !important}
@@ -187,60 +214,60 @@ td input{text-align: center}
 .loading {display: none}
 
 .loading.show {
-	display: block;
-	position: absolute;
-	background: yellow;
-	border: 1px solid #b4b400;
-	margin: 0 50%;
-	padding: .5em 2em;
+    display: block;
+    position: absolute;
+    background: yellow;
+    border: 1px solid #b4b400;
+    margin: 0 50%;
+    padding: .5em 2em;
 }
 
 .ttip-f{}
 .ui-slider-size{font-size: 13px}
 
 .tprob-bar{
-	display: inline-block;
-	margin-bottom: 17px;
+    display: inline-block;
+    margin-bottom: 17px;
 }
 .tprob-bar .ui-slider-vertical .ui-slider-range {
-	left: 0;
-	width: 100%;/*40%;*/
+    left: 0;
+    width: 100%;/*40%;*/
 }
 .tprob-bar .ui-slider .ui-slider-range {
-	position: absolute;
-	z-index: 1;
-	display: block;
-	border: 0;
-	border-radius: 0;
-	/*background: orange;*/
-	background: #1e5799;
-	background: -moz-linear-gradient(top, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1e5799), color-stop(50%,#2989d8), color-stop(51%,#207cca), color-stop(100%,#7db9e8));
-	background: -webkit-linear-gradient(top, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
-	background: -o-linear-gradient(top, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
-	background: -ms-linear-gradient(top, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
-	background: linear-gradient(to bottom, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
+    position: absolute;
+    z-index: 1;
+    display: block;
+    border: 0;
+    border-radius: 0;
+    /*background: orange;*/
+    background: #1e5799;
+    background: -moz-linear-gradient(top, #1e5799 0%, #2989d8 50%, #207cca 51%, #7db9e8 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1e5799), color-stop(50%,#2989d8), color-stop(51%,#207cca), color-stop(100%,#7db9e8));
+    background: -webkit-linear-gradient(top, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
+    background: -o-linear-gradient(top, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
+    background: -ms-linear-gradient(top, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
+    background: linear-gradient(to bottom, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
 }
 .tprob-bar .ui-slider-size{font-size: 8px}
 .tprob-bar .ui-slider-size.vertical{
-	height: 400px;
-	border: 0;
-	padding: 0 6px;
-	border-radius: 0;
-	border-bottom: 1px solid black;
+    height: 400px;
+    border: 0;
+    padding: 0 6px;
+    border-radius: 0;
+    border-bottom: 1px solid black;
 }
 .tprob-bar .ui-slider-size.vertical.axis{
-	height: 400px;
-	border: 0 ;
-	border-radius: 0;
-	border-right: 1px solid black;
+    height: 400px;
+    border: 0 ;
+    border-radius: 0;
+    border-right: 1px solid black;
 }
 .tprob-bar .ui-state-default,
 .tprob-bar .ui-widget-content .ui-state-default,
 .tprob-bar .ui-widget-header .ui-state-default {
-	background: #FF0000;
-	font-weight: normal;
-	display: none;
+    background: #FF0000;
+    font-weight: normal;
+    display: none;
 }
 
 .sett-item:hover{color:initial}
@@ -256,6 +283,7 @@ td input{text-align: center}
 .margin-bot-10{margin-bottom: 10px}
 .margin-top-100{margin: 100px}
 .margin-left-214{margin-left: 214px !important;}
+.margin-2{margin: 2px}
 .margin-10{margin: 10px}
 .text-light-green{color: rgb(187, 221, 187)}
 .btn-logout:hover,
@@ -286,123 +314,123 @@ h2,
 .sett-item.active,
 .top-shadow{text-shadow: rgb(190, 189, 189) 0px 10px 10px}
 .shadow{
-	-webkit-box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
-	   -moz-box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
-	     -o-box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
-	        box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
+    -webkit-box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
+       -moz-box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
+         -o-box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
+            box-shadow: 0px 0px 6px 0px rgb(204, 204, 204);
 }
 .btn-shadow:hover{
-	-webkit-box-shadow: rgb(190, 189, 189) 0px 0px 10px;
-	   -moz-box-shadow: rgb(190, 189, 189) 0px 0px 10px;
-		 -o-box-shadow: rgb(190, 189, 189) 0px 0px 10px;
-			box-shadow: rgb(190, 189, 189) 0px 0px 10px;
+    -webkit-box-shadow: rgb(190, 189, 189) 0px 0px 10px;
+       -moz-box-shadow: rgb(190, 189, 189) 0px 0px 10px;
+         -o-box-shadow: rgb(190, 189, 189) 0px 0px 10px;
+            box-shadow: rgb(190, 189, 189) 0px 0px 10px;
 }
 .btn-shadow{
-	-webkit-box-shadow: rgb(190, 189, 189) 0px 10px 10px;
-	   -moz-box-shadow: rgb(190, 189, 189) 0px 10px 10px;
-		 -o-box-shadow: rgb(190, 189, 189) 0px 10px 10px;
-			box-shadow: rgb(190, 189, 189) 0px 10px 10px;
+    -webkit-box-shadow: rgb(190, 189, 189) 0px 10px 10px;
+       -moz-box-shadow: rgb(190, 189, 189) 0px 10px 10px;
+         -o-box-shadow: rgb(190, 189, 189) 0px 10px 10px;
+            box-shadow: rgb(190, 189, 189) 0px 10px 10px;
 }
 
 .full-screen{
-	position: absolute !important;
-	top:0 !important;
-	left:0 !important;
-	width: 100% !important;
-	height: auto !important;
+    position: absolute !important;
+    top:0 !important;
+    left:0 !important;
+    width: 100% !important;
+    height: auto !important;
 }
 
 .background-color-white{background-color: white}
 
 .logo-center{
-	background: url(../imgs/web-app/sb-logo-big.png) no-repeat center;
+    background: url(../imgs/web-app/sb-logo-big.png) no-repeat center;
 }
 
 .main-content{
-	background: #f5f5f5;
-	margin-top: 0px;
-	padding: 0;
-	padding-bottom: 30px;
-	/*border-bottom: 1px solid #ddd;*/
-	text-align: center;
+    background: #f5f5f5;
+    margin-top: 0px;
+    padding: 0;
+    padding-bottom: 30px;
+    /*border-bottom: 1px solid #ddd;*/
+    text-align: center;
 }
 
 .footer{
-	width: 100%;
-	padding-top: 10px;
-	background-color: #555;
-	
-	-webkit-box-shadow: inset 0 14px 20px -6px rgb(41, 41, 41);
-	   -moz-box-shadow: inset 0 14px 20px -6px rgb(41, 41, 41);
-	     -o-box-shadow: inset 0 14px 20px -6px rgb(41, 41, 41);
-	        box-shadow: inset 0 14px 20px -6px rgb(41, 41, 41);
+    width: 100%;
+    padding-top: 10px;
+    background-color: #555;
+    
+    -webkit-box-shadow: inset 0 14px 20px -6px rgb(41, 41, 41);
+       -moz-box-shadow: inset 0 14px 20px -6px rgb(41, 41, 41);
+         -o-box-shadow: inset 0 14px 20px -6px rgb(41, 41, 41);
+            box-shadow: inset 0 14px 20px -6px rgb(41, 41, 41);
 }
 
 .separator{
-	background: url(../imgs/separator.png) no-repeat;
-	background-size: contain;
-	background-position: center;
-	height: 57px;
+    background: url(../imgs/separator.png) no-repeat;
+    background-size: contain;
+    background-position: center;
+    height: 57px;
 }
 
 .shadow-inset{
-	-webkit-box-shadow: inset 0px -10px 23px 0px rgba(0,0,0,0.41);
-	   -moz-box-shadow: inset 0px -10px 23px 0px rgba(0,0,0,0.41);
-	     -o-box-shadow: inset 0px -10px 23px 0px rgba(0,0,0,0.41);
-	        box-shadow: inset 0px -10px 23px 0px rgba(0,0,0,0.41);
+    -webkit-box-shadow: inset 0px -10px 23px 0px rgba(0,0,0,0.41);
+       -moz-box-shadow: inset 0px -10px 23px 0px rgba(0,0,0,0.41);
+         -o-box-shadow: inset 0px -10px 23px 0px rgba(0,0,0,0.41);
+            box-shadow: inset 0px -10px 23px 0px rgba(0,0,0,0.41);
 }
 
 .border-sides{
-	border-left: 1px solid #EEE;
-	border-right: 1px solid #EEE;
+    border-left: 1px solid #EEE;
+    border-right: 1px solid #EEE;
 }
 
 .padding-sides{
-	padding-left: 200px;
-	padding-right: 200px;
+    padding-left: 200px;
+    padding-right: 200px;
 }
 
 .no-selection {
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .no-events {
-	pointer-events: none
+    pointer-events: none
 }
 
 .mouse-cursor{cursor:default}
 .cursor-pointer{cursor:pointer;}
 
 .stoch-box{
-	width: 150px;
-	height: 150px;
-	background: url(../imgs/web-app/model-of-action.jpg) no-repeat 50% 0%;
+    width: 150px;
+    height: 150px;
+    background: url(../imgs/web-app/model-of-action.jpg) no-repeat 50% 0%;
 }
 
 .stoch-opp{
-	width: 54px;
-	height: 150px;
+    width: 54px;
+    height: 150px;
 }
 .stoch-ref{
-	width: 54px;
-	height: 98px;
+    width: 54px;
+    height: 98px;
 }
 /*Icons*/
 .solid-icon-30,
 .solid-icon-16{display: inline-block}
 
 .solid-icon-16{
-	height: 16px;
-	width: 16px;
+    height: 16px;
+    width: 16px;
 }
 .solid-icon-30{
-	height: 30px;
-	width: auto;
+    height: 30px;
+    width: auto;
 }
 .icon-single-agent{background: url(../imgs/web-app/icon-single-agent.png) center no-repeat}
 .icon-multiagent{background: url(../imgs/web-app/icon-multiagent.png) center no-repeat}
@@ -419,86 +447,86 @@ h2,
 .active .icon-keyboard {background: url(../imgs/web-app/icon-keyboard-white.png) center no-repeat}
 
 .active .badge{
-	color: #428bca;
-	background-color: #fff;
+    color: #428bca;
+    background-color: #fff;
 }
 
 .to-top{
-	-webkit-transition: -webkit-transform 0.15s ease-out;
-	   -moz-transition: -moz-transform 0.15s ease-out;
-	     -o-transition: -moz-transform 0.15s ease-out;
-	        transition: transform 0.15s ease-out;
+    -webkit-transition: -webkit-transform 0.15s ease-out;
+       -moz-transition: -moz-transform 0.15s ease-out;
+         -o-transition: -moz-transform 0.15s ease-out;
+            transition: transform 0.15s ease-out;
 
-	cursor: default;
+    cursor: default;
 
-	font-size: 20px;
-	padding: 10px;
-	margin-bottom: -34px
+    font-size: 20px;
+    padding: 10px;
+    margin-bottom: -34px
 }
 
 .ui-slider-handle.ui-state-hover{
-	-webkit-transform: scale(1.2);
-	   -moz-transform: scale(1.2);
-	     -o-transform: scale(1.2);
-	        transform: scale(1.2);
+    -webkit-transform: scale(1.2);
+       -moz-transform: scale(1.2);
+         -o-transform: scale(1.2);
+            transform: scale(1.2);
 }
 
 .ui-slider-handle{
-	border-radius: 10px;
-	background: #3276b1 !important;
-	border-color: #285e8e;
+    border-radius: 10px;
+    background: #3276b1 !important;
+    border-color: #285e8e;
 }
 
 .panel.solid{
-	background: inherit;
-	border: none;
+    background: inherit;
+    border: none;
 }
 .a-image:hover{text-decoration: none}
 a{display: inline-block}
 a.list-group-item.no-animation:hover{
-	-webkit-transform: translateY(0);
-	-o-transform: translateY(0);
-	transform: translateY(0);
+    -webkit-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
 }
 a.list-group-item.step.active{
-	-webkit-transform: translateX(10px);
-	-moz-transform: translateX(10px);
-	-o-transform: translateX(10px);
-	transform: translateX(10px);
+    -webkit-transform: translateX(10px);
+    -moz-transform: translateX(10px);
+    -o-transform: translateX(10px);
+    transform: translateX(10px);
 
-	border-bottom-right-radius: 10px;
-	border-top-right-radius: 10px;
-	box-shadow: -8px 0px 15px 0px rgb(207, 207, 207);
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: -8px 0px 15px 0px rgb(207, 207, 207);
 }
 a:hover{
-	-webkit-transform: translateY(2px);
-	/*-moz-transform: translateY(2px);*/
-	-o-transform: translateY(2px);
-	/*transform: translateY(2px);*/
+    -webkit-transform: translateY(2px);
+    /*-moz-transform: translateY(2px);*/
+    -o-transform: translateY(2px);
+    /*transform: translateY(2px);*/
 }
 
 .a-supp:hover{
-	-webkit-transform: translateX(-2px);
-	/*-moz-transform: translateY(2px);*/
-	-o-transform: translateX(-2px);
-	/*transform: translateY(2px);*/
+    -webkit-transform: translateX(-2px);
+    /*-moz-transform: translateY(2px);*/
+    -o-transform: translateX(-2px);
+    /*transform: translateY(2px);*/
 }
 
 a.a-supp-thumb{
-	background: white no-repeat center;
-	background-size: contain;
-	width:398px;
-	height:512px;
-	box-shadow: rgb(190, 189, 189) 0px 10px 10px;
+    background: white no-repeat center;
+    background-size: contain;
+    width:398px;
+    height:512px;
+    box-shadow: rgb(190, 189, 189) 0px 10px 10px;
 }
 
 a.a-supp-thumb:hover{
-	-webkit-transform: scale(0.98);
-	   -moz-transform: scale(0.98);
-	     -o-transform: scale(0.98);
-	        transform: scale(0.98);
+    -webkit-transform: scale(0.98);
+       -moz-transform: scale(0.98);
+         -o-transform: scale(0.98);
+            transform: scale(0.98);
 
-	box-shadow: rgb(190, 189, 189) 0px 3px 5px;
+    box-shadow: rgb(190, 189, 189) 0px 3px 5px;
 }
 
 @keyframes fade-in { %{ opacity: 1; } 100% { opacity: 0.6; } }
@@ -507,83 +535,97 @@ a.a-supp-thumb:hover{
 @-webkit-keyframes fade-in { %{ opacity: 1; } 100% { opacity: 0.6; } }
 
 @-webkit-keyframes zoom-rotate {
-	0%{ -webkit-transform: scale(0) rotate(360deg); opacity: 0; }
-	40% { -webkit-transform: scale(1.1) rotate(-10deg); opacity: 1; }
-	60% { -webkit-transform: scale(0.9) rotate(5deg); opacity: 0.9; }
-	100% { -webkit-transform: scale(1) rotate(0deg); opacity: 1; }
+    0%{ -webkit-transform: scale(0) rotate(360deg); opacity: 0; }
+    40% { -webkit-transform: scale(1.1) rotate(-10deg); opacity: 1; }
+    60% { -webkit-transform: scale(0.9) rotate(5deg); opacity: 0.9; }
+    100% { -webkit-transform: scale(1) rotate(0deg); opacity: 1; }
 }
 @-moz-keyframes zoom-rotate {
-	0%{ -moz-transform: scale(0) rotate(360deg); opacity: 0; }
-	40% { -moz-transform: scale(1.1) rotate(-10deg); opacity: 1; }
-	60% { -moz-transform: scale(0.9) rotate(5deg); opacity: 0.9; }
-	100% { -moz-transform: scale(1) rotate(0deg); opacity: 1; }
+    0%{ -moz-transform: scale(0) rotate(360deg); opacity: 0; }
+    40% { -moz-transform: scale(1.1) rotate(-10deg); opacity: 1; }
+    60% { -moz-transform: scale(0.9) rotate(5deg); opacity: 0.9; }
+    100% { -moz-transform: scale(1) rotate(0deg); opacity: 1; }
 }
 @-o-keyframes zoom-rotate {
-	0%{ -o-transform: scale(0) rotate(360deg); opacity: 0; }
-	40% { -o-transform: scale(1.1) rotate(-10deg); opacity: 1; }
-	60% { -o-transform: scale(0.9) rotate(5deg); opacity: 0.9; }
-	100% { -o-transform: scale(1) rotate(0deg); opacity: 1; }
+    0%{ -o-transform: scale(0) rotate(360deg); opacity: 0; }
+    40% { -o-transform: scale(1.1) rotate(-10deg); opacity: 1; }
+    60% { -o-transform: scale(0.9) rotate(5deg); opacity: 0.9; }
+    100% { -o-transform: scale(1) rotate(0deg); opacity: 1; }
 }
 @keyframes zoom-rotate {
-	0%{ transform: scale(0) rotate(360deg); opacity: 0; }
-	40% { transform: scale(1.1) rotate(-10deg); opacity: 1; }
-	60% { transform: scale(0.9) rotate(5deg); opacity: 0.9; }
-	100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    0%{ transform: scale(0) rotate(360deg); opacity: 0; }
+    40% { transform: scale(1.1) rotate(-10deg); opacity: 1; }
+    60% { transform: scale(0.9) rotate(5deg); opacity: 0.9; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
 
 @-webkit-keyframes bouncedelay {
-	0%, 80%, 100% { 
-		transform: scale(0.0);
-		-webkit-transform: scale(0.0);
-	} 40% { 
-		transform: scale(1.0);
-		-webkit-transform: scale(1.0);
-	}
+    0%, 80%, 100% { 
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    } 40% { 
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
 }
 
 @keyframes bouncedelay {
-	0%, 80%, 100% { 
-		transform: scale(0.0);
-		-webkit-transform: scale(0.0);
-	} 40% { 
-		transform: scale(1.0);
-		-webkit-transform: scale(1.0);
-	}
+    0%, 80%, 100% { 
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    } 40% { 
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
 }
 
 @-webkit-keyframes to-top {
-	0%{text-shadow: gray 0px 0px 0px}
-	100% {text-shadow: gray 0px 10px 10px; transform: translateY(-10px);
-	}
+    0%{text-shadow: gray 0px 0px 0px}
+    100% {text-shadow: gray 0px 10px 10px; transform: translateY(-10px);
+    }
 }
 
 @-webkit-keyframes zoom {0%{}
-	100% {transform: scale(0.8); color: #428bca; text-shadow: gray 0px 0px 0px;}
+    100% {transform: scale(0.8); color: #428bca; text-shadow: gray 0px 0px 0px;}
 }
 
 @-webkit-keyframes zoom-leave {0%{transform: scale(0.9)} 100% {transform: scale(1)}}
 
 @keyframes to-top {
-	0%{text-shadow: gray 0px 0px 0px}
-	100% {text-shadow: gray 0px 10px 10px; transform: translateY(-10px);
-	}
+    0%{text-shadow: gray 0px 0px 0px}
+    100% {text-shadow: gray 0px 10px 10px; transform: translateY(-10px);
+    }
 }
 
 @keyframes zoom {0%{}
-	100% {transform: scale(0.8); color: #428bca; text-shadow: gray 0px 0px 0px;}
+    100% {transform: scale(0.8); color: #428bca; text-shadow: gray 0px 0px 0px;}
 }
 
 @keyframes zoom-leave {0%{transform: scale(0.9)} 100% {transform: scale(1)}}
+
+.transition-1000{
+    -webkit-transition: all 1s cubic-bezier(0.245, 0.535, 0.050, 1.000);
+       -moz-transition: all 1s cubic-bezier(0.245, 0.535, 0.050, 1.000);
+         -o-transition: all 1s cubic-bezier(0.245, 0.535, 0.050, 1.000);
+            transition: all 1s cubic-bezier(0.245, 0.535, 0.050, 1.000);
+}
+
+.transition-800{
+    -webkit-transition: all 800ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
+       -moz-transition: all 800ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
+         -o-transition: all 800ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
+            transition: all 800ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
+}
 
 .width-120.tfocus,
 .tfocus:focus,
 .sett-item,
 .stoch-box, a,
 .transition-600{
-	-webkit-transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
-	   -moz-transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
-		 -o-transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
-		    transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
+    -webkit-transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
+       -moz-transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
+         -o-transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
+            transition: all 600ms cubic-bezier(0.245, 0.535, 0.050, 1.000);
 }
 
 .hover,
@@ -594,106 +636,106 @@ button,
 .ui-slider-handle,
 .ui-slider-range-min,
 .transition-400{
-	-webkit-transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	   -moz-transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	     -o-transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
+    -webkit-transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
+       -moz-transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
+         -o-transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
+            transition: all 400ms cubic-bezier(0.280, 0.720, 0.110, 1.005);
 }
 
 .to-top:hover{
-	-webkit-animation: to-top 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
-	   -moz-animation: to-top 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
-	     -o-animation: to-top 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
-	        animation: to-top 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    -webkit-animation: to-top 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
+       -moz-animation: to-top 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
+         -o-animation: to-top 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
+            animation: to-top 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
 }
 
 .table-grid td:hover,
 .animate-none{
-	-webkit-transition: all 0ms !important;
-	   -moz-transition: all 0ms !important;
-	     -o-transition: all 0ms !important;
-	        transition: all 0ms !important;
+    -webkit-transition: all 0ms !important;
+       -moz-transition: all 0ms !important;
+         -o-transition: all 0ms !important;
+            transition: all 0ms !important;
 }
 
 .animate-zoom-loop{
-	-webkit-animation: zoom 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
-	   -moz-animation: zoom 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
-	     -o-animation: zoom 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
-	        animation: zoom 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
+    -webkit-animation: zoom 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
+       -moz-animation: zoom 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
+         -o-animation: zoom 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
+            animation: zoom 0.6s infinite alternate cubic-bezier(0.645, 0.045, 0.355, 1.000);
 }
 
 .animate-zoom-loop-end{
-	-webkit-animation: zoom-leave 0.3s ease-out;
-	   -moz-animation: zoom-leave 0.3s ease-out;
-	     -o-animation: zoom-leave 0.3s ease-out;
-	        animation: zoom-leave 0.3s ease-out;
+    -webkit-animation: zoom-leave 0.3s ease-out;
+       -moz-animation: zoom-leave 0.3s ease-out;
+         -o-animation: zoom-leave 0.3s ease-out;
+            animation: zoom-leave 0.3s ease-out;
 }
 
 button:hover:not(.animate-none),
 .animate-zoom-out{
-	-webkit-transform: scale(0.9);
-	   -moz-transform: scale(0.9);
-	     -o-transform: scale(0.9);
-	        transform: scale(0.9);
+    -webkit-transform: scale(0.9);
+       -moz-transform: scale(0.9);
+         -o-transform: scale(0.9);
+            transform: scale(0.9);
 
-	-webkit-transition: -webkit-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	   -moz-transition: -moz-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	     -o-transition: -moz-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+    -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+       -moz-transition: -moz-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+         -o-transition: -moz-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+            transition: transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 }
 
 .animate-zoom-in{
-	-webkit-transform: scale(1);
-	   -moz-transform: scale(1);
-	     -o-transform: scale(1);
-	        transform: scale(1);
+    -webkit-transform: scale(1);
+       -moz-transform: scale(1);
+         -o-transform: scale(1);
+            transform: scale(1);
 
-	-webkit-transition: -webkit-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	   -moz-transition: -moz-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	     -o-transition: -moz-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+    -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+       -moz-transition: -moz-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+         -o-transition: -moz-transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+            transition: transform 0.5s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 }
 
 .animate-ok{
-	-webkit-animation: zoom-rotate 1s ease-out;
-	-moz-animation: zoom-rotate 1s ease-out;
-	-o-animation: zoom-rotate 1s ease-out;
-	animation: zoom-rotate 1s ease-out;
-	opacity: 1;
+    -webkit-animation: zoom-rotate 1s ease-out;
+    -moz-animation: zoom-rotate 1s ease-out;
+    -o-animation: zoom-rotate 1s ease-out;
+    animation: zoom-rotate 1s ease-out;
+    opacity: 1;
 }
 
 .animate-shadow-inset{
-	-webkit-box-shadow: inset 0px 0px 6px 0px rgb(240,240,240);
-	   -moz-box-shadow: inset 0px 0px 6px 0px rgb(240,240,240);
-	     -o-box-shadow: inset 0px 0px 6px 0px rgb(240,240,240);
-	        box-shadow: inset 0px 0px 6px 0px rgb(240,240,240);
+    -webkit-box-shadow: inset 0px 0px 6px 0px rgb(240,240,240);
+       -moz-box-shadow: inset 0px 0px 6px 0px rgb(240,240,240);
+         -o-box-shadow: inset 0px 0px 6px 0px rgb(240,240,240);
+            box-shadow: inset 0px 0px 6px 0px rgb(240,240,240);
 
-	-webkit-transition: -webkit-box-shadow 0.3s ease-out;
-	   -moz-transition: -moz-box-shadow 0.3s ease-out;
-	     -o-transition: -o-box-shadow 0.3s ease-out;
-	        transition: box-shadow 0.3s ease-out;
+    -webkit-transition: -webkit-box-shadow 0.3s ease-out;
+       -moz-transition: -moz-box-shadow 0.3s ease-out;
+         -o-transition: -o-box-shadow 0.3s ease-out;
+            transition: box-shadow 0.3s ease-out;
 
-	border-bottom: 1px solid white;
-	border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    border-right: 1px solid white;
 
-	margin-bottom: -1px;
+    margin-bottom: -1px;
 }
 
 .animate-active{
-	-webkit-box-shadow: inset 0px 0px 6px 0px rgb(200,200,200);
-	   -moz-box-shadow: inset 0px 0px 6px 0px rgb(200,200,200);
-	     -o-box-shadow: inset 0px 0px 6px 0px rgb(200,200,200);
-	        box-shadow: inset 0px 0px 6px 0px rgb(200,200,200);
+    -webkit-box-shadow: inset 0px 0px 6px 0px rgb(200,200,200);
+       -moz-box-shadow: inset 0px 0px 6px 0px rgb(200,200,200);
+         -o-box-shadow: inset 0px 0px 6px 0px rgb(200,200,200);
+            box-shadow: inset 0px 0px 6px 0px rgb(200,200,200);
 
-	-webkit-transition: -webkit-box-shadow 0.3s ease-out;
-	   -moz-transition: -moz-box-shadow 0.3s ease-out;
-	     -o-transition: -o-box-shadow 0.3s ease-out;
-	        transition: box-shadow 0.3s ease-out;
+    -webkit-transition: -webkit-box-shadow 0.3s ease-out;
+       -moz-transition: -moz-box-shadow 0.3s ease-out;
+         -o-transition: -o-box-shadow 0.3s ease-out;
+            transition: box-shadow 0.3s ease-out;
 
-	border-bottom: 1px solid white;
-	border-right: 1px solid white;
+    border-bottom: 1px solid white;
+    border-right: 1px solid white;
 
-	margin-bottom: -1px;
+    margin-bottom: -1px;
 
 
 }
@@ -702,38 +744,38 @@ button:hover:not(.animate-none),
 .animate-view {background-color: inherit;}
 .content,
 .animate-view.ng-enter, .animate-view.ng-leave{
-	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+    -webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+       -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+         -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+            transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 }
 
 .animate-view.ng-enter {
-	-webkit-transform: perspective(1000px) translateZ(-600px) translateX(50%) rotateY(90deg);
-	   -moz-transform: perspective(1000px) translateZ(-600px) translateX(50%) rotateY(90deg);
-	     -o-transform: perspective(1000px) translateZ(-600px) translateX(50%) rotateY(90deg);
-	        transform: perspective(1000px) translateZ(-600px) translateX(50%) rotateY(90deg);
+    -webkit-transform: perspective(1000px) translateZ(-600px) translateX(50%) rotateY(90deg);
+       -moz-transform: perspective(1000px) translateZ(-600px) translateX(50%) rotateY(90deg);
+         -o-transform: perspective(1000px) translateZ(-600px) translateX(50%) rotateY(90deg);
+            transform: perspective(1000px) translateZ(-600px) translateX(50%) rotateY(90deg);
 
-	opacity:0;
+    opacity:0;
 }
 
 .animate-view.ng-enter.ng-enter-active {
-	-webkit-transform: perspective(1000px) translateZ(0px) rotateY(0deg);
-	   -moz-transform: perspective(1000px) translateZ(0px) rotateY(0deg);
-	     -o-transform: perspective(1000px) translateZ(0px) rotateY(0deg);
-	        transform: perspective(1000px) translateZ(0px) rotateY(0deg);
+    -webkit-transform: perspective(1000px) translateZ(0px) rotateY(0deg);
+       -moz-transform: perspective(1000px) translateZ(0px) rotateY(0deg);
+         -o-transform: perspective(1000px) translateZ(0px) rotateY(0deg);
+            transform: perspective(1000px) translateZ(0px) rotateY(0deg);
 
-	opacity:1;
+    opacity:1;
 }
 
 .animate-view.ng-leave.ng-leave-active {
-	-webkit-transform: perspective(1000px) translateZ(-1000px) translateX(-50%) rotateY(-90deg);
-	   -moz-transform: perspective(1000px) translateZ(-1000px) translateX(-50%) rotateY(-90deg);
-	     -o-transform: perspective(1000px) translateZ(-1000px) translateX(-50%) rotateY(-90deg);
-	        transform: perspective(1000px) translateZ(-1000px) translateX(-50%) rotateY(-90deg);
+    -webkit-transform: perspective(1000px) translateZ(-1000px) translateX(-50%) rotateY(-90deg);
+       -moz-transform: perspective(1000px) translateZ(-1000px) translateX(-50%) rotateY(-90deg);
+         -o-transform: perspective(1000px) translateZ(-1000px) translateX(-50%) rotateY(-90deg);
+            transform: perspective(1000px) translateZ(-1000px) translateX(-50%) rotateY(-90deg);
 
-	position: absolute;
-	opacity:0;
+    position: absolute;
+    opacity:0;
 }
 
 .animate-show,
@@ -743,96 +785,96 @@ button:hover:not(.animate-none),
 /*.animate-login,*/
 .animate-show.ng-hide-add.ng-hide-add-active,
 .animate-show.ng-hide {
-	-webkit-transition: all 0.15s linear;
-	   -moz-transition: all 0.15s linear;
-	     -o-transition: all 0.15s linear;
-	        transition: all 0.15s linear;
+    -webkit-transition: all 0.15s linear;
+       -moz-transition: all 0.15s linear;
+         -o-transition: all 0.15s linear;
+            transition: all 0.15s linear;
 
-	opacity:0;
+    opacity:0;
 }
 
 /*.animate-login.show,*/
 .animate-show.ng-hide-remove.ng-hide-remove-active,
 .animate-show {
-	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+    -webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+       -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+         -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+            transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 
-	opacity:1;
+    opacity:1;
 }
 
 .animate-filter{}
 
 .animate-filter.ng-move,
 .animate-filter.ng-enter {
-	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+    -webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+       -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+         -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+            transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 }
 .animate-filter.ng-leave{
-	-webkit-transition: all 200ms ease-in; 
-	   -moz-transition: all 200ms ease-in; 
-		 -o-transition: all 200ms ease-in; 
-		    transition: all 200ms ease-in;
+    -webkit-transition: all 200ms ease-in; 
+       -moz-transition: all 200ms ease-in; 
+         -o-transition: all 200ms ease-in; 
+            transition: all 200ms ease-in;
 }
 
 .animate-filter.ng-leave.ng-leave-active,
 .animate-filter.ng-move,
 .animate-filter.ng-enter {
-	-webkit-transform: perspective(1000px) rotateY(-90deg);
-	   -moz-transform: perspective(1000px) rotateY(-90deg);
-	     -o-transform: perspective(1000px) rotateY(-90deg);
-	        transform: perspective(1000px) rotateY(-90deg);
+    -webkit-transform: perspective(1000px) rotateY(-90deg);
+       -moz-transform: perspective(1000px) rotateY(-90deg);
+         -o-transform: perspective(1000px) rotateY(-90deg);
+            transform: perspective(1000px) rotateY(-90deg);
 
-	opacity: 0;
+    opacity: 0;
 }
 
 .animate-filter.ng-leave,
 .animate-filter.ng-move.ng-move-active,
 .animate-filter.ng-enter.ng-enter-active {
-	-webkit-transform: perspective(1000px) rotateY(0deg);
-	   -moz-transform: perspective(1000px) rotateY(0deg);
-	     -o-transform: perspective(1000px) rotateY(0deg);
-	        transform: perspective(1000px) rotateY(0deg);
+    -webkit-transform: perspective(1000px) rotateY(0deg);
+       -moz-transform: perspective(1000px) rotateY(0deg);
+         -o-transform: perspective(1000px) rotateY(0deg);
+            transform: perspective(1000px) rotateY(0deg);
 
-	opacity: 1;
+    opacity: 1;
 }
 
 .animate-only-show.ng-hide-add.ng-hide-add-active,
 .animate-only-show.ng-hide {
-	-webkit-transition: all 0ms;
-	   -moz-transition: all 0ms;
-	     -o-transition: all 0ms;
-	        transition: all 0ms;
+    -webkit-transition: all 0ms;
+       -moz-transition: all 0ms;
+         -o-transition: all 0ms;
+            transition: all 0ms;
 
-	-webkit-transform: perspective(1000px) rotateX(-90deg);
-	   -moz-transform: perspective(1000px) rotateX(-90deg);
-	     -o-transform: perspective(1000px) rotateX(-90deg);
-	        transform: perspective(1000px) rotateX(-90deg);
+    -webkit-transform: perspective(1000px) rotateX(-90deg);
+       -moz-transform: perspective(1000px) rotateX(-90deg);
+         -o-transform: perspective(1000px) rotateX(-90deg);
+            transform: perspective(1000px) rotateX(-90deg);
 
-	opacity: 0;
+    opacity: 0;
 }
 
 .animate-only-show.ng-hide-remove.ng-hide-remove-active,
 .animate-only-show {
-	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+    -webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+       -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+         -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+            transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 
-	-webkit-transform: perspective(1000px) rotateX(0deg);
-	   -moz-transform: perspective(1000px) rotateX(0deg);
-	     -o-transform: perspective(1000px) rotateX(0deg);
-	        transform: perspective(1000px) rotateX(0deg);
-	
-	-webkit-transform-origin: 50% 0;
-	   -moz-transform-origin: 50% 0;
-		 -o-transform-origin: 50% 0;
-		    transform-origin: 50% 0;
+    -webkit-transform: perspective(1000px) rotateX(0deg);
+       -moz-transform: perspective(1000px) rotateX(0deg);
+         -o-transform: perspective(1000px) rotateX(0deg);
+            transform: perspective(1000px) rotateX(0deg);
+    
+    -webkit-transform-origin: 50% 0;
+       -moz-transform-origin: 50% 0;
+         -o-transform-origin: 50% 0;
+            transform-origin: 50% 0;
 
-	opacity:1;
+    opacity:1;
 }
 
 .animate-show-3d-right.ng-hide-add.ng-hide-add-active,
@@ -841,12 +883,12 @@ button:hover:not(.animate-none),
 .animate-show-3d-left.ng-hide,
 .animate-show-3d-top.ng-hide-add.ng-hide-add-active,
 .animate-show-3d-top.ng-hide {
-	-webkit-transition: all 300ms ease-in;
-	   -moz-transition: all 300ms ease-in;
-	     -o-transition: all 300ms ease-in;
-	        transition: all 300ms ease-in;
+    -webkit-transition: all 300ms ease-in;
+       -moz-transition: all 300ms ease-in;
+         -o-transition: all 300ms ease-in;
+            transition: all 300ms ease-in;
 
-	opacity:0;
+    opacity:0;
 }
 
 .animate-show-3d-right.ng-hide-remove.ng-hide-remove-active,
@@ -855,101 +897,101 @@ button:hover:not(.animate-none),
 .animate-show-3d-left,
 .animate-show-3d-top.ng-hide-remove.ng-hide-remove-active,
 .animate-show-3d-top {
-	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+    -webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+       -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+         -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+            transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 
-	opacity:1;
+    opacity:1;
 }
 
 .animate-show-3d-top.ng-hide-add.ng-hide-add-active,
 .animate-show-3d-top.ng-hide {
-	-webkit-transform: perspective(1000px) rotateX(-90deg);
-	   -moz-transform: perspective(1000px) rotateX(-90deg);
-	     -o-transform: perspective(1000px) rotateX(-90deg);
-	        transform: perspective(1000px) rotateX(-90deg);
+    -webkit-transform: perspective(1000px) rotateX(-90deg);
+       -moz-transform: perspective(1000px) rotateX(-90deg);
+         -o-transform: perspective(1000px) rotateX(-90deg);
+            transform: perspective(1000px) rotateX(-90deg);
 }
 
 .animate-show-3d-top.ng-hide-remove.ng-hide-remove-active,
 .animate-show-3d-top {
-	-webkit-transform: perspective(1000px) rotateX(0deg);
-	   -moz-transform: perspective(1000px) rotateX(0deg);
-	     -o-transform: perspective(1000px) rotateX(0deg);
-	        transform: perspective(1000px) rotateX(0deg);
-	
-	-webkit-transform-origin: 50% 0;
-	   -moz-transform-origin: 50% 0;
-		 -o-transform-origin: 50% 0;
-		    transform-origin: 50% 0;
+    -webkit-transform: perspective(1000px) rotateX(0deg);
+       -moz-transform: perspective(1000px) rotateX(0deg);
+         -o-transform: perspective(1000px) rotateX(0deg);
+            transform: perspective(1000px) rotateX(0deg);
+    
+    -webkit-transform-origin: 50% 0;
+       -moz-transform-origin: 50% 0;
+         -o-transform-origin: 50% 0;
+            transform-origin: 50% 0;
 }
 .animate-show-3d-right.ng-hide-add.ng-hide-add-active,
 .animate-show-3d-right.ng-hide,
 .animate-show-3d-left.ng-hide-add.ng-hide-add-active,
 .animate-show-3d-left.ng-hide {
-	-webkit-transform: perspective(1000px) rotateY(-90deg);
-	   -moz-transform: perspective(1000px) rotateY(-90deg);
-	     -o-transform: perspective(1000px) rotateY(-90deg);
-	        transform: perspective(1000px) rotateY(-90deg);
+    -webkit-transform: perspective(1000px) rotateY(-90deg);
+       -moz-transform: perspective(1000px) rotateY(-90deg);
+         -o-transform: perspective(1000px) rotateY(-90deg);
+            transform: perspective(1000px) rotateY(-90deg);
 }
 
 .animate-show-3d-left.ng-hide-remove.ng-hide-remove-active,
 .animate-show-3d-left {
-	-webkit-transform: perspective(1000px) rotateY(0deg);
-	   -moz-transform: perspective(1000px) rotateY(0deg);
-	     -o-transform: perspective(1000px) rotateY(0deg);
-	        transform: perspective(1000px) rotateY(0deg);
-	
-	-webkit-transform-origin: 0 50%;
-	   -moz-transform-origin: 0 50%;
-		 -o-transform-origin: 0 50%;
-		    transform-origin: 0 50%;
+    -webkit-transform: perspective(1000px) rotateY(0deg);
+       -moz-transform: perspective(1000px) rotateY(0deg);
+         -o-transform: perspective(1000px) rotateY(0deg);
+            transform: perspective(1000px) rotateY(0deg);
+    
+    -webkit-transform-origin: 0 50%;
+       -moz-transform-origin: 0 50%;
+         -o-transform-origin: 0 50%;
+            transform-origin: 0 50%;
 }
 
 .animate-show-3d-right.ng-hide-remove.ng-hide-remove-active,
 .animate-show-3d-right {
-	-webkit-transform: perspective(1000px) rotateY(0deg);
-	   -moz-transform: perspective(1000px) rotateY(0deg);
-	     -o-transform: perspective(1000px) rotateY(0deg);
-	        transform: perspective(1000px) rotateY(0deg);
-	
-	-webkit-transform-origin: 100% 50%;
-	   -moz-transform-origin: 100% 50%;
-		 -o-transform-origin: 100% 50%;
-		    transform-origin: 100% 50%;
+    -webkit-transform: perspective(1000px) rotateY(0deg);
+       -moz-transform: perspective(1000px) rotateY(0deg);
+         -o-transform: perspective(1000px) rotateY(0deg);
+            transform: perspective(1000px) rotateY(0deg);
+    
+    -webkit-transform-origin: 100% 50%;
+       -moz-transform-origin: 100% 50%;
+         -o-transform-origin: 100% 50%;
+            transform-origin: 100% 50%;
 }
 
 .animate-only-show-3d-left.ng-hide-add.ng-hide-add-active,
 .animate-only-show-3d-left.ng-hide {
-	-webkit-transition: all 0ms ease-in;
-	   -moz-transition: all 0ms ease-in;
-	     -o-transition: all 0ms ease-in;
-	        transition: all 0ms ease-in;
+    -webkit-transition: all 0ms ease-in;
+       -moz-transition: all 0ms ease-in;
+         -o-transition: all 0ms ease-in;
+            transition: all 0ms ease-in;
 
-	-webkit-transform: perspective(1000px) rotateY(-90deg);
-	   -moz-transform: perspective(1000px) rotateY(-90deg);
-	     -o-transform: perspective(1000px) rotateY(-90deg);
-	        transform: perspective(1000px) rotateY(-90deg);
+    -webkit-transform: perspective(1000px) rotateY(-90deg);
+       -moz-transform: perspective(1000px) rotateY(-90deg);
+         -o-transform: perspective(1000px) rotateY(-90deg);
+            transform: perspective(1000px) rotateY(-90deg);
 
-	opacity:0;
+    opacity:0;
 }
 
 .animate-only-show-3d-left.ng-hide-remove.ng-hide-remove-active,
 .animate-only-show-3d-left {
-	-webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	   -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	     -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
-	        transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+    -webkit-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+       -moz-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+         -o-transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
+            transition: all 1s cubic-bezier(0.280, 0.720, 0.110, 1.005);
 
-	-webkit-transform: perspective(1000px) rotateY(0deg);
-	   -moz-transform: perspective(1000px) rotateY(0deg);
-	     -o-transform: perspective(1000px) rotateY(0deg);
-	        transform: perspective(1000px) rotateY(0deg);
-	
-	-webkit-transform-origin: 0 50%;
-	   -moz-transform-origin: 0 50%;
-		 -o-transform-origin: 0 50%;
-		    transform-origin: 0 50%;
+    -webkit-transform: perspective(1000px) rotateY(0deg);
+       -moz-transform: perspective(1000px) rotateY(0deg);
+         -o-transform: perspective(1000px) rotateY(0deg);
+            transform: perspective(1000px) rotateY(0deg);
+    
+    -webkit-transform-origin: 0 50%;
+       -moz-transform-origin: 0 50%;
+         -o-transform-origin: 0 50%;
+            transform-origin: 0 50%;
 
-	opacity:1;
+    opacity:1;
 }

@@ -1,126 +1,126 @@
 <div class="container-fluid text-left">
-	<div class="row">
-		<button class="btn btn-danger glyphicon glyphicon-remove pull-right margin-10" ng-click="close()"></button>
-	</div>
-	<div class="row">
-		<div class="col-md-3" style="padding-right:40px">
-			<!--Sidebar content-->
+    <div class="row">
+        <button class="btn btn-danger glyphicon glyphicon-remove pull-right margin-10" ng-click="close()"></button>
+    </div>
+    <div class="row">
+        <div class="col-md-3" style="padding-right:40px">
+            <!--Sidebar content-->
 
-			Filter by name: <input class="form-control" ng-model="query.name">
+            Filter by name: <input class="form-control" ng-model="query.name">
 
-			<div class="checkbox">
-				<label><input type="checkbox" ng-model="query.allProps"> All properties</label>
-			</div>
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="query.allProps"> All properties</label>
+            </div>
 
-			<div class="animate-show-3d-top" ng-hide="query.allProps">
-				<b>{{text.filter}}</b>
-				<span ng-if="environments">
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default glyphicon glyphicon-eye-open" ng-model="query.prop.fullyObservable" btn-radio="true" tooltip="Fully Observable"></label>
-						<label class="btn btn-default glyphicon glyphicon-eye-close" ng-model="query.prop.fullyObservable" btn-radio="false" tooltip="Partially Observable"></label>
-					</div>
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default" ng-model="query.prop.multiagent" btn-radio="false" tooltip="Single agent"><img src="imgs/web-app/icon-single-agent.png"></label>
-						<label class="btn btn-default" ng-model="query.prop.multiagent" btn-radio="true" tooltip="Multiagent"><img src="imgs/web-app/icon-multiagent.png"></label>
-					</div>
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default glyphicon glyphicon-arrow-right" ng-model="query.prop.deterministic" btn-radio="true" tooltip="Deterministic"></label>
-						<label class="btn btn-default glyphicon glyphicon-random" ng-model="query.prop.deterministic" btn-radio="false" tooltip="Stochastic"></label>
-					</div>
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default glyphicon glyphicon-record" ng-model="query.prop.dynamic" btn-radio="0" tooltip="Static"></label>
-						<label class="btn btn-default" ng-model="query.prop.dynamic" btn-radio="1" tooltip="Semidynamic"><img src="imgs/web-app/icon-semidynamic.png"></label>
-						<label class="btn btn-default glyphicon glyphicon-time" ng-model="query.prop.dynamic" btn-radio="2" tooltip="Dynamic"></label>
-					</div>
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default glyphicon glyphicon-ok" ng-model="query.prop.known" btn-radio="true" tooltip="Known"></label>
-						<label class="btn btn-default glyphicon glyphicon-remove" ng-model="query.prop.known" btn-radio="false" tooltip="Unknown"></label>
-					</div>
-					<div class="checkbox">
-						<label><input type="checkbox" ng-model="query.battery"> Battery</label>
-					</div>
-				</span>
+            <div class="animate-show-3d-top" ng-hide="query.allProps">
+                <b>{{text.filter}}</b>
+                <span ng-if="environments">
+                    <div class="btn-group btn-group-justified">
+                        <label class="btn btn-default glyphicon glyphicon-eye-open" ng-model="query.prop.fullyObservable" btn-radio="true" tooltip="Fully Observable"></label>
+                        <label class="btn btn-default glyphicon glyphicon-eye-close" ng-model="query.prop.fullyObservable" btn-radio="false" tooltip="Partially Observable"></label>
+                    </div>
+                    <div class="btn-group btn-group-justified">
+                        <label class="btn btn-default" ng-model="query.prop.multiagent" btn-radio="false" tooltip="Single agent"><img src="imgs/web-app/icon-single-agent.png"></label>
+                        <label class="btn btn-default" ng-model="query.prop.multiagent" btn-radio="true" tooltip="Multiagent"><img src="imgs/web-app/icon-multiagent.png"></label>
+                    </div>
+                    <div class="btn-group btn-group-justified">
+                        <label class="btn btn-default glyphicon glyphicon-arrow-right" ng-model="query.prop.deterministic" btn-radio="true" tooltip="Deterministic"></label>
+                        <label class="btn btn-default glyphicon glyphicon-random" ng-model="query.prop.deterministic" btn-radio="false" tooltip="Stochastic"></label>
+                    </div>
+                    <div class="btn-group btn-group-justified">
+                        <label class="btn btn-default glyphicon glyphicon-record" ng-model="query.prop.dynamic" btn-radio="0" tooltip="Static"></label>
+                        <label class="btn btn-default" ng-model="query.prop.dynamic" btn-radio="1" tooltip="Semidynamic"><img src="imgs/web-app/icon-semidynamic.png"></label>
+                        <label class="btn btn-default glyphicon glyphicon-time" ng-model="query.prop.dynamic" btn-radio="2" tooltip="Dynamic"></label>
+                    </div>
+                    <div class="btn-group btn-group-justified">
+                        <label class="btn btn-default glyphicon glyphicon-ok" ng-model="query.prop.known" btn-radio="true" tooltip="Known"></label>
+                        <label class="btn btn-default glyphicon glyphicon-remove" ng-model="query.prop.known" btn-radio="false" tooltip="Unknown"></label>
+                    </div>
+                    <div class="checkbox">
+                        <label><input type="checkbox" ng-model="query.battery"> Battery</label>
+                    </div>
+                </span>
 
-				<span ng-if="!environments">
-					<div class="btn-group btn-group-justified">
-						<label class="btn btn-default" ng-model="query.ai" btn-radio="true" tooltip="Controlled by Algorithm"><img src="imgs/web-app/icon-single-agent.png"></label>
-						<label class="btn btn-default glyphicon glyphicon-user" ng-model="query.ai" btn-radio="false" tooltip="Controlled by Human"></label>
-					</div>
-					<div class="btn-group btn-group-justified animate-only-show" ng-show="query.ai">
-						<label class="btn btn-default" ng-model="query.javascript" btn-radio="true" tooltip="JavaScript"><img src="imgs/web-app/icon-js.png"></label>
-						<label class="btn btn-default glyphicon glyphicon-link" ng-model="query.javascript" btn-radio="false" tooltip="Extern language"></label>
-					</div>
-					<div class="btn-group btn-group-justified animate-only-show" ng-hide="query.ai">
-						<label class="btn btn-default" ng-model="query.keyboard" btn-radio="true" tooltip="Keyboard"><img src="imgs/web-app/icon-keyboard.png"></label>
-						<label class="btn btn-default glyphicon glyphicon-phone" ng-model="query.keyboard" btn-radio="false" tooltip="Remote Control"></label>
-					</div>
-				</span>
-			</div>
+                <span ng-if="!environments">
+                    <div class="btn-group btn-group-justified">
+                        <label class="btn btn-default" ng-model="query.ai" btn-radio="true" tooltip="Controlled by Algorithm"><img src="imgs/web-app/icon-single-agent.png"></label>
+                        <label class="btn btn-default glyphicon glyphicon-user" ng-model="query.ai" btn-radio="false" tooltip="Controlled by Human"></label>
+                    </div>
+                    <div class="btn-group btn-group-justified animate-only-show" ng-show="query.ai">
+                        <label class="btn btn-default" ng-model="query.javascript" btn-radio="true" tooltip="JavaScript"><img src="imgs/web-app/icon-js.png"></label>
+                        <label class="btn btn-default glyphicon glyphicon-link" ng-model="query.javascript" btn-radio="false" tooltip="Extern language"></label>
+                    </div>
+                    <div class="btn-group btn-group-justified animate-only-show" ng-hide="query.ai">
+                        <label class="btn btn-default" ng-model="query.keyboard" btn-radio="true" tooltip="Keyboard"><img src="imgs/web-app/icon-keyboard.png"></label>
+                        <label class="btn btn-default glyphicon glyphicon-phone" ng-model="query.keyboard" btn-radio="false" tooltip="Remote Control"></label>
+                    </div>
+                </span>
+            </div>
 
-			Sort by:
-			<select class="form-control" ng-model="orderCond">
-				<option value="name">Alphabetical</option>
-				<option value="-date">Newest</option>
-			</select>
-		</div>
-		<div class="col-md-9">
-			<h2>{{text.title}}<small class="pull-right" ng-if="totalPages-1">{{page+'/'+totalPages}}</small></h2>
-			<!--Body content-->
-			<div class="list-group mouse-cursor" style="min-height: 300px">
-				<a class="list-group-item step animate-filter transition-400 min-height-80" ng-repeat="item in _items = (items | filter:userFilter) | orderBy:orderCond track by $index" ng-click="setSelected(item.date)" ng-dblclick="ok()" ng-class="{active:isSelected(item.date)}" ng-if="(page-1)*itemsPerPage <= $index&&$index < page*itemsPerPage">
-					<!-- PROPERTIES ICONS-->
-					<div class="pull-right" ng-if="environments">
-						<div class="glyphicon glyphicon-eye-open" ng-show="item.prop.fullyObservable" tooltip="Fully observable"></div>
-						<div class="glyphicon glyphicon-eye-close" ng-hide="item.prop.fullyObservable" tooltip="Partially observable"></div>
+            Sort by:
+            <select class="form-control" ng-model="orderCond">
+                <option value="name">Alphabetical</option>
+                <option value="-date">Newest</option>
+            </select>
+        </div>
+        <div class="col-md-9">
+            <h2>{{text.title}}<small class="pull-right" ng-if="totalPages-1">{{page+'/'+totalPages}}</small></h2>
+            <!--Body content-->
+            <div class="list-group mouse-cursor" style="min-height: 300px">
+                <a class="list-group-item step animate-filter transition-400 min-height-80" ng-repeat="item in _items = (items | filter:userFilter) | orderBy:orderCond track by $index" ng-click="setSelected(item.date)" ng-dblclick="ok()" ng-class="{active:isSelected(item.date)}" ng-if="(page-1)*itemsPerPage <= $index&&$index < page*itemsPerPage">
+                    <!-- PROPERTIES ICONS-->
+                    <div class="pull-right" ng-if="environments">
+                        <div class="glyphicon glyphicon-eye-open" ng-show="item.prop.fullyObservable" tooltip="Fully observable"></div>
+                        <div class="glyphicon glyphicon-eye-close" ng-hide="item.prop.fullyObservable" tooltip="Partially observable"></div>
 
-						<div class="solid-icon-16 icon-single-agent" ng-hide="item.prop.multiagent" tooltip="Single agent"></div>
-						<div class="solid-icon-16 icon-multiagent" ng-show="item.prop.multiagent" tooltip="Multiagent"></div>
+                        <div class="solid-icon-16 icon-single-agent" ng-hide="item.prop.multiagent" tooltip="Single agent"></div>
+                        <div class="solid-icon-16 icon-multiagent" ng-show="item.prop.multiagent" tooltip="Multiagent"></div>
 
-						<div class="glyphicon glyphicon-arrow-right" ng-show="item.prop.deterministic" tooltip="Deterministic"></div>
-						<div class="glyphicon glyphicon-random" ng-hide="item.prop.deterministic" tooltip="Stochastic"></div>
+                        <div class="glyphicon glyphicon-arrow-right" ng-show="item.prop.deterministic" tooltip="Deterministic"></div>
+                        <div class="glyphicon glyphicon-random" ng-hide="item.prop.deterministic" tooltip="Stochastic"></div>
 
-						<div class="glyphicon glyphicon-record" ng-show="item.prop.dynamic == 0" tooltip="Static"></div>
-						<div class="solid-icon-16 icon-semidynamic" ng-show="item.prop.dynamic == 1" tooltip="Semidynamic"></div>
-						<div class="glyphicon glyphicon-time" ng-show="item.prop.dynamic == 2" tooltip="Dynamic"></div>
+                        <div class="glyphicon glyphicon-record" ng-show="item.prop.dynamic == 0" tooltip="Static"></div>
+                        <div class="solid-icon-16 icon-semidynamic" ng-show="item.prop.dynamic == 1" tooltip="Semidynamic"></div>
+                        <div class="glyphicon glyphicon-time" ng-show="item.prop.dynamic == 2" tooltip="Dynamic"></div>
 
-						<div class="glyphicon glyphicon-ok" ng-show="item.prop.known" tooltip="Known"></div>
-						<div class="glyphicon glyphicon-remove" ng-hide="item.prop.known" tooltip="Unknown"></div>
+                        <div class="glyphicon glyphicon-ok" ng-show="item.prop.known" tooltip="Known"></div>
+                        <div class="glyphicon glyphicon-remove" ng-hide="item.prop.known" tooltip="Unknown"></div>
 
-						<div class="glyphicon glyphicon-flash" ng-show="item.battery" tooltip="Battery"></div>
-					</div>
+                        <div class="glyphicon glyphicon-flash" ng-show="item.battery" tooltip="Battery"></div>
+                    </div>
 
-					<div class="pull-right text-gray" ng-if="!environments">
-						<div class="solid-icon-16 icon-single-agent" ng-show="item.ai" tooltip="Controlled by Algorithm"></div>
-						<div class="glyphicon glyphicon-user" ng-hide="item.ai" tooltip="Controlled by Human"></div>
+                    <div class="pull-right text-gray" ng-if="!environments">
+                        <div class="solid-icon-16 icon-single-agent" ng-show="item.ai" tooltip="Controlled by Algorithm"></div>
+                        <div class="glyphicon glyphicon-user" ng-hide="item.ai" tooltip="Controlled by Human"></div>
 
-						<span ng-if="item.ai">
-							<div class="solid-icon-16 icon-js" ng-show="item.javascript" tooltip="JavaScript"></div>
-							<div class="glyphicon glyphicon-link" ng-hide="item.javascript" tooltip="Extern language"></div>
-						</span>
+                        <span ng-if="item.ai">
+                            <div class="solid-icon-16 icon-js" ng-show="item.javascript" tooltip="JavaScript"></div>
+                            <div class="glyphicon glyphicon-link" ng-hide="item.javascript" tooltip="Extern language"></div>
+                        </span>
 
-						<span ng-if="!item.ai">
-							<div class="solid-icon-16 icon-keyboard" ng-show="item.keyboard" tooltip="Keyboard"></div>
-							<div class="glyphicon glyphicon-phone" ng-hide="item.keyboard" tooltip="Remote Control"></div>
-						</span>
-					</div>
+                        <span ng-if="!item.ai">
+                            <div class="solid-icon-16 icon-keyboard" ng-show="item.keyboard" tooltip="Keyboard"></div>
+                            <div class="glyphicon glyphicon-phone" ng-hide="item.keyboard" tooltip="Remote Control"></div>
+                        </span>
+                    </div>
 
-					<h4 class="list-group-item-heading">
-						<span ng-class="{'text-white':isSelected(item.date),'text-blue':!isSelected(item.date)}">
-							{{item.name}} 
-						</span>
-						<span class="badge active">{{item.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span>
-						<small ng-if="item.builtin" ng-class="{'text-white':isSelected(item.date),'text-green':!isSelected(item.date)}"><b>default</b></small>
-					</h4>
-					<p class="list-group-item-text text-gray2">{{item.desc|stringLimit:200}}</p>
-				</a>
-			</div>
-			<div class="text-center animate-show" ng-show="_items.length > itemsPerPage">
-				<pagination total-items="_items.length" ng-model="page" max-size="5" class="pagination" boundary-links="true" items-per-page="itemsPerPage"  num-pages="totalPages" ng-change="gotoTop()"></pagination>
-			</div>
-			<div class="separator"></div>
-		</div>
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-success pull-right" ng-click="ok()"><span class="glyphicon glyphicon-ok"></span> Select</button>
-	</div>
+                    <h4 class="list-group-item-heading">
+                        <span ng-class="{'text-white':isSelected(item.date),'text-blue':!isSelected(item.date)}">
+                            {{item.name}} 
+                        </span>
+                        <span class="badge active">{{item.date | date:'dd-MMM-yyyy HH:mm:ss'}}</span>
+                        <small ng-if="item.builtin" ng-class="{'text-white':isSelected(item.date),'text-green':!isSelected(item.date)}"><b>default</b></small>
+                    </h4>
+                    <p class="list-group-item-text text-gray2">{{item.desc|stringLimit:200}}</p>
+                </a>
+            </div>
+            <div class="text-center animate-show" ng-show="_items.length > itemsPerPage">
+                <pagination total-items="_items.length" ng-model="page" max-size="5" class="pagination" boundary-links="true" items-per-page="itemsPerPage"  num-pages="totalPages" ng-change="gotoTop()"></pagination>
+            </div>
+            <div class="separator"></div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success pull-right" ng-click="ok()"><span class="glyphicon glyphicon-ok"></span> Select</button>
+    </div>
 </div>

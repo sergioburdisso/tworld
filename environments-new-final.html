@@ -1,72 +1,72 @@
 <div class="container-fluid">
-	<h2>Final tweaks</h2><br>
-	<div class="text-left" ng-class="{'treadonly':enc.readOnly}">
-		<!--<div class="row" ng-show="enc.task_env.prop.battery">-->
-		<div class="panel panel-primary" ng-show="enc.task_env.battery">
-			<div class="panel-heading">Battery</div>
-			<div class="panel-body">
+    <h2>Final tweaks</h2><br>
+    <div class="text-left" ng-class="{'treadonly':enc.readOnly}">
+        <!--<div class="row" ng-show="enc.task_env.prop.battery">-->
+        <div class="panel panel-primary" ng-show="enc.task_env.battery">
+            <div class="panel-heading">Battery</div>
+            <div class="panel-body">
 
-				<label>Initial charge level: {{(enc.task_env.final_tweaks.battery.level/10).toFixed(1)}}%</label>
-				<div class="row">
-					<div class="col-md-8 col-xs-8">
-						<div class="ui-slider-size" ui-slider min="0" max="1000" step="1" ng-model="enc.task_env.final_tweaks.battery.level"></div>
-					</div>
-				</div>
+                <label>Initial charge level: {{(enc.task_env.final_tweaks.battery.level/10).toFixed(1)}}%</label>
+                <div class="row">
+                    <div class="col-md-8 col-xs-8">
+                        <div class="ui-slider-size" ui-slider min="0" max="1000" step="1" ng-model="enc.task_env.final_tweaks.battery.level"></div>
+                    </div>
+                </div>
 
-				<label>Good move costs {{(enc.task_env.final_tweaks.battery.good_move/10).toFixed(1)}}%</label>
-				<div class="row">
-					<div class="col-md-8 col-xs-8">
-						<div class="ui-slider-size" ui-slider min="0" max="300" step="1" ng-model="enc.task_env.final_tweaks.battery.good_move"></div>
-					</div>
-				</div>
+                <label>Good move costs {{(enc.task_env.final_tweaks.battery.good_move/10).toFixed(1)}}%</label>
+                <div class="row">
+                    <div class="col-md-8 col-xs-8">
+                        <div class="ui-slider-size" ui-slider min="0" max="300" step="1" ng-model="enc.task_env.final_tweaks.battery.good_move"></div>
+                    </div>
+                </div>
 
-				<label>Bad move costs {{(enc.task_env.final_tweaks.battery.bad_move/10).toFixed(1)}}%</label>
-				<div class="row">
-					<div class="col-md-8 col-xs-8">
-						<div class="ui-slider-size" ui-slider min="0" max="300" step="1" ng-model="enc.task_env.final_tweaks.battery.bad_move"></div>
-					</div>
-				</div>
+                <label>Bad move costs {{(enc.task_env.final_tweaks.battery.bad_move/10).toFixed(1)}}%</label>
+                <div class="row">
+                    <div class="col-md-8 col-xs-8">
+                        <div class="ui-slider-size" ui-slider min="0" max="300" step="1" ng-model="enc.task_env.final_tweaks.battery.bad_move"></div>
+                    </div>
+                </div>
 
-				<label>Sliding tile costs {{(enc.task_env.final_tweaks.battery.sliding/10).toFixed(1)}}%</label>
-				<div class="row">
-					<div class="col-md-8 col-xs-8">
-						<div class="ui-slider-size" ui-slider min="0" max="300" step="1" ng-model="enc.task_env.final_tweaks.battery.sliding"></div>
-					</div>
-				</div>
+                <label>Sliding tile costs {{(enc.task_env.final_tweaks.battery.sliding/10).toFixed(1)}}%</label>
+                <div class="row">
+                    <div class="col-md-8 col-xs-8">
+                        <div class="ui-slider-size" ui-slider min="0" max="300" step="1" ng-model="enc.task_env.final_tweaks.battery.sliding"></div>
+                    </div>
+                </div>
 
-			</div>
-		</div>
-		<br>
+            </div>
+        </div>
+        <br>
 
-		<div class="container">
-			<div class="checkbox">
-				<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.easy"> Easy-Mode (Holes are filled just by walking over them -There won't be any tiles)</label>
-			</div>
-		</div>
+        <div class="container">
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="enc.task_env.final_tweaks.easy"> Easy-Mode (Holes are filled just by walking over them -There won't be any tiles)</label>
+            </div>
+        </div>
 
-		<div class="container">
-			<div class="checkbox">
-				<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.multiplier.enabled"> Score Multiplier</label>
-			</div>
-			<div class="list-group col-md-5 animate-show-3d-top" ng-show="enc.task_env.final_tweaks.multiplier.enabled">
-				<a class="list-group-item no-animation">
-					<label>Multiplier will last for {{enc.task_env.final_tweaks.multiplier.timeout}} seconds</label>
-					<div class="ui-slider-size" ui-slider min="1" max="60" step="1" ng-model="enc.task_env.final_tweaks.multiplier.timeout"></div>
-				</a>
-			</div>
-		</div>
+        <div class="container">
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="enc.task_env.final_tweaks.multiplier.enabled"> Score Multiplier</label>
+            </div>
+            <div class="list-group col-md-5 animate-show-3d-top" ng-show="enc.task_env.final_tweaks.multiplier.enabled">
+                <a class="list-group-item no-animation">
+                    <label>Multiplier will last for {{enc.task_env.final_tweaks.multiplier.timeout}} seconds</label>
+                    <div class="ui-slider-size" ui-slider min="1" max="60" step="1" ng-model="enc.task_env.final_tweaks.multiplier.timeout"></div>
+                </a>
+            </div>
+        </div>
 
-		<div class="container" ng-hide="enc.isSemidynamic()">
-			<div class="checkbox">
-				<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.score.cell"> Enable partial reward (Points are rewarded not just by filling holes but also by filling hole cells)</label>
-			</div>
-		</div>
+        <div class="container" ng-hide="enc.isSemidynamic()">
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="enc.task_env.final_tweaks.score.cell"> Enable partial reward (Points are rewarded not just by filling holes but also by filling hole cells)</label>
+            </div>
+        </div>
 
-		<div class="container">
-			<div class="checkbox">
-				<label><input type="checkbox" ng-model="enc.task_env.final_tweaks.shapes" disabled> Holes shapes</label>
-			</div>
-		</div>
-	</div>
+        <div class="container">
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="enc.task_env.final_tweaks.shapes" disabled> Holes shapes</label>
+            </div>
+        </div>
+    </div>
 </div>
 <br><br><br><br>

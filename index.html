@@ -1,339 +1,359 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">-->
-	<meta name="viewport" content="initial-scale=1">
-	<meta name="description" content="Cross programming language Web platform for Artificial Intelligence research and education. Put your algorithms through their paces! Content based on the book Artificial Intelligence: A Modern Approach by Stuart Russell and Peter Norvig. Inspired by the Tileworld by Martha E. Pollack and Marc Ringuette. tags: 3d tileworld webgl html5 ai aima tworld unsl 3dgame"> 
-	<title>T-World</title>
-	<link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css" />
-	<link rel="stylesheet" type="text/css" href="libs/jquery/css/jquery-ui.min.css" />
-	<link rel="stylesheet" type="text/css" href="css/atebits.css" type="text/css">
-	<link rel="stylesheet" type="text/css" href="css/main.css" />
+    <meta charset="utf-8">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">-->
+    <meta name="viewport" content="initial-scale=1">
+    <meta name="description" content="Cross programming language Web platform for Artificial Intelligence research and education. Put your algorithms through their paces! Content based on the book Artificial Intelligence: A Modern Approach by Stuart Russell and Peter Norvig. Inspired by the Tileworld by Martha E. Pollack and Marc Ringuette. tags: 3d tileworld webgl html5 ai aima tworld unsl 3dgame"> 
+    <title>T-World v.0.98.9 -- an Open Source Software Platform for Artificial Intelligence Research and Education</title>
+    <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="libs/jquery/css/jquery-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/atebits.css" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/main.css" />
 </head>
 <body ng-app="tworld" class="tbody" ng-controller="TWorldController as twc">
-	<!-- HEADER -->
-	<div class="header" ng-click="twc.clickOutside()">
-		<div>
-			<div class="img-header text-center">
-				<video id="video-header" autoplay loop>
-					<source src="videos/header.ogv" type='video/ogg; codecs="theora, vorbis"'/>
-					<source src="videos/header.webm" type='video/webm' >
-					<source src="videos/header.mp4" type='video/mp4'>
-					<p>Video is not visible, most likely your browser does not support HTML5 video</p>
-				</video>
-			</div>
-			<!-- <div id="h-img-2" style="background: url(imgs/web-app/header2.png) center; display:none;" class="img-header"></div>
-			<div id="h-img-1" style="background: url(imgs/web-app/header0.png) center; display:none;" class="img-header"></div>
-			<div id="h-img-0" style="background: url(imgs/web-app/header1.png) center;" class="img-header"></div> -->
-		</div>
-		<div class="jumbotron container-fluid shadow-inset" style="background-color: transparent; margin-bottom: 0; height: 492px;">
-			<form role="form" class="form-inline">
-				<div class="form-group col-md-3 pull-right text-white" style="margin-bottom: -25px;">
-						<select class="form-control input-sm pull-right" id="language" ng-model="twc.language" ng-options="value for (lang, value) in twc.LANGUAGES" ng-change="twc.setLanguage()"></select>
-					<span class="pull-right" style="margin-right:10px" for="language">Language</span>
-				</div>
-			</form>
-			<span id="title" class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom: -20px/*-50px*/; left:0">
-				<h1><span class="text-light-blue">T</span>-World
-					<sub style="font-size:14px">by <a href="https://plus.google.com/+SergioBurdisso" target="_blank"  tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a></sub>
-					<sup style="font-size:11px">(v.{{twc.version}})</sup></h1>
-				<p ng-bind-html="twc.text.desc"></p>
-				<!--<h5 class="text-white"><span ng-bind-html="twc.text.author"></span> <a href="https://plus.google.com/+SergioBurdisso" target="_blank"  tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a>.</h5>-->
-				<h5 style="color:white" class="header text-right">
-					<span ng-bind-html="twc.text.aima"></span><br>
-					<span ng-bind-html="twc.text.martha_marc"></span>
-				</h5>
-			</span>
-		</div>
-	</div>
+    <div ng-controller="LiveTutorialsController as ltc" class="text-center center">
+        <div ng-click="ltc.toggleIntroPanel()" ng-mouseenter="ltc.setPreview(true)" ng-mouseleave="ltc.setPreview(false)" style="position:fixed; z-index: 113; cursor: pointer;" ng-if="!ltc.introPanel" ng-style="ltc.enterStyle"></div>
+        <div id="tuto-panel" class="transition-800">
+            <div class="row" style="position: relative; margin-top: -26px; top: 100%;">
+                <div ng-click="ltc.toggleIntroPanel()" class="tuto-footer col-md-12 text-center transition-800">
+                    <span style="position:absolute; right:25px">Live Tutorials</span><div id="tuto-panel-toggle" class="glyphicon glyphicon-chevron-up transition-1000"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <!-- HEADER -->
+        <div class="header" ng-click="twc.clickOutside()">
+            <a style="position: absolute; top: -2px; right: 0; border: 0;" href="https://github.com/sergioburdisso/tworld" target="_blank">
+                <img src="imgs/web-app/git-ribbon.png" alt="Fork me on Bitbucket">
+            </a>
+            <div>
+                <div class="frame-header text-center">
+                    <video id="video-header" class="video-header" autoplay loop paused>
+                        <source src="videos/header.ogv" type='video/ogg; codecs="theora, vorbis"'/>
+                        <source src="videos/header.webm" type='video/webm' >
+                        <source src="videos/header.mp4" type='video/mp4'>
+                        <p>Video is not visible, most likely your browser does not support HTML5 video</p>
+                    </video>
+                </div>
+            </div>
+            <div class="jumbotron container-fluid shadow-inset" style="background-color: transparent; margin-bottom: 0; height: 492px;">
+                <form role="form" class="form-inline" style="margin-right: 100px" >
+                    <div class="form-group col-sm-3 pull-right text-white" style="margin-bottom: -25px;">
+                            <select class="form-control input-sm pull-right" id="language" ng-model="twc.language" ng-options="value for (lang, value) in twc.LANGUAGES" ng-change="twc.setLanguage()"></select>
+                        <span class="pull-right" style="margin-right:10px" for="language">Language</span>
+                    </div>
+                </form>
+                <span id="title" class="col-md-5 col-xs-11" style="color: white; background-color: rgba(85, 85, 85, 0.80); bottom: -20px/*-50px*/; left:0">
+                    <h1><span class="text-light-blue">T</span>-World
+                        <sub style="font-size:14px">by <a href="https://plus.google.com/+SergioBurdisso" target="_blank"  tooltip="sergio.burdisso@gmail.com" tooltip-placement="right">Sergio Burdisso</a></sub>
+                        <sup style="font-size:11px">(v.{{twc.version}})</sup></h1>
+                    <p ng-bind-html="twc.text.desc"></p>
+                    <h5 style="color:white" class="header text-right">
+                        <span ng-bind-html="twc.text.aima"></span><br>
+                        <span ng-bind-html="twc.text.martha_marc"></span>
+                    </h5>
+                </span>
+            </div>
+        </div>
 
-	<ol id="top" class="breadcrumb pull-left" ng-cloak>
-		<li ng-repeat="n in twc.$loc.url().split('/') track by $index">
-			<a href="" ng-click="twc.goto(twc.getSubPath($index))" ng-if="!$last">{{n||"home"}}</a>
-			<span ng-if="$last">{{n}}</span>
-		</li>
-	</ol>
+        <ol id="top" class="breadcrumb pull-left" ng-cloak>
+            <li ng-repeat="n in twc.$loc.url().split('/') track by $index">
+                <a href="" ng-click="twc.goto(twc.getSubPath($index))" ng-if="!$last">{{n||"home"}}</a>
+                <span ng-if="$last">{{n}}</span>
+            </li>
+        </ol>
 
-	<!-- LOGIN -->
-	<div style="padding: 10px; background-color: #f5f5f5">
-		<span class="animate-only-show" ng-hide="twc.user.info">
-			<button class="btn btn-primary btn-sm pull-right margin-right-10" popover-placement="left" popover-trigger="click" popover-html-unsafe="{{twc.createAccountHtml}}" ng-click="twc.login.state=0;twc.gotoTop(1000, '#title')" ng-class="{'tdisabled':twc.login.state == 2 || twc.login.state == 4}"><span class="glyphicon glyphicon-cloud-upload"></span> Create T-Account</button>
-			<button id="login-submit" type="submit" form="frm-login" class="btn btn-sm pull-right margin-right-10" ng-click="twc.login.apply()" ng-class="{'btn-default':(twc.login.state!=1), 'btn-success':(twc.login.state==1), 'tdisabled':twc.login.state == 2 || twc.login.state == 4}"><span class="glyphicon glyphicon-user"></span> Login</button>
+        <!-- LOGIN -->
+        <div style="padding: 10px; background-color: #f5f5f5">
+            <span class="animate-only-show" ng-hide="twc.user.info">
+                <button class="btn btn-primary btn-sm pull-right margin-right-10" popover-placement="left" popover-trigger="click" popover-html-unsafe="{{twc.createAccountHtml}}" ng-click="twc.login.state=0;twc.gotoTop(1000, $(this).position().top+250)" ng-class="{'tdisabled':twc.login.state == 2 || twc.login.state == 4}"><span class="glyphicon glyphicon-cloud-upload"></span> Create T-Account</button>
+                <button id="login-submit" type="submit" form="frm-login" class="btn btn-sm pull-right margin-right-10" ng-click="twc.login.apply()" ng-class="{'btn-default':(twc.login.state!=1), 'btn-success':(twc.login.state==1), 'tdisabled':twc.login.state == 2 || twc.login.state == 4}"><span class="glyphicon glyphicon-user"></span> Login</button>
 
-			<form id="frm-login" role="form" class="form-inline pull-right margin-right-10 animate-show-3d-right" tooltip-html-unsafe="{{twc.loginErrorHtml}}" tooltip-placement="bottom" tooltip-trigger="errorEvent" ng-show="twc.login.state==1">
-				<div class="form-group">
-					<label class="sr-only" for="exampleInputPassword2">Your Email</label>
-					<input id="login-email" type="email" name="email" class="form-control width-120 tfocus" placeholder="Your Email" ng-model="twc.login.email" ng-class="{'has-error':!twc.login.email.trim().length}">
-				</div>
-				<div class="form-group">
-					<label class="sr-only" for="exampleInputPassword2">Password</label>
-					<input id="login-pwd" type="password" name="password" class="form-control width-120 tfocus" placeholder="Password" ng-model="twc.login.pwd" ng-class="{'has-error':!twc.login.pwd.trim().length}">
-				</div>
-				<div class="checkbox">
-					<label>
-						<input type="checkbox" ng-model="twc.login.rember"> Remember me
-					</label>
-				</div>
-			</form>
-		</span>
-		<span class="animate-only-show" ng-show="twc.user.info">
-			<button class="btn btn-default btn-sm pull-right margin-right-10 btn-logout" ng-click="twc.logout()" ng-class="{'tdisabled':twc.login.state == 2 || twc.login.state == 4}">
-				<span class="glyphicon glyphicon-off"></span> Log Out
-			</button>
-			<label class="pull-right margin-right-10 text-blue" style="margin-top: 5px;">{{twc.user.info.email}}</label>
-		</span>
-		<div id="load-login" class="transition-400 text-center pull-right animate-only-show" ng-show="(twc.login.state == 2||twc.login.state == 4||$loading||$loadingView)&&!$error">
-			<div class="spinner">
-				<div class="bounce1"></div>
-				<div class="bounce2"></div>
-				<div class="bounce3"></div>
-			</div>
-		</div>
-		<div class="text-red  pull-right margin-10 animate-zoom-loop" ng-show="$error">
-			<span class="glyphicon glyphicon-exclamation-sign" tooltip-placement="bottom" tooltip-html-unsafe="{{twc.connectionErrorHtml}}"></span>
-		</div>
-		<br>
-		<div class="container" ng-click="twc.clickOutside()"><hr/></div>
-	</div>
+                <form id="frm-login" role="form" class="form-inline pull-right margin-right-10 animate-show-3d-right" tooltip-html-unsafe="{{twc.loginErrorHtml}}" tooltip-placement="bottom" tooltip-trigger="errorEvent" ng-show="twc.login.state==1">
+                    <div class="form-group">
+                        <label class="sr-only" for="exampleInputPassword2">Your Email</label>
+                        <input id="login-email" type="email" name="email" class="form-control width-120 tfocus" placeholder="Your Email" ng-model="twc.login.email" ng-class="{'has-error':!twc.login.email.trim().length}">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="exampleInputPassword2">Password</label>
+                        <input id="login-pwd" type="password" name="password" class="form-control width-120 tfocus" placeholder="Password" ng-model="twc.login.pwd" ng-class="{'has-error':!twc.login.pwd.trim().length}">
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="twc.login.rember"> Remember me
+                        </label>
+                    </div>
+                </form>
+            </span>
+            <span class="animate-only-show" ng-show="twc.user.info">
+                <button class="btn btn-default btn-sm pull-right margin-right-10 btn-logout" ng-click="twc.logout()" ng-class="{'tdisabled':twc.login.state == 2 || twc.login.state == 4}">
+                    <span class="glyphicon glyphicon-off"></span> Log Out
+                </button>
+                <label class="pull-right margin-right-10 text-blue" style="margin-top: 5px;">{{twc.user.info.email}}</label>
+            </span>
+            <div id="load-login" class="transition-400 text-center pull-right animate-only-show" ng-show="(twc.login.state == 2||twc.login.state == 4||$loading||$loadingView)&&!$error">
+                <div class="spinner">
+                    <div class="bounce1"></div>
+                    <div class="bounce2"></div>
+                    <div class="bounce3"></div>
+                </div>
+            </div>
+            <div class="text-red  pull-right margin-10 animate-zoom-loop" ng-show="$error">
+                <span class="glyphicon glyphicon-exclamation-sign" tooltip-placement="bottom" tooltip-html-unsafe="{{twc.connectionErrorHtml}}"></span>
+            </div>
+            <br>
+            <div class="container" ng-click="twc.clickOutside()"><hr/></div>
+        </div>
 
-	<!-- CONTENT -->
-	<div class="container-fluid main-content min-height" ng-click="twc.clickOutside()">
-		<div ng-view class="container border-sides animate-view content"></div>
-	</div>
-	<div class="container-fluid main-content">
-		<div class="glyphicon glyphicon-hand-up pull-right to-top" ng-click="twc.gotoTop()" tooltip="to the top" tooltip-placement="left"></div>
-	</div>
-	<!-- FOOTER -->
-	<div class="container text-white text-justify footer logo-center overflow-hidden" id="footer">
-		<p class="pull-right no-margin" style="width: 300px; margin-right: 10px">
-			<a rel="license" class="a-image" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" alt="Creative Commons License">
-				<img style="border-width:0" src="imgs/web-app/cc.png" width="32"/>
-				<img style="border-width:0" src="imgs/web-app/by.png" width="32"/>
-				<img style="border-width:0" src="imgs/web-app/nc.png" width="32"/>
-				<img style="border-width:0" src="imgs/web-app/sa.png" width="32"/>
-			</a><br>
-			<span ng-bind-html="twc.text.cc"></span><br><br>
-			<span id="copyright" style="display:block; text-align: right;">&copy; <a href="https://plus.google.com/+SergioBurdisso" target="_blank" tooltip="sergio.burdisso@gmail.com">Sergio Burdisso</a></span>
-		</p>
-		<p class="pull-right" style="width: 300px; margin-right: 50px;">
-			<a rel="license" href="http://www.gnu.org/licenses/agpl-3.0.html" alt="GNU AGPL">
-				<img style="border-width:0" src="imgs/web-app/agplv3-88x31_white.png" height="32"/>
-			</a><br>
-			<span ng-bind-html="twc.text.agpl"></span>.<br>
-		</p>
+        <!-- CONTENT -->
+        <div class="container-fluid main-content min-height" ng-click="twc.clickOutside()">
+            <div ng-view class="container border-sides animate-view content"></div>
+        </div>
+        <div class="container-fluid main-content">
+            <div class="glyphicon glyphicon-hand-up pull-right to-top" ng-click="twc.gotoTop()" tooltip="to the top" tooltip-placement="left"></div>
+        </div>
+        <!-- FOOTER -->
+        <div class="container text-white text-justify footer logo-center overflow-hidden" id="footer">
+            <p class="pull-right no-margin" style="width: 300px; margin-right: 10px">
+                <a rel="license" class="a-image" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" alt="Creative Commons License">
+                    <img style="border-width:0" src="imgs/web-app/cc.png" width="32"/>
+                    <img style="border-width:0" src="imgs/web-app/by.png" width="32"/>
+                    <img style="border-width:0" src="imgs/web-app/nc.png" width="32"/>
+                    <img style="border-width:0" src="imgs/web-app/sa.png" width="32"/>
+                </a><br>
+                <span ng-bind-html="twc.text.cc"></span><br><br>
+                <span id="copyright" style="display:block; text-align: right;">&copy; <a href="https://plus.google.com/+SergioBurdisso" target="_blank" tooltip="sergio.burdisso@gmail.com">Sergio Burdisso</a></span>
+            </p>
+            <p class="pull-right" style="width: 300px; margin-right: 50px;">
+                <a rel="license" href="http://www.gnu.org/licenses/agpl-3.0.html" alt="GNU AGPL">
+                    <img style="border-width:0" src="imgs/web-app/agplv3-88x31_white.png" height="32"/>
+                </a><br>
+                <span ng-bind-html="twc.text.agpl"></span>.<br>
+            </p>
 
-		<a href="http://www.unsl.edu.ar" target="_blank" tooltip="I want to thank all the teachers and professors who've shaped me through these years. I started this project as part of my thesis at the National University of San Luis (Argentina)" style="color:rgb(209, 209, 209);margin-bottom:10px;margin-left:15px;text-decoration:overline;">
-			<img src="imgs/web-app/unsl.png">
-			National University of San Luis 
-		</a>
-		<br>
-		<a href="http://www.w3.org/html/logo/" target="_blank">
-			<img src="imgs/web-app/html5-badge-h-connectivity-css3-graphics-multimedia-performance-storage.png" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, and Offline &amp; Storage"  tooltip="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, and Offline &amp; Storage">
-		</a>
-		<br>
-		<a href="https://www.google.com/chrome/browser/" target="_blank" tooltip="Since T-World make intensive use of JavaScript, it is highly recommended to use Google Chrome." style="color:rgb(209, 209, 209);margin-top:10px;margin-left:14px;text-decoration:none;">
-			<img src="imgs/web-app/chrome_logo.png">
-			Google Chrome-optimized
-		</a>
+            <a href="http://www.unsl.edu.ar" target="_blank" tooltip="I want to thank all the teachers and professors who've shaped me through these years. I started this project as part of my thesis at the National University of San Luis (Argentina)" style="color:rgb(209, 209, 209);margin-bottom:10px;margin-left:15px;text-decoration:overline;">
+                <img src="imgs/web-app/unsl.png">
+                National University of San Luis 
+            </a>
+            <br>
+            <a href="http://www.w3.org/html/logo/" target="_blank">
+                <img src="imgs/web-app/html5-badge-h-connectivity-css3-graphics-multimedia-performance-storage.png" height="64" alt="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, and Offline &amp; Storage"  tooltip="HTML5 Powered with Connectivity / Realtime, CSS3 / Styling, Graphics, 3D &amp; Effects, Multimedia, Performance &amp; Integration, and Offline &amp; Storage">
+            </a>
+            <br>
+            <a href="https://www.google.com/chrome/browser/" target="_blank" tooltip="Since T-World makes intensive use of JavaScript, it is highly recommended to use Google Chrome." style="color:rgb(209, 209, 209);margin-top:10px;margin-left:14px;text-decoration:none;">
+                <img src="imgs/web-app/chrome_logo.png">
+                Google Chrome-optimized
+            </a>
+        </div>
 
-	</div>
+    </div>
 
-	<iframe name="download-iframe" style="display:none"></iframe>
+    <iframe name="download-iframe" style="display:none"></iframe>
 
-	<script type="text/javascript" src="libs/jquery/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript" src="libs/jquery/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="libs/angularjs/angular.min.js"></script>
-	<script type="text/javascript" src="libs/angularjs/angular-route.min.js"></script>
-	<script type="text/javascript" src="libs/angularjs/angular-animate.min.js"></script>
-	<script type="text/javascript" src="libs/angularjs/ui-bootstrap-0.11.0.min.js"></script>
-	<script type="text/javascript" src="libs/angularjs/ui-bootstrap-tpls-0.11.0.min.js"></script>
-	<script type="text/javascript" src="libs/angularjs/ui-slider.js"></script>
+    <script type="text/javascript" src="libs/jquery/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="libs/jquery/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="libs/angularjs/angular.min.js"></script>
+    <script type="text/javascript" src="libs/angularjs/angular-route.min.js"></script>
+    <script type="text/javascript" src="libs/angularjs/angular-animate.min.js"></script>
+    <script type="text/javascript" src="libs/angularjs/ui-bootstrap-0.11.0.min.js"></script>
+    <script type="text/javascript" src="libs/angularjs/ui-bootstrap-tpls-0.11.0.min.js"></script>
+    <script type="text/javascript" src="libs/angularjs/ui-slider.js"></script>
 
-	<!--
-	<script type="text/javascript" src="libs/solid/solid-vector.js"></script>
-	<script type="text/javascript" src="libs/solid/solid-bot.js"></script>
-	<script type="text/javascript" src="libs/solid/solid-bots.js"></script>
-	-->
+    <script type="text/javascript" src="libs/tworld/solid-global.js"></script>
 
-	<script type="text/javascript" src="libs/tworld/solid-global.js"></script>
+    <script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="libs/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+    <script src="libs/ace/theme-ambiance.js" type="text/javascript" charset="utf-8"></script>
+    <script src="libs/ace/worker-javascript.js" type="text/javascript" charset="utf-8"></script>
+    <script src="libs/ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="libs/ace/snippets/text.js" type="text/javascript" charset="utf-8"></script>
+    <script src="libs/ace/snippets/javascript.js" type="text/javascript" charset="utf-8"></script>
 
-	<script src="libs/ace/ace.js" type="text/javascript" charset="utf-8"></script>
-	<script src="libs/ace/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
-	<script src="libs/ace/theme-ambiance.js" type="text/javascript" charset="utf-8"></script>
-	<script src="libs/ace/worker-javascript.js" type="text/javascript" charset="utf-8"></script>
-	<script src="libs/ace/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
-	<script src="libs/ace/snippets/text.js" type="text/javascript" charset="utf-8"></script>
-	<script src="libs/ace/snippets/javascript.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.$global.js"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.$global.storage.js"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.$global.controllers.js"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.$text.js"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.js"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.menu.$text.js"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.menu.js"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.environments.js"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.agent-programs.js"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.stats.js"></script>
+    <script type="text/javascript" src="libs/tworld/web-app/main.support.js"></script>
 
-	<script type="text/javascript" src="libs/tworld/web-app/main.$global.js"></script>
-	<script type="text/javascript" src="libs/tworld/web-app/main.$global.storage.js"></script>
-	<script type="text/javascript" src="libs/tworld/web-app/main.$global.controllers.js"></script>
-	<script type="text/javascript" src="libs/tworld/web-app/main.$text.js"></script>
-	<script type="text/javascript" src="libs/tworld/web-app/main.js"></script>
-	<script type="text/javascript" src="libs/tworld/web-app/main.menu.$text.js"></script>
-	<script type="text/javascript" src="libs/tworld/web-app/main.menu.js"></script>
-	<script type="text/javascript" src="libs/tworld/web-app/main.environments.js"></script>
-	<script type="text/javascript" src="libs/tworld/web-app/main.agent-programs.js"></script>
-	<script type="text/javascript" src="libs/tworld/web-app/main.stats.js"></script>
-	<script type="text/javascript" src="libs/tworld/web-app/main.support.js"></script>
+    <script type="text/ng-template" id="account-confirmation.html">
+        <div ng-init="twc.gotoTop();twc.login.apply()">
+            <div style="martin-top:65px"><img src="./imgs/web-app/success.png" onload="$(this).addClass(&apos;animate-ok&apos;)" class="tinvisible"></div>
+            <div><h1><b class="text-blue">Congratulations!</b></h1></div>
+            <div>
+                Now you&apos;re ready to start coding and having fun <b>:D</b> Log in!
+            </div>
+        </div>
+    </script>
 
-	<script type="text/ng-template" id="account-confirmation.html">
-		<div ng-init="twc.gotoTop();twc.login.apply()">
-			<div style="martin-top:65px"><img src="./imgs/web-app/success.png" onload="$(this).addClass(&apos;animate-ok&apos;)" class="tinvisible"></div>
-			<div><h1><b class="text-blue">Congratulations!</b></h1></div>
-			<div>
-				Now you&apos;re ready to start coding and having fun <b>:D</b> Log in!
-			</div>
-		</div>
-	</script>
+    <script type="text/ng-template" id="yes-no-modal.html">
+        <div class="modal-header">
+            <h3 class="modal-title top-shadow">
+                <span class="glyphicon glyphicon-exclamation-sign"></span> {{title}}
+            </h3>
+        </div>
+        <div class="modal-body text-center">{{msg}}</div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="close()">Cancel</button>
+            <button class="btn btn-danger" ng-click="ok()">Yes</button>
+        </div>
+    </script>
 
-	<script type="text/ng-template" id="yes-no-modal.html">
-		<div class="modal-header">
-			<h3 class="modal-title top-shadow">
-				<span class="glyphicon glyphicon-exclamation-sign"></span> {{title}}
-			</h3>
-		</div>
-		<div class="modal-body text-center">{{msg}}</div>
-		<div class="modal-footer">
-			<button class="btn btn-default" ng-click="close()">Cancel</button>
-			<button class="btn btn-danger" ng-click="ok()">Yes</button>
-		</div>
-	</script>
+    <script type="text/ng-template" id="popover-html-unsafe-popup.html">
+        <div class="popover {{placement}}" ng-class="{ in: isOpen(), fade: animation() }">
+            <div class="arrow"></div>
 
-	<script type="text/ng-template" id="popover-html-unsafe-popup.html">
-		<div class="popover {{placement}}" ng-class="{ in: isOpen(), fade: animation() }">
-			<div class="arrow"></div>
+            <div class="popover-inner">
+                <h3 class="popover-title" ng-bind="title" ng-show="title"></h3>
+                <div class="popover-content" bind-html-unsafe="content">
 
-			<div class="popover-inner">
-				<h3 class="popover-title" ng-bind="title" ng-show="title"></h3>
-				<div class="popover-content" bind-html-unsafe="content">
+                </div>
+            </div>
+        </div>
+    </script>
 
-				</div>
-			</div>
-		</div>
-	</script>
+    <script type="text/ng-template" id="settings-modal.html">
+        <div class="modal-header"><h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-wrench"></span> 3D T-World Settings</h3></div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-3 text-right">
+                    <h4 class="sett-item cursor-pointer" ng-class="{active:isVideoTab()}" ng-click="setVideoTab()">Video</h4>
+                    <h4 class="sett-item cursor-pointer" ng-class="{active:isDisplayTab()}" ng-click="setDisplayTab()">Display</h4>
+                    <h4 class="sett-item cursor-pointer" ng-class="{active:isAudioTab()}" ng-click="setAudioTab()">Audio</h4>
+                    <h4 class="sett-item cursor-pointer" ng-class="{active:isGeneralTab()}" ng-click="setGeneralTab()" ng-if="false">General</h4>
+                </div>
 
-	<script type="text/ng-template" id="settings-modal.html">
-		<div class="modal-header"><h3 class="modal-title top-shadow"><span class="glyphicon glyphicon-wrench"></span> 3D T-World Settings</h3></div>
-		<div class="modal-body">
-			<div class="row">
-				<div class="col-md-3 text-right">
-					<h4 class="sett-item cursor-pointer" ng-class="{active:isVideoTab()}" ng-click="setVideoTab()">Video</h4>
-					<h4 class="sett-item cursor-pointer" ng-class="{active:isDisplayTab()}" ng-click="setDisplayTab()">Display</h4>
-					<h4 class="sett-item cursor-pointer" ng-class="{active:isAudioTab()}" ng-click="setAudioTab()">Audio</h4>
-					<h4 class="sett-item cursor-pointer" ng-class="{active:isGeneralTab()}" ng-click="setGeneralTab()" ng-if="false">General</h4>
-				</div>
+                <div class="col-md-1"></div>
 
-				<div class="col-md-1"></div>
+                <div class="col-md-6 animate-only-show-3d-left" ng-show="isVideoTab()">
 
-				<div class="col-md-6 animate-only-show-3d-left" ng-show="isVideoTab()">
+                    <div class="row"><h4>Quality</h4></div>
+                    <div class="row"><div class="checkbox">
+                        <label><input type="checkbox" ng-model="sett.video.lq_grid"> Low quality grid</label>
+                    </div></div>
+                    <div class="row"><div class="checkbox">
+                        <label><input type="checkbox" ng-model="sett.video.lq_env"> Low quality environment</label>
+                    </div></div>
 
-					<div class="row"><h4>Quality</h4></div>
-					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.video.lq_grid"> Low quality grid</label>
-					</div></div>
-					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.video.lq_env"> Low quality environment</label>
-					</div></div>
+                    <br>
+                    <div class="row"><h4>Resolution</h4></div>
+                    <div class="row">
+                        <div class="col-md-8 animate-show-3d-top" style="margin-left: -14px;">
+                                <select class="form-control" ng-model="sett.video.resolution">
+                                    <option value="427x240">240p</option>
+                                    <option value="640x360">360p</option>
+                                    <option value="854x480">480p</option>
+                                    <option value="1280x720">720p (HD)</option>
+                                    <option value="1920x1080">1080p (Full HD)</option>
+                                    <option value="">Same as window</option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="row"><div class="checkbox">
+                        <label><input type="checkbox" ng-model="sett.video.cover_window"> Cover the whole window</label>
+                    </div></div>
+                </div>
 
-					<br>
-					<div class="row"><h4>Resolution</h4></div>
-					<div class="row">
-						<div class="col-md-8 animate-show-3d-top" style="margin-left: -14px;">
-								<select class="form-control" ng-model="sett.video.resolution">
-									<option value="427x240">240p</option>
-									<option value="640x360">360p</option>
-									<option value="854x480">480p</option>
-									<option value="1280x720">720p (HD)</option>
-									<option value="1920x1080">1080p (Full HD)</option>
-									<option value="">Same as window</option>
-								</select>
-						</div>
-					</div>
-					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.video.cover_window"> Cover the whole window</label>
-					</div></div>
-				</div>
+                <div class="col-md-6 animate-only-show-3d-left" ng-show="isDisplayTab()">
 
-				<div class="col-md-6 animate-only-show-3d-left" ng-show="isDisplayTab()">
+                    <div class="row"><div class="checkbox">
+                        <label><input type="checkbox" ng-model="sett.display.show_console"> Show console</label>
+                    </div></div>
+                    <div class="row"><div class="checkbox">
+                        <label><input type="checkbox" ng-model="sett.display.show_fps"> Show fps</label>
+                    </div></div>
+                    <div class="row"><div class="checkbox">
+                        <label><input type="checkbox" ng-model="sett.display.show_holes_helpers"> Show holes helpers</label>
+                    </div></div>
+                    <div class="row"><div class="checkbox">
+                        <label><input type="checkbox" ng-model="sett.display.show_visibility_bounds"> Show visibility bounds (when task environment is partially observable)</label>
+                    </div></div>
 
-					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.display.show_console"> Show console</label>
-					</div></div>
-					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.display.show_fps"> Show fps</label>
-					</div></div>
-					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.display.show_holes_helpers"> Show holes helpers</label>
-					</div></div>
-					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.display.show_visibility_bounds"> Show visibility bounds (when task environment is partially observable)</label>
-					</div></div>
+                </div>
 
-				</div>
+                <div class="col-md-6 animate-only-show-3d-left" ng-show="isAudioTab()">
+                    <div class="row"><div class="checkbox">
+                        <label><input type="checkbox" ng-model="sett.audio.enabled"> Enable audio</label>
+                    </div></div>
 
-				<div class="col-md-6 animate-only-show-3d-left" ng-show="isAudioTab()">
-					<div class="row"><div class="checkbox">
-						<label><input type="checkbox" ng-model="sett.audio.enabled"> Enable audio</label>
-					</div></div>
+                    <div class="animate-show-3d-top" ng-show="sett.audio.enabled">
+                        <a class="list-group-item no-animation">
+                            <label>volume {{sett.audio.volume}}%</label>
+                            <div class="ui-slider-size" ui-slider min="0" max="100" ng-model="sett.audio.volume"></div>
+                        </a>
+                    </div>
+                </div>
 
-					<div class="animate-show-3d-top" ng-show="sett.audio.enabled">
-						<a class="list-group-item no-animation">
-							<label>volume {{sett.audio.volume}}%</label>
-							<div class="ui-slider-size" ui-slider min="0" max="100" ng-model="sett.audio.volume"></div>
-						</a>
-					</div>
-				</div>
+                <div class="col-md-6 animate-only-show-3d-left" ng-show="isGeneralTab()">
+                    <span>Work in progress</span>
+                </div>
 
-				<div class="col-md-6 animate-only-show-3d-left" ng-show="isGeneralTab()">
-					<span>Work in progress</span>
-				</div>
+            </div>
 
-			</div>
+        </div>
+        <div class="modal-footer" ng-class="{'treadonly': $loading}">
+            <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-success" ng-click="save()">Save</button>
+        </div>
+    </script>
 
-		</div>
-		<div class="modal-footer" ng-class="{'treadonly': $loading}">
-			<button class="btn btn-default" ng-click="cancel()">Cancel</button>
-			<button class="btn btn-success" ng-click="save()">Save</button>
-		</div>
-	</script>
+    <script type="text/javascript">
+        var $frame_header = $(".frame-header");
+        var $video_header = document.getElementById('video-header');
+        var $footer = $("#footer");
+        var $doc = $(document);
+        var $win = $(window);
+        var $win_height = $(window).height();
+        var $top_pos;
+        var $footer_pos;
 
-	<script type="text/javascript">
-		var $imgs_header = $(".img-header");
-		var $video_header = document.getElementById('video-header');
-		var $footer = $("#footer");
-		var $doc = $(document);
-		var $win_height = $(window).height();
+        $(window)
+            .resize(function(){
+                $win_height = $(window).height();
+                $(window).scroll();
+            })
+            .scroll(function(){
+                var _ratio = $doc.scrollTop()/($doc.height()-$win_height);
 
-		$(window)
-			.resize(function(){
-				$win_height = $(window).height();
-				$(window).scroll();
-			})
-			.scroll(function(){
-				var _ratio = $doc.scrollTop()/($doc.height()-$win_height);
-				if (_ratio > 0.5)
-					$footer.css({"background-position": "50% " + (50 - (1-_ratio)*800) + "%"});
-				else if (window.location.hash.search("source-code") == -1)
-					$imgs_header.css({ 'top' : -_ratio*800 });
-				else
-					$imgs_header.css({ 'top' : 0 });
+                if ($doc.scrollTop()+$win.height() > $footer_pos)
+                    $footer.css({"background-position": "50% " + (50 - (1-_ratio)*800) + "%"});
 
-				if (_ratio > 0.4) $video_header.pause();
-				else if (_ratio < 0.3) $video_header.play();
-			});
-	</script>
+                if ($doc.scrollTop() > $top_pos){
+                    $frame_header.hide();
+                } else {
+                    $frame_header.show();
+                    if (_ratio <= .5 && window.location.hash.search("source-code") == -1)
+                        $frame_header.css({ 'top' : -_ratio*800 });
+                    else
+                        $frame_header.css({ 'top' : 0 });
 
-	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
+                    if (_ratio > 0.37) $video_header.pause();
+                    else if (_ratio < 0.3) $video_header.play();
+                }
+            });
 
-		ga('create', 'UA-54081225-1', 'auto');
-		ga('send', 'pageview');
-	</script>
+            $(function(){
+                $top_pos = $("#top").position().top;
+                $footer_pos = $footer.position().top;
+            })
+    </script>
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','http://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-54081225-1', 'auto');
+        ga('send', 'pageview');
+    </script>
 
 </body>
 </html>
