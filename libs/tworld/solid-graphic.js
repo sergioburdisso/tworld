@@ -2056,7 +2056,7 @@ function GraphicTWorld(graphicEngine, environment){
         $("#loading-shadow").animate({opacity: 0}, 4000, function(){$("#loading-shadow").remove()});
         $("#loading").animate({opacity : 0}, 4000, function(){$("#loading").remove()});
 
-        //$("#sb-logo").mouseleave();
+        $("#sb-logo").mouseleave();
         $("#unsl-logo").mouseleave();
 
         //Pause Button

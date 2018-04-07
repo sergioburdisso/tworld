@@ -19,7 +19,7 @@
 
 /*if (localStorage.version != "0.98.7"){
     localStorage.clear();*/
-    localStorage.version = "0.98.9";
+    localStorage.version = "0.98.9.1";
 /*}*/
 
 var _tworldWindow;
@@ -29,11 +29,11 @@ var _LOGIN_STATE = {HIDDEN : 0, SHOWN: 1, LOADING:2, LOGGED: 3, LOGOUT: 4}
 function getVersion(){ return localStorage.version }
 
 function startTWorld(){
-    if (!_tworldWindow || !_tworldWindow.location|| !_tworldWindow.location.reload)
-        _tworldWindow = window.open('tworld.html');//,'T-World','width=712, height=450');//height=400
-    else{
+    if (_tworldWindow && !_tworldWindow.closed){
         _tworldWindow.location.reload();
         _tworldWindow.focus();
+    }else{
+        _tworldWindow = window.open('tworld.html');//,'T-World','width=712, height=450');//height=400
     }
 }
 
