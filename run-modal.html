@@ -46,13 +46,16 @@
 
             <div class="col-md-3">
                 <div class="checkbox">
+                    <label tooltip="Trials will run one after the other in a batch-like fashion"><input type="checkbox" ng-model="task_env.trial.batch"> Batch Mode</label>
+                </div>
+                <div class="checkbox" ng-hide="task_env.trial.batch">
                     <label><input type="checkbox" ng-model="task_env.trial.pause"> Enable Pause</label>
                 </div>
-                <div class="checkbox">
-                    <label tooltip="Trials will run one after the other in a batch-like fashion"><input type="checkbox" ng-model="task_env.trial.saveStats"> Save stats</label>
-                </div>
-                <div class="animate-show-3d-top" ng-show="task_env.trial.saveStats">
+                <div class="animate-show-3d-top" ng-show="task_env.trial.batch">
                     <label>Number of Trials</label><input type="number" min="0" class="form-control" ng-model="task_env.trial.runs" ng-class="{'has-error':(task_env.trial.runs|num)<=0}">
+                </div>
+                <div class="checkbox animate-show-3d-top" ng-show="task_env.trial.batch">
+                    <label><input type="checkbox" ng-model="task_env.trial.saveStats"> Save stats</label>
                 </div>
             </div>
 

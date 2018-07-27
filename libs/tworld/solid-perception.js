@@ -32,481 +32,481 @@ var TWorld;
 var attrPrefix, _X2JS;
 
 var _GET_TEAM_INDEX_OF = function(rIndex){
-    var j,i = _TEAMS.length;
+  var j,i = _TEAMS.length;
 
-    while (i--)
-        if (_TEAMS[i].MEMBERS.contains(rIndex))
-            break;
+  while (i--)
+    if (_TEAMS[i].MEMBERS.contains(rIndex))
+      break;
 
-    return i;
+  return i;
 }
 
 this.perceptionFunction = function( environment ) /*returns a percept*/{
-    environment = environment.data;
+  environment = environment.data;
 
-    var rVOEnvGrid, cVOEnvGrid; // VO stands for "Virtual Origin" (as if we were a compiler implementing multidimensional arrays XD)
-    var _totalHoles, _percept, _grid, _bik;
-    var _robLoc = environment.RobLocation;
+  var rVOEnvGrid, cVOEnvGrid; // VO stands for "Virtual Origin" (as if we were a compiler implementing multidimensional arrays XD)
+  var _totalHoles, _percept, _grid, _bik;
+  var _robLoc = environment.RobLocation;
 
-    //Constants initialization (this chunk runs once only)
-    if (environment.CFG_CONSTANTS){
-        var _CFG = environment.CFG_CONSTANTS;
+  //Constants initialization (this chunk runs once only)
+  if (environment.CFG_CONSTANTS){
+    var _CFG = environment.CFG_CONSTANTS;
 
-        if (_CFG._XML_NECESSARY){
-            importScripts('../util/xml2json.min.js');
-            attrPrefix = "_attr_";
-            _X2JS = new X2JS({attributePrefix : attrPrefix});
-        }
-
-        _ROWS                       = _CFG._ROWS;
-        _COLUMNS                    = _CFG._COLUMNS;
-        _NUMBER_OF_AGENTS           = _CFG._NUMBER_OF_AGENTS;
-        _AGENTS                     = _CFG._AGENTS;
-        _BATTERY_INVALID_MOVE_COST  = _CFG._BATTERY_INVALID_MOVE_COST;
-        _BATTERY_WALK_COST          = _CFG._BATTERY_WALK_COST;
-        _BATTERY_SLIDE_COST         = _CFG._BATTERY_SLIDE_COST;
-        _TEAMS                      = _CFG._TEAMS;
-        _ENDGAME                    = _CFG._ENDGAME;
-        _SCORE_HOLE_MULTIPLIER      = _CFG._SCORE_HOLE_MULTIPLIER;
-
-        TWorld = _CFG.TWorld;
-        TWorld.valueOfHoleFilledCompletely = function(size) {return size*_SCORE_HOLE_MULTIPLIER};
-        return;
+    if (_CFG._XML_NECESSARY){
+      importScripts('../util/xml2json.min.js');
+      attrPrefix = "_attr_";
+      _X2JS = new X2JS({attributePrefix : attrPrefix});
     }
 
-    //-> creating the Percept object for the very first time (this chunk of code below runs only once)
-    if (!this.Percept){
-        //NOTE: any changes you make to this object must be reflected in the <tw_msg.xsd> file too
-        this.Percept = {
-            header : _PERCEPT_HEADER.START,
-            data:{
-                environment:{
-                    grid: undefined/*[[..], [..], ..]*/,
-                    time: 0, // optional
-                    battery_chargers: [/*{row:,column:}, ..*/],// optional
-                    agents: environment.ListOfAgents,// optional
-                    holes: [],
-                    tiles: [/*{row:,column:}, ..*/],
-                    obstacles: [/*{row:,column:}, ..*/],
-                    stats:null
-                },
-                agent:{
-                    id: environment.RobID, // optional
-                    team_id: _GET_TEAM_INDEX_OF(environment.RobID), //optional
-                    location: {row: -1, column: -1},
-                    score: -1,
-                    battery: null, // optional
-                    stats: null /*{
-                                good_moves: 0,
-                                bad_moves: 0,
-                                filled_cells: 0,
-                                filled_holes: 0,
-                                battery_used: 0,
-                                battery_recharge: 0,
-                                battery_restore: 0,
-                                total_score: 0
-                            }*/
-                },
-                builtin_knowledge:{
-                    //TODO: add multiplier, easy mode flag and all other variations
-                    grid_total_rows: 0,
-                    grid_total_columns: 0,
-                    teams: [/*{id:, leader:, members:[]}...*/], // optional
-                    end : {//end game conditions
-                        neutral: {},
-                        success: {},
-                        failure: {}
-                    }, 
-                    costs: environment.Costs,
-                    probability: environment.Probability
-                }
-            }
+    _ROWS                       = _CFG._ROWS;
+    _COLUMNS                    = _CFG._COLUMNS;
+    _NUMBER_OF_AGENTS           = _CFG._NUMBER_OF_AGENTS;
+    _AGENTS                     = _CFG._AGENTS;
+    _BATTERY_INVALID_MOVE_COST  = _CFG._BATTERY_INVALID_MOVE_COST;
+    _BATTERY_WALK_COST          = _CFG._BATTERY_WALK_COST;
+    _BATTERY_SLIDE_COST         = _CFG._BATTERY_SLIDE_COST;
+    _TEAMS                      = _CFG._TEAMS;
+    _ENDGAME                    = _CFG._ENDGAME;
+    _SCORE_HOLE_MULTIPLIER      = _CFG._SCORE_HOLE_MULTIPLIER;
+
+    TWorld = _CFG.TWorld;
+    TWorld.valueOfHoleFilledCompletely = function(size) {return size*_SCORE_HOLE_MULTIPLIER};
+    return;
+  }
+
+  //-> creating the Percept object for the very first time (this chunk of code below runs only once)
+  if (!this.Percept){
+    //NOTE: any changes you make to this object must be reflected in the <tw_msg.xsd> file too
+    this.Percept = {
+      header : _PERCEPT_HEADER.START,
+      data:{
+        environment:{
+          grid: undefined/*[[..], [..], ..]*/,
+          time: 0, // optional
+          battery_chargers: [/*{row:,column:}, ..*/],// optional
+          agents: environment.ListOfAgents,// optional
+          holes: [],
+          tiles: [/*{row:,column:}, ..*/],
+          obstacles: [/*{row:,column:}, ..*/],
+          stats:null
+        },
+        agent:{
+          id: environment.RobID, // optional
+          team_id: _GET_TEAM_INDEX_OF(environment.RobID), //optional
+          location: {row: -1, column: -1},
+          score: -1,
+          battery: null, // optional
+          stats: null /*{
+                good_moves: 0,
+                bad_moves: 0,
+                filled_cells: 0,
+                filled_holes: 0,
+                battery_used: 0,
+                battery_recharge: 0,
+                battery_restore: 0,
+                total_score: 0
+              }*/
+        },
+        builtin_knowledge:{
+          //TODO: add multiplier, easy mode flag and all other variations
+          grid_total_rows: 0,
+          grid_total_columns: 0,
+          teams: [/*{id:, leader:, members:[]}...*/], // optional
+          end : {//end game conditions
+            neutral: {},
+            success: {},
+            failure: {}
+          }, 
+          costs: environment.Costs,
+          probability: environment.Probability
+        }
+      }
+    }
+
+    //builtin_knowledge.end
+    _bik = this.Percept.data.builtin_knowledge;
+
+    for (cond in _ENDGAME)
+      if (!(_ENDGAME[cond] instanceof Function)){
+        var nCond;
+        var _sockPA = _AGENTS[environment.RobID].SOCKET_PROGRAM_AGENT;
+        switch(cond){
+          case "SCORE":
+            if (_sockPA && _sockPA.OUTPUT_FORMAT == _PERCEPT_FORMAT.XML)
+              nCond = "_score_";
+            else
+              nCond = cond.toLowerCase();
+            break;
+          default:
+            nCond =cond.toLowerCase();
         }
 
-        //builtin_knowledge.end
-        _bik = this.Percept.data.builtin_knowledge;
+        _bik.end.neutral[nCond] = null;
+        _bik.end.success[nCond] = null;
+        _bik.end.failure[nCond] = null;
 
-        for (cond in _ENDGAME)
-            if (!(_ENDGAME[cond] instanceof Function)){
-                var nCond;
-                var _sockPA = _AGENTS[environment.RobID].SOCKET_PROGRAM_AGENT;
-                switch(cond){
-                    case "SCORE":
-                        if (_sockPA && _sockPA.OUTPUT_FORMAT == _PERCEPT_FORMAT.XML)
-                            nCond = "_score_";
-                        else
-                            nCond = cond.toLowerCase();
-                        break;
-                    default:
-                        nCond =cond.toLowerCase();
-                }
-
-                _bik.end.neutral[nCond] = null;
-                _bik.end.success[nCond] = null;
-                _bik.end.failure[nCond] = null;
-
-                if (_ENDGAME[cond].VALUE){
-                    switch(_ENDGAME[cond].RESULT){
-                        case _GAME_RESULT.NEUTRAL:
-                            _bik.end.neutral[nCond] = _ENDGAME[cond].VALUE;
-                            break;
-                        case _GAME_RESULT.SUCCESS:
-                            _bik.end.success[nCond] = _ENDGAME[cond].VALUE;
-                            break;
-                        case _GAME_RESULT.FAILURE:
-                            _bik.end.failure[nCond] = _ENDGAME[cond].VALUE;
-                    }
-                }
-            }
-
-        //my_id, team_id, agents and teams
-        /*if (_NUMBER_OF_AGENTS <= 1){
-            delete this.Percept.data.environment.agents;
-            delete this.Percept.data.agent.id;
-            delete this.Percept.data.agent.team_id;
-            delete this.Percept.data.builtin_knowledge.teams;
-        }else{*/
-            for (var len= _TEAMS.length, i=0; i < len; ++i){
-                this.Percept.data.builtin_knowledge.teams.push({
-                    id: i,
-                    leader: _TEAMS[i].MEMBERS[0],
-                    members: _TEAMS[i].MEMBERS
-                });
-            }
-        //}
-
-        //-> creating grid
-        if (!TWorld.FullyObservableGrid){
-            _bik.grid_total_columns = _bik.grid_total_rows = TWorld.VisibilityRadius*2 + 1;
-            this.Percept.data.agent.location.row = this.Percept.data.agent.location.column = TWorld.VisibilityRadius;
-
-            _grid = new Array(_bik.grid_total_rows);
-
-            for (var _rows=_bik.grid_total_rows, _columns= _bik.grid_total_columns, r= 0; r < _rows; ++r)
-                _grid[r] = new Array(_columns);
-
-            this.Percept.data.environment.grid = _grid;
-        }else{
-            _bik.grid_total_rows = _ROWS;
-            _bik.grid_total_columns = _COLUMNS;
+        if (_ENDGAME[cond].VALUE){
+          switch(_ENDGAME[cond].RESULT){
+            case _GAME_RESULT.NEUTRAL:
+              _bik.end.neutral[nCond] = _ENDGAME[cond].VALUE;
+              break;
+            case _GAME_RESULT.SUCCESS:
+              _bik.end.success[nCond] = _ENDGAME[cond].VALUE;
+              break;
+            case _GAME_RESULT.FAILURE:
+              _bik.end.failure[nCond] = _ENDGAME[cond].VALUE;
+          }
         }
-        //<-
+      }
 
-        //-> battery
-        /*if (!TWorld.Battery){
-            delete this.Percept.data.agent.battery;
-            delete this.Percept.data.environment.battery_chargers;
-        }else{*/
-            this.Percept.data.builtin_knowledge.costs.battery = {}
-            this.Percept.data.builtin_knowledge.costs.battery.bad_move = _BATTERY_INVALID_MOVE_COST;
-            this.Percept.data.builtin_knowledge.costs.battery.good_move = _BATTERY_WALK_COST;
-            this.Percept.data.builtin_knowledge.costs.battery.slide_tile = _BATTERY_SLIDE_COST;
-        //}
+    //my_id, team_id, agents and teams
+    /*if (_NUMBER_OF_AGENTS <= 1){
+      delete this.Percept.data.environment.agents;
+      delete this.Percept.data.agent.id;
+      delete this.Percept.data.agent.team_id;
+      delete this.Percept.data.builtin_knowledge.teams;
+    }else{*/
+      for (var len= _TEAMS.length, i=0; i < len; ++i){
+        this.Percept.data.builtin_knowledge.teams.push({
+          id: i,
+          leader: _TEAMS[i].MEMBERS[0],
+          members: _TEAMS[i].MEMBERS
+        });
+      }
+    //}
 
+    //-> creating grid
+    if (!TWorld.FullyObservableGrid){
+      _bik.grid_total_columns = _bik.grid_total_rows = TWorld.VisibilityRadius*2 + 1;
+      this.Percept.data.agent.location.row = this.Percept.data.agent.location.column = TWorld.VisibilityRadius;
+
+      _grid = new Array(_bik.grid_total_rows);
+
+      for (var _rows=_bik.grid_total_rows, _columns= _bik.grid_total_columns, r= 0; r < _rows; ++r)
+        _grid[r] = new Array(_columns);
+
+      this.Percept.data.environment.grid = _grid;
     }else{
-        environment.PerceptHeader = environment.PerceptHeader || _PERCEPT_HEADER.PERCEPT;
-        this.Percept.header =  environment.PerceptHeader;
-        _grid = this.Percept.data.environment.grid;
+      _bik.grid_total_rows = _ROWS;
+      _bik.grid_total_columns = _COLUMNS;
     }
     //<-
 
-    _bik = this.Percept.data.builtin_knowledge;
-
-    //-> Grid
-    // if grid is fully observable
-    if (TWorld.FullyObservableGrid)
-        _grid = environment.Grid;
-    else{
-    // if grid is partially observable
-        //-> calculate visible grid (according to the 'VisibilityRadius')
-        for (var totalRows= _bik.grid_total_rows, r= 0; r < totalRows; ++r)
-            for (var totalColumns= _bik.grid_total_columns, c= 0; c < totalColumns; ++c){
-                rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for "Virtual Origin"
-                cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for "Virtual Origin"
-
-                if ( (rVOEnvGrid + r >= 0 && rVOEnvGrid + r < environment.Grid.length) &&
-                     (cVOEnvGrid + c >= 0 && cVOEnvGrid + c < environment.Grid[0].length) )
-                    _grid[r][c] = environment.Grid[rVOEnvGrid + r][cVOEnvGrid + c];
-                else
-                    _grid[r][c] = _GRID_CELL.OBSTACLE;
-            }
-    }
-    this.Percept.data.environment.grid = _grid;
-
-    this.Percept.data.environment.time = environment.Time;
-
-    this.Percept.data.environment.stats = environment.Stats;
-
-    //-> score
-    this.Percept.data.agent.score = environment.Score;
-
     //-> battery
-    //if (TWorld.Battery){
-        this.Percept.data.agent.battery = environment.Battery;
-        var _listOfBC = environment.BatteryChargers;
-
-        if (!TWorld.FullyObservableGrid){
-            // if grid is partially observable
-            for (var i= 0; i < _listOfBC.length; ++i){
-                //if the i-th battery charger is not visible, then remove it...
-                if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfBC[i].row && _listOfBC[i].row <= _robLoc.Row + TWorld.VisibilityRadius) &&
-                     (_robLoc.Column - TWorld.VisibilityRadius <= _listOfBC[i].column && _listOfBC[i].column <= _robLoc.Column + TWorld.VisibilityRadius)){
-                    rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
-                    cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
-                    _listOfBC[i].row -= rVOEnvGrid;
-                    _listOfBC[i].column -= cVOEnvGrid;
-                }else
-                    _listOfBC.remove(i--);
-            }
-        }
-
-        this.Percept.data.environment.battery_chargers = _listOfBC;
+    /*if (!TWorld.Battery){
+      delete this.Percept.data.agent.battery;
+      delete this.Percept.data.environment.battery_chargers;
+    }else{*/
+      this.Percept.data.builtin_knowledge.costs.battery = {}
+      this.Percept.data.builtin_knowledge.costs.battery.bad_move = _BATTERY_INVALID_MOVE_COST;
+      this.Percept.data.builtin_knowledge.costs.battery.good_move = _BATTERY_WALK_COST;
+      this.Percept.data.builtin_knowledge.costs.battery.slide_tile = _BATTERY_SLIDE_COST;
     //}
 
-    //Agent stats
-    this.Percept.data.agent.stats = environment.RobStats;
+  }else{
+    environment.PerceptHeader = environment.PerceptHeader || _PERCEPT_HEADER.PERCEPT;
+    this.Percept.header =  environment.PerceptHeader;
+    _grid = this.Percept.data.environment.grid;
+  }
+  //<-
 
-    //->Agent's current location
-    if (TWorld.FullyObservableGrid){
-        this.Percept.data.agent.location.row = _robLoc.Row;
-        this.Percept.data.agent.location.column = _robLoc.Column;
-    }
+  _bik = this.Percept.data.builtin_knowledge;
 
-    //List of Agents
-    var _listOfAgs = environment.ListOfAgents;
+  //-> Grid
+  // if grid is fully observable
+  if (TWorld.FullyObservableGrid)
+    _grid = environment.Grid;
+  else{
+  // if grid is partially observable
+    //-> calculate visible grid (according to the 'VisibilityRadius')
+    for (var totalRows= _bik.grid_total_rows, r= 0; r < totalRows; ++r)
+      for (var totalColumns= _bik.grid_total_columns, c= 0; c < totalColumns; ++c){
+        rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for "Virtual Origin"
+        cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for "Virtual Origin"
 
-    if (!TWorld.FullyObservableGrid){
-        // if grid is partially observable
-        for (var i= _listOfAgs.length-1; i >= 0; i--){
-            //if the i-th agent is not visible, then remove it...
-            if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfAgs[i].location.row && _listOfAgs[i].location.row <= _robLoc.Row + TWorld.VisibilityRadius) &&
-                 (_robLoc.Column - TWorld.VisibilityRadius <= _listOfAgs[i].location.column && _listOfAgs[i].location.column <= _robLoc.Column + TWorld.VisibilityRadius)){
-                rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
-                cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
-                _listOfAgs[i].location.row -= rVOEnvGrid;
-                _listOfAgs[i].location.column -= cVOEnvGrid;
-            }else
-                _listOfAgs.remove(i);
-        }
-    }
+        if ( (rVOEnvGrid + r >= 0 && rVOEnvGrid + r < environment.Grid.length) &&
+           (cVOEnvGrid + c >= 0 && cVOEnvGrid + c < environment.Grid[0].length) )
+          _grid[r][c] = environment.Grid[rVOEnvGrid + r][cVOEnvGrid + c];
+        else
+          _grid[r][c] = _GRID_CELL.OBSTACLE;
+      }
+  }
+  this.Percept.data.environment.grid = _grid;
 
-    this.Percept.data.environment.agents = _listOfAgs;
+  this.Percept.data.environment.time = environment.Time;
 
-    //-> List Of Holes
-    this.Percept.data.environment.holes = environment.ListOfHoles;
+  this.Percept.data.environment.stats = environment.Stats;
 
-    // if grid is fully observable
-    if (TWorld.FullyObservableGrid){
+  //-> score
+  this.Percept.data.agent.score = environment.Score;
 
-        for (var i= this.Percept.data.environment.holes.length-1;  i >= 0; --i)
-            for (var iHCells, j= this.Percept.data.environment.holes[i].cells.length-1;  j >= 0; --j){
-                iHCells = this.Percept.data.environment.holes[i].cells[j];
-                this.Percept.data.environment.holes[i].cells[j] = {row: iHCells[0], column: iHCells[1]};
-            }
-
-    }else{
-        // if grid is partially observable
-        var vi= 0;
-        //for each hole in the environment
-        for (var iHole, iHCells, i= 0;  i < this.Percept.data.environment.holes.length; ++i){
-            iHole = environment.ListOfHoles[i];
-            iHCells = iHole.cells
-
-            //for each cell of the i-th hole...
-            for (var k= iHCells.length-1; k >= 0; --k){
-                //if the k-th cell of the i-th hole is not visible, then remove it...
-                if ( (_robLoc.Row - TWorld.VisibilityRadius <= iHCells[k][0] && iHCells[k][0] <= _robLoc.Row + TWorld.VisibilityRadius) &&
-                     (_robLoc.Column - TWorld.VisibilityRadius <= iHCells[k][1] && iHCells[k][1] <= _robLoc.Column + TWorld.VisibilityRadius)){
-                    rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
-                    cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
-                    iHCells[k] = {row: iHCells[k][0], column: iHCells[k][1]};
-                    iHCells[k].row -= rVOEnvGrid;
-                    iHCells[k].column -= cVOEnvGrid;
-                }else
-                    iHCells.remove(k);
-            }
-
-            //if the i-th hole hasn't any visible cell, then...
-            if(iHCells.length <= 0)
-                this.Percept.data.environment.holes.remove(i--);// we remove it from the list of visible holes
-        }
-    }
-
-    //-> List of obstacles
-    var _listOfObs = environment.ListOfObstacles;
+  //-> battery
+  //if (TWorld.Battery){
+    this.Percept.data.agent.battery = environment.Battery;
+    var _listOfBC = environment.BatteryChargers;
 
     if (!TWorld.FullyObservableGrid){
-        // if grid is partially observable
-        for (var i= _listOfObs.length-1; i >= 0 ; --i){
-            //if the i-th obstacle is not visible, then remove it...
-            if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfObs[i].row && _listOfObs[i].row <= _robLoc.Row + TWorld.VisibilityRadius) &&
-                 (_robLoc.Column - TWorld.VisibilityRadius <= _listOfObs[i].column && _listOfObs[i].column <= _robLoc.Column + TWorld.VisibilityRadius)){
-                rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
-                cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
-                _listOfObs[i].row -= rVOEnvGrid;
-                _listOfObs[i].column -= cVOEnvGrid;
-            }else
-                _listOfObs.remove(i);
+      // if grid is partially observable
+      for (var i= 0; i < _listOfBC.length; ++i){
+        //if the i-th battery charger is not visible, then remove it...
+        if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfBC[i].row && _listOfBC[i].row <= _robLoc.Row + TWorld.VisibilityRadius) &&
+           (_robLoc.Column - TWorld.VisibilityRadius <= _listOfBC[i].column && _listOfBC[i].column <= _robLoc.Column + TWorld.VisibilityRadius)){
+          rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+          cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+          _listOfBC[i].row -= rVOEnvGrid;
+          _listOfBC[i].column -= cVOEnvGrid;
+        }else
+          _listOfBC.remove(i--);
+      }
+    }
+
+    this.Percept.data.environment.battery_chargers = _listOfBC;
+  //}
+
+  //Agent stats
+  this.Percept.data.agent.stats = environment.RobStats;
+
+  //->Agent's current location
+  if (TWorld.FullyObservableGrid){
+    this.Percept.data.agent.location.row = _robLoc.Row;
+    this.Percept.data.agent.location.column = _robLoc.Column;
+  }
+
+  //List of Agents
+  var _listOfAgs = environment.ListOfAgents;
+
+  if (!TWorld.FullyObservableGrid){
+    // if grid is partially observable
+    for (var i= _listOfAgs.length-1; i >= 0; i--){
+      //if the i-th agent is not visible, then remove it...
+      if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfAgs[i].location.row && _listOfAgs[i].location.row <= _robLoc.Row + TWorld.VisibilityRadius) &&
+         (_robLoc.Column - TWorld.VisibilityRadius <= _listOfAgs[i].location.column && _listOfAgs[i].location.column <= _robLoc.Column + TWorld.VisibilityRadius)){
+        rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+        cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+        _listOfAgs[i].location.row -= rVOEnvGrid;
+        _listOfAgs[i].location.column -= cVOEnvGrid;
+      }else
+        _listOfAgs.remove(i);
+    }
+  }
+
+  this.Percept.data.environment.agents = _listOfAgs;
+
+  //-> List Of Holes
+  this.Percept.data.environment.holes = environment.ListOfHoles;
+
+  // if grid is fully observable
+  if (TWorld.FullyObservableGrid){
+
+    for (var i= this.Percept.data.environment.holes.length-1;  i >= 0; --i)
+      for (var iHCells, j= this.Percept.data.environment.holes[i].cells.length-1;  j >= 0; --j){
+        iHCells = this.Percept.data.environment.holes[i].cells[j];
+        this.Percept.data.environment.holes[i].cells[j] = {row: iHCells[0], column: iHCells[1]};
+      }
+
+  }else{
+    // if grid is partially observable
+    var vi= 0;
+    //for each hole in the environment
+    for (var iHole, iHCells, i= 0;  i < this.Percept.data.environment.holes.length; ++i){
+      iHole = environment.ListOfHoles[i];
+      iHCells = iHole.cells
+
+      //for each cell of the i-th hole...
+      for (var k= iHCells.length-1; k >= 0; --k){
+        //if the k-th cell of the i-th hole is not visible, then remove it...
+        if ( (_robLoc.Row - TWorld.VisibilityRadius <= iHCells[k][0] && iHCells[k][0] <= _robLoc.Row + TWorld.VisibilityRadius) &&
+           (_robLoc.Column - TWorld.VisibilityRadius <= iHCells[k][1] && iHCells[k][1] <= _robLoc.Column + TWorld.VisibilityRadius)){
+          rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+          cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+          iHCells[k] = {row: iHCells[k][0], column: iHCells[k][1]};
+          iHCells[k].row -= rVOEnvGrid;
+          iHCells[k].column -= cVOEnvGrid;
+        }else
+          iHCells.remove(k);
+      }
+
+      //if the i-th hole hasn't any visible cell, then...
+      if(iHCells.length <= 0)
+        this.Percept.data.environment.holes.remove(i--);// we remove it from the list of visible holes
+    }
+  }
+
+  //-> List of obstacles
+  var _listOfObs = environment.ListOfObstacles;
+
+  if (!TWorld.FullyObservableGrid){
+    // if grid is partially observable
+    for (var i= _listOfObs.length-1; i >= 0 ; --i){
+      //if the i-th obstacle is not visible, then remove it...
+      if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfObs[i].row && _listOfObs[i].row <= _robLoc.Row + TWorld.VisibilityRadius) &&
+         (_robLoc.Column - TWorld.VisibilityRadius <= _listOfObs[i].column && _listOfObs[i].column <= _robLoc.Column + TWorld.VisibilityRadius)){
+        rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+        cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+        _listOfObs[i].row -= rVOEnvGrid;
+        _listOfObs[i].column -= cVOEnvGrid;
+      }else
+        _listOfObs.remove(i);
+    }
+  }
+
+  this.Percept.data.environment.obstacles = _listOfObs;
+
+  //-> List Of Tiles
+  var _listOfTs = environment.ListOfTiles;
+
+  if (!TWorld.FullyObservableGrid){
+    // if grid is partially observable
+    for (var i= _listOfTs.length-1; i >= 0; --i){
+      //if the i-th obstacle is not visible, then remove it...
+      if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfTs[i].row && _listOfTs[i].row <= _robLoc.Row + TWorld.VisibilityRadius) &&
+         (_robLoc.Column - TWorld.VisibilityRadius <= _listOfTs[i].column && _listOfTs[i].column <= _robLoc.Column + TWorld.VisibilityRadius)){
+        rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+        cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
+        _listOfTs[i].row -= rVOEnvGrid;
+        _listOfTs[i].column -= cVOEnvGrid;
+      }else
+        _listOfTs.remove(i);
+    }
+  }
+
+  this.Percept.data.environment.tiles = _listOfTs;
+
+  //region Noise generator
+    //-> List of Holes
+    if (TWorld.HolesNoisyPerception){
+      for (var iHole, iHCells, i= 0;  i < this.Percept.data.environment.holes.length; ++i){
+        iHole =  this.Percept.data.environment.holes[i];
+        iHCells = iHole.cells;
+        //for each cell of the i-th hole...
+        for (var k= 0; k < iHCells.length; ++k)
+          if (Math.random() < TWorld.HolesNoisyPerception){
+            _grid[ iHCells[k].row ][ iHCells[k].column ] = _GRID_CELL.EMPTY;
+            delete iHCells[k];
+            iHCells.remove(k--);
+          }
+
+        if (iHole.size != iHCells.length){
+          //if the i-th hole doesn't have any cell, then...
+          if(iHCells.length <= 0){
+            delete iHole;
+            this.Percept.data.environment.holes.remove(i--);
+          }else{
+            iHole.size = iHCells.length;
+            iHole.value = TWorld.valueOfHoleFilledCompletely(iHole.size)
+          }
+        }
+      }
+    }
+
+    //-> List of Obstacles
+    if (TWorld.ObstaclesNoisyPerception){
+      for (var obst, i= 0; i < this.Percept.data.environment.obstacles.length; ++i)
+        if (Math.random() < TWorld.ObstaclesNoisyPerception){//Monte Carlos technique
+          obst = this.Percept.data.environment.obstacles[i];
+
+          _grid[ obst.row ][ obst.column ] = _GRID_CELL.EMPTY;
+
+          this.Percept.data.environment.obstacles.remove(i--);
+
+          delete obst;
         }
     }
 
-    this.Percept.data.environment.obstacles = _listOfObs;
+    //-> List of Tiles
+    if (TWorld.TilesNoisyPerception){
+      for (var tile, i= 0; i < this.Percept.data.environment.tiles.length; ++i)
+        if (Math.random() < TWorld.TilesNoisyPerception){//Monte Carlos technique
+          tile = this.Percept.data.environment.tiles[i];//.cell;
 
-    //-> List Of Tiles
-    var _listOfTs = environment.ListOfTiles;
+          _grid[ tile.row ][ tile.column ] = _GRID_CELL.EMPTY;
 
-    if (!TWorld.FullyObservableGrid){
-        // if grid is partially observable
-        for (var i= _listOfTs.length-1; i >= 0; --i){
-            //if the i-th obstacle is not visible, then remove it...
-            if ( (_robLoc.Row - TWorld.VisibilityRadius <= _listOfTs[i].row && _listOfTs[i].row <= _robLoc.Row + TWorld.VisibilityRadius) &&
-                 (_robLoc.Column - TWorld.VisibilityRadius <= _listOfTs[i].column && _listOfTs[i].column <= _robLoc.Column + TWorld.VisibilityRadius)){
-                rVOEnvGrid = _robLoc.Row - TWorld.VisibilityRadius; //VO stands for Virtual Origin
-                cVOEnvGrid = _robLoc.Column - TWorld.VisibilityRadius; //VO stands for Virtual Origin
-                _listOfTs[i].row -= rVOEnvGrid;
-                _listOfTs[i].column -= cVOEnvGrid;
-            }else
-                _listOfTs.remove(i);
+          this.Percept.data.environment.tiles.remove(i--);
+
+          delete tile;
         }
     }
+  //end region Noise generator
 
-    this.Percept.data.environment.tiles = _listOfTs;
+  _percept = this.Percept;
 
-    //region Noise generator
-        //-> List of Holes
-        if (TWorld.HolesNoisyPerception){
-            for (var iHole, iHCells, i= 0;  i < this.Percept.data.environment.holes.length; ++i){
-                iHole =  this.Percept.data.environment.holes[i];
-                iHCells = iHole.cells;
-                //for each cell of the i-th hole...
-                for (var k= 0; k < iHCells.length; ++k)
-                    if (Math.random() < TWorld.HolesNoisyPerception){
-                        _grid[ iHCells[k].row ][ iHCells[k].column ] = _GRID_CELL.EMPTY;
-                        delete iHCells[k];
-                        iHCells.remove(k--);
-                    }
+  //if percept has to be sent _out_ of the 3D TWorld, first we need to prepare it
+  if ( _AGENTS[environment.RobID].SOCKET_PROGRAM_AGENT )
+    //depending on the output format (selected by the user)
+    switch ( _AGENTS[environment.RobID].SOCKET_PROGRAM_AGENT.OUTPUT_FORMAT ){
 
-                if (iHole.size != iHCells.length){
-                    //if the i-th hole doesn't have any cell, then...
-                    if(iHCells.length <= 0){
-                        delete iHole;
-                        this.Percept.data.environment.holes.remove(i--);
-                    }else{
-                        iHole.size = iHCells.length;
-                        iHole.value = TWorld.valueOfHoleFilledCompletely(iHole.size)
-                    }
-                }
+      // JSON
+      case _PERCEPT_FORMAT.JSON:
+        _percept = JSON.stringify( _percept );
+        break;
+
+      // XML
+      case _PERCEPT_FORMAT.XML:
+        var temp;
+
+        //creating the XML-percept object
+        this.PerceptXML = json2attr_json(
+          _percept,
+          ["id", "size", "value", "time_elapsed", "lifetime_left", "row", "column", "leader", "team_id", "score", "battery"],
+          ["header"],
+          [["rows","row"], ["columns","column"], ["cells","cell"], ["members", "member"], ["_score_", "score"]]
+        );
+
+        //this.PerceptXML.data.environment.grid
+        var rows = new Array(this.PerceptXML.data.environment.grid.length);
+        for (var r= rows.length-1; r >= 0; --r)
+          rows[r] = {cell_data: this.PerceptXML.data.environment.grid[r]};
+        this.PerceptXML.data.environment.grid = {row: rows}
+
+        //this.PerceptXML.data.environment.holes.hole[*]
+        this.PerceptXML.data.environment.holes = {hole: this.PerceptXML.data.environment.holes};
+
+        //this.PerceptXML.data.environment.tiles.tile[*]
+        this.PerceptXML.data.environment.tiles = {tile: this.PerceptXML.data.environment.tiles};
+
+        //this.PerceptXML.data.environment.obstacles.obstacle[*]
+        this.PerceptXML.data.environment.obstacles = {obstacle: this.PerceptXML.data.environment.obstacles};
+
+        //this.PerceptXML.data.environment.battery_chargers.location[*]
+        if (this.PerceptXML.data.environment.battery_chargers)
+          this.PerceptXML.data.environment.battery_chargers = {location: this.PerceptXML.data.environment.battery_chargers};
+
+        //this.PerceptXML.data.environment.agents.agent[*]
+        if (this.PerceptXML.data.environment.agents)
+          this.PerceptXML.data.environment.agents = {agent: this.PerceptXML.data.environment.agents};
+
+        //this.PerceptXML.data.builtin_knowledge.teams.team[*]
+        if (this.PerceptXML.data.builtin_knowledge.teams){
+          this.PerceptXML.data.builtin_knowledge.teams = {team: this.PerceptXML.data.builtin_knowledge.teams};
+
+          //this.PerceptXML.data.builtin_knowledge.teams.team[*].member[*]
+          for (var teams = this.PerceptXML.data.builtin_knowledge.teams.team, t=0; t < teams.length; ++t)
+            for (var m=0; m < teams[t].member.length; ++m){
+              teams[t].member[m] = {_attr_id: teams[t].member[m]._attr_value}
             }
         }
 
-        //-> List of Obstacles
-        if (TWorld.ObstaclesNoisyPerception){
-            for (var obst, i= 0; i < this.Percept.data.environment.obstacles.length; ++i)
-                if (Math.random() < TWorld.ObstaclesNoisyPerception){//Monte Carlos technique
-                    obst = this.Percept.data.environment.obstacles[i];
+        _percept = sprintf( _PERCEPT_FORMAT.XML, _X2JS.json2xml_str( this.PerceptXML ) );
+        break;
 
-                    _grid[ obst.row ][ obst.column ] = _GRID_CELL.EMPTY;
-
-                    this.Percept.data.environment.obstacles.remove(i--);
-
-                    delete obst;
-                }
-        }
-
-        //-> List of Tiles
-        if (TWorld.TilesNoisyPerception){
-            for (var tile, i= 0; i < this.Percept.data.environment.tiles.length; ++i)
-                if (Math.random() < TWorld.TilesNoisyPerception){//Monte Carlos technique
-                    tile = this.Percept.data.environment.tiles[i];//.cell;
-
-                    _grid[ tile.row ][ tile.column ] = _GRID_CELL.EMPTY;
-
-                    this.Percept.data.environment.tiles.remove(i--);
-
-                    delete tile;
-                }
-        }
-    //end region Noise generator
-
-    _percept = this.Percept;
-
-    //if percept has to be sent _out_ of the 3D TWorld, first we need to prepare it
-    if ( _AGENTS[environment.RobID].SOCKET_PROGRAM_AGENT )
-        //depending on the output format (selected by the user)
-        switch ( _AGENTS[environment.RobID].SOCKET_PROGRAM_AGENT.OUTPUT_FORMAT ){
-
-            // JSON
-            case _PERCEPT_FORMAT.JSON:
-                _percept = JSON.stringify( _percept );
-                break;
-
-            // XML
-            case _PERCEPT_FORMAT.XML:
-                var temp;
-
-                //creating the XML-percept object
-                this.PerceptXML = json2attr_json(
-                    _percept,
-                    ["id", "size", "value", "time_elapsed", "lifetime_left", "row", "column", "leader", "team_id", "score", "battery"],
-                    ["header"],
-                    [["rows","row"], ["columns","column"], ["cells","cell"], ["members", "member"], ["_score_", "score"]]
-                );
-
-                //this.PerceptXML.data.environment.grid
-                var rows = new Array(this.PerceptXML.data.environment.grid.length);
-                for (var r= rows.length-1; r >= 0; --r)
-                    rows[r] = {cell_data: this.PerceptXML.data.environment.grid[r]};
-                this.PerceptXML.data.environment.grid = {row: rows}
-
-                //this.PerceptXML.data.environment.holes.hole[*]
-                this.PerceptXML.data.environment.holes = {hole: this.PerceptXML.data.environment.holes};
-
-                //this.PerceptXML.data.environment.tiles.tile[*]
-                this.PerceptXML.data.environment.tiles = {tile: this.PerceptXML.data.environment.tiles};
-
-                //this.PerceptXML.data.environment.obstacles.obstacle[*]
-                this.PerceptXML.data.environment.obstacles = {obstacle: this.PerceptXML.data.environment.obstacles};
-
-                //this.PerceptXML.data.environment.battery_chargers.location[*]
-                if (this.PerceptXML.data.environment.battery_chargers)
-                    this.PerceptXML.data.environment.battery_chargers = {location: this.PerceptXML.data.environment.battery_chargers};
-
-                //this.PerceptXML.data.environment.agents.agent[*]
-                if (this.PerceptXML.data.environment.agents)
-                    this.PerceptXML.data.environment.agents = {agent: this.PerceptXML.data.environment.agents};
-
-                //this.PerceptXML.data.builtin_knowledge.teams.team[*]
-                if (this.PerceptXML.data.builtin_knowledge.teams){
-                    this.PerceptXML.data.builtin_knowledge.teams = {team: this.PerceptXML.data.builtin_knowledge.teams};
-
-                    //this.PerceptXML.data.builtin_knowledge.teams.team[*].member[*]
-                    for (var teams = this.PerceptXML.data.builtin_knowledge.teams.team, t=0; t < teams.length; ++t)
-                        for (var m=0; m < teams[t].member.length; ++m){
-                            teams[t].member[m] = {_attr_id: teams[t].member[m]._attr_value}
-                        }
-                }
-
-                _percept = sprintf( _PERCEPT_FORMAT.XML, _X2JS.json2xml_str( this.PerceptXML ) );
-                break;
-
-            // PROLOG
-            case _PERCEPT_FORMAT.PROLOG_FACT:
-                _percept = sprintf(
-                                _PERCEPT_FORMAT.PROLOG_FACT,
-                                _percept.header,
-                                json2prolog_facts(
-                                    _percept.data,
-                                    ["row", "column"],
-                                    [
-                                        ["holes","hole"], ["tiles","tile"], ["obstacles", "obstacle"],
-                                        ["cells","cell"], ["agents","agent"], ["teams","team"],
-                                        ["battery_chargers","location"], /*((_NUMBER_OF_AGENTS > 1)? */["agents_location","agent"]/*: [])*/
-                                    ]
-                                )
-                );
-                break;
-        }
-    postMessage( _percept );
+      // PROLOG
+      case _PERCEPT_FORMAT.PROLOG_FACT:
+        _percept = sprintf(
+                _PERCEPT_FORMAT.PROLOG_FACT,
+                _percept.header,
+                json2prolog_facts(
+                  _percept.data,
+                  ["row", "column"],
+                  [
+                    ["holes","hole"], ["tiles","tile"], ["obstacles", "obstacle"],
+                    ["cells","cell"], ["agents","agent"], ["teams","team"],
+                    ["battery_chargers","location"], /*((_NUMBER_OF_AGENTS > 1)? */["agents_location","agent"]/*: [])*/
+                  ]
+                )
+        );
+        break;
+    }
+  postMessage( _percept );
 }
 
 //transform the JSON perception into a JSON object that is prepared to be exported as an XML
@@ -515,41 +515,41 @@ this.perceptionFunction = function( environment ) /*returns a percept*/{
 //  notAttrs:   not-an-attribute by force
 //  replace:    array of pairs "x:y", x is replaced by y whenever it appears (after conversion)
 function json2attr_json(json, attrs, notAttrs, replace){
-    var i, rProp, _attr_json = new Object();
-    attrs = attrs || [];
-    notAttrs = notAttrs || [];
+  var i, rProp, _attr_json = new Object();
+  attrs = attrs || [];
+  notAttrs = notAttrs || [];
 
-    if (json instanceof Array)
-        _attr_json = new Array(json.length);
+  if (json instanceof Array)
+    _attr_json = new Array(json.length);
 
-    for (prop in json)
-        if (!(json[prop] instanceof Function)){
-            rProp = prop;
+  for (prop in json)
+    if (!(json[prop] instanceof Function)){
+      rProp = prop;
 
-            //do I have to replace prop?
-            i= replace.length;
-            while (i--) if (replace[i][0] == prop)
-                {rProp = replace[i][1]; i=0}
+      //do I have to replace prop?
+      i= replace.length;
+      while (i--) if (replace[i][0] == prop)
+        {rProp = replace[i][1]; i=0}
 
-            if (json[prop] instanceof Object)
-                _attr_json[ rProp ] = json2attr_json(json[ prop ], attrs, notAttrs, replace);
-            else{
+      if (json[prop] instanceof Object)
+        _attr_json[ rProp ] = json2attr_json(json[ prop ], attrs, notAttrs, replace);
+      else{
 
-                if (attrs.contains(prop))
-                    _attr_json[ attrPrefix + rProp ] = json[ prop ];
-                else
-                    if (!notAttrs.contains(prop)){
+        if (attrs.contains(prop))
+          _attr_json[ attrPrefix + rProp ] = json[ prop ];
+        else
+          if (!notAttrs.contains(prop)){
 
-                        _attr_json[ rProp ] = null || {};
+            _attr_json[ rProp ] = null || {};
 
-                        _attr_json[ rProp ][ attrPrefix + "value" ] = json[ prop ];
-                    }
-                    else
-                        _attr_json[ rProp ] = json[ prop ];
-            }
+            _attr_json[ rProp ][ attrPrefix + "value" ] = json[ prop ];
+          }
+          else
+            _attr_json[ rProp ] = json[ prop ];
+      }
 
-        }
-    return _attr_json;
+    }
+  return _attr_json;
 }
 
 //transform the JSON perception into a Prolog fact
@@ -562,60 +562,60 @@ function json2attr_json(json, attrs, notAttrs, replace){
 //  parent:         internal parameter, you shoundn't care about it
 //                  (pretend it doens't exist when calling this function)
 function json2prolog_facts(json, skipFunctors, arrayFunctors, parent){
-    var i, _arrFunctor, functor, facts = "";
-    var rowColumnCell = (parent == "obstacles" || parent == "tiles");
-    var cell = false;
+  var i, _arrFunctor, functor, facts = "";
+  var rowColumnCell = (parent == "obstacles" || parent == "tiles");
+  var cell = false;
 
-    skipFunctors = skipFunctors || [];
-    arrayFunctors = arrayFunctors || [];
+  skipFunctors = skipFunctors || [];
+  arrayFunctors = arrayFunctors || [];
 
-    if (json === null || json === undefined)
-        return "null";
-    else
-    if (json.constructor === String && isNaN(parseInt(json)))
-        return "'" + json + "'";
-    else
-    if (!(json instanceof Object))
-        return json;
-    else
-        for (prop in json)
-            if (!(json[prop] instanceof Function)){
-                _arrFunctor = "";
-                if (facts !== "") facts+=", ";
+  if (json === null || json === undefined)
+    return "null";
+  else
+  if (json.constructor === String && isNaN(parseInt(json)))
+    return "'" + json + "'";
+  else
+  if (!(json instanceof Object))
+    return json;
+  else
+    for (prop in json)
+      if (!(json[prop] instanceof Function)){
+        _arrFunctor = "";
+        if (facts !== "") facts+=", ";
 
-                if ( rowColumnCell && prop == "row")
-                    {facts+= "location("; cell = true}
-                else
-                    if (!(rowColumnCell && prop == "column")){
-                        //do I have to add a functor to each array elemnt?
-                        i= arrayFunctors.length;
-                        while (i--) if (arrayFunctors[i][0] == parent)
-                            {_arrFunctor = arrayFunctors[i][1]; i=0}
-                    }
+        if ( rowColumnCell && prop == "row")
+          {facts+= "location("; cell = true}
+        else
+          if (!(rowColumnCell && prop == "column")){
+            //do I have to add a functor to each array elemnt?
+            i= arrayFunctors.length;
+            while (i--) if (arrayFunctors[i][0] == parent)
+              {_arrFunctor = arrayFunctors[i][1]; i=0}
+          }
 
-                functor = (skipFunctors.contains(prop) || !isNaN(parseInt(prop))/*prop is an Array index*/)?
-                            ((!_arrFunctor)? "%s" : _arrFunctor+"(%s)")
-                            :
-                            prop + "(%s)";
+        functor = (skipFunctors.contains(prop) || !isNaN(parseInt(prop))/*prop is an Array index*/)?
+              ((!_arrFunctor)? "%s" : _arrFunctor+"(%s)")
+              :
+              prop + "(%s)";
 
-                if (json[prop] instanceof Array && json[prop].length){
-                    facts+= sprintf(functor, "[" + json2prolog_facts(json[prop], skipFunctors, arrayFunctors, prop ) +"]");
-                }else
-                    facts+= sprintf(
-                        functor,
-                        json2prolog_facts(
-                            json[prop],
-                            skipFunctors,
-                            arrayFunctors,
-                            rowColumnCell? parent : prop
-                        )
-                    );
+        if (json[prop] instanceof Array && json[prop].length){
+          facts+= sprintf(functor, "[" + json2prolog_facts(json[prop], skipFunctors, arrayFunctors, prop ) +"]");
+        }else
+          facts+= sprintf(
+            functor,
+            json2prolog_facts(
+              json[prop],
+              skipFunctors,
+              arrayFunctors,
+              rowColumnCell? parent : prop
+            )
+          );
 
-                if (cell && rowColumnCell && prop == "column")
-                    facts+= ")";//closing the 'cell' functor
-            }
+        if (cell && rowColumnCell && prop == "column")
+          facts+= ")";//closing the 'cell' functor
+      }
 
-    return facts? facts : "null";
+  return facts? facts : "null";
 }
 
 onmessage = perceptionFunction;

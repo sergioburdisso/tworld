@@ -17,49 +17,49 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 (function(){
-    var mod = angular.module("tworldMainMenu", []);
+  var mod = angular.module("tworldMainMenu", []);
 
-    mod.controller("MainMenuController", ["$modal", function($modal){
-        var _self = this;
+  mod.controller("MainMenuController", ["$modal", function($modal){
+    var _self = this;
 
-        this.menu = -1;
-        this.overStart = false;
+    this.menu = -1;
+    this.overStart = false;
 
-        this.leave = function(){this.menu = -1}
-        this.setActive = function(i){this.menu = i}
-        this.isActive = function(i){return this.menu === i}
+    this.leave = function(){this.menu = -1}
+    this.setActive = function(i){this.menu = i}
+    this.isActive = function(i){return this.menu === i}
 
-        this.viewSettings = function(){
-            $modal.open({
-                templateUrl: 'settings-modal.html',
-                controller: settingsModalController
-            })
+    this.viewSettings = function(){
+      $modal.open({
+        templateUrl: 'settings-modal.html',
+        controller: settingsModalController
+      })
+    }
+
+    this.startTWorld = function(){
+      $modal.open({
+        size: 'lg',
+        templateUrl: 'items-list-modal.html',
+        controller: itemsListController,
+        resolve:{
+          items: itemsListEnvsResolver,
+          agentProgramsFlag:function(){return false}
         }
-
-        this.startTWorld = function(){
-            $modal.open({
-                size: 'lg',
-                templateUrl: 'items-list-modal.html',
-                controller: itemsListController,
-                resolve:{
-                    items: itemsListEnvsResolver,
-                    agentProgramsFlag:function(){return false}
-                }
-            })
-            .result.then(
-                function (taskEnv) {if (taskEnv){
-                    $modal.open({
-                        size: 'lg',
-                        templateUrl: 'run-modal.html',
-                        controller: runModalController,
-                        resolve:{
-                            taskEnv:  function (){ return taskEnv }, 
-                            agentProgs: function(){return []}
-                        }
-                    });
-                }}
-            );
-        }
-    }])
+      })
+      .result.then(
+        function (taskEnv) {if (taskEnv){
+          $modal.open({
+            size: 'lg',
+            templateUrl: 'run-modal.html',
+            controller: runModalController,
+            resolve:{
+              taskEnv:  function (){ return taskEnv }, 
+              agentProgs: function(){return []}
+            }
+          });
+        }}
+      );
+    }
+  }])
 
 })();

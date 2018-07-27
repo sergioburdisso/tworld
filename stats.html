@@ -139,9 +139,9 @@
                 <div class="col-md-2"><b>Speed</b><br>{{trial.speed | tspeed}}</div>
                 <div class="col-md-2"><b>Pause</b><br>{{trial.pause&&"enabled"||"disabled"}}</div>
                 <div class="col-md-2">
-                    <b>Result</b><br><span ng-if="trial.result == 0"><b>neutral</b></span>
-                    <span ng-if="trial.result == 1" class="text-green"><b>success</b></span>
-                    <span ng-if="trial.result == 2" class="text-red"><b>failure</b></span>
+                    <b>Result</b><br><span ng-if="trial.result == 1"><b>neutral</b></span>
+                    <span ng-if="trial.result == 2" class="text-green"><b>success</b></span>
+                    <span ng-if="trial.result == 3" class="text-red"><b>failure</b></span>
                 </div>
                 <div class="col-md-2"><b>T-Time</b><br>{{trial.stats.t_time|ttime}}t-s</div>
                 <div class="col-md-2"><b>Time</b><br>{{(trial.stats.time/1000).toFixed(2)|ttime}}s</div>

@@ -18,486 +18,518 @@
 */
 
 (function(){
-    var mod = angular.module('tworldAgentPrograms', []);
+  var mod = angular.module('tworldAgentPrograms', []);
 
-    var formats = []; for (p in _PERCEPT_FORMAT) formats.push(p);
+  var formats = []; for (p in _PERCEPT_FORMAT) formats.push(p);
 
-    mod.controller("AgentProgController", ['$scope', '$rootScope', '$location', '$modal', 'agentProgs',
-        function($scope, $rootScope, $location, $modal, agentProgs){
-        var _self = this;
-        var _selected = -1;
+  mod.controller("AgentProgController", ['$scope', '$rootScope', '$location', '$modal', 'agentProgs',
+    function($scope, $rootScope, $location, $modal, agentProgs){
+    var _self = this;
+    var _selected = -1;
 
-        this.agentPrograms = agentProgs;
-        this.orderCond = "-date";
-        this.allProps = true;
-        this.page = 1;
-        this.itemsPerPage = 7;
-        this.query = {
-            name:"",
-            ai:true,
-            javascript:true,
-            keyboard:true
-        };
+    this.agentPrograms = agentProgs;
+    this.orderCond = "-date";
+    this.allProps = true;
+    this.page = 1;
+    this.itemsPerPage = 7;
+    this.query = {
+      name:"",
+      ai:true,
+      javascript:true,
+      keyboard:true
+    };
 
-        this.setSelected = function(value){_selected = value}
-        this.isSelected = function(value){return _selected == value}
+    this.setSelected = function(value){_selected = value}
+    this.isSelected = function(value){return _selected == value}
 
-        this.remove = function(){
+    this.remove = function(){
+      $modal.open({
+        size: 'sm',
+        templateUrl: 'yes-no-modal.html',
+        controller: yesNoModalController,
+        resolve:{
+          title: function(){return 'Confirmation'}, 
+          msg: function(){return 'Are you sure you want to delete this agent program?'}
+        }
+      })
+      .result.then(function(){
+        if (!isLoggedIn())
+          removeRetry(emptyTrialsAgentProgram(_selected))
+        else
+          emptyTrialsAgentProgram(_selected, removeRetry, $rootScope);
+      });
+    }
+
+    this.download = function(date){downloadAgentProgramSourceCode(date, $rootScope)};
+
+    this.open = function(){$location.url('/agent-programs/view:'+_selected)}
+
+    this.run = function(jsap){
+      if (jsap&&_self.editor(jsap)){
+        $location.url('/agent-programs/source-code:'+jsap.date);
+        gotoTop();
+      }else{
+        modalInstance = $modal.open({
+          size: 'lg',
+          templateUrl: 'items-list-modal.html',
+          controller: itemsListController,
+          resolve:{
+            items: itemsListEnvsResolver,
+            agentProgramsFlag:function(){return false}
+          }
+        }).result.then(
+          function (taskEnv) {
             $modal.open({
-                size: 'sm',
-                templateUrl: 'yes-no-modal.html',
-                controller: yesNoModalController,
-                resolve:{
-                    title: function(){return 'Confirmation'}, 
-                    msg: function(){return 'Are you sure you want to delete this agent program?'}
-                }
-            })
-            .result.then(function(){
-                if (!isLoggedIn())
-                    removeRetry(emptyTrialsAgentProgram(_selected))
-                else
-                    emptyTrialsAgentProgram(_selected, removeRetry, $rootScope);
-            });
-        }
-
-        this.download = function(date){downloadAgentProgramSourceCode(date, $rootScope)};
-
-        this.open = function(){$location.url('/agent-programs/view:'+_selected)}
-
-        this.run = function(jsap){
-            if (jsap&&_self.editor(jsap)){
-                $location.url('/agent-programs/source-code:'+jsap.date);
-                gotoTop();
-            }else{
-                modalInstance = $modal.open({
-                    size: 'lg',
-                    templateUrl: 'items-list-modal.html',
-                    controller: itemsListController,
-                    resolve:{
-                        items: itemsListEnvsResolver,
-                        agentProgramsFlag:function(){return false}
-                    }
-                }).result.then(
-                    function (taskEnv) {
-                        $modal.open({
-                            size: 'lg',
-                            templateUrl: 'run-modal.html',
-                            controller: runModalController,
-                            resolve:{
-                                taskEnv     : function (){ return taskEnv },
-                                agentProgs  : function($q) {
-                                    if (!isLoggedIn()) return [getAgentProgramByDate(_selected)];
-                                    else{
-                                        var deferred = $q.defer();
-                                        getAgentProgramByDate(
-                                            _selected,
-                                            function(response){ deferred.resolve([response]) },
-                                            $rootScope
-                                        );
-                                        return deferred.promise;
-                                    }
-                                }
-                            }
-                        });
-                    }
-                );
-            }
-        }
-
-        this.editor = function(agent_prog){return (agent_prog && agent_prog.ai && agent_prog.javascript)}
-
-        this.userFilter = function(agentProg){
-            var regEx = new RegExp(_self.query.name,"i");
-            var q = _self.query;
-            return regEx.test(agentProg.name) && (
-                    _self.allProps ||
-                    (
-                        q.ai == agentProg.ai && (
-                            (q.ai && q.javascript == agentProg.javascript)
-                            ||
-                            (!q.ai && q.keyboard == agentProg.keyboard)
-                        )
-                    )
-            );
-        }
-
-        function removeRetry(emptyTrials){
-            if (emptyTrials)
-                remove()
-            else{
-                $modal.open({
-                    size: 'sm',
-                    templateUrl: 'yes-no-modal.html',
-                    controller: yesNoModalController,
-                    resolve:{
-                        title: function(){return 'Confirmation'}, 
-                        msg: function(){return 'It seems like there are trials/states associate with this agent programs. If you delete it, all its trials and stats will be deleted as well. Are you sure you want to proceed?'}
-                    }
-                }).result.then(remove)
-            }
-        }
-
-
-        function remove(){
-            if (!isLoggedIn())
-                _self.agentPrograms = removeAgentProgramByDate(_selected);
-            else
-                removeAgentProgramByDate(_selected, function(agentProgs){ _self.agentPrograms = agentProgs; $scope.$apply();}, $rootScope);
-        }
-    }]);
-
-    mod.controller('AgentProgSourceCodeController', ['$rootScope','$scope','$routeParams','$modal', '$location', 'agentProg',
-        function($rootScope, $scope, $routeParams, $modal, $location, agentProg){if (!agentProg || !agentProg.ai || !agentProg.javascript){$location.url('/');return}
-            var _self = this;
-            var _source;
-            var _editor;
-            var _undoManagers = [new ace.UndoManager(), new ace.UndoManager(), new ace.UndoManager(), new ace.UndoManager()];
-            var fontSize = 13;
-
-            ace.require("ace/ext/language_tools");
-            _editor = ace.edit("source-code");
-
-            _editor.setOptions({
-                theme: "ace/theme/ambiance",
-                enableBasicAutocompletion: true,
-                enableLiveAutocompletion: false,
-                enableSnippets: true,
-                cursorStyle: "smooth",
-                autoScrollEditorIntoView: true,
-                animatedScroll: true,
-                showInvisibles: true,
-                displayIndentGuides: true,
-                showPrintMargin: true,
-                mode:"ace/mode/javascript",
-                useWorker: true,
-                useSoftTabs:true,
-                tabSize:2,
-                fontSize: 13,
-                readOnly: agentProg.builtin
-            });
-
-            this.fullScreen = false;
-            this.saved = true;
-            this.dropdownopen = false;
-            this.agent_prog = agentProg;
-
-            if (!this.agent_prog.default_task_env)
-                this.task_env =  undefined;
-            else
-                loadEnvAsync(this.agent_prog.default_task_env);
-
-            this.search = function(){_editor.execCommand('find')}
-            this.replace = function(){_editor.execCommand('replace')}
-
-            this.open = function(source, iUndo){
-                if (_source){
-                    _source.cursor = _editor.getCursorPosition();
-                    _source.code = _editor.getValue();
-                }
-
-                _source = source;
-
-                _editor.setValue(_source.code);
-                _editor.focus();
-                if (!agentProg.builtin){
-                    _editor.gotoLine(_source.cursor.row+1, _source.cursor.column, true);
-                    _editor.scrollToRow(_source.cursor.row);
-                }else{
-                    _editor.gotoLine(1, 0, true);
-                    _editor.scrollToRow(0);
-                }
-                _editor.session.setUndoManager(_undoManagers[iUndo]);
-            }
-
-            this.save = function(){if(!agentProg.builtin){
-                this.dropdownopen = false;
-                _source.cursor = _editor.getCursorPosition();
-                _source.code = _editor.getValue();
-
-                if (!isLoggedIn())
-                    updateAgentProgram(_self.agent_prog);
-                else
-                    updateAgentProgram(_self.agent_prog, function(){$scope.$apply();}, $rootScope);
-
-                _self.saved = true;
-            }}
-
-            this.run = function(){
-                this.dropdownopen = false;
-                if (!this.task_env)
-                    this.openEnvironmentsModal(true);
-                else
-                    this.openRunModal();
-            }
-
-            this.toggleMaximaze = function(){
-                _self.fullScreen = !_self.fullScreen;
-                if (_self.fullScreen){
-                    _editor.setOptions({autoScrollEditorIntoView: false});
-                    $('body').addClass("overflow-hidden");
-                    $(window).scrollTop(0);
-                    $('#source-code').css("height", $(window).height()-95+"px")
-                }else{
-                    _editor.setOptions({autoScrollEditorIntoView: true});
-                    $('#source-code').css("height", "")
-                    $('body').removeClass("overflow-hidden");
-                    gotoTop()
-                }
-                _editor.resize();
-            }
-
-            this.openEnvironmentsModal = function(run){
-                $modal.open({
-                    size: 'lg',
-                    templateUrl: 'items-list-modal.html',
-                    controller: itemsListController,
-                    resolve: {
-                        items: itemsListEnvsResolver,
-                        agentProgramsFlag: function(){return false}
-                    }
-                })
-                .result.then(
-                    function (taskEnv) {
-                        _self.agent_prog.default_task_env = taskEnv.date;
-                        if (!_self.task_env && run){
-                            _self.task_env = taskEnv;
-                            _self.openRunModal();
-                        }else
-                            _self.task_env = taskEnv;
-                    }
-                );
-            }
-
-            this.openMemoryModal = function(){
-                $modal.open({
-                    size: 'lg',
-                    templateUrl: 'memory-modal.html',
-                    resolve:{
-                        memory: function($routeParams, $q){
-                            if (!isLoggedIn())
-                                return JSON.stringify(getMemoryByAgentProgramDate($routeParams.id));
-                            else{
-                                var deferred = $q.defer();
-                                getMemoryByAgentProgramDate(
-                                    $routeParams.id,
-                                    function(memory){
-                                        deferred.resolve( memory?JSON.stringify(memory):'' )
-                                    },
-                                    $rootScope
-                                );
-                                return deferred.promise;
-                            }
-                        }
-                    },
-                    controller: function($scope, $modalInstance, memory){
-                        $scope.memory = {text: memory, readonly: agentProg.builtin};
-                        $scope.alert = false;
-                        $scope.hideAlert = function(){$scope.alert = false}
-                        $scope.save = function(){if (!agentProg.builtin){
-                            try{
-                                JSON.parse($scope.memory.text); //is it a well-formed JSON string?
-                                if (!isLoggedIn()){
-                                    saveMemoryByAgentProgramDate($routeParams.id, $scope.memory.text);
-                                    $modalInstance.close();
-                                }else
-                                    saveMemoryByAgentProgramDate(
-                                        $routeParams.id,
-                                        $scope.memory.text,
-                                        $modalInstance.close,
-                                        $rootScope
-                                    );
-                            }catch(e){$scope.alert = true}
-                        }}
-                        $scope.close = function(){$modalInstance.dismiss()}
-
-                        //to handle TABs properly
-                        $(document).delegate('#memory', 'keydown', function(e) {
-                            var keyCode = e.keyCode || e.which;
-
-                            if (keyCode == 9) {
-                                e.preventDefault();
-                                var start = $(this).get(0).selectionStart;
-                                var end = $(this).get(0).selectionEnd;
-
-                                // set textarea value to: text before caret + tab + text after caret
-                                $(this).val($(this).val().substring(0, start)
-                                        + "\t"
-                                        + $(this).val().substring(end));
-
-                                // put caret at right position again
-                                $(this).get(0).selectionStart =
-                                $(this).get(0).selectionEnd = start + 1;
-                            }
-                        });
-                    }
-                })
-            }
-
-            this.openRunModal = function(){
-                _self.save();
-                $modal.open({
-                        size: 'lg',
-                        templateUrl: 'run-modal.html',
-                        controller: runModalController,
-                        resolve:{
-                            taskEnv: _self.task_env?
-                                        function(){return _self.task_env}
-                                        :
-                                        function ($rootScope, $q){
-                                            return runTaskEnvResolver(
-                                                _self.agent_prog.default_task_env,
-                                                $rootScope,
-                                                $q
-                                            )
-                                        },
-                            agentProgs: function(){return [_self.agent_prog]}
-                        }
-                    });
-            }
-
-            this.openAPIModal = function(){
-                _self.save();
-                $modal.open({
-                        size: 'lg',
-                        templateUrl: 'api-reference-modal.html',
-                        controller: APIReferenceController,
-                    });
-            }
-
-            function loadEnvAsync(date){
-                if (!isLoggedIn())
-                    _self.task_env = getEnvironmentByDate(date);
-                else{
-                    getEnvironmentByDate(date,function(response){_self.task_env = response;$scope.$apply();},$rootScope);
-                    _self.task_env = {date: date, name: "Loading..."};
-                }
-            }
-            //constructor logic
-
-            _editor.on('input', function() {
-                if (_self.saved){
-                    _self.saved = false;
-                    $scope.$apply()//update the binding values
-                }
-            });
-
-            $(window).unbind('keydown').bind('keydown', function(event) {
-                //console.log(event.which);event.preventDefault();
-                if (event.ctrlKey || event.metaKey) {
-                    switch (String.fromCharCode(event.which).toLowerCase()) {
-                        case 's':
-                            event.preventDefault();
-                            _self.save();
-                            $scope.$apply();
-                            break;
-                        case 'g':
-                            //event.preventDefault();
-                            break;
-                        case 'r':
-                            event.preventDefault();
-                            _self.run();
-                            break;
-                    }
-
-                    switch(event.which){
-                        case 107://+
-                            event.preventDefault();
-                            _editor.setFontSize(++fontSize);
-                            break;
-                        case 109://-
-                            event.preventDefault();
-                            _editor.setFontSize(--fontSize);
-                            if (fontSize < 1) fontSize = 1;
-                            break;
-                    }
-                }
-                switch(event.which){
-                    case 119://F8
-                        event.preventDefault();
-                        _self.run();
-                        break;
-                    case 112://F1
-                        event.preventDefault();
-                        _self.openAPIModal();
-                        break;
-                }
-            });
-
-        }]
-    );
-
-    mod.controller('AgentProgNewController', ['$scope', '$rootScope', '$modal', '$location', 'agentProg',
-        function($scope, $rootScope, $modal, $location, agentProg){if (!agentProg){$location.url('/');return}
-            var _self = this;
-            var _socket = agentProg.socket;
-
-            this.gett = gettt;
-
-            this.PERCEPT_FORMAT = _PERCEPT_FORMAT;
-
-            this.perceptFormats = formats;
-            this.agent_prog = agentProg;
-            this.isLoggedIn = isLoggedIn;
-
-            this.save = function(){if (Validate()){
-                agentProg.source.file = $("#file").val() != "";
-
-                if (!agentProg.source.file){
-                    if (!agentProg.date)
-                        newAgentProgram(this.agent_prog, _finished, $rootScope);
-                    else
-                        updateAgentProgram(agentProg, _finished, $rootScope);
-                }else{
-                    sendToTCloudWithFile(
-                        {
-                            nm: !agentProg.date? 'new_agent_program' : 'update_agent_program',
-                            m: 'user_file_uploader',
-                            date: agentProg.date,
-                            ap: JSON.stringify(agentProg)
-                        },
-                        $('#file')[0].files[0],
-                        _finished,
-                        $rootScope
+              size: 'lg',
+              templateUrl: 'run-modal.html',
+              controller: runModalController,
+              resolve:{
+                taskEnv     : function (){ return taskEnv },
+                agentProgs  : function($q) {
+                  if (!isLoggedIn()) return [getAgentProgramByDate(_selected)];
+                  else{
+                    var deferred = $q.defer();
+                    getAgentProgramByDate(
+                      _selected,
+                      function(response){ deferred.resolve([response]) },
+                      $rootScope
                     );
+                    return deferred.promise;
+                  }
                 }
-            }}
+              }
+            });
+          }
+        );
+      }
+    }
 
-            this.readKey = function(key){
-                $modal.open({
-                    size: 'sm',
-                    templateUrl: 'read-key.html',
-                    controller: readKeyController
-                })
-                .result.then(
-                    function (keyCode) {
-                        if (!keyCode) return;
-                        agentProg.controls[key] = keyCode;
-                    },
-                    function(){$(document).unbind('keydown')}
+    this.editor = function(agent_prog){return (agent_prog && agent_prog.ai && agent_prog.javascript)}
+
+    this.userFilter = function(agentProg){
+      var regEx = new RegExp(_self.query.name,"i");
+      var q = _self.query;
+      return regEx.test(agentProg.name) && (
+          _self.allProps ||
+          (
+            q.ai == agentProg.ai && (
+              (q.ai && q.javascript == agentProg.javascript)
+              ||
+              (!q.ai && q.keyboard == agentProg.keyboard)
+            )
+          )
+      );
+    }
+
+    function removeRetry(emptyTrials){
+      if (emptyTrials)
+        remove()
+      else{
+        $modal.open({
+          size: 'sm',
+          templateUrl: 'yes-no-modal.html',
+          controller: yesNoModalController,
+          resolve:{
+            title: function(){return 'Confirmation'}, 
+            msg: function(){return 'It seems like there are trials/states associate with this agent programs. If you delete it, all its trials and stats will be deleted as well. Are you sure you want to proceed?'}
+          }
+        }).result.then(remove)
+      }
+    }
+
+
+    function remove(){
+      if (!isLoggedIn())
+        _self.agentPrograms = removeAgentProgramByDate(_selected);
+      else
+        removeAgentProgramByDate(_selected, function(agentProgs){ _self.agentPrograms = agentProgs; $scope.$apply();}, $rootScope);
+    }
+  }]);
+
+  mod.controller('AgentProgSourceCodeController', ['$rootScope','$scope','$routeParams','$modal', '$location', 'agentProg',
+    function($rootScope, $scope, $routeParams, $modal, $location, agentProg){if (!agentProg || !agentProg.ai || !agentProg.javascript){$location.url('/');return}
+      var _self = this;
+      var _source;
+      var _editor;
+      var _undoManagers = [new ace.UndoManager(), new ace.UndoManager(), new ace.UndoManager(), new ace.UndoManager()];
+      var fontSize = 13;
+
+      ace.require("ace/ext/language_tools");
+      _editor = ace.edit("source-code");
+
+      _editor.setOptions({
+        theme: "ace/theme/ambiance",
+        enableBasicAutocompletion: true,
+        enableLiveAutocompletion: false,
+        enableSnippets: true,
+        cursorStyle: "smooth",
+        autoScrollEditorIntoView: true,
+        animatedScroll: true,
+        showInvisibles: true,
+        displayIndentGuides: true,
+        showPrintMargin: true,
+        mode:"ace/mode/javascript",
+        useWorker: true,
+        useSoftTabs:true,
+        tabSize:2,
+        fontSize: 13,
+        readOnly: agentProg.builtin
+      });
+
+      this.fullScreen = false;
+      this.saved = true;
+      this.dropdownopen = false;
+      this.agent_prog = agentProg;
+
+      if (!this.agent_prog.default_task_env)
+        this.task_env =  undefined;
+      else
+        loadEnvAsync(this.agent_prog.default_task_env);
+
+      this.search = function(){_editor.execCommand('find')}
+      this.replace = function(){_editor.execCommand('replace')}
+
+      this.open = function(source, iUndo){
+        if (_source){
+          _source.cursor = _editor.getCursorPosition();
+          _source.code = _editor.getValue();
+        }
+
+        _source = source;
+
+        _editor.setValue(_source.code);
+        _editor.focus();
+        if (!agentProg.builtin){
+          _editor.gotoLine(_source.cursor.row+1, _source.cursor.column, true);
+          _editor.scrollToRow(_source.cursor.row);
+        }else{
+          _editor.gotoLine(1, 0, true);
+          _editor.scrollToRow(0);
+        }
+        _editor.session.setUndoManager(_undoManagers[iUndo]);
+      }
+
+      this.save = function(){if(!agentProg.builtin){
+        this.dropdownopen = false;
+        _source.cursor = _editor.getCursorPosition();
+        _source.code = _editor.getValue();
+        //console.log(JSON.stringify(_self.agent_prog));
+        if (!isLoggedIn())
+          updateAgentProgram(_self.agent_prog);
+        else
+          updateAgentProgram(_self.agent_prog, function(){$scope.$apply();}, $rootScope);
+
+        _self.saved = true;
+      }}
+
+      this.run = function(){
+        this.dropdownopen = false;
+        if (!this.task_env)
+          this.openEnvironmentsModal(true);
+        else
+          this.openRunModal();
+      }
+
+      this.toggleMaximaze = function(){
+        _self.fullScreen = !_self.fullScreen;
+        if (_self.fullScreen){
+          _editor.setOptions({autoScrollEditorIntoView: false});
+          $('body').addClass("overflow-hidden");
+          $(window).scrollTop(0);
+          $('#source-code').css("height", $(window).height()-95+"px")
+        }else{
+          _editor.setOptions({autoScrollEditorIntoView: true});
+          $('#source-code').css("height", "")
+          $('body').removeClass("overflow-hidden");
+          gotoTop()
+        }
+        _editor.resize();
+      }
+
+      this.openEnvironmentsModal = function(run){
+        $modal.open({
+          size: 'lg',
+          templateUrl: 'items-list-modal.html',
+          controller: itemsListController,
+          resolve: {
+            items: itemsListEnvsResolver,
+            agentProgramsFlag: function(){return false}
+          }
+        })
+        .result.then(
+          function (taskEnv) {
+            _self.agent_prog.default_task_env = taskEnv.date;
+            if (!_self.task_env && run){
+              _self.task_env = taskEnv;
+              _self.openRunModal();
+            }else
+              _self.task_env = taskEnv;
+          }
+        );
+      }
+
+      this.openMemoryModal = function(){
+        $modal.open({
+          size: 'lg',
+          templateUrl: 'memory-modal.html',
+          resolve:{
+            memory: function($routeParams, $q){
+              if (!isLoggedIn())
+                return JSON.stringify(getMemoryByAgentProgramDate($routeParams.id));
+              else{
+                var deferred = $q.defer();
+                getMemoryByAgentProgramDate(
+                  $routeParams.id,
+                  function(memory){
+                    deferred.resolve( memory?JSON.stringify(memory):'' )
+                  },
+                  $rootScope
                 );
+                return deferred.promise;
+              }
             }
-
-            this.nameUpdate = function(){
-                if (!_socket.magic_string_dirty && $("#magic-string").hasClass("ng-pristine"))
-                    _socket.magic_string = this.agent_prog.name;
+          },
+          controller: function($scope, $modalInstance, memory){
+            $scope.memory = {text: memory};
+            $scope.alert = false;
+            $scope.hideAlert = function(){$scope.alert = false}
+            $scope.save = function(){
+              try{
+                if (!$scope.memory.text)
+                  $scope.memory.text = null;
+                JSON.parse($scope.memory.text); //is it a well-formed JSON string?
+                if (!isLoggedIn()){
+                  saveMemoryByAgentProgramDate($routeParams.id, $scope.memory.text);
+                  $modalInstance.close();
+                }else if (!agentProg.builtin){
+                  saveMemoryByAgentProgramDate(
+                    $routeParams.id,
+                    $scope.memory.text,
+                    $modalInstance.close,
+                    $rootScope
+                  );
+                }
+              }catch(e){$scope.alert = true}
             }
+            $scope.close = function(){$modalInstance.dismiss()}
 
-            function _finished(date){
-                _socket.magic_string_dirty = (_socket.magic_string != _self.agent_prog.name);
+            //to handle TABs properly
+            $(document).delegate('#memory', 'keydown', function(e) {
+              var keyCode = e.keyCode || e.which;
 
-                if (_self.agent_prog.javascript && _self.agent_prog.ai)
-                    $location.url('/agent-programs/source-code:'+(date?date:_self.agent_prog.date))
-                else
-                    $location.url('/');
+              if (keyCode == 9) {
+                e.preventDefault();
+                var start = $(this).get(0).selectionStart;
+                var end = $(this).get(0).selectionEnd;
 
-                if (isLoggedIn()) $scope.$apply(); // update current url
+                // set textarea value to: text before caret + tab + text after caret
+                $(this).val($(this).val().substring(0, start)
+                    + "\t"
+                    + $(this).val().substring(end));
 
-                gotoTop();
+                // put caret at right position again
+                $(this).get(0).selectionStart =
+                $(this).get(0).selectionEnd = start + 1;
+              }
+            });
+          }
+        })
+      }
+
+      this.clearMemoryModal = function(){
+      $modal.open({
+        size: 'sm',
+        templateUrl: 'yes-no-modal.html',
+        resolve:{
+          title: function(){return 'Confirmation'},
+          msg: function(){return "Are you sure you want to erase this agent program's memory?"}
+        },
+        controller: function($scope, $modalInstance, title, msg){
+          $scope.title = title;
+          $scope.msg = msg;
+          $scope.close = function () {$modalInstance.dismiss()};
+          $scope.ok = function(){
+            if (!isLoggedIn()){
+              saveMemoryByAgentProgramDate($routeParams.id, null);
+              $modalInstance.close();
+            }else if (!agentProg.builtin){
+              saveMemoryByAgentProgramDate(
+                $routeParams.id,
+                null,
+                $modalInstance.close,
+                $rootScope
+              );
             }
-    }]);
+          }
+        }
+      });
+    }
 
-    mod.filter('keyboard_key', function() {
-        return function(input) {return _KEYBOAR_MAP[input]}
-    });
+      this.openRunModal = function(){
+        _self.save();
+        $modal.open({
+            size: 'lg',
+            templateUrl: 'run-modal.html',
+            controller: runModalController,
+            resolve:{
+              taskEnv: _self.task_env?
+                    function(){return _self.task_env}
+                    :
+                    function ($rootScope, $q){
+                      return runTaskEnvResolver(
+                        _self.agent_prog.default_task_env,
+                        $rootScope,
+                        $q
+                      )
+                    },
+              agentProgs: function(){return [_self.agent_prog]}
+            }
+          });
+      }
+
+      this.openAPIModal = function(){
+        _self.save();
+        $modal.open({
+            size: 'lg',
+            templateUrl: 'api-reference-modal.html',
+            controller: APIReferenceController,
+          });
+      }
+
+      function loadEnvAsync(date){
+        if (!isLoggedIn())
+          _self.task_env = getEnvironmentByDate(date);
+        else{
+          getEnvironmentByDate(date,function(response){_self.task_env = response;$scope.$apply();},$rootScope);
+          _self.task_env = {date: date, name: "Loading..."};
+        }
+      }
+      //constructor logic
+
+      _editor.on('input', function() {
+        if (_self.saved){
+          _self.saved = false;
+          $scope.$apply()//update the binding values
+        }
+      });
+
+      $(window).unbind('keydown').bind('keydown', function(event) {
+        //console.log(event.which);event.preventDefault();
+        if (event.ctrlKey || event.metaKey) {
+          switch (String.fromCharCode(event.which).toLowerCase()) {
+            case 's':
+              event.preventDefault();
+              _self.save();
+              $scope.$apply();
+              break;
+            case 'g':
+              //event.preventDefault();
+              break;
+            case 'r':
+              event.preventDefault();
+              _self.run();
+              break;
+          }
+
+          switch(event.which){
+            case 107://+
+              event.preventDefault();
+              _editor.setFontSize(++fontSize);
+              break;
+            case 109://-
+              event.preventDefault();
+              _editor.setFontSize(--fontSize);
+              if (fontSize < 1) fontSize = 1;
+              break;
+          }
+        }
+        switch(event.which){
+          case 119://F8
+            event.preventDefault();
+            _self.run();
+            break;
+          case 112://F1
+            event.preventDefault();
+            _self.openAPIModal();
+            break;
+        }
+      });
+
+    }]
+  );
+
+  mod.controller('AgentProgNewController', ['$scope', '$rootScope', '$modal', '$location', 'agentProg',
+    function($scope, $rootScope, $modal, $location, agentProg){if (!agentProg){$location.url('/');return}
+      var _self = this;
+      var _socket = agentProg.socket;
+
+      this.gett = gettt;
+
+      this.PERCEPT_FORMAT = _PERCEPT_FORMAT;
+
+      this.perceptFormats = formats;
+      this.agent_prog = agentProg;
+      this.isLoggedIn = isLoggedIn;
+
+      this.save = function(){if (Validate()){
+        agentProg.source.file = $("#file").val() != "";
+
+        if (!agentProg.source.file){
+          if (!agentProg.date)
+            newAgentProgram(this.agent_prog, _finished, $rootScope);
+          else
+            updateAgentProgram(agentProg, _finished, $rootScope);
+        }else{
+          sendToTCloudWithFile(
+            {
+              nm: !agentProg.date? 'new_agent_program' : 'update_agent_program',
+              m: 'user_file_uploader',
+              date: agentProg.date,
+              ap: JSON.stringify(agentProg)
+            },
+            $('#file')[0].files[0],
+            _finished,
+            $rootScope
+          );
+        }
+      }}
+
+      this.readKey = function(key){
+        $modal.open({
+          size: 'sm',
+          templateUrl: 'read-key.html',
+          controller: readKeyController
+        })
+        .result.then(
+          function (keyCode) {
+            if (!keyCode) return;
+            agentProg.controls[key] = keyCode;
+          },
+          function(){$(document).unbind('keydown')}
+        );
+      }
+
+      this.nameUpdate = function(){
+        if (!_socket.magic_string_dirty && $("#magic-string").hasClass("ng-pristine"))
+          _socket.magic_string = this.agent_prog.name;
+      }
+
+      function _finished(date){
+        _socket.magic_string_dirty = (_socket.magic_string != _self.agent_prog.name);
+
+        if (_self.agent_prog.javascript && _self.agent_prog.ai)
+          $location.url('/agent-programs/source-code:'+(date?date:_self.agent_prog.date))
+        else
+          $location.url('/');
+
+        if (isLoggedIn()) $scope.$apply(); // update current url
+
+        gotoTop();
+      }
+  }]);
+
+  mod.filter('keyboard_key', function() {
+    return function(input) {return _KEYBOAR_MAP[input]}
+  });
 
 })();

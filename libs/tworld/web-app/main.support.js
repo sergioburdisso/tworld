@@ -18,25 +18,25 @@
 */
 
 (function(){
-    var mod = angular.module('tworldSupport', []);
+  var mod = angular.module('tworldSupport', []);
 
-    mod.controller("SupportController", ['$scope', '$rootScope', '$location',
-        function($scope, $rootScope, $location){
-            var _self = this;
-            var _selected = 0;
+  mod.controller("SupportController", ['$scope', '$rootScope', '$location',
+    function($scope, $rootScope, $location){
+      var _self = this;
+      var _selected = 0;
 
-            this.setThesisTab = function(){_selected = 0}
-            this.isThesisTab = function(value){return _selected == 0}
+      this.setThesisTab = function(){_selected = 0}
+      this.isThesisTab = function(value){return _selected == 0}
 
-            this.setPapersTab = function(){_selected = 1}
-            this.isPapersTab = function(value){return _selected == 1}
+      this.setPapersTab = function(){_selected = 1}
+      this.isPapersTab = function(value){return _selected == 1}
 
-            this.setPostersTab = function(){_selected = 2}
-            this.isPostersTab = function(value){return _selected == 2}
+      this.setPostersTab = function(){_selected = 2}
+      this.isPostersTab = function(value){return _selected == 2}
 
-            this.setForumTab = function(){_selected = 3}
-            this.isForumTab = function(value){return _selected == 3}
-        }
-    ]);
+      this.setForumTab = function(){_selected = 3}
+      this.isForumTab = function(value){return _selected == 3}
+    }
+  ]);
 
 })();

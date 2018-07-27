@@ -51,18 +51,12 @@ CL3D.DebugOutput.prototype.setLoadingText = function (a) {
                     this.parentElement.removeChild(this)
             }
         );
-        $("#loading-header").animate({opacity: 0}, 6000, function(){if (this.parentElement) this.parentElement.removeChild(this)});
         delete this.LoadingRoot;
         clearInterval(CL3D.LoadingTimer);
         CL3D.LoadingTimer = null;
 
-        //if everything is loaded and all [extern] agent programs are ready
-        if (_Ready){
-            $("#playFrame").show().removeClass("no-events");
-            if (_SAVE_STATS)
-                $("#playBtn").mouseup();
-        }
-        $("#playFrame").animate({opacity : 1}, 1000);
+        if (this.OnSceneLoadingComplete)
+            this.OnSceneLoadingComplete();
     }
     else 
         this.LoadingRootText.nodeValue = a;
@@ -7867,6 +7861,7 @@ CL3D.CopperLicht = function (d, e, c, a) {
     if ((e == null || e == true) && CL3D.gCCDebugOutput == null) {
         CL3D.gCCDebugOutput = new CL3D.DebugOutput(d, a)
     }
+    this.gCCDebugOutput = CL3D.gCCDebugOutput;
     this.ElementIdOfCanvas = d;
     this.MainElement = document.getElementById(this.ElementIdOfCanvas);
     this.MainElement.height = this.MainElement.parentNode.clientHeight;
@@ -8350,6 +8345,7 @@ CL3D.CopperLicht.prototype.handleMouseMove = function (a) {
         b.onMouseMove(a)
     }
 };
+CL3D.CopperLicht.prototype.OnSceneLoadingComplete = null;
 CL3D.CopperLicht.prototype.OnAnimate = null;
 CL3D.CopperLicht.prototype.OnAfterDrawAll = null;
 CL3D.CopperLicht.prototype.OnBeforeDrawAll = null;
