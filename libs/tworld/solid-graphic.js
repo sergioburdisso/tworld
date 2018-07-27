@@ -85,6 +85,8 @@ function GraphicTWorld(graphicEngine, environment){
     var _UFOFlyRadius   = -1;
     var _UFOFlyCenter   = new CL3D.Vect3d(10, 50, 80);
 
+    CL3D.render = !_NO_RENDER;
+
     //sounds & voices
     if (_AUDIO_ENABLE){
       var _sound_beep             = new buzz.sound("./sounds/beep.mp3");
@@ -256,7 +258,7 @@ function GraphicTWorld(graphicEngine, environment){
 
     this.restoreBattery = function(rIndex, noStats){this.Rob[rIndex].restoreBattery(noStats)}
 
-    this.gameIsOver = function(robs, goal, time) {
+    this.gameIsOver = function(robs, goal, time) {if (_NO_RENDER) return;
       var finalPositions = new Array(3), firstOne;
       var minRegEx = /min/i, maxRegEx = /max/i;
       var _i = {
@@ -2255,8 +2257,7 @@ function GraphicTWorld(graphicEngine, environment){
 //INTERNAL CLASSES DEFINITION
 //( our own 3D scene nodes implementation )
 // Class HoleCellHelper
-CL3D.HoleCellHelper = function(x, y, z, size, engine, r, g, b, a)
-{
+CL3D.HoleCellHelper = function(x, y, z, size, engine, r, g, b, a){
   var gl = engine.getRenderer().getWebGL(), p;
   var hSize = size/2;
   var vertex_shader_source = "\
@@ -2318,15 +2319,13 @@ CL3D.HoleCellHelper = function(x, y, z, size, engine, r, g, b, a)
   buf.Mat.Type = engine.getRenderer().createMaterialType(vertex_shader_source, fragment_shader_source, true, gl.SRC_ALPHA /*gl.ONE*/, gl.ONE_MINUS_SRC_ALPHA /*gl.ONE_MINUS_SRC_COLOR*/);
 }
 CL3D.HoleCellHelper.prototype = new CL3D.SceneNode(); // "HoleCellHelper inherits from SceneNode"
-CL3D.HoleCellHelper.prototype.OnRegisterSceneNode = function(scene)
-{
+CL3D.HoleCellHelper.prototype.OnRegisterSceneNode = function(scene){
   if (this.Visible){
     scene.registerNodeForRendering(this, CL3D.Scene.RENDER_MODE_DEFAULT);
     CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, scene); // call base class
   }
 }
-CL3D.HoleCellHelper.prototype.render = function(renderer)
-{
+CL3D.HoleCellHelper.prototype.render = function(renderer){if (!CL3D.render) return;
   if (this.Visible){
     renderer.setWorld(this.getAbsoluteTransformation());
     renderer.drawMesh(this.Mesh);
@@ -2334,8 +2333,7 @@ CL3D.HoleCellHelper.prototype.render = function(renderer)
 }
 
 // Class LaserBeam
-CL3D.LaserBeam = function(srcP, destP, engine, lifeTime)
-{
+CL3D.LaserBeam = function(srcP, destP, engine, lifeTime){
   var gl = engine.getRenderer().getWebGL();
   var hSize = 5;
   var buf = new CL3D.MeshBuffer();
@@ -2395,16 +2393,14 @@ CL3D.LaserBeam = function(srcP, destP, engine, lifeTime)
 }
 CL3D.LaserBeam.prototype = new CL3D.SceneNode(); // "LaserBeam inherits from SceneNode"
 
-CL3D.LaserBeam.prototype.OnRegisterSceneNode = function(scene)
-{
+CL3D.LaserBeam.prototype.OnRegisterSceneNode = function(scene){
   if (this.Visible){
     scene.registerNodeForRendering(this, CL3D.Scene.RENDER_MODE_DEFAULT);
     CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, scene); // call base class
   }
 }
 
-CL3D.LaserBeam.prototype.render = function(renderer)
-{
+CL3D.LaserBeam.prototype.render = function(renderer){if (!CL3D.render) return;
   if (this.Visible){
     renderer.setWorld(this.getAbsoluteTransformation());
     renderer.drawMesh(this.Mesh);
@@ -2412,8 +2408,7 @@ CL3D.LaserBeam.prototype.render = function(renderer)
 }
 
 // helper function for quickly creating a 3d vertex from 3d position and texture coodinates
-function CreateVertex(x, y, z, s, t)
-{
+function CreateVertex(x, y, z, s, t){
   var vtx = new CL3D.Vertex3D(true);
 
   vtx.Pos.X = x;

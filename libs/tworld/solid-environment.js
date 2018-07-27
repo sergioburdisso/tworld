@@ -987,10 +987,17 @@ function Environment(rows, columns, graphicEngine, parent) {
         _KNOBS.trial.runs--;
         localStorage.knobs = JSON.stringify(_KNOBS);
 
-        if (_KNOBS.trial.runs > 0)
-          setTimeout(function(){location.reload()}, 2000);
-        else
-          setTimeout(function(){window.close()}, 2000);
+        if (_KNOBS.trial.runs > 0){
+          if (_NO_RENDER)
+            location.reload();
+          else
+            setTimeout(function(){location.reload()}, 2000);
+        }else{
+          if (_NO_RENDER)
+            window.close();
+          else
+            setTimeout(function(){window.close()}, 2000);
+        }
       }
 
       //--------------------------------------------------------------------------------------> _checkIfGameOver

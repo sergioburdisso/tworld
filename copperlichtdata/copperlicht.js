@@ -12,7 +12,7 @@
  *       and optimization it went down to 0.38%.
  */
 var CL3D = {};
-
+CL3D.render = true;
 CL3D.DebugOutput = function (d, a) {
     this.DebugRoot = null;
 
@@ -3947,7 +3947,7 @@ CL3D.CameraSceneNode.prototype.OnRegisterSceneNode = function (a) {
         CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, a)
     }
 };
-CL3D.CameraSceneNode.prototype.render = function (a) {
+CL3D.CameraSceneNode.prototype.render = function (a) {if (!CL3D.render) return;
     this.calculateViewMatrix();
     if (this.Aspect == 0) {
         this.setAutoAspectIfNoFixedSet(a.width, a.height);
@@ -4077,7 +4077,7 @@ CL3D.MeshSceneNode.prototype.OnRegisterSceneNode = function (d) {
         CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, d)
     }
 };
-CL3D.MeshSceneNode.prototype.render = function (a) {
+CL3D.MeshSceneNode.prototype.render = function (a) {if (!CL3D.render) return;
     a.setWorld(this.AbsoluteTransformation);
     a.drawMesh(this.OwnedMesh)
 };
@@ -4178,7 +4178,7 @@ CL3D.SkyBoxSceneNode.prototype.OnRegisterSceneNode = function (a) {
         CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, a)
     }
 };
-CL3D.SkyBoxSceneNode.prototype.render = function (b) {
+CL3D.SkyBoxSceneNode.prototype.render = function (b) {if (!CL3D.render) return;
     var a = this.scene.getActiveCamera();
     if (!a || !this.OwnedMesh) {
         return
@@ -4310,7 +4310,7 @@ CL3D.BillboardSceneNode.prototype.OnRegisterSceneNode = function (a) {
         CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, a)
     }
 };
-CL3D.BillboardSceneNode.prototype.render = function (k) {
+CL3D.BillboardSceneNode.prototype.render = function (k) {if (!CL3D.render) return;
     var a = this.scene.getActiveCamera();
     if (!a) {
         return
@@ -4450,7 +4450,7 @@ CL3D.LightSceneNode.prototype.OnRegisterSceneNode = function (a) {
 CL3D.LightSceneNode.prototype.getBoundingBox = function () {
     return this.Box
 };
-CL3D.LightSceneNode.prototype.render = function (a) {
+CL3D.LightSceneNode.prototype.render = function (a) {if (!CL3D.render) return;
     a.addDynamicLight(this.LightData)
 };
 CL3D.PathSceneNode = function () {
@@ -4780,7 +4780,7 @@ CL3D.Overlay2DSceneNode.prototype.OnRegisterSceneNode = function (a) {
         CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, a)
     }
 };
-CL3D.Overlay2DSceneNode.prototype.render = function (l) {
+CL3D.Overlay2DSceneNode.prototype.render = function (l) {if (!CL3D.render) return;
     var d = this.getScreenCoordinatesRect(true, l);
     var f = d;
     var k = false;
@@ -5079,7 +5079,7 @@ CL3D.AnimatedMeshSceneNode.prototype.OnRegisterSceneNode = function (a) {
         CL3D.SceneNode.prototype.OnRegisterSceneNode.call(this, a);
     }
 };
-CL3D.AnimatedMeshSceneNode.prototype.render = function (a) {
+CL3D.AnimatedMeshSceneNode.prototype.render = function (a) {if (!CL3D.render) return;
     a.setWorld(this.AbsoluteTransformation);
     a.drawMesh(this.OwnedMesh)
 };
@@ -5232,7 +5232,7 @@ CL3D.AnimatedMeshSceneNode.prototype.OnAnimate = function (c, e) {
     }
     return CL3D.SceneNode.prototype.OnAnimate.call(this, c, e)
 };
-CL3D.AnimatedMeshSceneNode.prototype.render = function (c) {
+CL3D.AnimatedMeshSceneNode.prototype.render = function (c) {if (!CL3D.render) return;
     var b, matLength;
     c.setWorld(this.AbsoluteTransformation);
     var d = this.Mesh;

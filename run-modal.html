@@ -35,13 +35,18 @@
 
             <br>
             <div class="col-md-4">
-                T-World speed is {{ task_env.trial.speed | tspeed }}
-                <div class="ui-slider-size" ui-slider min="-9" max="9" step="1" ng-model="task_env.trial.speed"></div>
-                <label>({{
-                    (task_env.trial.speed < 0 && (-task_env.trial.speed+1)+ " seconds = 1 t-second")||
-                    (task_env.trial.speed == 0 && "1 t-second = 1 second") ||
-                    (task_env.trial.speed+1)+" t-seconds = 1 second"}})
-                </label>
+                <span class="animate-show-3d-top" ng-show="task_env.trial.no_render&&task_env.trial.batch">
+                    T-World speed will be 100 times faster
+                </span>
+                <span class="animate-show-3d-top" ng-hide="task_env.trial.no_render&&task_env.trial.batch">
+                    T-World speed is {{ task_env.trial.speed | tspeed }}
+                    <div class="ui-slider-size" ui-slider min="-9" max="9" step="1" ng-model="task_env.trial.speed"></div>
+                    <label>({{
+                        (task_env.trial.speed < 0 && (-task_env.trial.speed+1)+ " seconds = 1 t-second")||
+                        (task_env.trial.speed == 0 && "1 t-second = 1 second") ||
+                        (task_env.trial.speed+1)+" t-seconds = 1 second"}})
+                    </label>
+                </span>
             </div>
 
             <div class="col-md-3">
@@ -53,6 +58,9 @@
                 </div>
                 <div class="animate-show-3d-top" ng-show="task_env.trial.batch">
                     <label>Number of Trials</label><input type="number" min="0" class="form-control" ng-model="task_env.trial.runs" ng-class="{'has-error':(task_env.trial.runs|num)<=0}">
+                </div>
+                <div class="checkbox animate-show-3d-top" ng-show="task_env.trial.batch">
+                    <label><input type="checkbox" ng-model="task_env.trial.no_render"> No 3D visualization</label>
                 </div>
                 <div class="checkbox animate-show-3d-top" ng-show="task_env.trial.batch">
                     <label><input type="checkbox" ng-model="task_env.trial.saveStats"> Save stats</label>

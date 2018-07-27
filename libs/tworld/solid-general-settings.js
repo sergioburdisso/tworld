@@ -55,6 +55,7 @@ var _BATTERY_SLIDE_COST         = _EASY_MODE? 0 : _KNOBS.final_tweaks.battery.sl
 // Players
 if (_KNOBS.trial.test){
   var _BATCH = false;
+  var _NO_RENDER = false;
   var _PAUSE_ENABLED = true;
   var _SPEED = 1;
   var _TEAMS = [{NAME:"", COLOR: _COLORS.BLUE, MEMBERS:[0]}];
@@ -67,6 +68,7 @@ if (_KNOBS.trial.test){
   var _KNOBS_Agents = _KNOBS.trial.agents;
 
   var _BATCH = _KNOBS.trial.batch;
+  var _NO_RENDER = _BATCH? _KNOBS.trial.no_render : false;
   var _SAVE_STATS = _KNOBS.trial.saveStats;
   var _PAUSE_ENABLED = _KNOBS.trial.pause && !_BATCH;
   var _SPEED = _KNOBS.trial.speed < 0?
@@ -76,8 +78,8 @@ if (_KNOBS.trial.test){
           1
         :
           _KNOBS.trial.speed + 1
-        )
-      ;
+        );
+
 
   var _NUMBER_OF_AGENTS = _KNOBS_Agents.length;
   var _TEAMS = []
@@ -165,6 +167,28 @@ var _AUDIO_ENABLE = _KNOBS_SETTINGS.audio.enabled;
 var _VOLUME_LEVEL = _KNOBS_SETTINGS.audio.volume;
 
 var _START_TIME;
+if (_NO_RENDER){
+  _SPEED = 100;
+
+  _PAUSE_ENABLED = false;
+  _CAMERA_SMOOTH = false;
+
+  _LOW_QUALITY_GRID = true;
+  _LOW_QUALITY_WORLD = true;
+
+  _AUDIO_ENABLE = false;
+
+  _SHOW_HOLES_HELPERS = false;
+  _SHOW_VISIBILITY_BOUNDS = false;
+  _SHOW_CONSOLE = false;
+  _SHOW_FPS = false;
+
+  _MINIMAL_UPDATE_DELAY = 1000;
+
+  $("#tw-root").hide();
+}else{
+  $("#cube").show();
+}
 
 // Global flags
 var _AI_NECESSARY = false;
