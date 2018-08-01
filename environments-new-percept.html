@@ -1,49 +1,49 @@
 <h2>Perception</h2>
 
 <div class="panel panel-default solid">
-    <div class="panel-body">
+  <div class="panel-body">
 
-        <div ng-class="{'treadonly':enc.readOnly}" ng-hide="enc.task_env.prop.fullyObservable">
+    <div ng-class="{'treadonly':enc.readOnly}" ng-hide="enc.task_env.prop.fullyObservable">
 
-                <p class="lead">Partially observable because of...</p>
+        <p class="lead">Partially observable because of...</p>
 
-                <div class="container">
-                    <div class="checkbox">
-                        <label><input type="checkbox" ng-model="enc.task_env.agents.percept.partialGrid" ng-class="{'has-error':!enc.task_env.agents.percept.partialGrid&&!enc.task_env.agents.percept.noise}"> Visibility bounds.</label>
-                    </div>
-                    <div class="list-group col-md-4 animate-show-3d-top" ng-show="enc.task_env.agents.percept.partialGrid">
-                        <a class="list-group-item no-animation">
-                            <label>{{enc.getTextVisibilityRadius()}}</label>
-                            <div class="ui-slider-size" ui-slider min="0" max="10" step="1" ng-model="enc.task_env.agents.percept.radius"></div>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="container">
-                    <div class="checkbox">
-                        <label><input type="checkbox" ng-model="enc.task_env.agents.percept.noise"> Noisy and inaccurate sensors.</label>
-                    </div>
-                    <div class="list-group col-md-4 animate-show-3d-top" ng-show="enc.task_env.agents.percept.noise">
-
-                        <a class="list-group-item no-animation">
-                            <label>Holes noise ({{(enc.task_env.agents.percept.noise_cfg.hole*100).toFixed(1)}}%)</label>
-                            <div class="ui-slider-size" ui-slider min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.percept.noise_cfg.hole"></div>
-                        </a>
-
-                        <a class="list-group-item no-animation">
-                            <label>Tiles noise ({{(enc.task_env.agents.percept.noise_cfg.tile*100).toFixed(1)}}%)</label>
-                            <div class="ui-slider-size" ui-slider min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.percept.noise_cfg.tile"></div>
-                        </a>
-
-                        <a class="list-group-item no-animation">
-                            <label>Obstacles noise ({{(enc.task_env.agents.percept.noise_cfg.obstacle*100).toFixed(1)}}%)</label>
-                            <div class="ui-slider-size" ui-slider min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.percept.noise_cfg.obstacle"></div>
-                        </a>
-                    </div>
-                </div>
-
-            <hr>
+        <div class="container">
+          <div class="checkbox">
+            <label><input type="checkbox" ng-model="enc.task_env.agents.percept.partialGrid" ng-class="{'has-error':!enc.task_env.agents.percept.partialGrid&&!enc.task_env.agents.percept.noise}"> Visibility bounds.</label>
+          </div>
+          <div class="list-group col-md-4 animate-show-3d-top" ng-show="enc.task_env.agents.percept.partialGrid">
+            <a class="list-group-item no-animation">
+              <label>{{enc.getTextVisibilityRadius()}}</label>
+              <div class="ui-slider-size" ui-slider min="0" max="10" step="1" ng-model="enc.task_env.agents.percept.radius"></div>
+            </a>
+          </div>
         </div>
 
+        <div class="container">
+          <div class="checkbox">
+            <label><input type="checkbox" ng-model="enc.task_env.agents.percept.noise"> Noisy and inaccurate sensors.</label>
+          </div>
+          <div class="list-group col-md-4 animate-show-3d-top" ng-show="enc.task_env.agents.percept.noise">
+
+            <a class="list-group-item no-animation">
+              <label>Holes noise ({{(enc.task_env.agents.percept.noise_cfg.hole*100).toFixed(1)}}%)</label>
+              <div class="ui-slider-size" ui-slider min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.percept.noise_cfg.hole"></div>
+            </a>
+
+            <a class="list-group-item no-animation">
+              <label>Tiles noise ({{(enc.task_env.agents.percept.noise_cfg.tile*100).toFixed(1)}}%)</label>
+              <div class="ui-slider-size" ui-slider min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.percept.noise_cfg.tile"></div>
+            </a>
+
+            <a class="list-group-item no-animation">
+              <label>Obstacles noise ({{(enc.task_env.agents.percept.noise_cfg.obstacle*100).toFixed(1)}}%)</label>
+              <div class="ui-slider-size" ui-slider min="0" max="1" step="0.001" use-decimals ng-model="enc.task_env.agents.percept.noise_cfg.obstacle"></div>
+            </a>
+          </div>
+        </div>
+
+      <hr>
     </div>
+
+  </div>
 </div>

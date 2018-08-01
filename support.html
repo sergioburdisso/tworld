@@ -1,62 +1,62 @@
 <div class="container-fluid text-left">
-    <h2><span class="glyphicon glyphicon-question-sign"></span> Support</small></h2>
+  <h2><span class="glyphicon glyphicon-question-sign"></span> Support</small></h2>
 
-    <div class="">
+  <div class="">
+    <div class="row">
+      <div class="col-md-3 text-right" style="border-right: 10px rgb(190, 189, 189) solid">
+        <h4 class="sett-item cursor-pointer a-supp" style="color:rgb(61,61,61)" ng-class="{active:sc.isThesisTab()}" ng-click="sc.setThesisTab()">Thesis</h4>
+        <h4 class="sett-item cursor-pointer a-supp" style="color:rgb(61,61,61)" ng-class="{active:sc.isPapersTab()}" ng-click="sc.setPapersTab()">Papers</h4>
+        <h4 class="sett-item cursor-pointer a-supp" style="color:rgb(61,61,61)" ng-class="{active:sc.isPostersTab()}" ng-click="sc.setPostersTab()">Posters</h4>
+        <h4 class="sett-item cursor-pointer a-supp" style="color:rgb(61,61,61)" ng-class="{active:sc.isForumTab()}" ng-click="sc.setForumTab()">Forum</h4>
+      </div>
+
+      <div class="col-md-1"></div>
+
+      <div class="col-md-6 animate-only-show-3d-left" ng-show="sc.isThesisTab()">
+
         <div class="row">
-            <div class="col-md-3 text-right" style="border-right: 10px rgb(190, 189, 189) solid">
-                <h4 class="sett-item cursor-pointer a-supp" style="color:rgb(61,61,61)" ng-class="{active:sc.isThesisTab()}" ng-click="sc.setThesisTab()">Thesis</h4>
-                <h4 class="sett-item cursor-pointer a-supp" style="color:rgb(61,61,61)" ng-class="{active:sc.isPapersTab()}" ng-click="sc.setPapersTab()">Papers</h4>
-                <h4 class="sett-item cursor-pointer a-supp" style="color:rgb(61,61,61)" ng-class="{active:sc.isPostersTab()}" ng-click="sc.setPostersTab()">Posters</h4>
-                <h4 class="sett-item cursor-pointer a-supp" style="color:rgb(61,61,61)" ng-class="{active:sc.isForumTab()}" ng-click="sc.setForumTab()">Forum</h4>
-            </div>
-
-            <div class="col-md-1"></div>
-
-            <div class="col-md-6 animate-only-show-3d-left" ng-show="sc.isThesisTab()">
-
-                <div class="row">
-                    <h4 class="top-shadow"><b>LICENCIATE THESIS (SPANISH)</b></h4>
-                    <a href="resrc/support/thesis_burdisso_sergio.pdf" target="_blank" class="a-supp-thumb" style="background-image: url(imgs/web-app/support/thesis_es.png)"></a>
-                    <div class="separator"></div>
-                </div>
-
-            </div>
-
-            <div class="col-md-6 animate-only-show-3d-left" ng-show="sc.isPapersTab()">
-                <h4 class="top-shadow"><b>CACIC 2014 (ENGLISH)</b></h4>
-                <a href="resrc/support/cacic_2014_en.pdf" target="_blank" class="a-supp-thumb" style="background-image: url(imgs/web-app/support/cacic_2014_en.png)"></a>
-                <div class="separator"></div>
-                <h4 class="top-shadow"><b>CACIC 2014 (SPANISH)</b></h4>
-                <a href="resrc/support/cacic_2014_es.pdf" target="_blank" class="a-supp-thumb" style="background-image: url(imgs/web-app/support/cacic_2014_es.png)"></a>
-                <div class="separator"></div>
-                <h4 class="top-shadow"><b>CACIC 2015 (SPANISH)</b></h4>
-                <a href="resrc/support/cacic_2015_es.pdf" target="_blank" class="a-supp-thumb" style="background-image: url(imgs/web-app/support/cacic_2015_es.png)"></a>
-                <div class="separator"></div>
-            </div>
-
-            <div class="col-md-6 animate-only-show-3d-left" ng-show="sc.isPostersTab()">
-
-                <div class="row">
-                    <h4 class="top-shadow"><b>Poster A4 ConAIISI (SPANISH)</b></h4>
-                    <a href="resrc/support/poster_conaiisi_2014.pdf" target="_blank" class="a-supp-thumb" style="background-image: url(imgs/web-app/support/poster_conaiisi_2014.png); width: 475px; height: 672px"></a>
-                    <div class="separator"></div>
-                </div>
-
-            </div>
-
-            <div class="col-md-6 animate-only-show-3d-left" ng-show="sc.isForumTab()">
-                <div class="row">
-                    <iframe id="forum_embed" src="javascript:void(0)" scrolling="no" frameborder="0"  width="100%" height="800px"></iframe>
-                </div>
-            </div>
-
+          <h4 class="top-shadow"><b>LICENCIATE THESIS (SPANISH)</b></h4>
+          <a href="resrc/support/thesis_burdisso_sergio.pdf" target="_blank" class="a-supp-thumb" style="background-image: url(imgs/web-app/support/thesis_es.png)"></a>
+          <div class="separator"></div>
         </div>
+
+      </div>
+
+      <div class="col-md-6 animate-only-show-3d-left" ng-show="sc.isPapersTab()">
+        <h4 class="top-shadow"><b>CACIC 2014 (ENGLISH)</b></h4>
+        <a href="resrc/support/cacic_2014_en.pdf" target="_blank" class="a-supp-thumb" style="background-image: url(imgs/web-app/support/cacic_2014_en.png)"></a>
+        <div class="separator"></div>
+        <h4 class="top-shadow"><b>CACIC 2014 (SPANISH)</b></h4>
+        <a href="resrc/support/cacic_2014_es.pdf" target="_blank" class="a-supp-thumb" style="background-image: url(imgs/web-app/support/cacic_2014_es.png)"></a>
+        <div class="separator"></div>
+        <h4 class="top-shadow"><b>CACIC 2015 (SPANISH)</b></h4>
+        <a href="resrc/support/cacic_2015_es.pdf" target="_blank" class="a-supp-thumb" style="background-image: url(imgs/web-app/support/cacic_2015_es.png)"></a>
+        <div class="separator"></div>
+      </div>
+
+      <div class="col-md-6 animate-only-show-3d-left" ng-show="sc.isPostersTab()">
+
+        <div class="row">
+          <h4 class="top-shadow"><b>Poster A4 ConAIISI (SPANISH)</b></h4>
+          <a href="resrc/support/poster_conaiisi_2014.pdf" target="_blank" class="a-supp-thumb" style="background-image: url(imgs/web-app/support/poster_conaiisi_2014.png); width: 475px; height: 672px"></a>
+          <div class="separator"></div>
+        </div>
+
+      </div>
+
+      <div class="col-md-6 animate-only-show-3d-left" ng-show="sc.isForumTab()">
+        <div class="row">
+          <iframe id="forum_embed" src="javascript:void(0)" scrolling="no" frameborder="0"  width="100%" height="800px"></iframe>
+        </div>
+      </div>
+
     </div>
+  </div>
 
 </div>
 
 <script type="text/javascript">
   document.getElementById('forum_embed').src =
-     "https://groups.google.com/forum/embed/?place=forum/tworld"
-     + "&parenturl=" + encodeURIComponent(window.location.href);
+   "https://groups.google.com/forum/embed/?place=forum/tworld"
+   + "&parenturl=" + encodeURIComponent(window.location.href);
 </script>

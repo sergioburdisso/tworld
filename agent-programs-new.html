@@ -1,162 +1,162 @@
 <div ng-class="{'treadonly': $loading}">
-    <div class="row"></div>
-    <h2><b>Your new Agent Program</b></h2>
-    <section class="text-justify">
-        <blockquote class="blockquote-reverse">
-            <p>An <b>agent</b> is anything that can be viewed as perceiving its environment through sensors and acting upon that environment through actuators. We use the term <b>percept</b> to refer to the agent's perceptual inputs at any given instant. Mathematically speaking, we say that an agent's behavior is described by the <b>agent function</b> that maps any given percept sequence to an action. Internally, the agent function for an artificial agent will be implemented by an <b>agent program</b>.</p>
-            <footer>Artificial Intelligence: A Modern Approach (Third edition) by Stuart Russell and Peter Norvig</footer>
-        </blockquote>
-    </section>
-    <br>
-    <div class="container-fluid" ng-class="{'treadonly':apnc.agent_prog.builtin}">
-        <div class="row text-left">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-                <alert class="text-center" type="info" ng-if="apnc.agent_prog.builtin">
-                    <span class="glyphicon glyphicon-info-sign" style="font-size:30px"></span><br>
-                    This is a default agent program, values are read-only.
-                </alert>
-                <div class="row">
-                    <label class="lead"><b>1.</b> Give your Agent Program a name.</label>
-                    <input type="text" class="form-control" ng-model="apnc.agent_prog.name" ng-change="apnc.nameUpdate()" placeholder="Name" maxlength="128" ng-class="{'has-error':!apnc.agent_prog.name.trim().length}">
-                </div>
-                <div class="separator"></div>
-            </div>
-        </div>
-        <div class="row text-left">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-                <div class="row ">
-                <label class="lead"><b>2.</b> Agent will be controlled by...</label>
-                    <div class="btn-group btn-group-justified">
-                        <label class="btn btn-default" ng-model="apnc.agent_prog.ai" btn-radio="true" tooltip-placement="left" tooltip="">Algorithm</label>
-                        <label class="btn btn-default" ng-model="apnc.agent_prog.ai" btn-radio="false" tooltip-placement="right" tooltip="">Human</label>
-                    </div>
-                </div>
-                <div class="panel panel-default animate-only-show" ng-show="apnc.agent_prog.ai">
-                    <div class="panel-heading">Written in...</div>
-                    <div class="panel-body text-center">
-                        <div class="btn-group">
-                            <label class="btn btn-default" ng-model="apnc.agent_prog.javascript" btn-radio="true" tooltip-placement="left" tooltip="The T-World Code editor lets you code your agent program inside your web browser Start coding right away!">JavaScript</label>
-                            <label class="btn btn-default" ng-model="apnc.agent_prog.javascript" btn-radio="false" tooltip-placement="right" tooltip="Since your agent program will be a computer program written in another language other than Javascript, you will need to connect it to the T-World proxy server via socket">Another language</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default animate-only-show" ng-hide="apnc.agent_prog.ai">
-                    <div class="panel-heading">Using a...</div>
-                    <div class="panel-body text-center">
-                        <div class="btn-group">
-                            <label class="btn btn-default" ng-model="apnc.agent_prog.keyboard" btn-radio="true" tooltip-placement="left" tooltip="">Keyboard</label>
-                            <label class="btn btn-default" ng-model="apnc.agent_prog.keyboard" btn-radio="false" tooltip-placement="right" tooltip="">Remote Control</label>
-                        </div><br>
-                        <div class="animate-show-3d-top" ng-hide="apnc.agent_prog.keyboard"><small>(<a href="resrc/tw-control.apk" target="_blank">download app for Android</a>)</small></div>
-                    </div>
-                </div>
-
-
-                <div class="panel panel-default animate-show-3d-top" ng-show="apnc.agent_prog.ai && !apnc.agent_prog.javascript" ng-class="{'tdisabled':!apnc.isLoggedIn()}">
-                    <div class="panel-body">
-                        <form action="http://tworld-ai.com/rest/main.php" method="post" enctype="multipart/form-data" role="form" class="form-inline" id="source-form">
-                            <div class="form-group">
-                                <label class="lead" for="file">Source Code <small>(ZIP file, size limit is 200KB)</small></label>
-                                <alert type="danger" ng-hide="apnc.isLoggedIn()">Need to be logged in to upload your source code.</alert>
-                                <input type="file" id="file" name="file" accept=".zip, application/zip">
-                                <p class="help-block" ng-show="apnc.isLoggedIn()">Upload it so that you and other users are able to download it!</p>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <div class="panel panel-default animate-show-3d-top" ng-show="(apnc.agent_prog.ai && !apnc.agent_prog.javascript) || (!apnc.agent_prog.ai && !apnc.agent_prog.keyboard)">
-                    <div class="panel-body">
-                        <label class="lead">T-World proxy 
-                            <small><small><a href="resrc/twproxy.zip"><span class="glyphicon glyphicon-save"></span> download version 1.0</a></small></small>
-                        </label>
-                        <br>
-                        <label for="ip-address">IP Address</label><input type="text" id="ip-address" class="form-control" ng-model="apnc.agent_prog.socket.ip_address" placeholder="IPv4 Address" ng-class="{'has-error':!apnc.agent_prog.socket.ip_address.trim().length}">
-                        <br>
-                        <label for="port">Port</label><input type="number" id="port" min="1" max="65535" class="form-control" ng-model="apnc.agent_prog.socket.port" placeholder="Port number" ng-class="{'has-error':(apnc.agent_prog.socket.port|num)<=0}">
-                        <br>
-                        <label for="magic-string">The magic string</label><input type="text" id="magic-string" class="form-control" ng-model="apnc.agent_prog.socket.magic_string" placeholder="Magic string" value="localhost" maxlength="128">
-                        <br>
-                        <div ng-show="apnc.agent_prog.ai" class="panel panel-default animate-show">
-                            <div class="panel-heading"><b>Perception</b></div>
-
-                            <div class="panel-body">
-                                <div class="container-fluid">
-                                    <div class="row">
-                                        <label>Percept-action relationship</label>
-
-                                        <div class="btn-group btn-group-justified">
-                                            <label class="btn btn-default" ng-model="apnc.agent_prog.percept.sync" btn-radio="true" tooltip="percept-action pattern (recommended)">Synchronously</label>
-                                            <label class="btn btn-default" ng-model="apnc.agent_prog.percept.sync" btn-radio="false" tooltip="percept is send periodically. Advanced mode">Asynchronously</label>
-                                        </div>
-
-                                        <div class="list-group animate-show-3d-top" ng-hide="apnc.agent_prog.percept.sync">
-                                            <a class="list-group-item no-animation">
-                                                <label>Percept will be sent every {{apnc.agent_prog.percept.interval}} milliseconds</label>
-                                                <div class="ui-slider-size" ui-slider min="10" max="1000" step="1" ng-model="apnc.agent_prog.percept.interval"></div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <label>Format</label>
-                                        <select class="form-control" ng-model="apnc.agent_prog.socket.percept_format" ng-options="value as format|nounderscore for (format, value) in apnc.PERCEPT_FORMAT"></select>
-                                        <a class="animate-show-3d-top pull-right" href="resrc/tw_msg.xsd" target="_blank" ng-show="apnc.agent_prog.socket.percept_format == apnc.PERCEPT_FORMAT.XML">download XSD</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="panel panel-default animate-show-3d-top text-center" ng-show="!apnc.agent_prog.ai && apnc.agent_prog.keyboard">
-                    <div class="panel-body">
-                        <label class="lead text-left">Controls</label>
-                        <br>
-                        <span>
-                            <button class="btn btn-default" ng-click="apnc.readKey('Up')">
-                                Up<br>
-                                <small class="text-blue">({{apnc.agent_prog.controls.Up | keyboard_key}})</small>
-                            </button>
-                        </span>
-                        <button class="btn btn-default" ng-click="apnc.readKey('Down')">
-                            Down<br>
-                            <small class="text-blue">({{apnc.agent_prog.controls.Down | keyboard_key}})</small>
-                        </button>
-                        <button class="btn btn-default" ng-click="apnc.readKey('Left')">
-                            Left<br>
-                            <small class="text-blue">({{apnc.agent_prog.controls.Left | keyboard_key}})</small>
-                        </button>
-                        <button class="btn btn-default" ng-click="apnc.readKey('Right')">
-                            Right<br>
-                            <small class="text-blue">({{apnc.agent_prog.controls.Right | keyboard_key}})</small>
-                        </button>
-                        <button class="btn btn-default" ng-click="apnc.readKey('Restore')">
-                            Battery restoration<br>
-                            <small class="text-blue">({{apnc.agent_prog.controls.Restore | keyboard_key}})</small>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="row"></div>
+  <h2><b>Your new Agent Program</b></h2>
+  <section class="text-justify">
+    <blockquote class="blockquote-reverse">
+      <p>An <b>agent</b> is anything that can be viewed as perceiving its environment through sensors and acting upon that environment through actuators. We use the term <b>percept</b> to refer to the agent's perceptual inputs at any given instant. Mathematically speaking, we say that an agent's behavior is described by the <b>agent function</b> that maps any given percept sequence to an action. Internally, the agent function for an artificial agent will be implemented by an <b>agent program</b>.</p>
+      <footer>Artificial Intelligence: A Modern Approach (Third edition) by Stuart Russell and Peter Norvig</footer>
+    </blockquote>
+  </section>
+  <br>
+  <div class="container-fluid" ng-class="{'treadonly':apnc.agent_prog.builtin}">
+    <div class="row text-left">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <alert class="text-center" type="info" ng-if="apnc.agent_prog.builtin">
+          <span class="glyphicon glyphicon-info-sign" style="font-size:30px"></span><br>
+          This is a default agent program, values are read-only.
+        </alert>
         <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-6">
-                <div class="separator"></div>
-                <div class="row text-left">
-                    <label class="lead "><b>3.</b> Optionally, write something about your Agent Program.</label>
-                    <textarea class="form-control" ng-model="apnc.agent_prog.desc" rows="5" placeholder="Description"></textarea>
-                </div>
-                <div class="separator"></div>
-            </div>
+          <label class="lead"><b>1.</b> Give your Agent Program a name.</label>
+          <input type="text" class="form-control" ng-model="apnc.agent_prog.name" ng-change="apnc.nameUpdate()" placeholder="Name" maxlength="128" ng-class="{'has-error':!apnc.agent_prog.name.trim().length}">
         </div>
-        <button ng-click="apnc.save()" ng-if="!apnc.agent_prog.builtin" class="btn btn-success col-xs-offset-1 col-md-2 col-xs-3 pull-right"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+        <div class="separator"></div>
+      </div>
     </div>
+    <div class="row text-left">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <div class="row ">
+        <label class="lead"><b>2.</b> Agent will be controlled by...</label>
+          <div class="btn-group btn-group-justified">
+            <label class="btn btn-default" ng-model="apnc.agent_prog.ai" btn-radio="true" tooltip-placement="left" tooltip="">Algorithm</label>
+            <label class="btn btn-default" ng-model="apnc.agent_prog.ai" btn-radio="false" tooltip-placement="right" tooltip="">Human</label>
+          </div>
+        </div>
+        <div class="panel panel-default animate-only-show" ng-show="apnc.agent_prog.ai">
+          <div class="panel-heading">Written in...</div>
+          <div class="panel-body text-center">
+            <div class="btn-group">
+              <label class="btn btn-default" ng-model="apnc.agent_prog.javascript" btn-radio="true" tooltip-placement="left" tooltip="The T-World Code editor lets you code your agent program inside your web browser Start coding right away!">JavaScript</label>
+              <label class="btn btn-default" ng-model="apnc.agent_prog.javascript" btn-radio="false" tooltip-placement="right" tooltip="Since your agent program will be a computer program written in another language other than Javascript, you will need to connect it to the T-World proxy server via socket">Another language</label>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default animate-only-show" ng-hide="apnc.agent_prog.ai">
+          <div class="panel-heading">Using a...</div>
+          <div class="panel-body text-center">
+            <div class="btn-group">
+              <label class="btn btn-default" ng-model="apnc.agent_prog.keyboard" btn-radio="true" tooltip-placement="left" tooltip="">Keyboard</label>
+              <label class="btn btn-default" ng-model="apnc.agent_prog.keyboard" btn-radio="false" tooltip-placement="right" tooltip="">Remote Control</label>
+            </div><br>
+            <div class="animate-show-3d-top" ng-hide="apnc.agent_prog.keyboard"><small>(<a href="resrc/tw-control.apk" target="_blank">download app for Android</a>)</small></div>
+          </div>
+        </div>
+
+
+        <div class="panel panel-default animate-show-3d-top" ng-show="apnc.agent_prog.ai && !apnc.agent_prog.javascript" ng-class="{'tdisabled':!apnc.isLoggedIn()}">
+          <div class="panel-body">
+            <form action="http://tworld-ai.com/rest/main.php" method="post" enctype="multipart/form-data" role="form" class="form-inline" id="source-form">
+              <div class="form-group">
+                <label class="lead" for="file">Source Code <small>(ZIP file, size limit is 200KB)</small></label>
+                <alert type="danger" ng-hide="apnc.isLoggedIn()">Need to be logged in to upload your source code.</alert>
+                <input type="file" id="file" name="file" accept=".zip, application/zip">
+                <p class="help-block" ng-show="apnc.isLoggedIn()">Upload it so that you and other users are able to download it!</p>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="panel panel-default animate-show-3d-top" ng-show="(apnc.agent_prog.ai && !apnc.agent_prog.javascript) || (!apnc.agent_prog.ai && !apnc.agent_prog.keyboard)">
+          <div class="panel-body">
+            <label class="lead">T-World proxy 
+              <small><small><a href="resrc/twproxy.zip"><span class="glyphicon glyphicon-save"></span> download version 1.0</a></small></small>
+            </label>
+            <br>
+            <label for="ip-address">IP Address</label><input type="text" id="ip-address" class="form-control" ng-model="apnc.agent_prog.socket.ip_address" placeholder="IPv4 Address" ng-class="{'has-error':!apnc.agent_prog.socket.ip_address.trim().length}">
+            <br>
+            <label for="port">Port</label><input type="number" id="port" min="1" max="65535" class="form-control" ng-model="apnc.agent_prog.socket.port" placeholder="Port number" ng-class="{'has-error':(apnc.agent_prog.socket.port|num)<=0}">
+            <br>
+            <label for="magic-string">The magic string</label><input type="text" id="magic-string" class="form-control" ng-model="apnc.agent_prog.socket.magic_string" placeholder="Magic string" value="localhost" maxlength="128">
+            <br>
+            <div ng-show="apnc.agent_prog.ai" class="panel panel-default animate-show">
+              <div class="panel-heading"><b>Perception</b></div>
+
+              <div class="panel-body">
+                <div class="container-fluid">
+                  <div class="row">
+                    <label>Percept-action relationship</label>
+
+                    <div class="btn-group btn-group-justified">
+                      <label class="btn btn-default" ng-model="apnc.agent_prog.percept.sync" btn-radio="true" tooltip="percept-action pattern (recommended)">Synchronously</label>
+                      <label class="btn btn-default" ng-model="apnc.agent_prog.percept.sync" btn-radio="false" tooltip="percept is send periodically. Advanced mode">Asynchronously</label>
+                    </div>
+
+                    <div class="list-group animate-show-3d-top" ng-hide="apnc.agent_prog.percept.sync">
+                      <a class="list-group-item no-animation">
+                        <label>Percept will be sent every {{apnc.agent_prog.percept.interval}} milliseconds</label>
+                        <div class="ui-slider-size" ui-slider min="10" max="1000" step="1" ng-model="apnc.agent_prog.percept.interval"></div>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <label>Format</label>
+                    <select class="form-control" ng-model="apnc.agent_prog.socket.percept_format" ng-options="value as format|nounderscore for (format, value) in apnc.PERCEPT_FORMAT"></select>
+                    <a class="animate-show-3d-top pull-right" href="resrc/tw_msg.xsd" target="_blank" ng-show="apnc.agent_prog.socket.percept_format == apnc.PERCEPT_FORMAT.XML">download XSD</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-default animate-show-3d-top text-center" ng-show="!apnc.agent_prog.ai && apnc.agent_prog.keyboard">
+          <div class="panel-body">
+            <label class="lead text-left">Controls</label>
+            <br>
+            <span>
+              <button class="btn btn-default" ng-click="apnc.readKey('Up')">
+                Up<br>
+                <small class="text-blue">({{apnc.agent_prog.controls.Up | keyboard_key}})</small>
+              </button>
+            </span>
+            <button class="btn btn-default" ng-click="apnc.readKey('Down')">
+              Down<br>
+              <small class="text-blue">({{apnc.agent_prog.controls.Down | keyboard_key}})</small>
+            </button>
+            <button class="btn btn-default" ng-click="apnc.readKey('Left')">
+              Left<br>
+              <small class="text-blue">({{apnc.agent_prog.controls.Left | keyboard_key}})</small>
+            </button>
+            <button class="btn btn-default" ng-click="apnc.readKey('Right')">
+              Right<br>
+              <small class="text-blue">({{apnc.agent_prog.controls.Right | keyboard_key}})</small>
+            </button>
+            <button class="btn btn-default" ng-click="apnc.readKey('Restore')">
+              Battery restoration<br>
+              <small class="text-blue">({{apnc.agent_prog.controls.Restore | keyboard_key}})</small>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <div class="separator"></div>
+        <div class="row text-left">
+          <label class="lead "><b>3.</b> Optionally, write something about your Agent Program.</label>
+          <textarea class="form-control" ng-model="apnc.agent_prog.desc" rows="5" placeholder="Description"></textarea>
+        </div>
+        <div class="separator"></div>
+      </div>
+    </div>
+    <button ng-click="apnc.save()" ng-if="!apnc.agent_prog.builtin" class="btn btn-success col-xs-offset-1 col-md-2 col-xs-3 pull-right"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+  </div>
 </div>
 
 <script type="text/ng-template" id="read-key.html">
-    <div class="modal-body text-center">
-        <h3>Press a key</h3>
-    </div>
+  <div class="modal-body text-center">
+    <h3>Press a key</h3>
+  </div>
 </script>

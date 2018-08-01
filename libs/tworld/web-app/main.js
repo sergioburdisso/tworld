@@ -488,7 +488,10 @@
 
   main.filter('tspeed', function() {
     return function(input) {
-      return (input < 0 && (-input+1) + " times slower.")|| (input == 0 && "normal.") || ((input+1) + " times faster.")
+      return (input < 0 && (-input+1) + " times slower.") ||
+             (input == 0 && "normal.") ||
+             (input == 9 && "100 times faster.") ||
+             ((input+1) + " times faster.")
     }
   });
 

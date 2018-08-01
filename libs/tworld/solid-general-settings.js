@@ -72,12 +72,15 @@ if (_KNOBS.trial.test){
   var _SAVE_STATS = _KNOBS.trial.saveStats;
   var _PAUSE_ENABLED = _KNOBS.trial.pause && !_BATCH;
   var _SPEED = _KNOBS.trial.speed < 0?
-        1/(-_KNOBS.trial.speed + 1)
-      :
-        (_KNOBS.trial.speed == 0?
-          1
-        :
-          _KNOBS.trial.speed + 1
+        1/(-_KNOBS.trial.speed + 1):
+        (
+          _KNOBS.trial.speed == 0?
+            1:
+            (
+              _KNOBS.trial.speed == 9?
+              100:
+              _KNOBS.trial.speed + 1
+            )
         );
 
 
@@ -169,8 +172,6 @@ var _VOLUME_LEVEL = _KNOBS_SETTINGS.audio.volume;
 var _START_TIME;
 if (_NO_RENDER){
   var trials_left = _KNOBS.trial.runs;
-
-  _SPEED = 100;
 
   _PAUSE_ENABLED = false;
   _CAMERA_SMOOTH = false;

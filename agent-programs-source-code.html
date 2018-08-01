@@ -1,93 +1,93 @@
 <div class="text-left">
-    <div class="row"></div>
-    <div class="row">
-        <alert class="text-center" type="info" ng-if="apscc.agent_prog.builtin">
-            <span class="glyphicon glyphicon-info-sign"></span>
-            This is a default agent program, source code is read-only and can't be modified.<br>
-            <b>Note:</b> you always can copy this source code to a new agent program and edit it as you please.
-        </alert>
-        <div id="editor" class="panel panel-primary" ng-class="{'full-screen':apscc.fullScreen}">
-            <div class="panel-heading" ng-class="{'treadonly': $loading}">
-                {{apscc.agent_prog.name}}
+  <div class="row"></div>
+  <div class="row">
+    <alert class="text-center" type="info" ng-if="apscc.agent_prog.builtin">
+      <span class="glyphicon glyphicon-info-sign"></span>
+      This is a default agent program, source code is read-only and can't be modified.<br>
+      <b>Note:</b> you always can copy this source code to a new agent program and edit it as you please.
+    </alert>
+    <div id="editor" class="panel panel-primary" ng-class="{'full-screen':apscc.fullScreen}">
+      <div class="panel-heading" ng-class="{'treadonly': $loading}">
+        {{apscc.agent_prog.name}}
 
-                <div class="pull-right" style="margin-top: -7px;">
-                    <span class="">( Task Environment:</span>
-                    <span class="cursor-pointer margin-2" ng-click="apscc.openEnvironmentsModal()">
-                        <b>
-                            <span ng-if="apscc.task_env.name" class="text-white"> {{apscc.task_env.name}}</span>
-                            <span ng-if="!apscc.task_env.name" class="text-red"> (empty)</span>
-                        </b>
-                        )
-                    </span>
-                    <button ng-click="apscc.toggleMaximaze()" ng-class="{'glyphicon-resize-small':apscc.fullScreen,'glyphicon-resize-full':!apscc.fullScreen}" class="btn btn-default glyphicon" tooltip="Maximaze/Restore" tooltip-placement="left"></button>
-                    <button ng-click="apscc.openAPIModal()" class="btn btn-default glyphicon glyphicon-question-sign text-blue" tooltip="Help / API Reference" tooltip-placement="left"></button>
-                </div>
-            </div>
-
-            <div class="panel-body no-padding">
-
-                <tabset>
-                    <tab select="apscc.open(apscc.agent_prog.source.agentProgram, 0)">
-                        <tab-heading>
-                            <i class="glyphicon glyphicon-pencil"></i> Agent Program
-                        </tab-heading>
-                    </tab>
-                    <tab select="apscc.open(apscc.agent_prog.source.global, 1)">
-                        <tab-heading>
-                            <i class="glyphicon glyphicon-pencil"></i> Global Scope
-                        </tab-heading>
-                    </tab>
-                    <tab select="apscc.open(apscc.agent_prog.source.onStart, 2)">
-                        <tab-heading>
-                            <i class="glyphicon glyphicon-fire"></i> Start Event
-                        </tab-heading>
-                    </tab>
-                    <tab select="apscc.open(apscc.agent_prog.source.onMessage, 3)">
-                        <tab-heading>
-                            <i class="glyphicon glyphicon-fire"></i> Message Received Event
-                        </tab-heading>
-                    </tab>
-                    <div class="pull-right">
-                        <div class="btn-group margin-2 pull-right" dropdown is-open="apscc.dropdownopen">
-                            <button type="button" class="btn btn-default dropdown-toggle glyphicon glyphicon-align-justify" tooltip="Open menu"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu" ng-click="apscc.dropdownopen = false">
-                                <li ng-class="{'treadonly':apscc.agent_prog.builtin}"><a href="" ng-click="apscc.save()">Save All <span class="text-light-gray"><small>(Crtl+S)</small></span></a></li>
-                                <li><a href="" ng-click="apscc.search()">Search... <span class="text-light-gray"><small>(Crtl+F)</small></span></a></li>
-                                <li><a href="" ng-click="apscc.replace()">Search and Replace... <span class="text-light-gray"><small>(Crtl+H)</small></span></a></li>
-                                <li class="divider"></li>
-                                <li><a href="" ng-click="apscc.run()">Run <span class="text-light-gray"><small>(Crtl+R)</small></span></a></li>
-                                <li><a href="" ng-click="apscc.openEnvironmentsModal()">Select Task Environment</a></li>
-                                <li class="divider"></li>
-                                <li><a href="" ng-click="apscc.openMemoryModal()">Show/Edit Persistent Memory</a></li>
-                                <li><a href="" ng-click="apscc.clearMemoryModal()">Clear Persistent Memory</a></li>
-                                <li class="divider"></li>
-                                <li><a href="" ng-click="apscc.openAPIModal()">Help <span class="text-light-gray"><small>(F1)</small></span></a></li>
-                            </ul>
-                        </div>
-                        <button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play margin-2" tooltip="Run agent program"></button>
-                        <button id="save" class="btn btn-success glyphicon margin-2" ng-class="{'disabled glyphicon-floppy-saved':apscc.saved, 'glyphicon-floppy-save':!apscc.saved, 'disabled':apscc.agent_prog.builtin}" ng-click="apscc.save()" tooltip="Save all"></button>
-
-                    </div>
-                </tabset>
-
-                <div id="source-code"></div>
-            </div>
+        <div class="pull-right" style="margin-top: -7px;">
+          <span class="">( Task Environment:</span>
+          <span class="cursor-pointer margin-2" ng-click="apscc.openEnvironmentsModal()">
+            <b>
+              <span ng-if="apscc.task_env.name" class="text-white"> {{apscc.task_env.name}}</span>
+              <span ng-if="!apscc.task_env.name" class="text-red"> (empty)</span>
+            </b>
+            )
+          </span>
+          <button ng-click="apscc.toggleMaximaze()" ng-class="{'glyphicon-resize-small':apscc.fullScreen,'glyphicon-resize-full':!apscc.fullScreen}" class="btn btn-default glyphicon" tooltip="Maximaze/Restore" tooltip-placement="left"></button>
+          <button ng-click="apscc.openAPIModal()" class="btn btn-default glyphicon glyphicon-question-sign text-blue" tooltip="Help / API Reference" tooltip-placement="left"></button>
         </div>
+      </div>
+
+      <div class="panel-body no-padding">
+
+        <tabset>
+          <tab select="apscc.open(apscc.agent_prog.source.agentProgram, 0)">
+            <tab-heading>
+              <i class="glyphicon glyphicon-pencil"></i> Agent Program
+            </tab-heading>
+          </tab>
+          <tab select="apscc.open(apscc.agent_prog.source.global, 1)">
+            <tab-heading>
+              <i class="glyphicon glyphicon-pencil"></i> Global Scope
+            </tab-heading>
+          </tab>
+          <tab select="apscc.open(apscc.agent_prog.source.onStart, 2)">
+            <tab-heading>
+              <i class="glyphicon glyphicon-fire"></i> Start Event
+            </tab-heading>
+          </tab>
+          <tab select="apscc.open(apscc.agent_prog.source.onMessage, 3)">
+            <tab-heading>
+              <i class="glyphicon glyphicon-fire"></i> Message Received Event
+            </tab-heading>
+          </tab>
+          <div class="pull-right">
+            <div class="btn-group margin-2 pull-right" dropdown is-open="apscc.dropdownopen">
+              <button type="button" class="btn btn-default dropdown-toggle glyphicon glyphicon-align-justify" tooltip="Open menu"></span>
+              </button>
+              <ul class="dropdown-menu" role="menu" ng-click="apscc.dropdownopen = false">
+                <li ng-class="{'treadonly':apscc.agent_prog.builtin}"><a href="" ng-click="apscc.save()">Save All <span class="text-light-gray"><small>(Crtl+S)</small></span></a></li>
+                <li><a href="" ng-click="apscc.search()">Search... <span class="text-light-gray"><small>(Crtl+F)</small></span></a></li>
+                <li><a href="" ng-click="apscc.replace()">Search and Replace... <span class="text-light-gray"><small>(Crtl+H)</small></span></a></li>
+                <li class="divider"></li>
+                <li><a href="" ng-click="apscc.run()">Run <span class="text-light-gray"><small>(Crtl+R)</small></span></a></li>
+                <li><a href="" ng-click="apscc.openEnvironmentsModal()">Select Task Environment</a></li>
+                <li class="divider"></li>
+                <li><a href="" ng-click="apscc.openMemoryModal()">Show/Edit Persistent Memory</a></li>
+                <li><a href="" ng-click="apscc.clearMemoryModal()">Clear Persistent Memory</a></li>
+                <li class="divider"></li>
+                <li><a href="" ng-click="apscc.openAPIModal()">Help <span class="text-light-gray"><small>(F1)</small></span></a></li>
+              </ul>
+            </div>
+            <button ng-click="apscc.run()" class="btn btn-primary glyphicon glyphicon-play margin-2" tooltip="Run agent program"></button>
+            <button id="save" class="btn btn-success glyphicon margin-2" ng-class="{'disabled glyphicon-floppy-saved':apscc.saved, 'glyphicon-floppy-save':!apscc.saved, 'disabled':apscc.agent_prog.builtin}" ng-click="apscc.save()" tooltip="Save all"></button>
+
+          </div>
+        </tabset>
+
+        <div id="source-code"></div>
+      </div>
     </div>
+  </div>
 </div>
 
 <script type="text/ng-template" id="memory-modal.html">
-    <div class="modal-header">
-        <h3 class="modal-title"><span class="glyphicon glyphicon-hdd"></span> Agent Program Persistent Memory ($memory) </h3>
-    </div>
-    <div class="modal-body text-blue">
-        $memory =
-        <textarea id="memory" class="form-control text-blue" ng-model="memory.text" rows="8" placeholder="A JSON String e.g. {&quot;counter&quot;:10, &quot;attemps&quot;:4}"></textarea><br>
-        <alert class="animate-show" type="danger" close="hideAlert()" ng-show="alert"><span class="glyphicon glyphicon-warning-sign"></span> The code above is not a well-formed JSON string</alert>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-default" ng-click="close()">Cancel</button>
-        <button class="btn btn-success" ng-click="save()">Save</button>
-    </div>
+  <div class="modal-header">
+    <h3 class="modal-title"><span class="glyphicon glyphicon-hdd"></span> Agent Program Persistent Memory ($memory) </h3>
+  </div>
+  <div class="modal-body text-blue">
+    $memory =
+    <textarea id="memory" class="form-control text-blue" ng-model="memory.text" rows="8" placeholder="A JSON String e.g. {&quot;counter&quot;:10, &quot;attemps&quot;:4}"></textarea><br>
+    <alert class="animate-show" type="danger" close="hideAlert()" ng-show="alert"><span class="glyphicon glyphicon-warning-sign"></span> The code above is not a well-formed JSON string</alert>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" ng-click="close()">Cancel</button>
+    <button class="btn btn-success" ng-click="save()">Save</button>
+  </div>
 </script>

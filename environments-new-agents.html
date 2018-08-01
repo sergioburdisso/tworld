@@ -1,36 +1,36 @@
 <h2>Agents</h2>
 
 <div class="panel panel-default solid">
-    <div class="panel-body">
+  <div class="panel-body">
 
-        <div class="container animate-filter col-md-6" ng-repeat="team in enc.task_env.teams">
-            <div class="panel panel-default">
-                <div class="panel-heading" ng-hide="enc.isCooperative()">
-                    <img ng-src="copperlichtdata/color-{{team.color}}.png" height="32" style="margin-top:-16px">
-                    Team 
-                    <span ng-hide="enc.isCompetitive()">"{{team.name}}"</span>
-                    <span ng-show="enc.isCompetitive()">{{$index + 1}}</span>
-                </div>
-                <div class="panel-body" ng-class="{'treadonly':enc.readOnly}">
-                    <button ng-if="$index > 1" class="btn btn-danger pull-right glyphicon glyphicon-remove" ng-click="enc.removeTeam($index)" tooltip="remove"></button>
-                    <section class="teditable" ng-show="enc.isCompetitiveCooperative()">
-                        <label>Name: </label><input type="text" size="8" ng-model="team.name" ng-class="{'has-error':!team.name.trim().length}" ng-readonly="enc.task_env.builtin">
-                    </section>
-                    <section ng-hide="enc.isCompetitive()">
-                        <label> Number of agents: </label>
-                        <input type="number" style="width:60px" min="2" ng-model="team.members" ng-if="enc.isCooperative()" ng-class="{'has-error':(team.members|num)<=1}">
-                        <input type="number" style="width:60px" min="1" ng-model="team.members" ng-if="enc.isCompetitiveCooperative()" ng-class="{'has-error':(team.members|num)<=0}">
-                    </section>
-                    <section class="teditable" ng-hide="enc.isCooperative()">
-                        <label> Color: </label><select ng-options="c for c in enc.teamColors" ng-model="team.color"></select>
-                    </section>
-                </div>
-            </div>
-            <br>
+    <div class="container animate-filter col-md-6" ng-repeat="team in enc.task_env.teams">
+      <div class="panel panel-default">
+        <div class="panel-heading" ng-hide="enc.isCooperative()">
+          <img ng-src="copperlichtdata/color-{{team.color}}.png" height="32" style="margin-top:-16px">
+          Team 
+          <span ng-hide="enc.isCompetitive()">"{{team.name}}"</span>
+          <span ng-show="enc.isCompetitive()">{{$index + 1}}</span>
         </div>
-        <div class="container col-md-6 text-center">
-            <button class="btn btn-success" ng-click="enc.addTeam()" ng-hide="enc.isCooperative()||enc.readOnly"><span class="glyphicon glyphicon-plus"></span> Add Team</button>
+        <div class="panel-body" ng-class="{'treadonly':enc.readOnly}">
+          <button ng-if="$index > 1" class="btn btn-danger pull-right glyphicon glyphicon-remove" ng-click="enc.removeTeam($index)" tooltip="remove"></button>
+          <section class="teditable" ng-show="enc.isCompetitiveCooperative()">
+            <label>Name: </label><input type="text" size="8" ng-model="team.name" ng-class="{'has-error':!team.name.trim().length}" ng-readonly="enc.task_env.builtin">
+          </section>
+          <section ng-hide="enc.isCompetitive()">
+            <label> Number of agents: </label>
+            <input type="number" style="width:60px" min="2" ng-model="team.members" ng-if="enc.isCooperative()" ng-class="{'has-error':(team.members|num)<=1}">
+            <input type="number" style="width:60px" min="1" ng-model="team.members" ng-if="enc.isCompetitiveCooperative()" ng-class="{'has-error':(team.members|num)<=0}">
+          </section>
+          <section class="teditable" ng-hide="enc.isCooperative()">
+            <label> Color: </label><select ng-options="c for c in enc.teamColors" ng-model="team.color"></select>
+          </section>
         </div>
-
+      </div>
+      <br>
     </div>
+    <div class="container col-md-6 text-center">
+      <button class="btn btn-success" ng-click="enc.addTeam()" ng-hide="enc.isCooperative()||enc.readOnly"><span class="glyphicon glyphicon-plus"></span> Add Team</button>
+    </div>
+
+  </div>
 </div>
