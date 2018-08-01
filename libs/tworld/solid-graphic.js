@@ -533,7 +533,7 @@ function GraphicTWorld(graphicEngine, environment){
       }
     }
 
-    this.setMultiplier = function(rIndex, Multiplier, firstOne){
+    this.setMultiplier = function(rIndex, Multiplier, firstOne){ if (_NO_RENDER) return;
       var $robMultiplier = $("#rob-"+rIndex).find("#multiplier");
       if (Multiplier.Value == 1)
         $robMultiplier.html("");
@@ -549,7 +549,7 @@ function GraphicTWorld(graphicEngine, environment){
       }
     }
 
-    this.updateScore = function(rIndex, score, holeCells, filled, points, strPoints) {
+    this.updateScore = function(rIndex, score, holeCells, filled, points, strPoints) {if (_NO_RENDER) return;
       var lIndex = _GET_TEAM_LEADER(rIndex);
       var $rob = $("#rob-" + lIndex);
 
@@ -687,7 +687,7 @@ function GraphicTWorld(graphicEngine, environment){
         $($id).find("#battery-charge").stop(true).animate({width:value/10 + "%"},300);
     }
 
-    this.batteryChargeAnimation = function(rIndex, bcIndex, out, bad){
+    this.batteryChargeAnimation = function(rIndex, bcIndex, out, bad){ if (_NO_RENDER) return;
       rIndex = _GET_TEAM_LEADER(rIndex);
       if (out){
         $("#rob-"+rIndex).find("#battery-charge-frame").css("box-shadow", "0 0 10px rgba(87, 255, 168, 0.57)");
@@ -1463,7 +1463,7 @@ function GraphicTWorld(graphicEngine, environment){
       tpHalo.OnAnimate = CL_TPHalo_OnAnimate;
     }
 
-    this.showHoleFilledLight = function(rIndex, pair /*[x,z]*/) {
+    this.showHoleFilledLight = function(rIndex, pair /*[x,z]*/) { if (_NO_RENDER) return;
       var light= _CL_Scene.getSceneNodeFromName('holefilled-light').createClone(_CL_Scene.getRootSceneNode());//TODO: could be improved (Clone = garbage collection!!)
       var $scoreUp = $("#score-up-" + rIndex);
       var $rob = $("#rob-" + _GET_TEAM_LEADER(rIndex));
@@ -2015,28 +2015,30 @@ function GraphicTWorld(graphicEngine, environment){
 
       if (!_Running){
 
-        $('#tworld').removeClass("blur");
-        $('#playBtn').hide();
-        $('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
+        if (!_NO_RENDER){
+          $('#tworld').removeClass("blur");
+          $('#playBtn').hide();
+          $('#frameShadow').css({'background-color':'transparent', 'pointer-events':'none'});
 
 
-        $("#header").show();
-        $("#header").animate({opacity:1},1000);
-        $(".title").animate({opacity:0},1000,function(){$(".title").hide()});
-        $("#pie").css("background-color", "transparent");
+          $("#header").show();
+          $("#header").animate({opacity:1},1000);
+          $(".title").animate({opacity:0},1000,function(){$(".title").hide()});
+          $("#pie").css("background-color", "transparent");
 
-        $("#logos-line").css({border:'none'});
-        $("#sb-logo").mouseleave();
-        $("#unsl-logo").mouseleave();
-        $("#pie-derecho").animate(
-          {opacity:0},
-          500,
-          function(){
-            $("#pie-derecho").hide();
-            $("#robs-hud").show();
-            $("#robs-hud").animate({opacity:1},1000);
-          }
-        );
+          $("#logos-line").css({border:'none'});
+          $("#sb-logo").mouseleave();
+          $("#unsl-logo").mouseleave();
+          $("#pie-derecho").animate(
+            {opacity:0},
+            500,
+            function(){
+              $("#pie-derecho").hide();
+              $("#robs-hud").show();
+              $("#robs-hud").animate({opacity:1},1000);
+            }
+          );
+        }
 
         _START_TIME = Date.now();
         $("#playFrame").remove();
@@ -2064,17 +2066,19 @@ function GraphicTWorld(graphicEngine, environment){
     $("#score-up").hide();
     $(window).resize();
 
-    if (!_SHOW_FPS)
-      $("#fps").hide();
+    if (!_NO_RENDER){
+      if (!_SHOW_FPS)
+        $("#fps").hide();
 
-    $("#frame").show();
-    $("#frame").animate({opacity : 1}, 4000, function(){$("tw-root").removeClass("body-background");});
+      $("#frame").show();
+      $("#frame").animate({opacity : 1}, 4000, function(){$("tw-root").removeClass("body-background");});
 
-    $("#loading-shadow").animate({opacity: 0}, 1500, function(){$("#loading-shadow").remove()});
-    $("#loading").animate({opacity : 0}, 1500, function(){$("#loading").remove()});
+      $("#loading-shadow").animate({opacity: 0}, 1500, function(){$("#loading-shadow").remove()});
+      $("#loading").animate({opacity : 0}, 1500, function(){$("#loading").remove()});
 
-    $("#sb-logo").mouseleave();
-    $("#unsl-logo").mouseleave();
+      $("#sb-logo").mouseleave();
+      $("#unsl-logo").mouseleave();
+    }
 
     //Pause Button
     if (_PAUSE_ENABLED){

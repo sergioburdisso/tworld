@@ -168,6 +168,8 @@ var _VOLUME_LEVEL = _KNOBS_SETTINGS.audio.volume;
 
 var _START_TIME;
 if (_NO_RENDER){
+  var trials_left = _KNOBS.trial.runs;
+
   _SPEED = 100;
 
   _PAUSE_ENABLED = false;
@@ -185,9 +187,19 @@ if (_NO_RENDER){
 
   _MINIMAL_UPDATE_DELAY = 1000;
 
-  $("#tw-root").hide();
+  $("#playPauseBtn").hide();
+  $("#robs-hud").hide();
+  $("#loading").hide();
+  $("#loading-shadow").hide();
+  $("#frame").hide();
+
+  $("#nbr-trial").html(
+    trials_left + " TRIAL" + (trials_left > 1? 'S':'') + " LEFT"
+  );
+  $("#no-render").show();
 }else{
   $("#cube").show();
+  $("#loading-shadow").show();
 }
 
 // Global flags
