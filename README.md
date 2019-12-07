@@ -1,10 +1,10 @@
-# T-WORLD#
+# T-WORLD
 
 Cross programming language Web platform for Artificial Intelligence research and education.
 
 (Put your algorithms through their paces!)
 
-**Site:** [tworld.io](http://tworld.io)
+**Url:** [tworld.io](http://tworld.io)
 
 **Code license: _GNU AGPL License (Affero General Public License)_**
 
