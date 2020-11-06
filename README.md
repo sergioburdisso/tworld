@@ -9,4 +9,4 @@ Cross programming language Web platform for Artificial Intelligence research and
 **Code license: _GNU AGPL License (Affero General Public License)_**
 
 
-![http://tworld-ai.com/imgs/web-app/slider0.png](http://tworld-ai.com/imgs/web-app/slider0.png)
+![http://tworld.io/imgs/web-app/slider0.png](http://tworld.io/imgs/web-app/slider0.png)
