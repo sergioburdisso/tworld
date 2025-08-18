@@ -2493,7 +2493,11 @@ CL3D.TextureManager.prototype.getTexture = function (b, a) {
             d.onTextureLoaded(c)
         };
         c.Image.onerror = function () {
-            console.error("Error: couldn't download texture '"+c.Name+"'\n(if your Internet connection is slow, try reloading the page)");
+            if (c.Name.split('\\').pop().split('/').pop().startsWith("~")) {
+                c.Loaded = true;
+            }else{
+                console.error("Error: couldn't download texture '"+c.Name+"'\n(if your Internet connection is slow, try reloading the page)");
+            }
         };
         c.Image.src = c.Name;
         return c
