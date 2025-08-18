@@ -4,7 +4,7 @@ Cross programming language Web platform for Artificial Intelligence research and
 
 (Put your algorithms through their paces!)
 
-**Url:** [tworld.io](http://tworld.io)
+**Online demo:** [here](https://sergioburdisso.github.io/tworld/)
 
 **Code license: _GNU AGPL License (Affero General Public License)_**
 
