@@ -30,7 +30,7 @@ $text.main.agplLicense[_LANGUAGES.ENGLISH] = '<a href="https://github.com/sergio
 $text.main.agplLicense[_LANGUAGES.SPANISH] = '<a href="https://github.com/sergioburdisso/tworld" target="_blank">Este proyecto</a> es software libre <sup>[<a href="https://github.com/sergioburdisso/tworld/archive/v'+localStorage.version+'.zip" target="_blank">descargar zip</a>]</sup>, puedes redistribuirlo y/o modificarlo bajo los t&eacute;rminos de la <a rel="license" target="_blank" href="http://www.gnu.org/licenses/agpl-3.0.html">Licencia AGPL de GNU</a>';
 
 $text.main.description = {};
-$text.main.description[_LANGUAGES.ENGLISH] = "Cross programming language Web platform for Artificial Intelligence research and education.<br>(Put your algorithms through their paces!)";
+$text.main.description[_LANGUAGES.ENGLISH] = "Cross programming language Web platform for Artificial Intelligence research and education.<br>(Put your agents through their paces!)";
 $text.main.description[_LANGUAGES.SPANISH] = "Plataforma web multilenguaje para la investigaci&oacute;n y el aprendizaje de Inteligencia Artificial &iexcl;Pon a prueba tus algoritmos!";
 
 $text.main.author = {}
