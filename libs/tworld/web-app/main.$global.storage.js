@@ -234,7 +234,7 @@ var defaults = {
     socket:{
       ip_address: "localhost",
       port:3313,
-      magic_string: "",
+      magic_string: "magic-agent",
       percept_format: _PERCEPT_FORMAT.JSON
     },
     percept:{

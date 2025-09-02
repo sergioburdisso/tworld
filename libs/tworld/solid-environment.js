@@ -387,7 +387,7 @@ function Environment(rows, columns, graphicEngine, parent) {
             nTotal++;
             if (_rob[irob].AgentProgram.isConnected()){
               nReady++;
-              msg_ap_list+="  Agent "+irob+": '"+_AGENTS[irob].NAME+"' is READY!\n";
+              msg_ap_list+="  Agent "+irob+": '"+_AGENTS[irob].NAME+"' is READY! :)\n";
             }else
               msg_ap_list+="  Agent "+irob+": '"+_AGENTS[irob].NAME+"' is disconnected!\n";
           }else{

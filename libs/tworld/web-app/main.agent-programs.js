@@ -510,8 +510,8 @@
       }
 
       this.nameUpdate = function(){
-        if (!_socket.magic_string_dirty && $("#magic-string").hasClass("ng-pristine"))
-          _socket.magic_string = this.agent_prog.name;
+        // if (!_socket.magic_string_dirty && $("#magic-string").hasClass("ng-pristine"))
+        //   _socket.magic_string = this.agent_prog.name;
       }
 
       function _finished(date){
