@@ -56,7 +56,8 @@ var _PERCEPT_HEADER = {
   ERROR: "error", INTERNAL:"internal"
 }
 
-//NOTE: any changes you make to this object must be reflected in the twproxy.c file (and in case of XML, the tw_msg.xsd file too)
+//NOTE: any changes you make to this object must be reflected in the twproxy.c file (https://github.com/sergioburdisso/tworld-proxy)
+//      (and in case of XML, the tw_msg.xsd file too)
 var _PERCEPT_FORMAT = {
   JSON: 0,
   XML: '<?xml version="1.0" encoding="UTF-8"?>'+
