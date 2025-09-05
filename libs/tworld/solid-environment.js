@@ -387,7 +387,7 @@ function Environment(rows, columns, graphicEngine, parent) {
             nTotal++;
             if (_rob[irob].AgentProgram.isConnected()){
               nReady++;
-              msg_ap_list+="  Agent "+irob+": '"+_AGENTS[irob].NAME+"' is READY! :)\n";
+              msg_ap_list+="  Agent "+irob+": '"+_AGENTS[irob].NAME+"' is READY! :D\n";
             }else
               msg_ap_list+="  Agent "+irob+": '"+_AGENTS[irob].NAME+"' is disconnected!\n";
           }else{
@@ -1478,23 +1478,31 @@ function AgentProgram(rIndex, _X2JS, isSocket, src, _env, _gtw){
       //case _ACTION.SOUTH
       if ( _ACTION_REGEX.SOUTH.test(action) ){
         _gtw.RobWalkSouth(_index);
+        if (!_env.isBatteryChargeSufficient(_index))
+          _env.programAgentPerceive(_index);
       }else
       //case _ACTION.NORTH
       if ( _ACTION_REGEX.NORTH.test(action) ){
         _gtw.RobWalkNorth(_index);
+        if (!_env.isBatteryChargeSufficient(_index))
+          _env.programAgentPerceive(_index);
       }else
       //case _ACTION.EAST
-      if ( _ACTION_REGEX.EAST.test(action) )
+      if ( _ACTION_REGEX.EAST.test(action) ){
         _gtw.RobWalkEast(_index);
-      else
+        if (!_env.isBatteryChargeSufficient(_index))
+          _env.programAgentPerceive(_index);
+      }else
       //case _ACTION.WEST
-      if ( _ACTION_REGEX.WEST.test(action) )
+      if ( _ACTION_REGEX.WEST.test(action) ){
         _gtw.RobWalkWest(_index);
-      else
+        if (!_env.isBatteryChargeSufficient(_index))
+          _env.programAgentPerceive(_index);
+      }else
       //case _ACTION.NONE
-      if ( _ACTION_REGEX.NONE.test(action) )
+      if ( _ACTION_REGEX.NONE.test(action) ){
         _env.programAgentPerceive(_index);
-      else
+      }else
       //case _ACTION.RESTORE
       if ( _ACTION_REGEX.RESTORE.test(action) ){
         _gtw.restoreBattery(_index);
