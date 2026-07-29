@@ -30,4 +30,4 @@ Try T-World instantly: [**Online Demo**](https://sergioburdisso.github.io/tworld
 
 ## Screenshot 🖼️
 
-![T-World Web App Screenshot](http://tworld.io/imgs/web-app/slider0.png)
+![T-World Web App Screenshot](https://raw.githubusercontent.com/sergioburdisso/tworld/refs/heads/master/imgs/web-app/slider0.png)
